@@ -2,7 +2,7 @@
 
 > **Canonical execution brief.** The implementation work is already present on `release/v5.4.0` (commits `419b51f`, `5c41741`). Do not repeat it. This task is to verify the real test execution and close the remaining developer-level evidence gap.
 >
-> **Status (2026-11-20): executed — Claude-reported, awaiting independent review and owner acceptance.** Claude Code added UI-interaction and schema-wide coverage in commits `52bcdea` and `023171d` (test-only) and reported 49 + 18 + 111 = 178 passing, exit code 0 for all three suites, in a fresh clone with raw logs saved under `docs/test-evidence/v5.4.0-023171d/`. No production defect was found. A browser-only owner acceptance kit is ready in `docs/acceptance/v5.4.0/`. If this brief is run again, **verify and report; do not repeat completed work or create an empty commit.** Update this brief when the owner approves a new bounded task.
+> **Status (2026-11-20): executed — Claude-reported, awaiting independent review and owner acceptance.** Claude Code added UI-interaction and schema-wide coverage in commits `52bcdea` and `023171d` (test-only) and reported 49 + 18 + 111 = 178 passing, exit code 0 for all three suites, in a fresh clone with raw logs saved under `docs/test-evidence/v5.4.0-023171d/`. No production defect was found. A browser-only owner acceptance kit is ready in `docs/acceptance/v5.4.0/`. A separate owner-approved brief later reconciled `readme.md` on the docs branch (see `docs/CURRENT_STATUS.md`). If this brief is run again, **verify and report; do not repeat completed work or create an empty commit.** Update this brief when the owner approves a new bounded task.
 
 ## Shorthand command
 

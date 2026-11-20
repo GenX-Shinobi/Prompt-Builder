@@ -14,7 +14,7 @@ The free-first, chatbot-independent mission and project scope in [PROJECT_CONTRO
    - `node tests/browser_corrective.js`
 4. **Independently review** the final release-branch commit (`023171d`) and the test evidence. May run alongside step 5.
 5. **Next milestone — owner-led real-browser acceptance** with the browser-only kit in `docs/acceptance/v5.4.0/` (six tests: added/removed commands and chatbots, a 500+ item change, inert hostile text, a refused broken catalogue; keyboard and expand/collapse included). The owner does not edit JSON or use a terminal.
-6. Reconcile README/project documentation carefully; preserve the separate draft documentation PR (#1) and the v5.4.0 README. The two READMEs conflict and are deliberately unreconciled.
+6. ~~Reconcile the READMEs~~ — **prepared on the docs branch (not merged).** Apply at PR #1 merge by keeping the PR's `readme.md`; merge PR #1 only after the release code is in `main`. The owner decides when.
 7. Obtain explicit owner release approval. The owner decides how the release branch reaches `main`.
 
 **Claude brief:** [docs/CLAUDE_TASK.md](docs/CLAUDE_TASK.md) (executed; no open implementation task)  

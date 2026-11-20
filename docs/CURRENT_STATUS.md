@@ -15,14 +15,34 @@
 |---|---|---|
 | `main` | `b247aec8a1ee279b71f6aedd8fbaf4d908c22d5f` | Merge commit of PR #2 (contains `ce1ec19`). Unchanged. |
 | `release/v5.4.0` | `023171dc60af78d43081a447d41009f153d82127` | 4 ahead / 1 behind `main`; local and remote heads matched; clean tree; everything pushed. |
-| `docs/project-control-baseline` | `d5dfb03` (before this checkpoint's commit; see `git log`) | Draft PR #1, open and unmerged; head advances with docs commits only. |
+| `docs/project-control-baseline` | `7e6c65e` (before this checkpoint's commit; see `git log`) | Draft PR #1, open and unmerged; head advances with docs commits only. |
 
 - **Why the release branch diverges:** PR #2 was merged at `ce1ec19`. Four more commits were then pushed to the release branch: `419b51f`, `5c41741`, `52bcdea`, `023171d`. `main` holds only the merge commit `b247aec` that the release branch lacks. No merge, rebase or cherry-pick has been done.
 - PR #2 is closed and merged. **That merge is not release approval.**
 - PR #1 (https://github.com/GenX-Shinobi/Prompt-Builder/pull/1) is open/draft, unmerged, no reviews. Do not merge without explicit owner approval.
 - No GitHub Actions or CI results exist for any commit.
 - This documentation lives only on the docs branch. `release/v5.4.0` and `main` do not contain these files.
-- `readme.md` conflicts between the release branch (v5.4.0) and this branch (v5.3.1). Deliberately unreconciled until after v5.4.0 acceptance.
+- `readme.md`: **reconciled on this branch, not yet merged** — see "README reconciliation" below.
+
+## README reconciliation (prepared, not merged)
+
+- **Why they conflicted:** `main`/release and this branch edited the same lines of `readme.md` after common ancestor `2774483` (`2606885`, `ce1ec19` for v5.4.0; `5ff33b3` for v5.3.1). No filename or case problem exists. PR #1 changes only documentation files and `readme.md` (never `index.html`), so `readme.md` is the only conflict (GitHub reports PR #1 `mergeable=false, dirty`).
+- **What was done:** `readme.md` on this branch now describes the current v5.4.0 app, keeps the free-first, chatbot-independent, zero-dependency principles, labels budgets as estimates, shows chatbot "best for" text and budgets copied from `catalog.json` revision 1, separates current features from roadmap ideas, links the management documents, and says v5.4.0 is in acceptance testing and not formally released. Behaviour claims were checked against the release `index.html`; it corrects older wording (only a v5.2.0 GitHub Release exists; the app has Step 0 to Step 2 plus a separate Saved presets section).
+- **Not resolved:** the file still conflicts with `main`'s `readme.md`. When the owner approves merging PR #1, keep the PR's `readme.md` in full. It also describes behaviour that is only in `release/v5.4.0` (for example the 500-item install gate), so merge it **after** the release code is in `main`.
+- **Unverified:** whether the live GitHub Pages site serves `main` and which build it runs. The README's live link is unchanged.
+
+## Release-readiness audit (2026-11-20)
+
+| Check | Result | Category |
+|---|---|---|
+| Heads | `main` `b247aec`; `release/v5.4.0` `023171d`; docs `7e6c65e` before this checkpoint; all matched live GitHub | Verified |
+| PR #1 / PR #2 | #1 open, draft, unmerged, no reviews (`mergeable=false`, README only); #2 merged earlier | Verified |
+| Release code vs evidence | `023171d` is identical to the commit the logs were run on; `catalog.json` unchanged since `2606885` | Verified |
+| Test logs | Committed logs show exit 0 and 49 / 18 / 111 passed, 0 failed (178 total) | Claude-reported (implementer's own run) |
+| Kit | Six tests, six catalogues, built from release `catalog.json` (rev 1, 9 bots, 81 commands); self-check re-run after a pause: 36 passed, 0 failed | Claude-reported |
+| Suites re-run in this task | No (code unchanged). Only the kit self-check was repeated. | n/a |
+| Independent reproduction | None | Outstanding |
+| Owner acceptance | Not done | Outstanding |
 
 ## v5.4.0 source and catalogue
 
@@ -75,7 +95,7 @@ The owner opened the release-branch `index.html` locally with a separate copy of
 1. ~~Interactive added/removed record details and three-suite execution~~ — **done, Claude-reported only.**
 2. Independent review of `023171d` and its evidence (ideally with the suites re-run and output recorded by someone other than the implementer).
 3. Owner real-browser acceptance with the kit above, on desktop and mobile where practical.
-4. Reconcile README and release documentation without losing the v5.4.0 README or PR #1 work.
+4. README: **prepared on the docs branch**; apply at PR #1 merge (keep the PR's file) and only after the release code is in `main`. Awaiting owner or ChatGPT review.
 5. Obtain explicit owner release approval.
 
 No v5.5.0 implementation before v5.4.0 has passed these gates. Release restrictions are listed in [PROJECT_CONTROL.md](../PROJECT_CONTROL.md).
@@ -83,4 +103,5 @@ No v5.5.0 implementation before v5.4.0 has passed these gates. Release restricti
 ## Checkpoint log
 
 - 2026-11-20 — Documentation reconciled to release head `52bcdea`; test record split into reported versus independently reproduced; continuity protocol added to `PROJECT_CONTROL.md`. Documentation-only.
+- 2026-11-20 — README reconciled on the docs branch (not merged); release-readiness audit recorded; owner decisions listed in `PROJECT_CONTROL.md`. Documentation only.
 - 2026-11-20 — Release head advanced to `023171d` (test-only A5 coverage). Fresh-clone run of all three suites: 178 passed, raw logs saved. Owner acceptance kit built and self-verified. No production code, `main` or PR changes.

@@ -37,12 +37,12 @@ Each item below was checked against live GitHub and the Claude workspace on 2026
 |---|---|---|
 | `main` | `b247aec8a1ee279b71f6aedd8fbaf4d908c22d5f` | Merge commit of PR #2. Contains `ce1ec19`; not release approval. Untouched by later work. |
 | `release/v5.4.0` | `023171dc60af78d43081a447d41009f153d82127` | 4 commits ahead of and 1 behind `main`. Local and remote heads matched; all commits pushed. |
-| `docs/project-control-baseline` | `d5dfb03` before this checkpoint's commit (see `git log` for the head) | Draft PR #1, open and unmerged. Its head advances with documentation commits only. |
+| `docs/project-control-baseline` | `7e6c65e` before this checkpoint's commit (see `git log` for the head) | Draft PR #1, open and unmerged. Its head advances with documentation commits only. |
 
 - The release branch is "4 ahead, 1 behind" because PR #2 was merged at `ce1ec19` (its merge commit `b247aec` exists only on `main`), and four further commits were then pushed to the release branch: `419b51f` (diff before/after previews and install gate), `5c41741` (complete records for added/removed commands and chatbots), `52bcdea` (seven UI-interaction checks) and `023171d` (schema-wide field, keyboard and install-gate checks). The branches were deliberately not merged or rebased.
 - `023171d` and `52bcdea` change only `tests/browser_corrective.js`; `5c41741` and `419b51f` change `index.html` and `tests/browser_corrective.js`. No production-code defect was found in the final two rounds. No catalogue or `catalog.json` change since PR #2: 9 chatbots, 81 commands, revision 1. v5.4.0 source declares version 5.4.0.
 - PR #1 (https://github.com/GenX-Shinobi/Prompt-Builder/pull/1) is open/draft, unmerged, with no reviews. PR #2 is merged. No CI or GitHub Actions results exist for any commit.
-- `readme.md` differs between branches (release: v5.4.0; docs branch: v5.3.1) and a dry-run merge conflicts there only. Do not overwrite or reconcile either README until after v5.4.0 acceptance.
+- `readme.md` **reconciled on the docs branch** (not merged). **Cause of the conflict:** release/`main` and the docs branch both edited `readme.md` from the common ancestor `2774483` — `main`/release for v5.4.0 (`2606885`, `ce1ec19`), the docs branch for v5.3.1 (`5ff33b3`, which also said the default branch held v5.3.1). It is not a filename or letter-case problem: every branch uses `readme.md` (an old `README.md` was deleted on 2026-11-19). **Fix:** the docs-branch `readme.md` is now one accurate document: the docs branch's principles and project-management links, plus feature content checked against the v5.4.0 app and `catalog.json`; it says v5.4.0 is in acceptance testing and not yet formally released; it separates current features from roadmap ideas; it makes no new chatbot-quota claims (budgets are labelled estimates; only a v5.2.0 GitHub Release exists, and it says so). **Still conflicts with `main` when PR #1 merges**, because both sides changed the file. **Resolution (when the owner approves the merge):** keep the PR's `readme.md` in full. **Order dependency:** it describes `release/v5.4.0` at `023171d` (for example the 500-item install gate), which `main` does not yet contain (`main`'s `index.html` is the earlier `ce1ec19`). Do not merge PR #1 before the release code is in `main`, or the README will overstate `main`.
 
 ### Test evidence — keep these categories separate
 
@@ -68,7 +68,7 @@ An **owner acceptance kit** is ready ([acceptance-kit.html](https://github.com/G
 1. ~~Implement complete catalogue-diff review and expandable added/removed records; run all three suites.~~ **Done — Claude-reported only** (commits `419b51f`, `5c41741`, `52bcdea`).
 2. ChatGPT independently reviews the final release-branch code and test evidence (and, ideally, someone other than the implementer re-runs the three suites and records the output). This may run alongside step 3 and does not block it.
 3. **Next milestone — owner-led real-browser verification** using the acceptance kit: added and removed catalogue records in the preview; expanding and collapsing each record; keyboard interaction (Tab, Enter/Space); the large-diff safeguards ("Showing 500 of N", Install disabled until "Show all"); inert booby-trapped text; refusal of a broken catalogue. Desktop, and mobile where practical. The kit's "Copy my results" button produces a short report to paste back.
-4. Reconcile release documentation, including the two READMEs, and record acceptance without losing PR #1 work or the v5.4.0 README.
+4. ~~Prepare README reconciliation~~ — **prepared on the docs branch, not merged.** Remaining: apply it when PR #1 merges (resolution above), and re-check it if acceptance changes any behaviour.
 5. Owner explicitly approves release.
 6. Only then resume v5.5.0 planning/implementation.
 
@@ -77,6 +77,14 @@ An **owner acceptance kit** is ready ([acceptance-kit.html](https://github.com/G
 There is **no open Claude implementation task.** The verification brief [docs/CLAUDE_TASK.md](docs/CLAUDE_TASK.md) has been executed (Claude-reported; see above); `/pb-v54` (defined by `.claude/commands/pb-v54.md`) remains available and, if re-run, must verify and report rather than repeat completed work.
 
 **Single next action:** the owner runs the browser-only acceptance kit (about 15 minutes) against the real release `index.html` and pastes the kit's results summary back to ChatGPT. The owner decides whether and how branches reach `main`.
+
+### Decisions requiring owner approval
+
+Claude does not decide these.
+
+1. **How and when the reviewed release branch reaches `main`.** Note that `main` already contains an earlier v5.4.0 build (`ce1ec19`, from merged PR #2) **without** the later review fixes (`419b51f` to `023171d`). GitHub Pages could not be checked from Claude's environment (API blocked, page not fetchable). If Pages serves `main`, the live page is probably already running that earlier build. Please check the live page and decide.
+2. **When to merge PR #1**, and confirming the README resolution above.
+3. **Release approval.** Not given; v5.4.0 is not released.
 
 ### Release restrictions (apply to every session)
 
@@ -88,7 +96,7 @@ There is **no open Claude implementation task.** The verification brief [docs/CL
 
 ## Other unfinished work
 
-PR #1 is the draft project-control documentation PR. Preserve its work. README reconciliation is deliberately deferred until after v5.4.0 acceptance to avoid clobbering release documentation.
+PR #1 is the draft project-control documentation PR. Preserve its work. Its `readme.md` is now the reconciled version (see Verified facts); merging PR #1 is an owner decision and still needs the one-file resolution above, ideally after the release code reaches `main`.
 
 ## Working method and authority
 

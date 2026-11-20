@@ -115,5 +115,5 @@ Automated checks for these exist and are Claude-reported only; they do not repla
 **Checks passed:** Claude-reported: suite 1 = 49, suite 2 = 18, corrective = 111 (178 total, exit 0 each); kit self-check 36. Raw logs: `docs/test-evidence/v5.4.0-023171d/`. Not independently reproduced.  
 **Checks failed:** none reported  
 **Not run:** owner real-browser/device acceptance; independent re-run of the suites; mobile and screen-reader checks  
-**Known limitations:** no CI; owner and independent runs outstanding; no version-log entry for the three post-merge commits; READMEs on the release and docs branches conflict and are unreconciled  
+**Known limitations:** no CI; owner and independent runs outstanding; no version-log entry for the three post-merge commits; the reconciled `readme.md` exists only on the docs branch and conflicts with `main`'s until PR #1 is merged; live GitHub Pages build unverified  
 **Reviewer / owner decision:** pending
