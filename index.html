@@ -18,6 +18,7 @@
     --good: #12a36b;
     --warn: #e0412f;
     --shadow: 0 1px 0 rgba(0,0,0,.03), 0 12px 30px -12px rgba(40, 30, 90, .25);
+    --hero-a: #2a1f78;
     --console-bg: #14122a;
     --console-ink: #e9e7ff;
     --console-line: #2b2850;
@@ -53,7 +54,7 @@ body {
 /* ---------- Hero ---------- */
 .hero {
     position: relative; overflow: hidden; border-radius: 24px; padding: 34px 36px;
-    background: linear-gradient(120deg, #2a1f78 0%, #5b4bdb 45%, #ff6b4a 120%);
+    background: linear-gradient(120deg, var(--hero-a) 0%, var(--accent) 45%, var(--accent-2) 120%);
     color: #fff; box-shadow: var(--shadow);
 }
 .hero::before, .hero::after { content: ""; position: absolute; border-radius: 50%; filter: blur(2px); opacity: .22; background: #fff; }
@@ -69,6 +70,26 @@ body {
     padding: 8px 12px; border-radius: 999px; font-size: 13px; backdrop-filter: blur(6px);
 }
 .icon-btn:hover { background: rgba(255,255,255,.28); }
+
+
+/* ---------- v5.3.0 palettes & layout ---------- */
+[data-palette="ocean"] { --accent:#0b7bb5; --accent-2:#14b8a6; --accent-soft:#dff1fa; --hero-a:#0a3a5c; }
+[data-palette="forest"] { --accent:#2f855a; --accent-2:#d69e2e; --accent-soft:#e3f4ea; --hero-a:#17402a; }
+[data-palette="sunset"] { --accent:#d9480f; --accent-2:#e64980; --accent-soft:#ffe9df; --hero-a:#7a2410; }
+[data-palette="graphite"] { --accent:#3c4252; --accent-2:#7c8aa5; --accent-soft:#e8eaf0; --hero-a:#20242e; }
+[data-theme="dark"][data-palette="ocean"] { --accent:#4cc3f5; --accent-soft:#12324a; }
+[data-theme="dark"][data-palette="forest"] { --accent:#5fd08f; --accent-soft:#1b3a2a; }
+[data-theme="dark"][data-palette="sunset"] { --accent:#ff8a5c; --accent-soft:#3d2118; }
+[data-theme="dark"][data-palette="graphite"] { --accent:#aab4c8; --accent-soft:#2a2f3d; }
+.hero-tools select { width:auto; padding:7px 28px 7px 12px; font-size:13px; border-radius:999px; background-color:rgba(255,255,255,.16); color:#fff; border:1px solid rgba(255,255,255,.3); }
+.hero-tools select option { color:#1d1b2e; }
+.sec-tools { display:flex; gap:4px; justify-content:flex-end; margin:-6px -6px 6px 0; }
+.sec-tools button { background:var(--card-2); color:var(--muted); border:1px solid var(--line); border-radius:8px; padding:2px 8px; font-size:12px; cursor:pointer; }
+.sec-tools button:hover, .sec-tools button[aria-pressed="true"] { color:var(--accent); border-color:var(--accent); }
+.sec-tools button:focus-visible { outline:3px solid var(--accent-soft); }
+[data-sec].dragging { opacity:.45; }
+[data-sec].drop-target { outline:2px dashed var(--accent); outline-offset:4px; }
+[data-sec].pinned { border-left:4px solid var(--accent); }
 
 /* ---------- Layout ---------- */
 .layout { display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(340px, .9fr); gap: 22px; margin-top: 22px; align-items: start; }
@@ -324,10 +345,26 @@ This block acts as an unalterable log. Every future AI Chatbot updating this fil
 increment the minor/major version string below, append a new historical array object, and preserve the template structure.
 
 [ACTIVE CONFIGURATION]
-- currentVersion: "5.2.0"
+- currentVersion: "5.3.1"
 
 [MIGRATION HISTORY MATRIX]
 [
+  {
+    "version": "5.3.1",
+    "bot": "Claude (Anthropic)",
+    "date": "2026-11-19",
+    "change": "PHASE 2 of the 5.3.0 request. (1) Command consolidation: the six legacy tabs (Accuracy, Research, Format, Writing, Persona and Tone, Tech and Strategy) are folded into Prompt Craft as headed groups (Set the brief, Shape the output, Think and check, Accuracy, Research, Writing, Persona and tone, Tech and code) plus the Output layout, Persona and Tone dropdowns; the app now has two tabs, Bot Commands (per engine) and Prompt Craft (universal). The plain-words deep research pill was dropped as redundant with the per-bot switches. Moved pills keep their old module id inside the preset key, so saved presets still load; a preset that used the dropped pill will report it as no longer existing. renderControls() now renders pills under optional group headings. (2) CHATBOTS free and brief notes rewritten for ChatGPT, Gemini, Claude, Perplexity, Grok, Meta AI and Mistral. (3) BOT_CMDS/BOT_NOTES: Meta AI no longer says there is no paid tier (Meta One Core and Premium exist, in limited testing); Mistral Canvas re-badged Paid; Grok Build item added (Limited quota) and Imagine video note corrected; Perplexity academic item notes the Focus or Connectors menu. Palette, layout and Dev Bay features from 5.3.0 are unchanged.",
+    "why": "User requested: (1) consolidate relevant commands into the Prompt Craft tab to reduce duplication and visual clutter, (2) improve the Dev Bay so the clean-copy / download path works better both for bots that accept HTML files and for bots that force splitting, and (3) add theme customizations beyond light/dark plus basic layout controls (pin/unpin or drag-and-drop sections). These changes make the free-tier-focused tool cleaner, less confusing, and more flexible for different chatbot upload behaviours. Items (2) and (3) landed in 5.3.0; item (1) lands here.",
+    "freshnessCheck": "Nov 19 2026. CONFIRMED from public sources: ChatGPT free text chat has no cap since Aug 6 2026, default GPT-5.6 Luna, uploads, images, Deep Research, voice and Codex limited, ads possible; Grok free tier is limited Chat, Imagine and Grok Build per xAI, full Imagine video starts at paid SuperGrok Lite; Meta One Core $7.99 and Premium $19.99 launched Sep 15 2026 and are in limited testing; Mistral Le Chat is now Mistral Vibe (renamed May 28 2026), Pro $14.99, free limits unpublished (about 25 messages a day reported), Think mode and deep research exist on free with small allowances. CONFLICTING and left with a check-the-app note: Perplexity free Pro Search (3 to 5 a day), Deep Research (none to a few) and whether the source picker is still called Focus. TAKEN FROM THE USER-SUPPLIED GROK PDF AND NOT INDEPENDENTLY VERIFIED: Claude 5-hour plus weekly usage windows, free Artifacts templates and 5 Projects; Gemini free Deep Research, effort levels, Gems and a roughly 32k context; Copilot image boosts and Edge sidebar; DeepSeek 1M context; ChatGPT slash commands /canvas and /image (not added, the existing exact list stays marked app dependent); Mistral Flash Answers and scheduled tasks (not added); Grok Think, Expert and Fast selectors (not added). Other BOT_CMDS entries are unchanged from 5.2.0."
+  },
+  {
+    "version": "5.3.0",
+    "bot": "Claude (Anthropic)",
+    "date": "2026-11-19",
+    "change": "PHASE 1 of the 5.3.0 request. (1) Dev Bay clean-copy: new 'Include change request in .html' switch embeds the change request + reason as a PB-CHANGE-REQUEST comment at the top of the downloaded clean file (single self-contained package for bots that accept HTML files); new 'Copy paste-this-first prompt' button gives a short instruction that works for both attach-the-file and paste-in-parts workflows and states the part count. Existing multi-part splitting, getCleanSource() and hardReset() are unchanged apart from resetting the new palette attribute. (2) Theme: five named palettes (Default, Ocean, Forest, Sunset, Graphite) on top of light/dark, stored in localStorage key pb-palette. (3) Layout: each main-column card can be pinned (pinned cards sort first), moved up/down with buttons, or drag-reordered; stored in localStorage key pb-layout-v1; 'Reset layout' button. DEFERRED to the next revision: full BOT_CMDS freshness pass and moving commands into Prompt Craft.",
+    "why": "User requested: (1) consolidate relevant commands into the Prompt Craft tab to reduce duplication and visual clutter, (2) improve the Dev Bay so the clean-copy / download path works better both for bots that accept HTML files and for bots that force splitting, and (3) add theme customizations beyond light/dark plus basic layout controls (pin/unpin or drag-and-drop sections). These changes make the free-tier-focused tool cleaner, less confusing, and more flexible for different chatbot upload behaviours. Items (2) and (3) are done in this entry; item (1) is pending.",
+    "freshnessCheck": "Nov 19 2026, partial. ChatGPT confirmed from public news: since Aug 6 2026 free text chat has no message cap and defaults to GPT-5.6 Luna; uploads, image generation, Deep Research, voice and Codex stay limited; free users may see ads. Gemini, Claude, Perplexity, Grok, Copilot, DeepSeek, Meta AI and Mistral were NOT re-verified in this entry and their BOT_CMDS are unchanged from 5.2.0."
+  },
   {
     "version": "5.2.0",
     "bot": "Claude (Anthropic)",
@@ -429,6 +466,8 @@ paste the package into a chatbot, and save the complete .html file it returns.
 
     <header class="hero">
         <div class="hero-tools">
+            <select id="paletteSel" class="icon-btn" aria-label="Colour palette" title="Colour palette"><option value="default" selected>Default</option><option value="ocean">Ocean</option><option value="forest">Forest</option><option value="sunset">Sunset</option><option value="graphite">Graphite</option></select>
+            <button class="icon-btn" id="layoutResetBtn" type="button" title="Restore the default card order and unpin everything">↺ Layout</button>
             <button class="icon-btn" id="themeBtn" type="button" title="Toggle light / dark">◐ Theme</button>
         </div>
         <div class="eyebrow">Prompt Forge · Cheat Sheet · Code Migrator</div>
@@ -495,6 +534,8 @@ paste the package into a chatbot, and save the complete .html file it returns.
                     <div style="display:flex; flex-wrap:wrap; gap:10px; align-items:center;">
                         <button class="btn-copy" id="modLaunchBtn" type="button" data-tip="Copies the modification package (split into parts if over the target bot's paste budget), then opens the chatbot you picked in the form. Paste it in." onclick="launchMod()">Copy package &amp; launch</button>
                         <button class="btn-secondary" id="modDownloadBtn" type="button" data-tip="Downloads the clean standalone .html source file so you can attach it directly in chatbots that support file uploads." onclick="downloadCleanHtml()">Download clean .html</button>
+                        <label class="switch" data-tip="Adds your change request and reason as a comment at the top of the downloaded .html, so one file carries everything. Remove that comment from the new version."><input type="checkbox" id="modIncludeReq"><span class="track"></span><span>Include change request in .html</span></label>
+                        <button class="btn-secondary" id="modFirstBtn" type="button" data-tip="Copies a short 'paste this first' message that tells the chatbot what you are sending (an attached file or numbered parts) and what to do with it." onclick="copyPasteFirst()">Copy paste-this-first prompt</button>
                     </div>
                     <div id="modSplitBox" data-render="" hidden=""></div>
                 </div>
@@ -727,29 +768,53 @@ const MODULES = [
     }
 ];
 
+/* v5.3.1 CONSOLIDATION: the six legacy tabs (Accuracy, Research, Format, Writing, Persona & Tone, Tech & Strategy) are folded into
+   Prompt Craft as headed groups, leaving only two tabs: Bot Commands (differs per engine) and Prompt Craft (works everywhere).
+   Their definitions stay above so they remain easy to edit. Moved pills keep their old module id in p.m so saved presets still load.
+   The research pill that asked for deep research in plain words was dropped: Bot Commands has the real per-bot switches. */
+(function foldIntoCraft() {
+    const craft = MODULES.find(m => m.id === 'craft');
+    const GROUPS = {
+        'Set the brief': ['Set a role', 'Give background context', 'State the goal / success test', 'Define audience & reading level', 'List hard constraints', 'Localise to my region'],
+        'Shape the output': ['Show an example (few-shot)', 'Set a length limit', 'Choose the response language', 'Return structured JSON', 'No preamble', 'Say what to avoid', 'End with next-step checklist'],
+        'Think and check': ['Plan first, then execute', 'Surface assumptions & ambiguity', '3 options + a recommendation', 'Verify against my constraints', 'Fence source text with ### markers']
+    };
+    craft.pills.forEach(p => { const g = Object.keys(GROUPS).find(k => GROUPS[k].includes(p.l)); p.g = g || 'Prompt Craft'; });
+    const LEGACY = { accuracy: 'Accuracy', research: 'Research', writing: 'Writing', voice: 'Persona & tone', tech: 'Tech & code' };
+    const extraSelects = [];
+    MODULES.slice().forEach(m => {
+        if (m.id === 'craft' || m.id === 'botcmds') return;
+        (m.pills || []).forEach(p => { if (/^Run deep research/.test(p.t)) return; p.g = LEGACY[m.id] || m.title; p.m = m.id; craft.pills.push(p); });
+        (m.selects || []).forEach(sl => extraSelects.push(sl));
+    });
+    craft.selects = extraSelects;
+    craft.desc = 'One place for the prompt-shaping tools that work on ANY chatbot: brief, output shape, reasoning checks, accuracy, research, writing, persona, tone, layout and code. Stack several to turn a vague idea into a concrete task.';
+    for (let i = MODULES.length - 1; i >= 0; i--) if (MODULES[i].id !== 'craft' && MODULES[i].id !== 'botcmds') MODULES.splice(i, 1);
+})();
+
 /* limit = conservative paste budget in CHARACTERS per bot on a FREE plan (estimates, not official figures; edit freely).
    free  = short free-tier / free-account note shown on the card. Free-tier rules change often: verify before relying on them. */
 const CHATBOTS = [
     { name: 'ChatGPT',    maker: 'OpenAI',        url: 'https://chatgpt.com',       color: '#10a37f', limit: 24000,
-      blurb: 'All-rounder for writing, coding and ideas.', brief: 'Works signed out; an account adds uploads.',
+      blurb: 'All-rounder for writing, coding and ideas.', brief: 'Unlimited text chat; uploads and tools capped.',
       best: 'Versatile all-rounder for writing, brainstorming, coding, explaining concepts and varied tasks. Most widely used.',
-      free: 'Basic chat works signed out; a free account unlocks uploads, history and more tools. Heavier tools have small quotas.' },
+      free: 'Text chat has no message cap (default model GPT-5.6 Luna since Aug 2026, abuse limits apply); a free account adds history and tools. Uploads, image generation, Deep Research, voice and Codex have small quotas, and free users may see ads.' },
     { name: 'Gemini',     maker: 'Google',        url: 'https://gemini.google.com', color: '#4f8cff', limit: 60000,
       blurb: 'Google apps and multimodal work.', brief: 'Free Google account; heavy tools have daily caps.',
       best: 'Best if you live in Google Workspace; strong at multimodal work with text, images and other media.',
-      free: 'Needs a free Google account. Deep Research, images and extended reasoning have daily caps.' },
+      free: 'Needs a free Google account. Free use is mostly on Auto / Flash-class models with a smaller context window. Deep Research, images and extended reasoning have daily caps; video generation is paid.' },
     { name: 'Claude',     maker: 'Anthropic',     url: 'https://claude.ai',         color: '#d97757', limit: 60000,
-      blurb: 'Long documents, careful writing and code.', brief: 'Free account; limits reset every few hours.',
+      blurb: 'Long documents, careful writing and code.', brief: 'Free account; 5-hour and weekly usage windows.',
       best: 'Long documents, careful writing, summarization, coding and analysis of complex material.',
-      free: 'Needs a free account. Free usage limits reset every few hours and long pastes use them up faster.' },
+      free: 'Needs a free account. Usage runs on a rolling 5-hour window plus a weekly cap, and long pastes use it up faster. Artifacts, file creation, web search, memory and up to 5 Projects are included; Research and Claude Code are paid.' },
     { name: 'Perplexity', maker: 'Perplexity AI', url: 'https://perplexity.ai',     color: '#20b8cd', limit: 8000,
       blurb: 'Web research with cited sources.', brief: 'Works signed out; deep research is capped.',
       best: 'AI search engine for web research; answers usually include source citations. Keep prompts short.',
-      free: 'Basic search works signed out; a free account adds history and uploads. Deep research and Pro searches are capped.' },
+      free: 'Basic search is unlimited and works signed out; a free account adds history. Pro Search is a few a day (reports say 3 to 5) and Deep Research is small or inconsistent; image generation and model choice need Pro. Reports disagree, so check the app.' },
     { name: 'Grok',       maker: 'xAI',           url: 'https://grok.com',          color: '#c9c9d6', limit: 24000,
       blurb: 'Current topics, tied to X.', brief: 'Tight message limits; some features need sign-in.',
       best: 'Conversational assistant tied to X (Twitter); good for exploring current topics and discussions.',
-      free: 'Free access with tight message limits that change often; some features need sign-in. DeeperSearch, Imagine video and Tasks need a paid plan.' },
+      free: 'Free daily access with limited Chat, Imagine, Grok Build and DeepSearch (xAI publishes no fixed numbers; about 10 prompts per 2 hours is reported). Full Imagine video, DeeperSearch and Tasks need a paid plan.' },
     { name: 'Microsoft Copilot', maker: 'Microsoft', url: 'https://copilot.microsoft.com', color: '#b83fa0', limit: 8000,
       blurb: 'Windows and Edge users; a free fallback bot.', brief: 'Free; sign in for history and uploads.',
       best: 'Easily accessible on Windows and Edge, with free web answers, image generation and deeper reasoning modes. Useful as a fallback when another chatbot hits its free usage cap.',
@@ -759,13 +824,13 @@ const CHATBOTS = [
       best: 'Widely noted for generous free chat and reasoning, and for coding and maths help. A good pick when data sensitivity is not a blocker: check its privacy policy and keep confidential or personal material out of it.',
       free: 'Free with an account; there is no paid chat plan and no published daily cap, though busy periods can slow it down. DeepThink (reasoning) and Search are switches under the message box. It cannot generate images.' },
     { name: 'Meta AI', maker: 'Meta', url: 'https://www.meta.ai', color: '#0668e1', limit: 8000,
-      blurb: 'Quick everyday prompts in WhatsApp and Instagram.', brief: 'Free; no paid tier; uses a Meta account.',
+      blurb: 'Quick everyday prompts in WhatsApp and Instagram.', brief: 'Free; paid Meta One adds usage (limited testing).',
       best: 'Convenient if you already live inside WhatsApp, Instagram or Messenger: quick everyday questions, casual writing and image ideas without opening another app. Lighter on long documents and deep analysis.',
-      free: 'Free with no paid tier, inside those apps and at meta.ai. Features and availability vary by country and app version, and prompts may be used to improve Meta AI, so check its privacy settings.' },
+      free: 'Free for everyday use in Meta apps and at meta.ai; heavier image and video generation has unpublished daily and monthly limits. Paid Meta One plans (Core $7.99, Premium $19.99) add usage but are in limited testing and vary by account. Prompts may be used to improve Meta AI, so check privacy settings.' },
     { name: 'Mistral', maker: 'Mistral AI', url: 'https://chat.mistral.ai', color: '#e8590c', limit: 24000,
       blurb: 'Le Chat / Vibe: a solid non-US alternative.', brief: 'Free plan with a soft daily cap.',
       best: 'A solid non-US alternative worth considering if you want regional and ecosystem variety on a free tier. Le Chat (now branded Vibe) covers chat, web search, images, Canvas and coding help.',
-      free: 'Free account with a soft daily cap (about 25 messages has been reported). Web search, Think mode and deep research (both preview) have small allowances. Pro adds higher limits and fuller Vibe coding features.' }
+      free: 'Free account with unpublished limits (about 25 messages a day reported). Chat, image generation, web search, Think mode and deep research (both preview) have small allowances; Pro ($14.99) multiplies them and adds fuller Vibe coding and Canvas. Le Chat is now called Mistral Vibe.' }
 ];
 
 /* Free-tier status labels used by the badges on every BOT_CMDS item. */
@@ -786,12 +851,12 @@ const BOT_NOTES = {
     ChatGPT: "ChatGPT mixes typed commands (/ and @) with a + tools menu. The typed commands are shortcuts whose availability depends on the app and version, so if one does not appear, use the + menu instead. A free account is needed for uploads and history, and several tools have small free quotas. Agent mode is paid.",
     Gemini: "Gemini has no slash commands and needs a free Google account. It uses a Tools menu, and @ to call a Connected App. Google Maps, YouTube, Flights and Hotels are used automatically when you ask (the old @Google Maps style mentions were retired). Video generation is paid.",
     Claude: "Claude needs a free account. Its chat has no typed slash commands: typing / just opens the same menu as the + button (Claude Code, the developer tool, is different). Most control is by switches in that menu or by asking in words. File creation and connectors work on free accounts, but free usage limits are tight, so keep pastes short; Research is paid.",
-    Perplexity: "Perplexity treats every message as a search and has no slash commands. You steer it with the Search mode menu and the sources picker. Free users get unlimited basic searches, a small Pro Search allowance, and little or no deep research (reports disagree, so check the menu).",
+    Perplexity: "Perplexity treats every message as a search and has no slash commands. You steer it with the Search mode menu and the sources picker. Free users get unlimited basic searches, a few Pro Searches a day and little or no deep research (reports disagree, so check the menu). Older guides call the source picker Focus; the name differs by app version.",
     Grok: "Grok has no slash commands. Switches sit under the message box on grok.com and in the apps, and newer Grok models may reason automatically. Free access has tight limits; DeeperSearch, Imagine video and Tasks need a paid plan.",
     "Microsoft Copilot": "Copilot has no slash commands. You steer it with the mode selector under the message box (Smart, Quick response, Think Deeper, Study and Learn, Search) and a separate Deep Research option. Mode names and places differ between Windows, Edge, the web and the app, so pick the closest match. Free use is generous; Deep Research and image creation have small allowances.",
     DeepSeek: "DeepSeek has no slash commands. Under the message box you pick Instant or Expert Mode and switch DeepThink (reasoning) and Search on or off. It needs a free account, cannot generate images and has no paid chat plan. Avoid confidential or personal material.",
-    "Meta AI": "Meta AI has no slash commands. In WhatsApp or Messenger group chats you call it by typing @Meta AI, and Imagine creates images. The Meta AI app and meta.ai add voice and, where offered, a Thinking option. Features vary by country and app, and there is no paid tier.",
-    Mistral: "Mistral's assistant (Le Chat, now branded Vibe) lives at chat.mistral.ai and has no slash commands. Web search, Think mode, deep research (preview), Canvas and the code interpreter are switches in the message box or tools menu. The free plan has a soft daily cap (about 25 messages reported); coding agents in Vibe are mostly on paid plans."
+    "Meta AI": "Meta AI has no slash commands. In WhatsApp or Messenger group chats you call it by typing @Meta AI, and Imagine creates images. The Meta AI app and meta.ai add voice and, where offered, a Thinking option. Features vary by country and app, and paid Meta One plans (Core, Premium) exist but are only in limited testing.",
+    Mistral: "Mistral's assistant (Le Chat, now branded Vibe) lives at chat.mistral.ai and has no slash commands. Web search, Think mode, deep research (preview), the code interpreter is a switch in the message box or tools menu, and Canvas is listed with Pro. The free plan has a soft daily cap (about 25 messages reported); coding agents in Vibe are mostly on paid plans."
 };
 const BOT_CMDS = {
     ChatGPT: [
@@ -860,7 +925,7 @@ const BOT_CMDS = {
         { g: "Ask in words", k: "ask", tier: "account", t: "Search the web for current information and cite your sources.", l: "Web search", w: "Automatic now; asking makes your intent explicit",
           d: "Claude decides on its own when to search. Saying so forces a search and asks for citations; best for quick facts that change." },
         { g: "Ask in words", k: "ask", tier: "account", t: "Create the result as an Artifact (a standalone document, page or app in its own side panel).", l: "Create an Artifact", w: "Needs Artifacts enabled in Settings > Capabilities",
-          d: "Puts long documents, code, web pages or small tools in a side panel you can edit, copy, download or share." },
+          d: "Puts long documents, code, web pages or small tools in a side panel you can edit, copy, download or share. Doc, Slides and Design templates are reported as free." },
         { g: "Ask in words", k: "ask", tier: "limited", t: "Create the result as a downloadable {0} file.", l: "Make a file", f: ["File type (Word, Excel, PowerPoint, PDF)"], w: "Needs code execution and file creation enabled in Settings > Capabilities",
           d: "Builds a finished Word, Excel, PowerPoint or PDF file instead of pasting text. It uses more of your free usage limit than plain chat." },
         { g: "Ask in words", k: "ask", tier: "limited", t: "Run code to analyse the data and show your calculations.", l: "Analyse data with code", w: "Needs code execution enabled; attach the data file",
@@ -873,7 +938,7 @@ const BOT_CMDS = {
           d: "Performs many searches, reads many sources and writes a long, cited report in a few minutes. Use for questions you would otherwise research by hand. Free allowance is small and has been cut back in 2026; reports disagree on whether free accounts get any, so check the Search menu." },
         { g: "Search modes (Search menu beside the + button)", k: "ui", tier: "free", t: "Teach this step by step, checking my understanding as we go.", l: "Learn step by step", w: "Search menu > Learn step by step",
           d: "A guided tutoring style instead of a single answer." },
-        { g: "Sources (Connectors menu or Choose sources, set BEFORE you send)", k: "ui", tier: "free", t: "Use academic and peer-reviewed sources only (papers and journals) and cite each one.", l: "Academic sources", w: "+ menu > Connectors > Academic (untick Web for papers only)",
+        { g: "Sources (Connectors menu or Choose sources, set BEFORE you send)", k: "ui", tier: "free", t: "Use academic and peer-reviewed sources only (papers and journals) and cite each one.", l: "Academic sources", w: "Focus button in the search bar, or + menu > Connectors > Academic (name varies by version; untick Web for papers only)",
           d: "Limits answers to scholarly material. Weak for recent events, so pair it with Web for current topics." },
         { g: "Sources (Connectors menu or Choose sources, set BEFORE you send)", k: "ui", tier: "free", t: "Use financial sources only (filings, earnings, market data) and cite each one.", l: "Finance sources", w: "Choose sources > Finance",
           d: "Focuses on company filings, earnings and market information." },
@@ -897,10 +962,12 @@ const BOT_CMDS = {
           d: "A more thorough variant of DeepSearch for research where completeness matters more than speed. Needs a paid plan." },
         { g: "Toggles under the message box", k: "ui", tier: "limited", t: "Think step by step before answering and show your reasoning.", l: "Think mode", w: "Think toggle (newer Grok models may reason automatically, with no toggle)",
           d: "Switches on Grok's reasoning path for multi-step maths, logic and decisions. Turn it off for plain summarising, where extra inference can add errors. Free uses are capped." },
+        { g: "Ask in words", k: "ask", tier: "limited", t: "Act as a coding agent: plan the change, write the code, and explain how to run and test it: {0}", l: "Grok Build (coding)", f: ["What to build or fix"], w: "Build in the Grok app or grok.com (limited on free)",
+          d: "xAI lists Grok Build with limited free use. Best for scoped coding jobs; heavy or long-running jobs need a paid plan." },
         { g: "Ask in words", k: "ask", tier: "limited", t: "Generate an image of: {0}", l: "Imagine: image", f: ["Describe the image"], w: "No switch: just ask (Imagine)",
           d: "Creates images from text and can edit or combine images you upload. Free daily allowance is small." },
         { g: "Ask in words", k: "ask", tier: "paid", t: "Generate a short video of: {0}", l: "Imagine: video", f: ["Describe the scene"], w: "No switch: just ask (Imagine; paid plans, limits vary)",
-          d: "Makes a short video clip from a description or image. Full video generation starts on paid SuperGrok tiers; free access is not guaranteed." },
+          d: "Makes a short video clip from a description or image. Full video generation starts on paid tiers (SuperGrok Lite and up); a limited image-to-video clip may appear on free accounts." },
         { g: "Ask in words", k: "ask", tier: "free", t: "Search X (Twitter) posts for what people are saying right now about this and summarise the sentiment.", l: "Search X posts", w: "No switch: just ask",
           d: "Taps live posts on X, Grok's distinctive data source. Good for breaking news and public reaction; verify claims independently." },
         { g: "Ask in words", k: "ask", tier: "limited", t: "Analyse the attached image and explain what it shows.", l: "Analyse an image", w: "Attach the image, then ask",
@@ -961,8 +1028,8 @@ const BOT_CMDS = {
           d: "Mistral's reasoning mode for maths, logic and code. The free allowance is small." },
         { g: "Message box toggles and tools", k: "ui", tier: "limited", t: "Run Deep Research: plan the research, run several searches and write a cited report.", l: "Deep research", w: "Deep research option in the tools menu (preview)",
           d: "Multi-step research that ends in a cited report. Free use has a small allowance; Pro raises it." },
-        { g: "Message box toggles and tools", k: "ui", tier: "limited", t: "Open this in Canvas so I can edit it side by side and revise it directly.", l: "Canvas", w: "Canvas option in the tools menu",
-          d: "A side-by-side editor for documents and code. Limits on free accounts can differ, so check." },
+        { g: "Message box toggles and tools", k: "ui", tier: "paid", t: "Open this in Canvas so I can edit it side by side and revise it directly.", l: "Canvas", w: "Canvas option in the tools menu",
+          d: "A side-by-side editor for documents and code. Mistral lists Canvas with Pro; it may be missing on free, so check your menu." },
         { g: "Message box toggles and tools", k: "ask", tier: "limited", t: "Run code to analyse the data and show your calculations.", l: "Code interpreter", w: "Code interpreter in the tools menu; attach the data file",
           d: "Runs code to calculate, clean data and make charts instead of estimating." },
         { g: "Message box toggles and tools", k: "ask", tier: "limited", t: "Create an image of: {0}", l: "Create an image", f: ["Describe the image"], w: "No switch: just ask",
@@ -994,7 +1061,7 @@ function esc(s) { return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').
 /* ------------------------------------------------------- Render controls */
 const KIND = { type: 'Type', ui: 'UI switch', ask: 'Ask' };
 function pillHtml(modId, p) {
-    const key = modId + '|' + (modId === 'botcmds' ? currentBot.name + '|' : '') + p.l;
+    const key = (p.m || modId) + '|' + (modId === 'botcmds' ? currentBot.name + '|' : '') + p.l;
     const tier = p.tier && TIERS[p.tier] ? p.tier : '';
     const tip = p.d + (tier ? ' Free-tier status: ' + TIERS[tier][0] + '. ' + TIERS[tier][1] : '');
     const uiNote = p.k === 'ui' ? p.l + ' (' + p.w + ')' + (tier ? ' \u2014 ' + TIERS[tier][0] : '') : '';
@@ -1022,7 +1089,9 @@ function renderControls() {
             html += '<div class="pills" id="botCmdPills" data-render=""></div>';
         }
         if (m.pills) {
-            html += '<div class="pills">' + m.pills.map(p => pillHtml(m.id, p)).join('') + '</div>';
+            const grp = [];
+            m.pills.forEach(p => { const n = p.g || ''; let g = grp.find(x => x.n === n); if (!g) { g = { n: n, items: [] }; grp.push(g); } g.items.push(p); });
+            html += grp.map(g => '<div class="cmdgroup">' + (g.n ? '<h4>' + esc(g.n) + '</h4>' : '') + '<div class="pills">' + g.items.map(p => pillHtml(m.id, p)).join('') + '</div></div>').join('');
         }
         if (m.selects) {
             html += m.selects.map(sl =>
@@ -1449,7 +1518,7 @@ function closeModificationModal() { document.getElementById('modModal').classLis
    Runs on a DETACHED document, never on the live page. */
 function hardReset(root) {
     const $ = s => root.querySelector(s);
-    root.setAttribute('data-theme', 'light');
+    root.setAttribute('data-theme', 'light'); root.removeAttribute('data-palette');
     // every JS-rendered container
     root.querySelectorAll('[data-render]').forEach(el => { el.innerHTML = ''; el.removeAttribute('class'); el.removeAttribute('style'); });
     // previews and meters
@@ -1504,7 +1573,9 @@ function copyModPart(i) {
         .catch(() => toast('Clipboard blocked \u2014 copy manually', true));
 }
 function downloadCleanHtml() {
-    const clean = getCleanSource();
+    let clean = getCleanSource();
+    const inc = document.getElementById('modIncludeReq');
+    if (inc && inc.checked) { const h = reqHeader(); if (h) clean = clean.replace('<!DOCTYPE html>\n', '<!DOCTYPE html>\n' + h); }
     const m = clean.match(/currentVersion:\s*"([^"]+)"/);
     const ver = m ? 'v' + m[1].replace(/\./g, '_') : 'clean';
     const blob = new Blob([clean], { type: 'text/html;charset=utf-8' });
@@ -1721,6 +1792,76 @@ document.getElementById('hidePaid').addEventListener('change', () => {
     if (r.cleared) toast(r.cleared + ' selected item' + (r.cleared > 1 ? 's' : '') + ' removed', true);
 });
 
+/* ---------- v5.3.0 Dev Bay helpers ---------- */
+function reqHeader() {
+    const ch = (document.getElementById('modalChange').value || '').trim(), why = (document.getElementById('modalWhy').value || '').trim();
+    if (!ch) return '';
+    const safe = t => t.replace(/--+/g, '-');
+    return '<!--\nPB-CHANGE-REQUEST (delete this block from the new version)\nTarget AI: ' + safe(document.getElementById('modalAI').value) + '\nChange: ' + safe(ch) + '\nReason: ' + safe(why) + '\n-->\n';
+}
+function copyPasteFirst() {
+    const eng = document.getElementById('modalAI').value, name = eng.split(' (')[0];
+    const bot = CHATBOTS.find(c => c.name === name) || currentBot;
+    const full = document.getElementById('modificationPreview').textContent;
+    const parts = full ? (full.length > bot.limit ? splitPrompt(full, bot.limit).length : 1) : 0;
+    const ch = (document.getElementById('modalChange').value || '').trim(), why = (document.getElementById('modalWhy').value || '').trim();
+    const t = 'I am sending you a single-file HTML app, "AI Prompt Builder Hub", to revise.\n' +
+        '- If a .html file is attached: open it and read the PB-CHANGE-REQUEST comment (if present) and the version log at the top.\n' +
+        '- Otherwise the package arrives as ' + (parts || 'several') + ' pasted part(s). Do not reply until I say "all parts sent".\n' +
+        'Change wanted: ' + (ch || '(see the package)') + '\nReason: ' + (why || '(see the package)') + '\n' +
+        'Then: run the freshness check, apply the change, increment currentVersion, append a log entry naming you, and return the COMPLETE updated .html. If you run out of space, stop at a clean break and end with CONTINUE_REQUIRED.';
+    copyText(t).then(() => toast('Paste-this-first prompt copied \u2713')).catch(() => toast('Clipboard blocked \u2014 copy manually', true));
+}
+
+/* ---------- v5.3.0 palette & layout (localStorage only; never read by getCleanSource) ---------- */
+function applyPalette(v) { if (!v || v === 'default') document.documentElement.removeAttribute('data-palette'); else document.documentElement.setAttribute('data-palette', v); }
+const LAYOUT_KEY = 'pb-layout-v1';
+function readLayout() { try { const o = JSON.parse(localStorage.getItem(LAYOUT_KEY) || '{}'); return o && typeof o === 'object' ? o : {}; } catch (e) { return {}; } }
+function writeLayout(o) { try { localStorage.setItem(LAYOUT_KEY, JSON.stringify(o)); } catch (e) {} }
+function layoutSections() { return [...document.querySelectorAll('main > section[data-sec]')]; }
+function saveLayout() {
+    const secs = layoutSections();
+    writeLayout({ order: secs.map(x => x.dataset.sec), pinned: secs.filter(x => x.classList.contains('pinned')).map(x => x.dataset.sec) });
+}
+function sortPinned() {
+    const main = document.querySelector('main');
+    const secs = layoutSections();
+    secs.filter(x => x.classList.contains('pinned')).concat(secs.filter(x => !x.classList.contains('pinned'))).forEach(x => main.appendChild(x));
+}
+function moveSec(sec, d) {
+    const secs = layoutSections(), i = secs.indexOf(sec), j = i + d;
+    if (j < 0 || j >= secs.length) return;
+    if (d < 0) secs[j].before(sec); else secs[j].after(sec);
+    sortPinned(); saveLayout(); sec.querySelector('.sec-tools button').focus();
+}
+function initLayout() {
+    const main = document.querySelector('main'), ids = ['modules', 'core', 'presets', 'devbay'];
+    layoutSections.call(null);
+    [...main.children].filter(x => x.tagName === 'SECTION').forEach((x, i) => { x.dataset.sec = ids[i] || ('sec' + i); });
+    const st = readLayout();
+    (st.order || []).forEach(id => { const x = main.querySelector('[data-sec="' + id + '"]'); if (x) main.appendChild(x); });
+    (st.pinned || []).forEach(id => { const x = main.querySelector('[data-sec="' + id + '"]'); if (x) x.classList.add('pinned'); });
+    sortPinned();
+    layoutSections().forEach(sec => {
+        const bar = document.createElement('div'); bar.className = 'sec-tools'; bar.setAttribute('role', 'toolbar'); bar.setAttribute('aria-label', 'Arrange this section');
+        const mk = (txt, label, fn) => { const b = document.createElement('button'); b.type = 'button'; b.textContent = txt; b.setAttribute('aria-label', label); b.title = label; b.addEventListener('click', fn); bar.appendChild(b); return b; };
+        const pin = mk('\uD83D\uDCCC', 'Pin to top', () => { sec.classList.toggle('pinned'); pin.setAttribute('aria-pressed', sec.classList.contains('pinned')); sortPinned(); saveLayout(); });
+        pin.setAttribute('aria-pressed', sec.classList.contains('pinned'));
+        mk('\u2191', 'Move up', () => moveSec(sec, -1)); mk('\u2193', 'Move down', () => moveSec(sec, 1));
+        const h = mk('\u2630', 'Drag to reorder', () => {}); h.draggable = true;
+        h.addEventListener('dragstart', e => { sec.classList.add('dragging'); e.dataTransfer.effectAllowed = 'move'; e.dataTransfer.setData('text/plain', sec.dataset.sec); e.dataTransfer.setDragImage(sec, 20, 20); });
+        h.addEventListener('dragend', () => { sec.classList.remove('dragging'); layoutSections().forEach(x => x.classList.remove('drop-target')); });
+        sec.addEventListener('dragover', e => { if (document.querySelector('.dragging')) { e.preventDefault(); sec.classList.add('drop-target'); } });
+        sec.addEventListener('dragleave', () => sec.classList.remove('drop-target'));
+        sec.addEventListener('drop', e => { e.preventDefault(); const d = document.querySelector('.dragging'); sec.classList.remove('drop-target'); if (d && d !== sec) { const all = layoutSections(); if (all.indexOf(d) < all.indexOf(sec)) sec.after(d); else sec.before(d); sortPinned(); saveLayout(); } });
+        sec.insertBefore(bar, sec.firstChild);
+    });
+}
+function resetLayout() { try { localStorage.removeItem(LAYOUT_KEY); } catch (e) {} const main = document.querySelector('main'), ids = ['modules', 'core', 'presets', 'devbay']; ids.forEach(id => { const x = main.querySelector('[data-sec="' + id + '"]'); if (x) { x.classList.remove('pinned'); const b = x.querySelector('.sec-tools button'); if (b) b.setAttribute('aria-pressed', 'false'); main.appendChild(x); } }); toast('Layout reset'); }
+document.getElementById('paletteSel').addEventListener('change', e => { applyPalette(e.target.value); try { localStorage.setItem('pb-palette', e.target.value); } catch (er) {} });
+try { const sp = localStorage.getItem('pb-palette'); if (sp) { applyPalette(sp); document.getElementById('paletteSel').value = sp; } } catch (e) {}
+document.getElementById('layoutResetBtn').addEventListener('click', resetLayout);
+
 renderControls();
 renderBots();
 renderPresets();
@@ -1731,4 +1872,5 @@ preventResponseClippingEl.addEventListener('change', updateStandardPrompt);
 panelsEl.addEventListener('change', updateStandardPrompt);
 panelsEl.addEventListener('input', updateStandardPrompt);
 updateStandardPrompt();
+initLayout();
 </script></body></html>
