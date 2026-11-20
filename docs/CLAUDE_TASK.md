@@ -2,7 +2,7 @@
 
 > **Canonical execution brief.** The implementation work is already present on `release/v5.4.0` (commits `419b51f`, `5c41741`). Do not repeat it. This task is to verify the real test execution and close the remaining developer-level evidence gap.
 >
-> **Status (2026-11-20): executed — Claude-reported, awaiting independent review.** Claude Code added seven UI-interaction checks in commit `52bcdea` (test-only) and reported 49 + 18 + 100 = 167 passing, exit code 0 for all three suites. No production defect was found. If this brief is run again, **verify and report; do not repeat completed work or create an empty commit.** Update this brief when the owner approves a new bounded task.
+> **Status (2026-11-20): executed — Claude-reported, awaiting independent review and owner acceptance.** Claude Code added UI-interaction and schema-wide coverage in commits `52bcdea` and `023171d` (test-only) and reported 49 + 18 + 111 = 178 passing, exit code 0 for all three suites, in a fresh clone with raw logs saved under `docs/test-evidence/v5.4.0-023171d/`. No production defect was found. A browser-only owner acceptance kit is ready in `docs/acceptance/v5.4.0/`. If this brief is run again, **verify and report; do not repeat completed work or create an empty commit.** Update this brief when the owner approves a new bounded task.
 
 ## Shorthand command
 
@@ -25,7 +25,7 @@ The repository command at `.claude/commands/pb-v54.md` directs Claude Code to re
 ## Verified starting point
 
 - The catalogue-diff implementation commit is `5c41741ed3b75870e40bb8e3eef4a8b12a538521` (preceded by `419b51f`). Its changes are in `index.html` and `tests/browser_corrective.js`.
-- The interaction-test commit is `52bcdead070d14c2e062d28f5b7b1d0c49b518ef` on `release/v5.4.0` (test-only, `tests/browser_corrective.js`). `main` is `b247aec8a1ee279b71f6aedd8fbaf4d908c22d5f`.
+- The latest release-branch commit is `023171dc60af78d43081a447d41009f153d82127` (test-only, `tests/browser_corrective.js`; preceded by `52bcdea`). `main` is `b247aec8a1ee279b71f6aedd8fbaf4d908c22d5f`.
 - Added/removed commands now carry complete installable field records inside expandable details.
 - Added/removed chatbot records show card fields and notes; each associated command is listed as its own complete record.
 - HTML escaping and the 500-item review/install gate remain.
@@ -35,12 +35,12 @@ Treat these as checkpoints. Re-check the live branch and actual local workspace 
 
 ## Execution record (Claude-reported, 2026-11-20)
 
-- Environment: Node v22.23.5, Playwright 1.63.0, headless Chromium 157.0.8103.78, Claude cloud workspace.
+- Fresh clone of `release/v5.4.0` at `023171d`, clean tree. Node v22.23.5, Playwright 1.63.0, headless Chromium 157.0.8103.78, Linux.
 - `node tests/browser_suite_1.js` — exit 0, 49 passed, 0 failed.
 - `node tests/browser_suite_2.js` — exit 0, 18 passed, 0 failed.
-- `node tests/browser_corrective.js` — exit 0, 100 passed, 0 failed.
-- New tests also failed as intended against deliberately broken copies (records always open; records hidden).
-- These are **reported, not independently reproduced**; raw logs are not in the repository. Anyone can re-run the three commands above to reproduce.
+- `node tests/browser_corrective.js` — exit 0, 111 passed, 0 failed.
+- New tests also failed as intended against deliberately broken copies (eight code mutations).
+- These are **Claude-reported, not independently reproduced**. Raw logs: `docs/test-evidence/v5.4.0-023171d/`. Anyone can re-run the three commands above to reproduce.
 
 ## Authorised work
 

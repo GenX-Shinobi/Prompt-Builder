@@ -71,14 +71,16 @@ Run the relevant checks before accepting a change or release. Mark each item **P
 
 ### v5.4.0 owner real-browser verification (not yet done by the owner)
 
-Automated checks for these exist and are Claude-reported only; they do not replace an owner check in a real browser. Mark each **Pass / Fail / Not run** with the browser and device.
+Automated checks for these exist and are Claude-reported only; they do not replace an owner check in a real browser. Use the browser-only kit in `docs/acceptance/v5.4.0/` (kit test numbers in brackets). Mark each **Pass / Fail / Not run** with the browser and device.
 
-- [ ] An added command and a removed command each appear in the preview as a line that opens and closes to show its complete record.
-- [ ] An added chatbot (card, notes and each command) and a removed chatbot are inspectable the same way.
-- [ ] Keyboard: Tab reaches each expandable line; Enter or Space opens and closes it; focus stays visible.
-- [ ] A very large change shows "Showing 500 of N", keeps Install disabled, and enables it only after "Show all".
-- [ ] Cancel closes the preview and installs nothing; the built-in catalogue is unchanged.
-- [ ] Layout is readable on a narrow mobile screen and on desktop.
+- [ ] [1] An added command and a removed command each appear in the preview as a line that opens and closes to show its complete record.
+- [ ] [2, 3] An added chatbot (card, notes and each command) and a removed chatbot are inspectable the same way.
+- [ ] [1] Keyboard: Tab reaches each expandable line; Enter or Space opens and closes it; focus stays visible.
+- [ ] [4] A very large change shows "Showing 500 of N", keeps Install disabled, and enables it only after "Show all".
+- [ ] [5] Booby-trapped text is shown as plain characters: nothing bold, no image, no pop-up.
+- [ ] [6] A broken catalogue is refused in plain English with no Install button.
+- [ ] [all] Cancel closes the preview and installs nothing; the built-in catalogue is unchanged.
+- [ ] Layout is readable on a narrow mobile screen and on desktop (optional narrow-window repeat of kit Test 1).
 
 ## Dev Bay
 
@@ -107,11 +109,11 @@ Automated checks for these exist and are Claude-reported only; they do not repla
 ## Release record
 
 **Version:** 5.4.0 (not released)  
-**Branch / commit:** `release/v5.4.0` at `52bcdead070d14c2e062d28f5b7b1d0c49b518ef`  
+**Branch / commit:** `release/v5.4.0` at `023171dc60af78d43081a447d41009f153d82127`  
 **Date:** 2026-11-20  
-**Browsers / devices:** automated headless Chromium 157.0.8103.78 only (Claude cloud workspace, Node v22.23.5, Playwright 1.63.0); owner browser/device not yet recorded  
-**Checks passed:** Claude-reported: suite 1 = 49, suite 2 = 18, corrective = 100 (167 total, exit 0 each). Not independently reproduced.  
+**Browsers / devices:** automated headless Chromium 157.0.8103.78 only (fresh clone, Linux, Node v22.23.5, Playwright 1.63.0); owner browser/device not yet recorded  
+**Checks passed:** Claude-reported: suite 1 = 49, suite 2 = 18, corrective = 111 (178 total, exit 0 each); kit self-check 36. Raw logs: `docs/test-evidence/v5.4.0-023171d/`. Not independently reproduced.  
 **Checks failed:** none reported  
 **Not run:** owner real-browser/device acceptance; independent re-run of the suites; mobile and screen-reader checks  
-**Known limitations:** raw test logs not committed; no CI; no version-log entry for the three post-merge commits; READMEs on the release and docs branches conflict and are unreconciled  
+**Known limitations:** no CI; owner and independent runs outstanding; no version-log entry for the three post-merge commits; READMEs on the release and docs branches conflict and are unreconciled  
 **Reviewer / owner decision:** pending
