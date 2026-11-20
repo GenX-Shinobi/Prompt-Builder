@@ -1,84 +1,86 @@
-# AI Prompt Builder & Code Migrator
+# AI Prompt Builder Hub
 
-A zero-dependency, single-file web application designed by a non-coder to help everyday users—especially fellow non-coders—get the most out of free AI chatbots, while staying open source and directly editable by those same AI chatbots.
+A free-first, chatbot-independent prompt builder for everyday people. Turn an unclear question, idea or task into a useful prompt, choose an AI chatbot that fits, prepare relevant context and transfer the result—without needing coding skills or a paid AI subscription.
 
-You don't need a coding background, developer tools, local servers, or an expensive paid subscription to use it. Open it in your browser, shape rough ideas into clear prompts, copy them into your favorite chatbot, and keep moving.
+The project is open source and designed to stay portable: the application is a standalone HTML file with no build step or external runtime dependencies.
 
-## Try It
+## Try it
 
-- **Live in Browser (GitHub Pages):** [Open AI Prompt Builder](https://genx-shinobi.github.io/Prompt-Builder/)
-- **View or Download Current File (`v5.2.0`):** [index.html](index.html)
+- **[Open the live app](https://genx-shinobi.github.io/Prompt-Builder/)**
+- **[View or download index.html](index.html)**
+- **[Browse older versions](archive/)**
+- **[Browse project documents](docs/)**
 
-![AI Prompt Builder v5.2.0 Preview](Preview.jpg)
+## Why it exists
 
-## Core Mission
+The project began with a practical problem: finding the right AI for a task and constructing a prompt that gets a useful result. That task might be writing, research, learning, planning, coding, shopping, everyday problem-solving or even getting past a gameplay roadblock.
 
-- **Built for Non-Coders & Everyday Tinkers:** Plain-English prompt building and step-by-step workflows made for people who aren't software engineers—whether you're writing, researching, planning, or building simple web tools with AI help.
-- **Free-Tier First:** Built around free chatbot plans (with free accounts where required for uploads, history, or connectors). Every bot command includes a high-contrast free-tier availability badge (`Free`, `Free w/ account`, `Limited quota`, `Paid plan`), conservative paste budgets, and automatic multi-part prompt splitting when a prompt exceeds a bot's safe paste limit.
-- **Self-Contained & AI-Editable:** The entire application lives in a single `.html` file (`index.html`) with zero build steps, external libraries, or backend servers. Its built-in Dev Bay packages your change request alongside a clean snapshot of the app's source code, version-log rules, and a command freshness check so any AI chatbot can generate the next version.
+The aim is not to make people learn prompt-engineering jargon. It is to help them explain what they need and get more value from whichever chatbot they can access.
 
-## Versions & Older Releases
+## Core principles
 
-- **Current Version (`v5.2.0`):** Maintained in [index.html](index.html) and served on the live page above.
-- **Older Versions:** Earlier builds (`v5.1`, `v5.1.1`, and earlier prototypes) are stored in the [archive/](archive/) folder, with versioned snapshots available under [Releases](https://github.com/GenX-Shinobi/Prompt-Builder/releases).
+- **Free-use first:** design around free chatbot plans and clearly label account requirements, limited quotas and paid-only features. Paid plans are optional, never a prerequisite for the project.
+- **Chatbot-independent:** support choice rather than lock-in.
+- **Accessible:** plain language and workflows that make sense to non-coders.
+- **Portable:** standalone HTML, no external libraries or build process.
+- **Honest:** chatbot features, model access and quotas change. Treat budgets as estimates and mark uncertain information rather than presenting it as fact.
+- **Open and AI-editable:** users can ask an AI chatbot to help revise the project using the built-in Dev Bay and the documented contribution rules.
 
-## Documentation
+## Current application baseline
 
-- **Guides & Reference PDFs:** Browse project documentation, release notes, and revision guides in the [docs/](docs/) folder.
-- **Contribution & Dev Bay Rules:** See [contributing.md](contributing.md) for single-file design rules and AI-assisted revision steps.
+The default branch currently contains **v5.3.1** (check the version string in `index.html) unless a newer reviewed release has been merged.
 
-## Supported Chatbots (Free-Tier Baseline — 9 Engines)
+The application includes:
+- Nine chatbot choices: ChatGPT, Gemini, Claude, Perplexity, Grok, Microsoft Copilot, DeepSeek, Meta AI and Mistral.
+- **Bot Commands** for chatbot-specific tools and capabilities.
+- **Prompt Craft** for universal prompt-shaping modules, including brief, output, accuracy, research, writing, persona/tone and technical tasks.
+- A core prompt area, context/attachment workflow and prompt-size estimates.
+- Automatic splitting for prompts that exceed the selected chatbot's conservative paste budget.
+- Local browser presets.
+- A Dev Bay for preparing AI-assisted code changes and exporting clean standalone HTML.
+- Light/dark themes, colour palettes and section layout controls.
 
-Each chatbot card displays task-fit guidance, free-tier availability notes, and conservative character paste budgets:
+Feature availability and chatbot quotas can change by account, region and date. Check the app's current notes and linked provider sources; do not treat estimated paste budgets as official provider limits.
 
-- **ChatGPT (OpenAI):** Everyday all-rounder (`≈ 24,000` chars) with web/research modes, study/app helpers, Canvas, data analysis, and image tools where available.
-- **Gemini (Google):** Google Workspace `@` Connected Apps (`≈ 60,000` chars), Tools menu (Deep Research, Canvas, Guided Learning, image/music), and built-in Maps/Flights/Hotels/YouTube queries.
-- **Claude (Anthropic):** Long documents (`≈ 60,000` chars), careful writing, Artifacts, styles, connectors (`Free w/ account`), and code/file creation.
-- **Perplexity (Perplexity AI):** Citation-backed web, academic, finance, and attached-file research (`≈ 8,000` chars).
-- **Grok (xAI):** Conversational assistant (`≈ 24,000` chars) with search/DeepSearch, reasoning modes, image tools, and live X (Twitter) search.
-- **Microsoft Copilot:** Everyday assistant (`≈ 8,000` chars) with task-fit guidance and free-tier command filtering.
-- **DeepSeek:** Long-context drafting and coding (`≈ 30,000` chars) tuned for free-tier usage.
-- **Meta AI:** Quick conversational tasks (`≈ 8,000` chars) with free-tier command filtering.
-- **Mistral (Le Chat / Vibe):** Fast, structured drafting and coding (`≈ 24,000` chars) with free-tier command filtering.
+## Quick start
 
-## Quickstart
+1. Open the [live app](https://genx-shinobi.github.io/Prompt-Builder/) or download [index.html](index.html).
+2. Choose the chatbot you want to use.
+3. Select useful options in **Bot Commands** and **Prompt Craft**.
+4. Enter your task and any context you want the chatbot to consider.
+5. Review the compiled prompt and size estimate.
+6. Use **Copy & launch** or the splitting workflow to transfer it to your chosen chatbot.
+7. Review the AI's answer and refine your prompt as needed.
 
-### Run Locally
+The local HTML file can build prompts without a server or installation. Features that query external sources, open chatbot websites or use provider services naturally require an internet connection.
 
-1. Download [index.html](index.html) (or grab an older build from [archive/](archive/)).
-2. Double-click the file to open it in any modern web browser. No installation, server, or internet connection is required to build prompts.
+## Improve the app with AI
 
-### Build & Launch a Prompt
+The built-in **Dev Bay** prepares a change request and packages the application source for an AI-assisted revision. Before making changes, read:
+- [Contributing & AI code-migration rules](contributing.md)
+- [AI work rules](docs/AI_WORK_RULES.md)
+- [Project control and continuity file](PROJECT_CONTROL.md)
 
-- **Step 0 — Choose your AI chatbot:** Pick from the 9 supported chatbots to set its free-plan paste budget, view task-fit notes, and filter commands to what that bot supports.
-- **Step 1 — System commands & cheat-sheet modifiers:** Mix and match commands across Bot Commands, Prompt Craft, Accuracy, Research, Format, Writing, Persona & Tone, and Tech & Strategy. Fill in any inline `[bracketed]` fields that appear, and use **Hide paid-plan-only commands** at the bottom of the card to filter out paid-tier items.
-- **Step 2 — Core prompt & attachments:** Enter your query or source text. Drag, browse, or paste (`Ctrl/Cmd+V`) files or screenshots—small text files (`≤1 MB`) can be inlined into the prompt, while images and larger files are staged locally with upload/copy reminders. Adjust the truncation and continuity toggles as needed.
-- **Step 3 — Saved presets (optional):** Save frequently used setups to your browser's `localStorage` (`pb-presets-v1`). Presets never leave your device and are never included in code-migration exports.
-- **Copy & launch:** Click **Copy & launch** in the right-hand console to copy the compiled prompt (or Part 1 of an auto-split sequence) and open your chosen chatbot in a new tab.
+Always test the complete returned HTML before publishing it. AI-generated changes are not automatically verified.
 
-### Update the App Using an AI Chatbot (Dev Bay)
+## Project management and roadmap
 
-1. Scroll to the **DEV BAY** section and click **Initialize code modification sequence**.
-2. Choose the target AI engine, describe the change you want, and state why it is needed.
-3. Click **Generate package**, then use **Copy package & launch** (which auto-splits packages that exceed the target engine's paste budget) or **Download clean .html** to attach the clean source file directly.
-4. Paste the copied package (or attach the downloaded `.html` file) into the AI chatbot—the package includes a mandatory freshness check so the AI verifies current commands/features before emitting the complete updated `.html` file.
-5. Save the returned `.html` file and verify it in your browser before publishing.
+The project owner can share ideas freely; they are captured and prioritised without turning every idea into immediate scope.
 
-## AI Assistance Note
+- [PROJECT_CONTROL.md](PROJECT_CONTROL.md) — central project memory, decisions, active work and session-resume instructions.
+- [ROADMAP.md](ROADMAP.md) — now/next/later direction and release gates.
+- [docs/IDEA_INBOX.md](docs/IDEA_INBOX.md) — idea capture and triage.
+- [docs/CURRENT_STATUS.md](docs/CURRENT_STATUS.md) — dated technical baseline and handoff.
+- [docs/REGRESSION_CHECKLIST.md](docs/REGRESSION_CHECKLIST.md) — repeatable pre-release checks.
+- [docs/](docs/) — historical guides and reference documents.
 
-This project's code and revisions were created and iterated with AI assistance and reviewed through testing. Because users can also edit the single-file HTML directly with AI chatbots, edge cases may vary—please test changes and report issues if you spot bugs. See [contributing.md](contributing.md) for revision and Dev Bay guidelines.
+## Privacy
 
-## Privacy & Local Storage
+Prompt text, attachments and presets are handled in the browser by the standalone app. They are not sent to this project or stored on a project server. They only leave the browser when the user chooses to paste or upload them to an external chatbot or service. Check each provider's own privacy terms before sharing sensitive information.
 
-- **100% Client-Side:** Your prompts, attached files, and saved presets never leave your browser until you explicitly paste or upload them into a chatbot tab.
+## Contributing
 
-**Browser Storage Keys:**
-- `pb-theme` — Light/dark theme preference.
-- `pb-presets-v1` — User-saved prompt presets.
-
-## Creator & Gameplay
-
-Made by a regular person sharing practical tools for non-coders and tinkering with AI workflows. Outside of building tools like this, I also publish gameplay streams on [Twitch](https://www.twitch.tv/genx_shinobi).
+Contributions and AI-assisted revisions are welcome. Preserve the free-use-first philosophy, standalone architecture, existing functionality and accessibility. See [contributing.md](contributing.md) and the project control files before proposing changes.
 
 ## License
 
