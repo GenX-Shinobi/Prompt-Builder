@@ -14,6 +14,9 @@ A zero-dependency, single-file web application designed to help everyday users g
 ## Versions & Older Releases
 * **Current Version (`v5.2.0`):** Maintained in [index.html](index.html) and served on the live page above.
 * **Older Versions:** Earlier builds (`v5.1`, `v5.1.1`, and earlier prototypes) are stored in the [archive/](archive/) folder, with versioned snapshots available under [Releases](../../releases).
+## Documentation
+* **Guides & Reference PDFs:** Browse project documentation, release notes, and revision guides in the [docs/](docs/) folder.
+* **Contribution & Dev Bay Rules:** See [contributing.md](contributing.md) for single-file design rules and AI-assisted revision steps.
 
 ## Supported Chatbots (Free-Tier Baseline — 9 Engines)
 Each chatbot card displays task-fit guidance, free-tier availability notes, and conservative character paste budgets:
