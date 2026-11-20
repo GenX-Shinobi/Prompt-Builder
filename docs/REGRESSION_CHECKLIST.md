@@ -55,6 +55,20 @@ Run the relevant checks before accepting a change or release. Mark each item **P
 - [ ] Theme, palette and layout preferences behave as documented.
 - [ ] Reset controls restore a predictable default state.
 
+## Catalogue import and installation review (v5.4+)
+
+- [ ] Every field accepted by catalogue validation/normalisation is represented in the installation diff.
+- [ ] Chatbot maker, colour, command placeholders, tier labels/descriptions, notes, links, ordering and other retained fields are covered.
+- [ ] Changed human-facing text shows meaningful before/after values, with a safe way to inspect full long values.
+- [ ] Dynamic values are safely escaped; catalogue content cannot inject markup or script into the review.
+- [ ] Added, removed, reordered and duplicate-keyed commands are represented correctly.
+- [ ] Revision, update date and status metadata are clearly distinguished from content changes.
+- [ ] Aggregate change counts match the complete diff.
+- [ ] If the diff is long, the interface makes the total and currently visible count explicit and allows inspection of every change before installation.
+- [ ] No installation occurs until the user explicitly approves the fully reviewable diff.
+- [ ] Invalid, older or malformed catalogues are rejected without replacing the last known-good catalogue.
+- [ ] Embedded catalogue and standalone `catalog.json` are identical for the release snapshot.
+
 ## Dev Bay
 
 - [ ] Change request and reason are included in the modification package as intended.
