@@ -1,0 +1,1128 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light"><head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Prompt Builder &amp; Code Migrator</title>
+<style>
+:root {
+    --bg: #f3efe7;
+    --bg-grid: rgba(60, 50, 90, .06);
+    --card: #fffdf8;
+    --card-2: #f8f4ea;
+    --ink: #1d1b2e;
+    --muted: #6d6a7c;
+    --line: #e4ddcc;
+    --accent: #5b4bdb;
+    --accent-2: #ff6b4a;
+    --accent-soft: #ece9ff;
+    --good: #12a36b;
+    --warn: #e0412f;
+    --shadow: 0 1px 0 rgba(0,0,0,.03), 0 12px 30px -12px rgba(40, 30, 90, .25);
+    --console-bg: #14122a;
+    --console-ink: #e9e7ff;
+    --console-line: #2b2850;
+    --radius: 16px;
+    --mono: ui-monospace, "SF Mono", "JetBrains Mono", Menlo, Consolas, monospace;
+    --sans: "Avenir Next", "Segoe UI", -apple-system, BlinkMacSystemFont, Roboto, Helvetica, Arial, sans-serif;
+}
+[data-theme="dark"] {
+    --bg: #0e0d1c;
+    --bg-grid: rgba(160, 150, 255, .05);
+    --card: #181630;
+    --card-2: #1f1c3d;
+    --ink: #ecebff;
+    --muted: #9a97b8;
+    --line: #2d2a52;
+    --accent: #8b7dff;
+    --accent-2: #ff8a6b;
+    --accent-soft: #272352;
+    --console-bg: #0a0916;
+    --console-line: #26234a;
+    --shadow: 0 12px 30px -12px rgba(0,0,0,.6);
+}
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+    margin: 0; font-family: var(--sans); color: var(--ink); background: var(--bg);
+    background-image: linear-gradient(var(--bg-grid) 1px, transparent 1px), linear-gradient(90deg, var(--bg-grid) 1px, transparent 1px);
+    background-size: 28px 28px;
+    min-height: 100vh; transition: background-color .3s, color .3s;
+}
+.wrap { max-width: 1280px; margin: 0 auto; padding: 24px 22px 60px; }
+
+/* ---------- Hero ---------- */
+.hero {
+    position: relative; overflow: hidden; border-radius: 24px; padding: 34px 36px;
+    background: linear-gradient(120deg, #2a1f78 0%, #5b4bdb 45%, #ff6b4a 120%);
+    color: #fff; box-shadow: var(--shadow);
+}
+.hero::before, .hero::after { content: ""; position: absolute; border-radius: 50%; filter: blur(2px); opacity: .22; background: #fff; }
+.hero::before { width: 320px; height: 320px; right: -80px; top: -140px; animation: drift 14s ease-in-out infinite alternate; }
+.hero::after  { width: 180px; height: 180px; right: 220px; bottom: -110px; animation: drift 10s ease-in-out infinite alternate-reverse; }
+@keyframes drift { to { transform: translate(-30px, 24px) scale(1.12); } }
+.hero .eyebrow { font: 600 11px/1 var(--mono); letter-spacing: .22em; text-transform: uppercase; opacity: .8; }
+.hero h1 { margin: 10px 0 8px; font-size: clamp(26px, 4vw, 40px); letter-spacing: -.02em; line-height: 1.05; }
+.hero p { margin: 0; max-width: 620px; opacity: .88; font-size: 15px; line-height: 1.5; }
+.hero-tools { position: absolute; top: 18px; right: 20px; z-index: 2; display: flex; gap: 8px; }
+.icon-btn {
+    background: rgba(255,255,255,.16); color: #fff; border: 1px solid rgba(255,255,255,.3);
+    padding: 8px 12px; border-radius: 999px; font-size: 13px; backdrop-filter: blur(6px);
+}
+.icon-btn:hover { background: rgba(255,255,255,.28); }
+
+/* ---------- Layout ---------- */
+.layout { display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(340px, .9fr); gap: 22px; margin-top: 22px; align-items: start; }
+@media (max-width: 980px) { .layout { grid-template-columns: 1fr; } .console { position: static !important; } }
+.card { background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); box-shadow: var(--shadow); padding: 20px; }
+.card + .card { margin-top: 22px; }
+.step { display: flex; align-items: center; gap: 12px; margin-bottom: 14px; }
+.step .num {
+    width: 30px; height: 30px; border-radius: 10px; display: grid; place-items: center;
+    background: var(--accent); color: #fff; font: 700 14px var(--mono); transform: rotate(-6deg);
+}
+.step h2 { margin: 0; font-size: 18px; letter-spacing: -.01em; }
+.step small { color: var(--muted); display: block; font-size: 12.5px; margin-top: 2px; }
+
+textarea, select, .input-text {
+    width: 100%; font: inherit; font-size: 15px; color: var(--ink); background: var(--card-2);
+    border: 1.5px solid var(--line); border-radius: 12px; padding: 12px 14px; transition: border-color .2s, box-shadow .2s;
+}
+textarea { height: 150px; resize: vertical; line-height: 1.5; }
+textarea:focus, select:focus, .input-text:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 4px var(--accent-soft); }
+select { appearance: none; cursor: pointer; padding-right: 36px;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'><path d='M1 1l5 5 5-5' fill='none' stroke='%238a87a0' stroke-width='2' stroke-linecap='round'/></svg>");
+    background-repeat: no-repeat; background-position: right 14px center; }
+
+.switches { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 12px; }
+.switch { display: inline-flex; align-items: center; gap: 10px; cursor: pointer; font-size: 13.5px; padding: 8px 12px; border: 1px solid var(--line); border-radius: 999px; background: var(--card-2); user-select: none; }
+.switch input { display: none; }
+.switch .track { width: 32px; height: 18px; border-radius: 99px; background: #b9b5cc; position: relative; transition: background .2s; flex: none; }
+.switch .track::after { content: ""; position: absolute; width: 14px; height: 14px; border-radius: 50%; background: #fff; top: 2px; left: 2px; transition: transform .2s; }
+.switch input:checked + .track { background: var(--good); }
+.switch input:checked + .track::after { transform: translateX(14px); }
+
+/* ---------- Tabs ---------- */
+.tabs { display: flex; gap: 6px; overflow-x: auto; padding-bottom: 4px; scrollbar-width: thin; }
+.tab {
+    flex: none; display: inline-flex; align-items: center; gap: 8px; padding: 9px 14px; border-radius: 12px;
+    background: transparent; color: var(--muted); border: 1.5px solid transparent; font-size: 13.5px; font-weight: 600;
+}
+.tab:hover { background: var(--card-2); color: var(--ink); }
+.tab.active { background: var(--accent-soft); color: var(--accent); border-color: var(--accent); }
+.tab .badge { min-width: 20px; padding: 1px 6px; border-radius: 99px; font: 700 11px var(--mono); background: var(--line); color: var(--muted); text-align: center; }
+.tab .badge.on { background: var(--accent); color: #fff; }
+.panel { display: none; margin-top: 14px; animation: rise .25s ease; }
+.panel.active { display: block; }
+@keyframes rise { from { opacity: 0; transform: translateY(6px); } }
+.panel-desc { margin: 0 0 12px; color: var(--muted); font-size: 13px; }
+.pills { display: flex; flex-wrap: wrap; gap: 8px; }
+.pill { cursor: pointer; }
+.pill input { position: absolute; opacity: 0; pointer-events: none; }
+.pill span {
+    display: inline-flex; align-items: center; gap: 7px; padding: 8px 13px; border-radius: 999px; font-size: 13px;
+    border: 1.5px solid var(--line); background: var(--card-2); transition: all .15s;
+}
+.pill span::before { content: "+"; font: 700 13px var(--mono); color: var(--muted); transition: transform .2s; }
+.pill:hover span { border-color: var(--accent); }
+.pill input:checked + span { background: var(--accent); color: #fff; border-color: var(--accent); box-shadow: 0 6px 14px -6px var(--accent); }
+.pill input:checked + span::before { content: "\2713"; color: #fff; }
+.pill input:focus-visible + span { outline: 3px solid var(--accent-soft); }
+.pill.cmd span { font-family: var(--mono); font-size: 12.5px; border-style: dashed; }
+.field { margin-top: 12px; }
+.field label { display: block; font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); margin-bottom: 6px; }
+
+/* ---------- Console ---------- */
+.console {
+    position: sticky; top: 16px; background: var(--console-bg); color: var(--console-ink);
+    border: 1px solid var(--console-line); border-radius: 20px; box-shadow: var(--shadow); overflow: hidden;
+}
+.console-bar { display: flex; align-items: center; gap: 8px; padding: 12px 16px; border-bottom: 1px solid var(--console-line); }
+.dot { width: 11px; height: 11px; border-radius: 50%; }
+.console-bar .title { margin-left: 8px; font: 600 12px var(--mono); opacity: .7; letter-spacing: .08em; }
+.console-bar .chips { margin-left: auto; font: 600 11px var(--mono); padding: 3px 9px; border-radius: 99px; background: #2b2850; color: #cfc9ff; }
+.meter { display: flex; align-items: center; gap: 16px; padding: 16px; border-bottom: 1px solid var(--console-line); }
+.ring { width: 64px; height: 64px; flex: none; position: relative; }
+.ring svg { transform: rotate(-90deg); }
+.ring .bg { stroke: #2b2850; } .ring .fg { stroke: var(--good); transition: stroke-dashoffset .35s, stroke .2s; stroke-linecap: round; }
+.ring .pct { position: absolute; inset: 0; display: grid; place-items: center; font: 700 12px var(--mono); }
+.meter .stats { font-size: 13px; line-height: 1.55; }
+.meter .stats b { font-family: var(--mono); }
+#limitStatus { display: inline-block; margin-top: 2px; font-size: 12px; color: #7ff0bd; }
+#limitStatus.warning { color: #ff9b8a; }
+.preview-box {
+    margin: 0; padding: 16px; min-height: 220px; max-height: 52vh; overflow: auto; white-space: pre-wrap; word-break: break-word;
+    font: 13px/1.6 var(--mono); color: #dcd9ff;
+}
+.preview-box:empty::before { content: "Your compiled prompt will materialise here\2026"; opacity: .4; }
+.console-actions { display: flex; flex-wrap: wrap; gap: 8px; padding: 14px 16px; border-top: 1px solid var(--console-line); }
+.launch-label { padding: 0 16px; font: 700 11px var(--mono); letter-spacing: .14em; text-transform: uppercase; opacity: .55; }
+.launchers { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 8px; padding: 10px 16px 18px; }
+
+/* ---------- Buttons ---------- */
+button { font: inherit; cursor: pointer; border: none; border-radius: 12px; padding: 10px 16px; font-weight: 600; font-size: 14px; transition: transform .12s, background .2s, box-shadow .2s; }
+button:active { transform: translateY(1px) scale(.98); }
+.btn-copy { background: var(--good); color: #fff; }
+.btn-copy:hover { filter: brightness(1.08); }
+.btn-ghost { background: transparent; color: inherit; border: 1.5px solid currentColor; opacity: .7; }
+.btn-ghost:hover { opacity: 1; }
+.btn-ai { background: var(--accent); color: #fff; }
+.btn-ai:hover { filter: brightness(1.1); }
+.btn-secondary { background: var(--card-2); color: var(--ink); border: 1.5px solid var(--line); }
+.btn-mod-trigger { background: linear-gradient(120deg, var(--accent-2), #e0348a); color: #fff; box-shadow: 0 10px 22px -10px #e0348a; }
+.btn-mod-trigger:hover { filter: brightness(1.08); }
+.launch {
+    display: flex; align-items: center; gap: 8px; justify-content: flex-start; text-align: left;
+    background: #1f1c3d; color: #ece9ff; border: 1px solid #332f63; padding: 10px 12px; font-size: 13px;
+}
+.launch:hover { background: #2a2656; border-color: var(--bc, #8b7dff); }
+.launch .bd { width: 9px; height: 9px; border-radius: 50%; background: var(--bc); flex: none; box-shadow: 0 0 10px var(--bc); }
+.launch.suggested { border-color: var(--bc); box-shadow: 0 0 0 2px var(--bc) inset; }
+
+/* ---------- Dev bay ---------- */
+.devbay {
+    margin-top: 22px; border-radius: 22px; padding: 22px; position: relative;
+    background: repeating-linear-gradient(135deg, transparent 0 14px, rgba(224, 52, 138, .05) 14px 28px), var(--card);
+    border: 2px dashed #e0348a;
+}
+.devbay .tag { position: absolute; top: -12px; left: 22px; background: #e0348a; color: #fff; font: 700 11px var(--mono); letter-spacing: .14em; padding: 4px 12px; border-radius: 99px; }
+.devbay h2 { margin: 6px 0 6px; font-size: 20px; }
+.devbay p { margin: 0 0 14px; color: var(--muted); font-size: 14px; max-width: 760px; line-height: 1.5; }
+#modificationPayloadWrapper { display: none; margin-top: 20px; }
+#modificationPayloadWrapper h3 { margin: 0 0 8px; font-size: 15px; }
+.mod-preview { background: var(--console-bg); border: 1px solid var(--console-line); border-left: 4px solid #e0348a; border-radius: 12px; max-height: 320px; min-height: 0; }
+.mod-meta { font: 12px var(--mono); color: var(--muted); margin: 8px 0 14px; }
+.mod-launchers { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 8px; margin-top: 8px; }
+
+/* ---------- Modal ---------- */
+.modal { position: fixed; inset: 0; z-index: 1000; display: none; align-items: center; justify-content: center; background: rgba(10, 8, 30, .6); backdrop-filter: blur(5px); padding: 16px; }
+.modal.open { display: flex; animation: fade .2s ease; }
+@keyframes fade { from { opacity: 0; } }
+.modal-content { background: var(--card); color: var(--ink); border: 1px solid var(--line); padding: 26px; border-radius: 20px; max-width: 620px; width: 100%; box-shadow: 0 30px 60px -20px rgba(0,0,0,.5); animation: rise .25s ease; }
+.modal-header { font-size: 20px; font-weight: 800; letter-spacing: -.01em; }
+.modal-sub { color: var(--muted); font-size: 13px; margin: 4px 0 8px; }
+.modal-body label { display: block; font-weight: 700; margin: 14px 0 6px; font-size: 12px; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); }
+.modal-body textarea { height: 90px; }
+.modal-footer { margin-top: 22px; display: flex; justify-content: flex-end; gap: 10px; }
+
+
+/* ---------- Tooltips & fill-ins ---------- */
+#tip { position: fixed; z-index: 3000; max-width: 320px; padding: 10px 13px; border-radius: 10px; background: #14122a; color: #ecebff;
+    font-size: 12.5px; line-height: 1.45; border: 1px solid #3a3670; box-shadow: 0 14px 30px -10px rgba(0,0,0,.55);
+    opacity: 0; transform: translateY(-4px); pointer-events: none; transition: opacity .15s, transform .15s; }
+#tip.show { opacity: 1; transform: none; }
+#tip.flip { transform: translateY(4px); } #tip.flip.show { transform: none; }
+[data-tip] { cursor: help; }
+.pillwrap { display: inline-flex; flex-direction: column; gap: 6px; max-width: 100%; }
+.pill-fields { display: none; flex-direction: column; gap: 6px; padding-left: 4px; }
+.pillwrap.open .pill-fields { display: flex; animation: rise .2s ease; }
+.pill-fields .input-text { padding: 8px 11px; font-size: 13px; border-radius: 10px; min-width: 220px; }
+.sel-desc { margin-top: 8px; font-size: 12.5px; color: var(--muted); line-height: 1.45; min-height: 0; }
+.sel-desc:not(:empty) { padding: 8px 12px; border-left: 3px solid var(--accent); background: var(--accent-soft); border-radius: 0 10px 10px 0; color: var(--ink); }
+.panel .pills + .field { margin-top: 18px; }
+
+
+/* ---------- Attachments ---------- */
+.drop { margin-top: 12px; display: flex; align-items: center; gap: 14px; padding: 14px 16px; border: 2px dashed var(--line); border-radius: 14px; background: var(--card-2); cursor: pointer; transition: all .2s; }
+.drop:hover, .drop:focus-visible, .drop.over { border-color: var(--accent); background: var(--accent-soft); outline: none; }
+.drop.over { transform: scale(1.01); box-shadow: 0 0 0 5px var(--accent-soft); }
+.drop-ic { font-size: 26px; transform: rotate(-12deg); }
+.drop-txt { flex: 1; min-width: 0; }
+.drop-txt b { display: block; font-size: 14.5px; }
+.drop-txt small { color: var(--muted); font-size: 12.5px; }
+.drop-btn { padding: 7px 14px; border-radius: 99px; background: var(--accent); color: #fff; font-weight: 700; font-size: 13px; }
+.files { display: grid; gap: 8px; margin-top: 10px; }
+.file { display: flex; align-items: center; gap: 12px; padding: 8px 10px; border: 1px solid var(--line); border-radius: 12px; background: var(--card-2); animation: rise .2s ease; }
+.thumb { width: 46px; height: 46px; border-radius: 9px; overflow: hidden; flex: none; display: grid; place-items: center; background: var(--accent-soft); color: var(--accent); font: 800 11px var(--mono); text-transform: uppercase; }
+.thumb img { width: 100%; height: 100%; object-fit: cover; }
+.finfo { flex: 1; min-width: 0; }
+.fname { font-weight: 700; font-size: 13.5px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.fmeta { font-size: 12px; color: var(--muted); }
+.fact { margin-top: 4px; }
+.mini-btn { padding: 4px 10px; font-size: 12px; border-radius: 8px; background: var(--accent-soft); color: var(--accent); border: 1px solid var(--accent); }
+.mini-switch { font-size: 12.5px; display: inline-flex; align-items: center; gap: 6px; cursor: pointer; }
+.x { background: transparent; color: var(--muted); font-size: 22px; line-height: 1; padding: 4px 10px; border-radius: 8px; }
+.x:hover { color: var(--warn); background: rgba(224, 65, 47, .1); }
+.manual-note { margin: 0; padding: 10px 16px; font-size: 12.5px; line-height: 1.5; background: #2a2150; color: #ffd9a8; border-top: 1px solid var(--console-line); }
+.manual-note[hidden] { display: none; }
+.sel-fields { margin-top: 10px; }
+.sel-fields.open { display: flex; animation: rise .2s ease; }
+.sel-fields .input-text { padding: 8px 11px; font-size: 13px; border-radius: 10px; }
+
+/* ---------- Toast ---------- */
+#toast { position: fixed; left: 50%; bottom: 28px; transform: translate(-50%, 30px); opacity: 0; pointer-events: none; z-index: 2000;
+    background: #1d1b2e; color: #fff; padding: 12px 20px; border-radius: 99px; font-size: 14px; box-shadow: 0 14px 30px -10px rgba(0,0,0,.5); transition: all .3s; max-width: 90vw; }
+#toast.show { opacity: 1; transform: translate(-50%, 0); }
+#toast.err { background: var(--warn); }
+.foot { margin-top: 30px; text-align: center; color: var(--muted); font: 12px var(--mono); }
+
+/* ---------- v4.4 chatbot selector ---------- */
+.botbar { margin-top: 22px; background: var(--card); border: 1.5px solid var(--line); border-radius: 18px; padding: 16px; }
+.botbar-title { font: 700 11px var(--mono); letter-spacing: .16em; text-transform: uppercase; opacity: .6; margin-bottom: 10px; }
+.botgrid { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 10px; }
+.botcard { text-align: left; display: flex; flex-direction: column; gap: 4px; padding: 12px 14px; border-radius: 14px; background: var(--card-2); color: var(--ink); border: 2px solid var(--line); font-weight: 400; }
+.botcard:hover { border-color: var(--bc); }
+.botcard.active { border-color: var(--bc); box-shadow: 0 0 0 2px var(--bc) inset; }
+.botcard b { display: flex; align-items: center; gap: 8px; font-size: 15px; }
+.botcard b i { width: 10px; height: 10px; border-radius: 50%; background: var(--bc); flex: none; }
+.botcard small { font-size: 12px; line-height: 1.4; opacity: .8; }
+.botcard em { font: 600 11px var(--mono); opacity: .6; font-style: normal; margin-top: 2px; }
+.botnote { margin-top: 10px; font-size: 13px; line-height: 1.5; opacity: .85; }
+.splitbox { margin: 10px 0 0; padding: 12px; border-radius: 14px; border: 1.5px solid #e8b030; background: var(--card-2); font-size: 13px; line-height: 1.5; }
+.splitbox .parts { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
+.splitbox .parts button { padding: 6px 12px; font-size: 12.5px; background: var(--accent); color: #fff; }
+</style>
+</head>
+<body>
+<!--
+========================================================================
+IMMUTABLE CODE METADATA & VERSION MIGRATION HISTORY LOG
+========================================================================
+This block acts as an unalterable log. Every future AI Chatbot updating this file MUST read this history,
+increment the minor/major version string below, append a new historical array object, and preserve the template structure.
+
+[ACTIVE CONFIGURATION]
+- currentVersion: "4.4.0"
+
+[MIGRATION HISTORY MATRIX]
+[
+  {
+    "version": "4.4.0",
+    "bot": "Claude (Anthropic)",
+    "change": "Added a chatbot selector at the top (cards with what each bot excels at). Selecting a bot now sets a per-bot prompt budget, hides slash/tool commands that bot does not support, and highlights its launch button. Over-limit prompts are auto-split into numbered parts with Copy-part buttons instead of being pasted and clipped. Fixed Perplexity maker name.",
+    "why": "User approved the review of v4.3 against the PDF spec: no bot selector, one shared 24,000-char limit, warning-only overflow, and bot-specific commands shown for every bot."
+  },
+  {
+    "version": "4.3.0",
+    "bot": "Claude (Anthropic)",
+    "change": "Removed the browser's 'This file wants to see text and images copied to the clipboard' permission prompt from the chatbot launch buttons. copyText() now uses the legacy synchronous document.execCommand('copy') path FIRST (needs no permission and runs while the click gesture and page focus are still active), and only falls back to navigator.clipboard.writeText if that fails. copyAndLaunch() now starts the copy BEFORE calling window.open(), so the new tab can no longer steal focus and block the copy. Result: clicking any AI chatbot button (compiled prompt or mod hub) copies the text immediately with no trip back to the Prompt Builder to click Allow. The 'Copy image' button still uses the async clipboard API because images cannot be copied any other way.",
+    "why": "User did not want to click back to the Prompt Builder to ALLOW the page to copy text to the clipboard; text should simply be copied when the AI chatbot button is clicked."
+  },
+  {
+    "version": "4.2.0",
+    "bot": "Claude (Anthropic)",
+    "change": "Added file and photo attachments: drag-and-drop anywhere, browse button, and clipboard paste of screenshots. Attachments live in the in-memory 'attachments' array and never leave the device. Text-like files (<=1 MB) can be pasted into the compiled prompt (counts toward the length meter); all attachments are listed under ATTACHED FILES. Images get a Copy image button (PNG via clipboard API). Files that must be uploaded manually are flagged in the console and in the launch toast. Optional instruction toggle tells the AI to examine attachments. Panel of Experts persona now reveals Topic/Role 1/Role 2/Role 3 fill-in boxes (select options may carry fields + template: [text,label,desc,fields,template]); blank boxes keep the generic wording.",
+    "why": "User often uploads files or photos for the AI to examine, and agreed multiple fill-in blanks are fine for the expert panel. A web page cannot auto-upload files into another site, so the page prepares and flags attachments instead."
+  },
+  {
+    "version": "4.1.0",
+    "bot": "Claude (Anthropic)",
+    "change": "Added hover/focus tooltips (data-tip attributes + one floating #tip element) describing what every command, tab, dropdown and button does, using the wording of the original Cheat Sheet PDF. Dropdowns also show a description panel for the selected option. Restored cheat-sheet commands missing from all earlier versions: write from a perspective for an audience, emulate a famous style, explain an error with 3 fixes, /explain, and explain at three levels. Commands that contain [bracketed] blanks now reveal inline fill-in boxes (pill 'f' arrays, {0}/{1} tokens); empty boxes compile as visible [placeholders]. MODULES pill entries are now objects {t, l, d, cmd, f}.",
+    "why": "User asked for descriptors on hover so people know what each function does, and supplied the original PDF showing the full cheat sheet."
+  },
+  {
+    "version": "4.0.0",
+    "bot": "Claude (Anthropic)",
+    "change": "Merged the full cheat-sheet library from v1 (accuracy, research, structural formats, writing tools, persona, tone, tech/strategy) into the v3 modification pipeline. Fixed v1 syntax error (raw line breaks inside JS string literals). Controls are now data-driven (MODULES config in the script) and rendered into tabs. Persona and tone selects are wired into the compiler again. Source snapshot sent to the modification pipeline is now sanitised (previews cleared, rendered controls stripped) so payloads no longer balloon with each generation. Added clipboard fallback, toasts instead of alerts, live token/length ring, light/dark theme, reset button, Esc/backdrop modal close, suggested-engine highlight. Full visual redesign.",
+    "why": "User asked to integrate the features missing from v3 (file 2) from the original builder, repair anything broken, and refresh the page design."
+  },
+  {
+    "version": "3.0.0",
+    "bot": "Claude (Anthropic)",
+    "change": "Removed visual version labels from UI. Added Modification Input Modal popup feature. Implemented Chatbot launch hub to specifically handle file mutation injection requests.",
+    "why": "User requested cleaner visual canvas with an isolated pop-up query window to instruct upcoming bots and package both the command parameters and source code together cleanly."
+  },
+  {
+    "version": "2.0.0",
+    "bot": "Claude (Anthropic)",
+    "change": "Re-architected prompt preview pipeline using textContent. Repaired platform redirection click isolation loops, built structured history tracker grid.",
+    "why": "User reported blank text box errors and broken assistant routing actions."
+  },
+  {
+    "version": "1.0.0",
+    "bot": "Initial System Base",
+    "change": "Created base HTML document containing core user prompt space, standard cheat sheet modifiers, and basic platform redirection blocks.",
+    "why": "Initial build request."
+  }
+]
+========================================================================
+-->
+
+<div class="wrap">
+
+    <header class="hero">
+        <div class="hero-tools">
+            <button class="icon-btn" id="themeBtn" type="button" title="Toggle light / dark">◐ Theme</button>
+        </div>
+        <div class="eyebrow">Prompt Forge · Cheat Sheet · Code Migrator</div>
+        <h1>AI Prompt Builder Hub</h1>
+        <p>Write your idea, stack the system commands that tame hallucinations, shape the output and set the voice — then fire the finished prompt at your chatbot of choice.</p>
+    </header>
+
+    <section class="botbar" aria-label="Choose your AI chatbot">
+        <div class="botbar-title">Step 0 · Choose your AI chatbot</div>
+        <div class="botgrid" id="botGrid" role="radiogroup" data-render=""></div>
+        <div class="botnote" id="botNote" data-render=""></div>
+    </section>
+
+    <div class="layout">
+
+        <!-- LEFT: build -->
+        <main>
+            <section class="card">
+                <div class="step"><div class="num">1</div><div><h2>Core prompt</h2><small>Your base query, topic or source text</small></div></div>
+                <textarea id="corePrompt" placeholder="Type your base query or topic here..."></textarea>
+                <div class="drop" id="drop" tabindex="0" data-tip="Drag files or photos here, click to browse, or paste a screenshot with Ctrl/Cmd+V. Files never leave your device; text files can be pasted into the prompt, everything else is listed in the prompt and uploaded by you in the chatbot.">
+                    <input type="file" id="fileInput" multiple hidden>
+                    <div class="drop-ic">📎</div>
+                    <div class="drop-txt"><b>Attach files or photos</b><small>Drop anywhere on the page, browse, or paste a screenshot. Stays on your device.</small></div>
+                    <span class="drop-btn">Browse…</span>
+                </div>
+                <div class="files" id="fileList" data-render=""></div>
+                <div class="switches">
+                    <label class="switch" data-tip="When files are attached, adds an instruction telling the AI to examine them and refer to them by file name."><input type="checkbox" id="examineFiles" checked><span class="track"></span>Tell the AI to examine attachments</label>
+                    <label class="switch" data-tip="Adds a leading notice telling the chatbot to process your whole input without truncating or clipping it. Recommended for long pastes."><input type="checkbox" id="preventClipping" checked><span class="track"></span>Prevent input truncation framework</label>
+                    <label class="switch" data-tip="Adds a rule so that if the reply is about to run out of space, the AI stops at a clean milestone and says CONTINUE_REQUIRED. Reply 'continue' to get the rest."><input type="checkbox" id="preventResponseClipping" checked><span class="track"></span>Output continuity safeguard</label>
+                </div>
+            </section>
+
+            <section class="card">
+                <div class="step"><div class="num">2</div><div><h2>System commands &amp; cheat-sheet modifiers</h2><small>Mix and match — the console updates live</small></div></div>
+                <div class="tabs" id="tabs" role="tablist" data-render=""></div>
+                <div id="panels" data-render=""></div>
+            </section>
+
+            <!-- Advanced code modification pipeline -->
+            <section class="devbay">
+                <span class="tag">DEV BAY</span>
+                <h2>Advanced code modification pipeline</h2>
+                <p>Package your change request together with this page’s complete source code and the version-log instructions, ready to hand to any AI assistant for the next revision.</p>
+                <button class="btn-mod-trigger" type="button" data-tip="Opens a form where you describe the change you want. The result bundles it with this page's full source and the version-log rules for any AI to follow." onclick="openModificationModal()">⚙ Initialize code modification sequence</button>
+
+                <div id="modificationPayloadWrapper">
+                    <h3>Compiled modification prompt package</h3>
+                    <pre id="modificationPreview" class="preview-box mod-preview"></pre>
+                    <div class="mod-meta" id="modMeta"></div>
+                    <div class="btn-group">
+                        <button class="btn-copy" type="button" onclick="manualCopy('modificationPreview')">Copy modification package</button>
+                    </div>
+                    <h3 style="margin-top:18px;">Launch a chatbot for file modification</h3>
+                    <div class="mod-launchers" id="modLaunchers" data-render=""></div>
+                </div>
+            </section>
+        </main>
+
+        <!-- RIGHT: console -->
+        <aside class="console" aria-label="Compiled prompt console">
+            <div class="console-bar">
+                <span class="dot" style="background:#ff5f57"></span><span class="dot" style="background:#febc2e"></span><span class="dot" style="background:#28c840"></span>
+                <span class="title">COMPILED PROMPT</span>
+                <span class="chips" id="activeCount" data-tip="How many system commands are currently selected.">0 active</span>
+            </div>
+            <div class="meter">
+                <div class="ring" data-tip="Share of the safe paste budget (about 24,000 characters) used by your compiled prompt. Updates live as you add commands.">
+                    <svg width="64" height="64" viewBox="0 0 64 64"><circle class="bg" cx="32" cy="32" r="27" fill="none" stroke-width="6"></circle><circle class="fg" id="ringFg" cx="32" cy="32" r="27" fill="none" stroke-width="6" stroke-dasharray="169.6" stroke-dashoffset="169.6"></circle></svg>
+                    <div class="pct" id="ringPct">0%</div>
+                </div>
+                <div class="stats">
+                    <div id="charCount">Total Built Prompt Length: 0 characters</div>
+                    <div>≈ <b id="tokenCount">0</b> tokens · <b id="wordCount">0</b> words</div>
+                    <span id="limitStatus">Within Safe Processing Range</span>
+                </div>
+            </div>
+            <pre id="promptPreview" class="preview-box"></pre>
+            <div class="manual-note" id="manualNote" data-render="" hidden></div>
+            <div class="console-actions">
+                <button class="btn-copy" type="button" data-tip="Copies the full compiled prompt to your clipboard." onclick="manualCopy('promptPreview')">Copy prompt</button>
+                <button class="btn-ghost" type="button" data-tip="Clears the prompt text and every selected command." onclick="resetAll()">Reset all</button>
+            </div>
+            <div class="launch-label">Copy &amp; launch</div>
+            <div class="launchers" id="launchers" data-render=""></div>
+            <div class="splitbox" id="splitBox" data-render="" hidden></div>
+        </aside>
+    </div>
+
+    <div class="foot">built to be rebuilt · see the version log at the top of the source</div>
+</div>
+
+<!-- Modification modal -->
+<div id="modModal" class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+    <div class="modal-content">
+        <div class="modal-header" id="modalTitle">Define code base changes</div>
+        <div class="modal-sub">Tell the next AI exactly what to change and why. Both go into the package.</div>
+        <div class="modal-body">
+            <label for="modalAI">Target modifying AI engine</label>
+            <select id="modalAI" data-render=""></select>
+
+            <label for="modalChange">What changes are required?</label>
+            <textarea id="modalChange" placeholder="e.g. Add .html files as an output format option"></textarea>
+
+            <label for="modalWhy">Why is this change required?</label>
+            <input type="text" id="modalWhy" class="input-text" placeholder="e.g. Need direct code layout templates block options">
+        </div>
+        <div class="modal-footer">
+            <button class="btn-secondary" type="button" onclick="closeModificationModal()">Cancel</button>
+            <button class="btn-ai" type="button" onclick="compileModificationPayload()">Generate package</button>
+        </div>
+    </div>
+</div>
+
+<div id="toast" role="status" aria-live="polite" data-render=""></div>
+<div id="tip" role="tooltip" data-render=""></div>
+
+<script>
+/* =====================================================================
+   CONFIGURATION  (edit these arrays to add commands / chatbots)
+   - Pill with text starting "/" is treated as a slash-command PREFIX.
+   - Select options are single-choice. "slot" decides where text lands:
+       "command" -> SYSTEM COMMANDS list, "suffix" -> INSTRUCTIONS / MODIFIERS
+   ===================================================================== */
+const MODULES = [
+    {
+        id: 'accuracy', icon: '\u{1F6E1}', title: 'Accuracy',
+        desc: 'Hallucination prevention & accuracy anchors. Use for medical, legal, financial or highly precise data where mistakes are unacceptable.',
+        pills: [
+            { t: "If you do not know the answer based on verified data, state 'I do not know'. Do not guess or extrapolate.", l: "If unknown, state 'I do not know'",
+              d: "Shuts down the AI's tendency to please you by inventing a plausible-sounding answer. It admits gaps instead." },
+            { t: "Only use information explicitly provided in the text above. Do not introduce outside knowledge or assumptions.", l: "Strictly use explicitly provided text",
+              d: "Freezes the AI's training data so it acts purely as a reading-comprehension tool on the documents you paste in." },
+            { t: "Quote the exact sentence from the source material that supports your claim.", l: "Quote source supporting sentences",
+              d: "Anchors every claim to a specific sentence, forcing the AI to verify its own logic against your source." },
+            { t: "Review your own output. Identify any potential factual assumptions you made and grade your confidence level from 1-10.", l: "Self-correct & confidence grade 1-10",
+              d: "Triggers a self-correction loop: the AI audits its own answer and rates its confidence before finalizing." }
+        ]
+    },
+    {
+        id: 'research', icon: '\u{1F50E}', title: 'Research',
+        desc: 'Research, deep dives & fact-checking. Use for up-to-date information, competitive analysis, or validating complex facts.',
+        pills: [
+            { t: "/search ", l: "/search", cmd: true,
+              d: "Slash command: makes the chatbot skip its static training data and search the live internet for real-time information. Goes at the very start of the prompt." },
+            { t: "Run deep research on the topic and provide a multi-perspective analysis.", l: "Deep research & multi-perspective analysis",
+              d: "Triggers multi-step research agents that browse dozens of sources and compile a detailed report on their own." },
+            { t: "Provide a counter-argument to the text above and point out any logical fallacies or biases.", l: "Devil's advocate / fallacy reviewer",
+              d: "Turns the AI into a critical red-team reviewer for your theories or arguments." },
+            { t: "Cite your sources with direct links and evaluate the credibility of each source.", l: "Cite sources with links & evaluate credibility",
+              d: "Crucial for academic or legal research: makes the AI show where facts came from so you can spot hallucinated data." }
+        ]
+    },
+    {
+        id: 'format', icon: '\u{1F4D0}', title: 'Format',
+        desc: 'Structural & file output formatting. Force exact layouts and code structures instead of plain chat text.',
+        selects: [{
+            id: 'formatSelect', label: 'Output layout', slot: 'command', empty: '-- No Layout Change --',
+            tip: 'Pick ONE layout. Dictates the exact shape of the answer so you do not have to reformat it yourself.',
+            options: [
+                ["Format the output strictly as a Table.", "Strict Table Layout", "Dictates the exact layout (a table) so you don't have to reformat the answer yourself."],
+                ["Format the output strictly as a Bulleted List.", "Strict Bulleted List", "Dictates the exact layout (a bulleted list) so you don't have to reformat the answer yourself."],
+                ["Format the output strictly as a Markdown Flowchart.", "Markdown Flowchart", "Draws a process or decision path as a Markdown flowchart."],
+                ["Format the output strictly as an Executive Summary.", "Executive Summary", "Condenses everything into a short, decision-maker-friendly summary."],
+                ["Format the output as a copy-pasteable CSV block using standard comma separators.", "Copy-pasteable CSV block", "Generates a raw data block you can paste straight into Notepad, save as .csv, and open in Excel."],
+                ["Use your Python environment to generate and provide a downloadable PDF file of this report.", "Trigger Python PDF Generation", "Triggers Code Interpreter / the Python sandbox to build a real, downloadable PDF document."],
+                ["Format the output strictly as a copy-pasteable .html file block.", "Strict HTML File Output Layout", "Returns a complete .html file in one code block that you can copy, save and open in a browser."],
+                ["Provide the output in clean, semantic HTML5 code inside a markdown code block.", "Clean Semantic HTML5 Code Block", "Packages the text as web-ready HTML5 with proper headers, paragraphs and lists."],
+                ["Create a side-by-side comparison matrix using a markdown table. Columns: Feature, Option A, Option B, Key Difference.", "Side-by-Side Comparison Matrix Table", "Builds an aligned visual grid (Feature / Option A / Option B / Key Difference) for fast decisions."],
+                ["Write this strictly in standard narrative paragraphs. Do not use bullet points, bold headers, or lists.", "Strict Narrative Paragraphs Only", "Forces traditional essay or email flow when the AI leans too hard on lists and headers."],
+                ["Structure the response as a punchy, bulleted list. Limit each bullet point to a single short sentence fragment.", "Punchy Single-Sentence Fragments List", "Eliminates blocks of text for maximum scannability."],
+                ["Write this in a 'TL;DR' format restricted to exactly 3 bullet points.", "TL;DR format (exactly 3 bullets)", "Forces extreme brevity: the whole answer in exactly three bullets."]
+            ]
+        }]
+    },
+    {
+        id: 'writing', icon: '\u270D\uFE0F', title: 'Writing',
+        desc: 'Content writing & editing. Use when drafting emails, articles or reports, or collaborating in a dedicated workspace.',
+        pills: [
+            { t: "/canvas ", l: "/canvas", cmd: true,
+              d: "Slash command: opens a separate side-by-side writing window so your draft does not clutter the main chat timeline." },
+            { t: "/rewrite ", l: "/rewrite", cmd: true,
+              d: "Slash command: brings up structural adjustment menus to fix grammar, flow or style." },
+            { t: "Write this from the perspective of a {0} addressing {1}.", l: "Write from a perspective, for an audience", f: ["Profession / Persona", "Target Audience"],
+              d: "Shifts voice, vocabulary and tone to match an exact demographic. Fill in who is speaking and who is listening." },
+            { t: "Ruthlessly edit this draft. Cut the fluff, remove passive voice, and improve readability.", l: "Ruthless copyeditor mode",
+              d: "Makes the AI act like a strict copyeditor rather than a polite assistant." },
+            { t: "Provide 5 distinct headlines/hooks for this piece, ranging from professional to provocative.", l: "Generate 5 distinct headlines/hooks",
+              d: "Great for brainstorming marketing copy or email subject lines." }
+        ]
+    },
+    {
+        id: 'voice', icon: '\u{1F3AD}', title: 'Persona & Tone',
+        desc: 'Persona hacking, "Act As" frameworks and tone modifiers. Push the AI out of its default polite persona.',
+        pills: [
+            { t: "Emulate the writing style, vocabulary, and rhythm of {0} to write the following text.", l: "Emulate a famous writing style", f: ["Famous Author / Figure"],
+              d: "Matches a specific, recognizable voice (e.g. Steve Jobs, Ernest Hemingway). Type who to imitate." }
+        ],
+        selects: [
+            {
+                id: 'personaSelect', label: 'Persona', slot: 'command', empty: '-- Standard Persona --',
+                tip: 'Pick ONE persona to push the AI out of its standard polite assistant mode.',
+                options: [
+                    ["Act like a panel of experts on this topic, debate this issue and come to a consensus.", "Panel of Experts Debate", "Simulates a boardroom of experts debating to a consensus. Excellent for vetting ideas. Optionally name the topic and three expert roles; leave them blank for a generic panel.", ["Topic", "Role 1", "Role 2", "Role 3"], "Act like a panel of experts on {0}, with these expert roles: {1}, {2}, and {3}. Debate this issue and come to a consensus."],
+                    ["Act as a brutal Devil\u2019s Advocate. Tear down this proposal and find every reason it will fail.", "Brutal Devil's Advocate", "Stress-tests your idea with no politeness: the AI hunts for every reason it could fail."],
+                    ["Act as a professional interviewer for this role. Ask me one question at a time, wait for my response, and give me feedback after each turn.", "Interactive Interview Simulator", "Turns the chat into a live interview-prep session: one question at a time, with feedback after each answer."]
+                ]
+            },
+            {
+                id: 'toneSelect', label: 'Tone', slot: 'suffix', empty: '-- Default Tone --',
+                tip: 'Pick ONE tone. It is appended at the end of the prompt to control vocabulary and delivery style.',
+                options: [
+                    ["Tone: No-Nonsense / Concise.", "No-Nonsense / Concise", "Direct, zero filler, highly efficient."],
+                    ["Tone: Empathetic / Supportive.", "Empathetic / Supportive", "Warm and understanding, either clinical or conversational."],
+                    ["Tone: Persuasive / High-Converting.", "Persuasive / High-Converting", "Copywriting-focused, with psychological hooks."],
+                    ["Tone: Jargon-Free.", "Jargon-Free Simplified", "Explains high-level concepts in simple, universal words."]
+                ]
+            }
+        ]
+    },
+    {
+        id: 'tech', icon: '\u2699\uFE0F', title: 'Tech & Strategy',
+        desc: 'Coding, technical work, complex problem solving and strategy. Use for debugging, scripts, planning and learning dense topics.',
+        pills: [
+            { t: "/python ", l: "/python", cmd: true,
+              d: "Slash command: launches a sandboxed back-end environment to run script calculations or build charts natively." },
+            { t: "Generate a structural blueprint using Artifacts.", l: "Use Claude Artifacts blueprint",
+              d: "Tells the AI (specifically Claude) to put big code outputs into a clean, standalone, renderable container." },
+            { t: "Write a script for this task. Do not dumb it down. Keep technical context and edge cases intact.", l: "Full script without simplification",
+              d: "Overcomes the habit of bots to over-simplify or truncate long code blocks." },
+            { t: "Review this code for security vulnerabilities, memory leaks, and optimization opportunities.", l: "Security & optimization auditor",
+              d: "Transforms the chatbot into an automated code auditor." },
+            { t: "Explain what this error message means and provide three potential fixes: {0}", l: "Explain an error + 3 fixes", f: ["Paste the error message"],
+              d: "Rapid troubleshooting during active development. Paste the error text in the box that appears." },
+            { t: "Think step-by-step and show your hidden chain of thought.", l: "Think step-by-step (CoT)",
+              d: "Forces visible reasoning, which dramatically reduces logic errors and hallucinations on math or logic puzzles." },
+            { t: "Ask me 5 clarifying questions before you generate the final answer.", l: "Ask 5 clarifying questions first",
+              d: "Flips the workflow: the AI collects missing background itself, so you don't need to write a massive first prompt." },
+            { t: "/explain ", l: "/explain", cmd: true,
+              d: "Slash command: triggers an automated learning workflow that breaks a complex concept down with analogies. Put the concept in your core prompt." },
+            { t: "Explain this concept to me at three levels: a 10-year-old, a college student, and an industry expert.", l: "Explain at three levels",
+              d: "Lets you grasp the baseline idea first, then move into the advanced technical nuance." }
+        ]
+    }
+];
+
+const CHATBOTS = [
+    { name: 'ChatGPT',    maker: 'OpenAI',        url: 'https://chatgpt.com',       color: '#10a37f', limit: 60000,
+      best: 'Versatile all-rounder for writing, brainstorming, coding, explaining concepts and varied tasks. Most widely used.' },
+    { name: 'Gemini',     maker: 'Google',        url: 'https://gemini.google.com', color: '#4f8cff', limit: 100000,
+      best: 'Best if you live in Google Workspace; strong at multimodal work with text, images and other media.' },
+    { name: 'Claude',     maker: 'Anthropic',     url: 'https://claude.ai',         color: '#d97757', limit: 100000,
+      best: 'Long documents, careful writing, summarization, coding and analysis of complex material.' },
+    { name: 'Perplexity', maker: 'Perplexity AI', url: 'https://perplexity.ai',     color: '#20b8cd', limit: 16000,
+      best: 'AI search engine for web research; answers usually include source citations. Keep prompts short.' },
+    { name: 'Grok',       maker: 'xAI',           url: 'https://grok.com',          color: '#c9c9d6', limit: 40000,
+      best: 'Conversational assistant tied to X (Twitter); good for exploring current topics and discussions.' }
+];
+/* limit = conservative paste budget in CHARACTERS per bot (estimates, not official figures; edit freely).
+   BOT_ONLY hides commands a bot does not support: [text fragment, [bots that support it]] */
+const BOT_ONLY = [
+    ['/canvas ', ['ChatGPT']], ['/python ', ['ChatGPT']], ['/rewrite ', ['ChatGPT']],
+    ['Artifacts', ['Claude']], ['Python environment', ['ChatGPT', 'Gemini', 'Claude']]
+];
+
+let LIMIT_CHARS = CHATBOTS[0].limit;
+let currentBot = CHATBOTS[0];
+let splitParts = [];
+
+/* ---------------------------------------------------------------- DOM */
+const corePromptEl = document.getElementById('corePrompt');
+const preventClippingEl = document.getElementById('preventClipping');
+const preventResponseClippingEl = document.getElementById('preventResponseClipping');
+const promptPreviewEl = document.getElementById('promptPreview');
+const charCountEl = document.getElementById('charCount');
+const limitStatusEl = document.getElementById('limitStatus');
+const tabsEl = document.getElementById('tabs');
+const panelsEl = document.getElementById('panels');
+
+function esc(s) { return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'); }
+
+/* ------------------------------------------------------- Render controls */
+function renderControls() {
+    MODULES.forEach((m, i) => {
+        const tab = document.createElement('button');
+        tab.type = 'button'; tab.className = 'tab' + (i === 0 ? ' active' : '');
+        tab.dataset.target = m.id; tab.setAttribute('role', 'tab'); tab.setAttribute('data-tip', m.desc);
+        tab.innerHTML = '<span>' + m.icon + '</span>' + esc(m.title) + '<span class="badge" id="badge-' + m.id + '">0</span>';
+        tab.addEventListener('click', () => switchTab(m.id));
+        tabsEl.appendChild(tab);
+
+        const panel = document.createElement('div');
+        panel.className = 'panel' + (i === 0 ? ' active' : ''); panel.id = 'panel-' + m.id;
+        let html = '<p class="panel-desc">' + esc(m.desc) + '</p>';
+        if (m.pills) {
+            html += '<div class="pills">' + m.pills.map(p =>
+                '<div class="pillwrap"><label class="pill' + (p.cmd ? ' cmd' : '') + '" data-tip="' + esc(p.d) + '">' +
+                '<input type="checkbox" class="prompt-mod" data-module="' + m.id + '" data-text="' + esc(p.t) + '"><span>' + esc(p.l) + '</span></label>' +
+                (p.f ? '<div class="pill-fields">' + p.f.map(f => '<input type="text" class="input-text pf" placeholder="' + esc(f) + '" aria-label="' + esc(f) + '">').join('') + '</div>' : '') +
+                '</div>'
+            ).join('') + '</div>';
+        }
+        if (m.selects) {
+            html += m.selects.map(sl =>
+                '<div class="field"><label for="' + sl.id + '">' + esc(sl.label) + '</label>' +
+                '<select id="' + sl.id + '" class="prompt-mod-select" data-module="' + m.id + '" data-slot="' + sl.slot + '" data-tip="' + esc(sl.tip) + '"><option value="">' + esc(sl.empty) + '</option>' +
+                sl.options.map(o => '<option value="' + esc(o[0]) + '" data-desc="' + esc(o[2]) + '" title="' + esc(o[2]) + '"' + (o[4] ? ' data-tpl="' + esc(o[4]) + '"' : '') + '>' + esc(o[1]) + '</option>').join('') +
+                '</select><div class="sel-desc" id="desc-' + sl.id + '"></div>' +
+                sl.options.map((o, oi) => o[3] ? '<div class="pill-fields sel-fields" data-sel="' + sl.id + '" data-opt="' + (oi + 1) + '">' + o[3].map(f => '<input type="text" class="input-text sf" placeholder="' + esc(f) + '" aria-label="' + esc(f) + '">').join('') + '</div>' : '').join('') +
+                '</div>'
+            ).join('');
+        }
+        panel.innerHTML = html;
+        panelsEl.appendChild(panel);
+    });
+
+    document.getElementById('launchers').innerHTML = CHATBOTS.map(c =>
+        '<button class="launch" type="button" data-tip="Copies the compiled prompt, then opens ' + esc(c.name) + ' in a new tab. Paste it into the chat box." style="--bc:' + c.color + '" onclick="launchBot(\'' + c.name + '\')"><span class="bd"></span>' + esc(c.name) + '</button>'
+    ).join('');
+
+    document.getElementById('modLaunchers').innerHTML = CHATBOTS.map(c =>
+        '<button class="launch" type="button" data-tip="Copies the modification package (your request plus this page\'s source), then opens ' + esc(c.name) + '. Paste it in." data-engine="' + esc(c.name + ' (' + c.maker + ')') + '" style="--bc:' + c.color + ';background:#1f1c3d" onclick="copyAndLaunch(\'modificationPreview\', \'' + c.url + '\')"><span class="bd"></span>' + esc(c.name) + ' &middot; mod hub</button>'
+    ).join('');
+
+    document.getElementById('modalAI').innerHTML = CHATBOTS.map(c =>
+        '<option value="' + esc(c.name + ' (' + c.maker + ')') + '">' + esc(c.name + ' (' + c.maker + ')') + '</option>'
+    ).join('');
+}
+
+function switchTab(id) {
+    document.querySelectorAll('.tab').forEach(t => t.classList.toggle('active', t.dataset.target === id));
+    document.querySelectorAll('.panel').forEach(p => p.classList.toggle('active', p.id === 'panel-' + id));
+}
+
+/* --------------------------------------------------------- Prompt compiler */
+function updateStandardPrompt() {
+    const prefixes = [], systemCommands = [], suffixes = [];
+    const perModule = {};
+    const bump = id => { perModule[id] = (perModule[id] || 0) + 1; };
+
+    document.querySelectorAll('.pillwrap').forEach(w => w.classList.toggle('open', w.querySelector('.prompt-mod').checked));
+
+    document.querySelectorAll('.prompt-mod:checked').forEach(item => {
+        let val = item.getAttribute('data-text');
+        if (!val) return;
+        const wrap = item.closest('.pillwrap');
+        if (wrap) {
+            const ins = wrap.querySelectorAll('.pf');
+            val = val.replace(/\{(\d+)\}/g, (m, i) => {
+                const inp = ins[+i];
+                return inp && inp.value.trim() ? inp.value.trim() : '[' + (inp ? inp.placeholder : '?') + ']';
+            });
+        }
+        bump(item.dataset.module);
+        if (val.startsWith('/')) prefixes.push(val.trim());
+        else systemCommands.push(val);
+    });
+
+    document.querySelectorAll('.prompt-mod-select').forEach(sel => {
+        const dEl = document.getElementById('desc-' + sel.id);
+        const opt = sel.options[sel.selectedIndex];
+        if (dEl) dEl.textContent = sel.value ? (opt.getAttribute('data-desc') || '') : '';
+        let sv = sel.value;
+        document.querySelectorAll('.sel-fields[data-sel="' + sel.id + '"]').forEach(c => {
+            const on = +c.dataset.opt === sel.selectedIndex;
+            c.classList.toggle('open', on);
+            if (on) {
+                const ins = c.querySelectorAll('.sf');
+                const vals = [...ins].map(i => i.value.trim());
+                if (vals.some(Boolean)) sv = opt.getAttribute('data-tpl').replace(/\{(\d+)\}/g, (m, i) => vals[+i] || '[' + ins[+i].placeholder + ']');
+            }
+        });
+        if (!sel.value) return;
+        bump(sel.dataset.module);
+        (sel.dataset.slot === 'suffix' ? suffixes : systemCommands).push(sv);
+    });
+
+    const baseText = corePromptEl.value.trim();
+    if (preventClippingEl.checked) {
+        prefixes.push("[SYSTEM UPDATE: The upcoming package contains user parameters. Process fully without truncating inputs or clipping the final sequence bounds.]");
+    }
+    if (preventResponseClippingEl.checked) {
+        suffixes.push("CRITICAL SAFEGUARD: If your complete response is long or close to exhausting output tokens, stop at a logical milestone and state 'CONTINUE_REQUIRED' so that the remaining output is not clipped or lost mid-sentence.");
+    }
+
+    if (attachments.length && document.getElementById('examineFiles').checked) {
+        systemCommands.push("Examine the attached file(s) carefully before answering and refer to them by file name.");
+    }
+
+    const compiled = [];
+    if (prefixes.length) compiled.push(prefixes.join(" "));
+    if (systemCommands.length) compiled.push("SYSTEM COMMANDS:\n" + systemCommands.map(c => "- " + c).join("\n"));
+    if (baseText) compiled.push("USER PROMPT:\n" + baseText);
+    if (attachments.length) {
+        compiled.push("ATTACHED FILES:\n" + attachments.map(a => "- " + a.name + " (" + kindLabel(a) + ", " + fmtSize(a.size) + ") \u2014 " + (a.inline ? "contents included below" : "attached to this message")).join("\n"));
+        const inl = attachments.filter(a => a.inline && a.text != null);
+        if (inl.length) compiled.push("FILE CONTENTS:\n" + inl.map(a => "--- BEGIN " + a.name + " ---\n" + a.text + "\n--- END " + a.name + " ---").join("\n\n"));
+    }
+    renderManualNote();
+    if (suffixes.length) compiled.push("INSTRUCTIONS / MODIFIERS:\n" + suffixes.join("\n"));
+
+    const outText = compiled.join("\n\n");
+    promptPreviewEl.textContent = outText;
+
+    // metrics
+    const len = outText.length;
+    charCountEl.textContent = "Total Built Prompt Length: " + len.toLocaleString() + " characters";
+    document.getElementById('tokenCount').textContent = Math.ceil(len / 4).toLocaleString();
+    document.getElementById('wordCount').textContent = outText.trim() ? outText.trim().split(/\s+/).length.toLocaleString() : 0;
+    const ratio = Math.min(len / LIMIT_CHARS, 1);
+    const ring = document.getElementById('ringFg');
+    ring.style.strokeDashoffset = (169.6 * (1 - ratio)).toFixed(1);
+    ring.style.stroke = ratio > 1 - 1e-9 || len > LIMIT_CHARS * .85 ? 'var(--warn)' : (ratio > .6 ? '#e8b030' : 'var(--good)');
+    document.getElementById('ringPct').textContent = Math.round(ratio * 100) + '%';
+
+    if (len > LIMIT_CHARS) {
+        limitStatusEl.textContent = "Over " + currentBot.name + "'s limit (" + LIMIT_CHARS.toLocaleString() + " chars): will be auto-split into parts when copied.";
+        limitStatusEl.className = "warning";
+    } else if (len > LIMIT_CHARS * .85) {
+        limitStatusEl.textContent = "Nearing " + currentBot.name + "'s limit (" + LIMIT_CHARS.toLocaleString() + " chars)";
+        limitStatusEl.className = "warning";
+    } else {
+        limitStatusEl.textContent = "Within Safe Processing Range for " + currentBot.name;
+        limitStatusEl.className = "";
+    }
+    hideSplit();
+
+    // badges
+    let total = 0;
+    MODULES.forEach(m => {
+        const n = perModule[m.id] || 0; total += n;
+        const b = document.getElementById('badge-' + m.id);
+        b.textContent = n; b.classList.toggle('on', n > 0);
+    });
+    document.getElementById('activeCount').textContent = total + ' active';
+}
+
+function resetAll() {
+    corePromptEl.value = '';
+    document.querySelectorAll('.prompt-mod').forEach(c => c.checked = false);
+    document.querySelectorAll('.prompt-mod-select').forEach(s => s.value = '');
+    document.querySelectorAll('.pf, .sf').forEach(i => i.value = '');
+    clearAttachments();
+    preventClippingEl.checked = true; preventResponseClippingEl.checked = true;
+    updateStandardPrompt(); toast('Everything reset');
+}
+
+
+/* ------------------------------------------------ v4.4 chatbot selector & splitting */
+function renderBots() {
+    document.getElementById('botGrid').innerHTML = CHATBOTS.map(c =>
+        '<button type="button" class="botcard" role="radio" data-bot="' + esc(c.name) + '" style="--bc:' + c.color + '">' +
+        '<b><i></i>' + esc(c.name) + '</b><small>' + esc(c.maker) + ' · ' + esc(c.best) + '</small>' +
+        '<em>Budget ≈ ' + c.limit.toLocaleString() + ' chars</em></button>'
+    ).join('');
+    document.getElementById('botGrid').addEventListener('click', e => {
+        const b = e.target.closest('.botcard'); if (b) selectBot(b.dataset.bot);
+    });
+}
+function selectBot(name) {
+    currentBot = CHATBOTS.find(c => c.name === name) || CHATBOTS[0];
+    LIMIT_CHARS = currentBot.limit;
+    document.querySelectorAll('.botcard').forEach(b => { const on = b.dataset.bot === currentBot.name; b.classList.toggle('active', on); b.setAttribute('aria-checked', on); });
+    document.querySelectorAll('#launchers .launch').forEach((b, i) => b.classList.toggle('suggested', CHATBOTS[i] === currentBot));
+    let hidden = 0, cleared = 0;
+    document.querySelectorAll('.pillwrap').forEach(w => {
+        const cb = w.querySelector('.prompt-mod'), t = cb.dataset.text || '';
+        const rule = BOT_ONLY.find(r => t.includes(r[0]));
+        const ok = !rule || rule[1].includes(currentBot.name);
+        w.style.display = ok ? '' : 'none';
+        if (!ok) { hidden++; if (cb.checked) { cb.checked = false; cleared++; } }
+    });
+    document.getElementById('botNote').innerHTML = '<b>' + esc(currentBot.name) + '</b>: ' + esc(currentBot.best) +
+        ' Prompt budget about ' + LIMIT_CHARS.toLocaleString() + ' characters; longer prompts are split automatically.' +
+        (hidden ? ' ' + hidden + ' command' + (hidden > 1 ? 's' : '') + ' this bot does not support ' + (hidden > 1 ? 'are' : 'is') + ' hidden.' : '');
+    const ring = document.querySelector('.ring');
+    if (ring) ring.setAttribute('data-tip', 'Share of ' + currentBot.name + "'s safe paste budget (about " + LIMIT_CHARS.toLocaleString() + ' characters) used by your compiled prompt. Updates live.');
+    updateStandardPrompt();
+    if (cleared) toast(cleared + ' selected command' + (cleared > 1 ? 's' : '') + ' removed: not supported by ' + currentBot.name, true);
+}
+function splitPrompt(text, limit) {
+    const room = Math.max(limit - 450, 500), chunks = [];
+    let cur = '';
+    const push = () => { if (cur) chunks.push(cur); cur = ''; };
+    text.split('\n\n').forEach(p => {
+        while (p.length > room) {
+            let cut = p.lastIndexOf('\n', room);
+            if (cut < room * .5) cut = p.lastIndexOf(' ', room);
+            if (cut < room * .5) cut = room;
+            push(); chunks.push(p.slice(0, cut)); p = p.slice(cut).replace(/^\s+/, '');
+        }
+        if (cur && cur.length + 2 + p.length > room) push();
+        cur = cur ? cur + '\n\n' + p : p;
+    });
+    push();
+    const n = chunks.length;
+    return chunks.map((c, i) => {
+        const k = i + 1, head = '[PART ' + k + ' OF ' + n + '] ';
+        return (k < n
+            ? head + 'This prompt is split into ' + n + ' parts because of the input limit. Do NOT answer yet. Reply only with "Received part ' + k + '" until you have all parts.\n\n'
+            : head + 'FINAL PART. You now have all ' + n + ' parts. Combine them in order, treat them as one prompt, and respond in full.\n\n') +
+            c + '\n\n[END OF PART ' + k + ' OF ' + n + ']';
+    });
+}
+function hideSplit() { splitParts = []; const b = document.getElementById('splitBox'); if (b) { b.hidden = true; b.innerHTML = ''; } }
+function renderSplit(bot) {
+    const b = document.getElementById('splitBox'), n = splitParts.length;
+    b.innerHTML = '<b>Prompt is too long for ' + esc(bot.name) + ' in one paste.</b> It was split into ' + n + ' parts so nothing gets clipped. Part 1 is on your clipboard; paste each part in order and wait for the reply "Received part…" before the next.' +
+        '<div class="parts">' + splitParts.map((p, i) => '<button type="button" onclick="copyPart(' + i + ')">Copy part ' + (i + 1) + ' of ' + n + '</button>').join('') + '</div>';
+    b.hidden = false;
+}
+function copyPart(i) {
+    copyText(splitParts[i]).then(() => toast('Part ' + (i + 1) + ' of ' + splitParts.length + ' copied \u2713'))
+        .catch(() => toast('Clipboard blocked \u2014 copy manually', true));
+}
+function splitAndCopy(bot, open) {
+    const parts = splitPrompt(promptPreviewEl.textContent, bot.limit);
+    splitParts = parts; renderSplit(bot);
+    const copying = copyText(parts[0]);
+    const win = open ? window.open(bot.url, '_blank') : true;
+    copying.then(() => toast('Too long for ' + bot.name + ': part 1 of ' + parts.length + ' copied. Use the Copy part buttons for the rest.'))
+        .catch(() => toast('Auto-copy blocked \u2014 use the Copy part buttons', true));
+    if (!win) toast('Popup blocked \u2014 allow popups or open the chatbot manually', true);
+}
+function launchBot(name) {
+    const bot = CHATBOTS.find(c => c.name === name);
+    const txt = promptPreviewEl.textContent;
+    if (!txt.trim()) { toast('Type a prompt or pick some modifiers first', true); return; }
+    if (txt.length > bot.limit) { splitAndCopy(bot, true); return; }
+    hideSplit();
+    copyAndLaunch('promptPreview', bot.url);
+}
+
+/* -------------------------------------------------------------- Clipboard
+   v4.3.0: TEXT copy uses the legacy synchronous execCommand('copy') FIRST.
+   It needs no browser permission prompt and works while the click gesture and
+   page focus are still active. The async Clipboard API is only a fallback.
+   (Images still use the async API because there is no other way to copy them.) */
+function legacyCopy(txt) {
+    return new Promise((resolve, reject) => {
+        const prevFocus = document.activeElement;
+        const ta = document.createElement('textarea');
+        ta.value = txt; ta.setAttribute('readonly', '');
+        ta.style.cssText = 'position:fixed;opacity:0;top:0;left:0;';
+        document.body.appendChild(ta); ta.focus(); ta.select();
+        let ok = false;
+        try { ok = document.execCommand('copy'); } catch (e) {}
+        document.body.removeChild(ta);
+        if (prevFocus && prevFocus.focus) { try { prevFocus.focus(); } catch (e) {} }
+        ok ? resolve() : reject(new Error('copy blocked'));
+    });
+}
+function copyText(txt) {
+    // Runs synchronously inside the click, so no permission prompt appears.
+    return legacyCopy(txt).catch(() => {
+        if (navigator.clipboard && navigator.clipboard.writeText) return navigator.clipboard.writeText(txt);
+        throw new Error('copy blocked');
+    });
+}
+function manualCopy(elementId) {
+    const txt = document.getElementById(elementId).textContent;
+    if (!txt.trim()) { toast('Nothing to copy yet', true); return; }
+    if (elementId === 'promptPreview' && txt.length > currentBot.limit) { splitAndCopy(currentBot, false); return; }
+    copyText(txt).then(() => toast('Copied to clipboard \u2713'))
+        .catch(() => toast('Clipboard blocked \u2014 highlight the text and copy manually', true));
+}
+function copyAndLaunch(elementId, url) {
+    const txt = document.getElementById(elementId).textContent;
+    if (!txt.trim()) { toast('Type a prompt or pick some modifiers first', true); return; }
+    // 1) Copy FIRST, while this page still has focus (opening a tab steals focus).
+    const copying = copyText(txt);
+    // 2) Then open the chatbot synchronously so popup blockers see the user gesture.
+    const win = window.open(url, '_blank');
+    const manual = elementId === 'promptPreview' ? attachments.filter(a => !a.inline).length : 0;
+    const okMsg = manual ? 'Copied \u2014 paste it, then add your ' + manual + ' file' + (manual > 1 ? 's' : '') + ' in the chat' : 'Copied \u2014 paste it into the new tab';
+    copying.then(() => toast(okMsg))
+        .catch(() => toast('Auto-copy was blocked. Copy the panel text manually, then paste.', true));
+    if (!win) toast('Popup blocked \u2014 allow popups or open the chatbot manually', true);
+}
+
+let toastTimer;
+function toast(msg, isErr) {
+    const t = document.getElementById('toast');
+    t.textContent = msg; t.className = (isErr ? 'err ' : '') + 'show';
+    clearTimeout(toastTimer); toastTimer = setTimeout(() => t.className = isErr ? 'err' : '', 2600);
+}
+
+/* ------------------------------------------------ Modification pipeline */
+function openModificationModal() {
+    document.getElementById('modModal').classList.add('open');
+    setTimeout(() => document.getElementById('modalChange').focus(), 50);
+}
+function closeModificationModal() { document.getElementById('modModal').classList.remove('open'); }
+
+// Build a CLEAN copy of this page's source (no previews, no rendered controls, no theme state)
+function getCleanSource() {
+    const clone = document.documentElement.cloneNode(true);
+    clone.querySelectorAll('[data-render]').forEach(el => { el.innerHTML = ''; });
+    ['promptPreview', 'modificationPreview', 'modMeta'].forEach(id => { const e = clone.querySelector('#' + id); if (e) e.textContent = ''; });
+    const wrap = clone.querySelector('#modificationPayloadWrapper'); if (wrap) wrap.removeAttribute('style');
+    const modal = clone.querySelector('#modModal'); if (modal) modal.classList.remove('open');
+    const sbx = clone.querySelector('#splitBox'); if (sbx) sbx.setAttribute('hidden', '');
+    const mn = clone.querySelector('#manualNote'); if (mn) mn.setAttribute('hidden', '');
+    const tipC = clone.querySelector('#tip'); if (tipC) { tipC.removeAttribute('class'); tipC.removeAttribute('style'); }
+    const toastEl = clone.querySelector('#toast'); if (toastEl) toastEl.removeAttribute('class');
+    clone.setAttribute('data-theme', 'light');
+    return '<!DOCTYPE html>\n' + clone.outerHTML;
+}
+
+function compileModificationPayload() {
+    const aiEngine = document.getElementById('modalAI').value;
+    const requiredChange = document.getElementById('modalChange').value.trim();
+    const structuralWhy = document.getElementById('modalWhy').value.trim();
+    if (!requiredChange || !structuralWhy) { toast('Fill in both the change and the reason first', true); return; }
+
+    const selfCodeSource = getCleanSource();
+    const bar = "========================================================================\n";
+    const payload =
+        bar + "CORE ACTION REQUIRED: REQUEST FOR CODE REVISION AND SOURCE UPDATES\n" + bar +
+        "TARGET PROCESSING AGENT: " + aiEngine + "\n" +
+        "CHANGE SPECIFICATION: " + requiredChange + "\n" +
+        "CORE OBJECTIVE REASON: " + structuralWhy + "\n\n" +
+        "MIGRATION EXPECTATION FOR THE RECEIVING AI CHATBOT:\n" +
+        "1. You are being supplied with the full source code of this tool within this prompt framework below.\n" +
+        "2. Read the internal immutable comment history log located at the top of the file.\n" +
+        "3. Increment the major/minor version string appropriately inside that comment block template.\n" +
+        "4. Append a new structured log item detailing that you (" + aiEngine + ") made these updates.\n" +
+        "5. Apply the requested changes completely (" + requiredChange + ") and output the entire new .html file payload.\n\n" +
+        bar + "CURRENT SOURCE CODE OF THE APPARATUS FOLLOWS BELOW:\n" + bar + "\n" +
+        selfCodeSource;
+
+    document.getElementById('modificationPreview').textContent = payload;
+    document.getElementById('modMeta').textContent = payload.length.toLocaleString() + ' characters \u00B7 \u2248 ' + Math.ceil(payload.length / 4).toLocaleString() + ' tokens (includes full source)';
+    document.getElementById('modificationPayloadWrapper').style.display = 'block';
+
+    document.querySelectorAll('#modLaunchers .launch').forEach(b => b.classList.toggle('suggested', b.dataset.engine === aiEngine));
+    closeModificationModal();
+    document.getElementById('modificationPayloadWrapper').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    toast('Modification package ready');
+}
+
+
+
+/* ------------------------------------------------------------ Attachments */
+const attachments = [];
+let fileSeq = 0;
+const TEXT_EXT = new Set(['txt','md','markdown','csv','tsv','json','jsonl','xml','html','htm','css','js','mjs','ts','tsx','jsx','py','java','c','h','cpp','cs','go','rs','rb','php','sql','yaml','yml','toml','ini','cfg','log','sh','bat','ps1','tex','srt','vtt']);
+const MAX_INLINE_BYTES = 1024 * 1024;
+function extOf(n) { return (n.split('.').pop() || '').toLowerCase(); }
+function isTextFile(f) { return (f.type && (f.type.startsWith('text/') || f.type === 'application/json' || f.type === 'application/xml')) || TEXT_EXT.has(extOf(f.name || '')); }
+function fmtSize(n) { return n < 1024 ? n + ' B' : n < 1048576 ? (n / 1024).toFixed(1) + ' KB' : (n / 1048576).toFixed(1) + ' MB'; }
+function kindLabel(a) { return a.kind === 'image' ? 'image' : (a.kind === 'text' || a.kind === 'bigtext') ? 'text file' : (extOf(a.name) || 'file') + ' file'; }
+
+async function addFiles(list) {
+    for (const f of list) {
+        const a = { id: ++fileSeq, file: f, name: f.name || ('pasted-file-' + fileSeq), size: f.size, kind: 'file', inline: false, text: null, url: null };
+        if (f.type && f.type.startsWith('image/')) {
+            a.kind = 'image'; a.url = URL.createObjectURL(f);
+            if (/^(image|pasted-file)(\.\w+)?$/i.test(f.name || '')) a.name = 'pasted-image-' + fileSeq + '.' + (f.type.split('/')[1] || 'png').replace('jpeg', 'jpg');
+        } else if (isTextFile(f)) {
+            if (f.size <= MAX_INLINE_BYTES) {
+                try { a.text = await f.text(); a.kind = 'text'; a.inline = true; } catch (e) { a.kind = 'file'; }
+            } else { a.kind = 'bigtext'; }
+        }
+        attachments.push(a);
+    }
+    renderFiles(); updateStandardPrompt();
+    if (list.length) toast(list.length + ' file' + (list.length > 1 ? 's' : '') + ' attached');
+}
+function clearAttachments() {
+    attachments.forEach(a => a.url && URL.revokeObjectURL(a.url));
+    attachments.length = 0; renderFiles();
+}
+function renderFiles() {
+    const box = document.getElementById('fileList');
+    box.innerHTML = attachments.map(a => {
+        const thumb = a.kind === 'image' ? '<img src="' + a.url + '" alt="">' : '<span>' + esc((extOf(a.name) || 'file').slice(0, 4)) + '</span>';
+        let note = '', actions = '';
+        if (a.kind === 'text') {
+            actions += '<label class="mini-switch" data-tip="On: the file\u2019s text is pasted into the prompt (counts toward the length meter). Off: it is only listed, and you upload it in the chatbot."><input type="checkbox" data-act="inline" data-id="' + a.id + '"' + (a.inline ? ' checked' : '') + '> paste text into prompt</label>';
+        } else if (a.kind === 'image') {
+            actions += '<button type="button" class="mini-btn" data-act="copyimg" data-id="' + a.id + '" data-tip="Copies this image to your clipboard. Paste your prompt first, then copy the image and paste it into the same chat box.">Copy image</button>';
+            note = 'Upload or paste into the chatbot';
+        } else if (a.kind === 'bigtext') {
+            note = 'Over 1 MB: too large to paste, upload it in the chatbot';
+        } else {
+            note = 'Upload it in the chatbot (drag from your computer)';
+        }
+        return '<div class="file"><div class="thumb">' + thumb + '</div><div class="finfo"><div class="fname">' + esc(a.name) + '</div><div class="fmeta">' + esc(kindLabel(a)) + ' \u00B7 ' + fmtSize(a.size) + (note ? ' \u00B7 ' + esc(note) : '') + '</div>' + (actions ? '<div class="fact">' + actions + '</div>' : '') + '</div><button type="button" class="x" data-act="remove" data-id="' + a.id + '" aria-label="Remove ' + esc(a.name) + '" data-tip="Remove this file">&times;</button></div>';
+    }).join('');
+}
+function renderManualNote() {
+    const el = document.getElementById('manualNote');
+    const m = attachments.filter(a => !a.inline);
+    if (!m.length) { el.hidden = true; el.innerHTML = ''; return; }
+    el.hidden = false;
+    el.innerHTML = '\u{1F4CE} <b>Upload these in the chatbot too:</b> ' + m.map(a => esc(a.name)).join(', ');
+}
+async function toPngBlob(file) {
+    if (file.type === 'image/png') return file;
+    const bmp = await createImageBitmap(file);
+    const c = document.createElement('canvas'); c.width = bmp.width; c.height = bmp.height;
+    c.getContext('2d').drawImage(bmp, 0, 0);
+    return await new Promise((res, rej) => c.toBlob(b => b ? res(b) : rej(new Error('convert failed')), 'image/png'));
+}
+async function copyImage(a) {
+    try {
+        if (!navigator.clipboard || !window.ClipboardItem) throw new Error('unsupported');
+        const blob = await toPngBlob(a.file);
+        await navigator.clipboard.write([new ClipboardItem({ 'image/png': blob })]);
+        toast('Image copied \u2014 paste it into the chat');
+    } catch (e) { toast('This browser blocked image copy \u2014 drag the file into the chat instead', true); }
+}
+document.getElementById('fileList').addEventListener('click', e => {
+    const t = e.target.closest('[data-act]'); if (!t) return;
+    const a = attachments.find(x => x.id === +t.dataset.id); if (!a) return;
+    if (t.dataset.act === 'remove') { if (a.url) URL.revokeObjectURL(a.url); attachments.splice(attachments.indexOf(a), 1); hideTip(); renderFiles(); updateStandardPrompt(); }
+    else if (t.dataset.act === 'copyimg') copyImage(a);
+});
+document.getElementById('fileList').addEventListener('change', e => {
+    const t = e.target.closest('[data-act="inline"]'); if (!t) return;
+    const a = attachments.find(x => x.id === +t.dataset.id); if (a) { a.inline = t.checked; updateStandardPrompt(); }
+});
+const dropEl = document.getElementById('drop'), fileInputEl = document.getElementById('fileInput');
+dropEl.addEventListener('click', () => fileInputEl.click());
+dropEl.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); fileInputEl.click(); } });
+fileInputEl.addEventListener('change', () => { addFiles([...fileInputEl.files]); fileInputEl.value = ''; });
+const hasFiles = e => e.dataTransfer && [...(e.dataTransfer.types || [])].includes('Files');
+window.addEventListener('dragover', e => { if (hasFiles(e)) { e.preventDefault(); dropEl.classList.add('over'); } });
+window.addEventListener('dragleave', e => { if (!e.relatedTarget) dropEl.classList.remove('over'); });
+window.addEventListener('drop', e => { if (hasFiles(e)) { e.preventDefault(); dropEl.classList.remove('over'); addFiles([...e.dataTransfer.files]); } });
+document.addEventListener('paste', e => {
+    const fs = [...((e.clipboardData && e.clipboardData.files) || [])];
+    if (fs.length) { e.preventDefault(); addFiles(fs); }
+});
+document.getElementById('examineFiles').addEventListener('change', updateStandardPrompt);
+
+/* ------------------------------------------------------------ Tooltips */
+const tipEl = document.getElementById('tip');
+let tipTarget = null;
+function showTip(el) {
+    const txt = el.getAttribute('data-tip');
+    if (!txt) return;
+    tipTarget = el; tipEl.textContent = txt; tipEl.classList.add('show');
+    const r = el.getBoundingClientRect(), t = tipEl.getBoundingClientRect();
+    let left = Math.min(Math.max(8, r.left + r.width / 2 - t.width / 2), window.innerWidth - t.width - 8);
+    let top = r.bottom + 10, flip = false;
+    if (top + t.height > window.innerHeight - 8) { top = r.top - t.height - 10; flip = true; }
+    tipEl.style.left = left + 'px'; tipEl.style.top = Math.max(8, top) + 'px';
+    tipEl.classList.toggle('flip', flip);
+}
+function hideTip() { tipTarget = null; tipEl.classList.remove('show'); }
+document.addEventListener('mouseover', e => { const el = e.target.closest && e.target.closest('[data-tip]'); if (el && el !== tipTarget) showTip(el); else if (!el) hideTip(); });
+document.addEventListener('focusin', e => { const el = e.target.closest && e.target.closest('[data-tip]'); if (el) showTip(el); });
+document.addEventListener('focusout', hideTip);
+document.addEventListener('mouseleave', hideTip);
+window.addEventListener('scroll', hideTip, true);
+document.addEventListener('click', e => { if (e.target.closest && e.target.closest('select')) hideTip(); });
+
+/* ------------------------------------------------------------ Theme & init */
+function applyTheme(t) { document.documentElement.setAttribute('data-theme', t); }
+document.getElementById('themeBtn').addEventListener('click', () => {
+    const next = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+    applyTheme(next);
+    try { localStorage.setItem('pb-theme', next); } catch (e) {}
+});
+try { const saved = localStorage.getItem('pb-theme'); if (saved) applyTheme(saved); } catch (e) {}
+
+document.getElementById('modModal').addEventListener('click', e => { if (e.target.id === 'modModal') closeModificationModal(); });
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModificationModal(); });
+
+renderControls();
+renderBots();
+selectBot(CHATBOTS[0].name);
+corePromptEl.addEventListener('input', updateStandardPrompt);
+preventClippingEl.addEventListener('change', updateStandardPrompt);
+preventResponseClippingEl.addEventListener('change', updateStandardPrompt);
+panelsEl.addEventListener('change', updateStandardPrompt);
+panelsEl.addEventListener('input', updateStandardPrompt);
+updateStandardPrompt();
+</script>
+
+
+</body></html>

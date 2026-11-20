@@ -1,0 +1,910 @@
+<html lang="en"><!-- 
+==================================================================================
+ARCHITECTURAL METADATA LEDGER SIGNATURE (IMMUTABLE FOR DEBUGGING & LOGS)
+==================================================================================
+[SYSTEM VERSION] : v7.4.0-PRO-EVO
+[RELEASE BUILD]  : v5.0.0-PRO | LED Dark-Mode Enabled & Multi-Agent Sandbox Layout Restored
+[PRODUCTION DATE]: October 27, 2026, 07:30 PM CST
+[DEVELOPER NOTE] : Complete layout restructuring to match v5.0.0-PRO physical style. 
+                   Order: Profile Configuration first, Option Command Grid next (with 
+                   Structural Configuration & Hyperparameters toggle), Input Field next 
+                   for precise anti-clipping character tracking, easily accessible 
+                   Multi-Agent Transmission Sandbox, and finally Session Freeze / Studio.
+==================================================================================
+-->
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Universal Multi-Agent Prompt Architect Matrix</title>
+    <style>
+        :root {
+            --bg-primary: #0f0f11;
+            --bg-secondary: #16161a;
+            --bg-tertiary: #1f1f24;
+            --text-main: #e4e4e7;
+            --text-muted: #a1a1aa;
+            --accent-glow: #7c3aed;
+            --accent-glow-hover: #9333ea;
+            --border-color: #27272a;
+            --safe-color: #10b981;
+            --warning-color: #f59e0b;
+            --danger-color: #ef4444;
+            --led-glow: 0 0 10px rgba(124, 58, 237, 0.4);
+        }
+
+        .light-theme {
+            --bg-primary: #f4f4f5;
+            --bg-secondary: #ffffff;
+            --bg-tertiary: #e4e4e7;
+            --text-main: #18181b;
+            --text-muted: #71717a;
+            --accent-glow: #7c3aed;
+            --accent-glow-hover: #6d28d9;
+            --border-color: #d4d4d8;
+            --led-glow: 0 0 8px rgba(124, 58, 237, 0.2);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-primary);
+            color: var(--text-main);
+            padding: 24px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            min-height: 100vh;
+            transition: background-color 0.2s, color 0.2s;
+        }
+
+        header {
+            background-color: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            padding: 20px;
+            border-radius: 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: var(--led-glow);
+        }
+
+        .header-title h1 {
+            font-size: 1.5rem;
+            margin-bottom: 4px;
+        }
+
+        .header-title p {
+            color: var(--text-muted);
+            font-size: 0.85rem;
+        }
+
+        .header-controls {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .signature-badge {
+            font-family: monospace;
+            font-size: 0.75rem;
+            background: var(--bg-tertiary);
+            padding: 6px 12px;
+            border-radius: 6px;
+            border: 1px solid var(--border-color);
+            color: var(--text-muted);
+        }
+
+        .main-layout {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 20px;
+        }
+
+        @media (max-width: 1024px) {
+            .main-layout {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .control-panel {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .sidebar-panel {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .card {
+            background-color: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 20px;
+            position: relative;
+            box-shadow: var(--led-glow);
+        }
+
+        .card-title {
+            font-size: 1.1rem;
+            margin-bottom: 16px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: bold;
+        }
+
+        .box-num {
+            background: var(--accent-glow);
+            color: #fff;
+            font-size: 0.75rem;
+            padding: 2px 6px;
+            border-radius: 4px;
+            margin-right: 8px;
+            font-family: monospace;
+        }
+
+        .form-group {
+            margin-bottom: 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        label {
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        select, input[type="text"], textarea {
+            width: 100%;
+            background-color: var(--bg-tertiary);
+            border: 1px solid var(--border-color);
+            color: var(--text-main);
+            padding: 10px;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        select:focus, input[type="text"]:focus, textarea:focus {
+            border-color: var(--accent-glow);
+        }
+
+        .grid-options {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: 12px;
+        }
+
+        .checkbox-container {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background-color: var(--bg-tertiary);
+            padding: 10px;
+            border-radius: 6px;
+            border: 1px solid var(--border-color);
+            cursor: pointer;
+            position: relative;
+        }
+
+        .checkbox-container input {
+            cursor: pointer;
+        }
+
+        .tooltip {
+            position: absolute;
+            bottom: 105%;
+            left: 50%;
+            transform: translateX(-50%) translateY(5px);
+            background-color: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            color: var(--text-main);
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-size: 0.75rem;
+            width: 240px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.2s, transform 0.2s;
+            z-index: 10;
+        }
+
+        .checkbox-container:hover .tooltip {
+            opacity: 1;
+            transform: translateX(-50%) translateY(0);
+        }
+
+        .slider-row {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        input[type="range"] {
+            flex-grow: 1;
+            accent-color: var(--accent-glow);
+        }
+
+        .slider-value {
+            font-family: monospace;
+            font-size: 0.9rem;
+            width: 40px;
+            text-align: right;
+        }
+
+        textarea.main-input {
+            height: 160px;
+            resize: vertical;
+        }
+
+        .telemetry-row {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin-top: 8px;
+        }
+
+        .telemetry-block {
+            background-color: var(--bg-tertiary);
+            border: 1px solid var(--border-color);
+            padding: 8px;
+            border-radius: 6px;
+            text-align: center;
+        }
+
+        .telemetry-num {
+            font-family: monospace;
+            font-size: 1.1rem;
+            font-weight: bold;
+            display: block;
+        }
+
+        .telemetry-label {
+            font-size: 0.7rem;
+            color: var(--text-muted);
+        }
+
+        .buffer-meter-container {
+            width: 100%;
+            height: 6px;
+            background-color: var(--bg-tertiary);
+            border-radius: 3px;
+            margin-top: 10px;
+            overflow: hidden;
+        }
+
+        .buffer-bar {
+            width: 0%;
+            height: 100%;
+            background-color: var(--safe-color);
+            transition: width 0.3s, background-color 0.3s;
+        }
+
+        .routing-deck {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        button {
+            padding: 12px;
+            border-radius: 6px;
+            border: none;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.9rem;
+            transition: opacity 0.2s, background-color 0.2s;
+            color: #fff;
+        }
+
+        button:hover {
+            opacity: 0.9;
+        }
+
+        .btn-gemini { background-color: #1a73e8; }
+        .btn-chatgpt { background-color: #10a37f; }
+        .btn-claude { background-color: #d97706; }
+        .btn-action { background-color: var(--accent-glow); width: 100%; margin-top: 10px; }
+        .btn-action:hover { background-color: var(--accent-glow-hover); }
+        .btn-danger { background-color: var(--danger-color); padding: 6px 12px; font-size: 0.8rem; }
+        
+        .btn-secondary {
+            background-color: var(--bg-tertiary);
+            border: 1px solid var(--border-color);
+            color: var(--text-main);
+            padding: 6px 12px;
+            font-size: 0.8rem;
+        }
+        .btn-secondary:hover { background-color: var(--border-color); }
+
+        .collapsible-trigger {
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            user-select: none;
+        }
+
+        .collapsible-content {
+            display: none;
+            margin-top: 14px;
+            padding-top: 14px;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .collapsible-content.active {
+            display: block;
+        }
+
+        .history-list {
+            max-height: 150px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-top: 10px;
+        }
+
+        .history-item {
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border-color);
+            padding: 8px;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-size: 0.8rem;
+        }
+
+        .profile-row {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .sandbox-card {
+            border: 2px dashed var(--accent-glow) !important;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="header-title">
+            <h1>Universal Multi-Agent Prompt Architect Matrix</h1>
+            <p>Advanced system constraints engine designed to enforce zero-leakage prompt formatting rules.</p>
+        </div>
+        <div class="header-controls">
+            <button class="btn-secondary" onclick="toggleThemeMode()">🌓 Toggle Theme Mode</button>
+            <div class="signature-badge">v7.4.0-PRO-EVO // Build: v5.0.0-PRO LED</div>
+        </div>
+    </header>
+
+    <div class="main-layout">
+        <!-- LEFT CONTROL PANEL (Reordered per user spec: Profile -> Options -> Input -> Sandbox/Studio flow) -->
+        <div class="control-panel">
+            
+            <!-- Box 1: Profile Configuration First -->
+            <div class="card">
+                <div class="card-title"><span class="box-num">1</span>Profile Configuration Templates</div>
+                <div class="profile-row">
+                    <select id="profile-selector" onchange="loadSelectedProfileBlueprint()">
+                        <option value="default">-- Select Blueprint Profile --</option>
+                        <option value="HUD Grant Audit Mode">HUD Grant Audit Mode</option>
+                        <option value="ATS Technical Screening">ATS Technical Screening</option>
+                    </select>
+                    <input type="text" id="new-profile-name" placeholder="Blueprint Name..." style="width: 200px;">
+                    <button class="btn-secondary" onclick="saveProfileBlueprint()">Save</button>
+                    <button class="btn-danger" onclick="deleteProfileBlueprint()" style="padding: 10px;">Delete</button>
+                </div>
+            </div>
+
+            <!-- Box 3 (Options & Grid moved above the text prompt as requested) -->
+            <div class="card">
+                <div class="card-title"><span class="box-num">2</span>System Guard &amp; Logic Command Grid</div>
+                <div class="grid-options">
+                    <label class="checkbox-container">
+                        <input type="checkbox" id="cmd-hallucination" onchange="recalculateTelemetry()"> Zero-Hallucination Guard
+                        <div class="tooltip">Grounds outputs strictly within verifiable parameters.</div>
+                    </label>
+                    <label class="checkbox-container">
+                        <input type="checkbox" id="cmd-experts" onchange="recalculateTelemetry()"> Panel of Experts Mode
+                        <div class="tooltip">Simulates an expert roundtable debate between three specialists.</div>
+                    </label>
+                    <label class="checkbox-container">
+                        <input type="checkbox" id="cmd-advocate" onchange="recalculateTelemetry()"> Devil's Advocate Crucible
+                        <div class="tooltip">Commands the engine to audit structural vulnerabilities.</div>
+                    </label>
+                    <label class="checkbox-container">
+                        <input type="checkbox" id="cmd-verification" onchange="recalculateTelemetry()"> Source Cross-Verification
+                        <div class="tooltip">Enforces reference tracking data vectors for hard metrics.</div>
+                    </label>
+                    <label class="checkbox-container">
+                        <input type="checkbox" id="cmd-ats" onchange="recalculateTelemetry()"> ATS Resume Optimization
+                        <div class="tooltip">Optimizes keywords to clear corporate selection filter parses.</div>
+                    </label>
+                    <label class="checkbox-container">
+                        <input type="checkbox" id="cmd-housing" onchange="recalculateTelemetry()"> HUD/USDA Grant Frameworks
+                        <div class="tooltip">Checks alignment rules with federal public assistance guides.</div>
+                    </label>
+                    <label class="checkbox-container">
+                        <input type="checkbox" id="cmd-scannable" onchange="recalculateTelemetry()"> Ultra-Scannable Density
+                        <div class="tooltip">Bypasses conversational pleasantries entirely.</div>
+                    </label>
+                    <label class="checkbox-container">
+                        <input type="checkbox" id="cmd-anticlip" checked onchange="recalculateTelemetry()"> Output Anti-Clipping Guard
+                        <div class="tooltip">Forces response completion cleanly within token layout buffers.</div>
+                    </label>
+                </div>
+            </div>
+
+            <!-- Structural Configuration & Hyperparameters Toggle Card -->
+            <div class="card">
+                <div class="card-title collapsible-trigger" id="hyperparams-accordion-bar">
+                    <span>⚙️ Structural Configuration &amp; Hyperparameters</span>
+                    <span id="hyperparams-icon">▼</span>
+                </div>
+                <div class="collapsible-content" id="hyperparams-content">
+                    <div class="grid-options" style="grid-template-columns: 1fr 1fr; gap: 20px;">
+                        <div class="form-group">
+                            <label for="preset-persona">Core Persona Realization</label>
+                            <select id="preset-persona" onchange="recalculateTelemetry()">
+                                <option value="none">-- None / Standard System Assistant --</option>
+                                <option value="scholar">Distinguished Academic Scholar</option>
+                                <option value="sme">Domain Subject Matter Expert</option>
+                                <option value="dev">Lead Systems Architect / Engineer</option>
+                                <option value="advocate">Consumer Financial Advocate</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="output-format">Target Layout Strategy</label>
+                            <select id="output-format" onchange="recalculateTelemetry()">
+                                <option value="markdown">Side-by-Side Markdown Table Comparison</option>
+                                <option value="bullet">High-Density Fragmented Bullet Points</option>
+                                <option value="paragraph">Structured Context Prose Paragraphs</option>
+                                <option value="html">Raw Web Embed Layout (.html)</option>
+                                <option value="csv">Structured Tabular Data (.csv)</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group" style="margin-top: 14px;">
+                        <div class="slider-row">
+                            <label>Sampling Temperature (Variance Range)</label>
+                            <input type="range" id="param-temp" min="0" max="1" step="0.05" value="0.2" oninput="updateSliderLabels()">
+                            <span class="slider-value" id="val-temp">0.20</span>
+                        </div>
+                    </div>
+
+                    <div class="form-group" style="margin-top: 14px;">
+                        <div class="slider-row">
+                            <label>Explicit Token Boundary Clamp</label>
+                            <input type="range" id="param-tokens" min="500" max="8000" step="100" value="3000" oninput="updateSliderLabels()">
+                            <span class="slider-value" id="val-tokens">3000</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Box 2: Project Operational Scope / Text Input (Placed after options for valid character tracking) -->
+            <div class="card">
+                <div class="card-title"><span class="box-num">3</span>Project Operational Scope</div>
+                <div class="form-group">
+                    <label for="main-text-input">Core Query Scope / Instruction Core</label>
+                    <textarea id="main-text-input" class="main-input" placeholder="Paste your raw parameters here..." oninput="recalculateTelemetry()"></textarea>
+                </div>
+
+                <div class="telemetry-row">
+                    <div class="telemetry-block">
+                        <span class="telemetry-num" id="tele-user">0</span>
+                        <span class="telemetry-label">User Raw Count</span>
+                    </div>
+                    <div class="telemetry-block">
+                        <span class="telemetry-num" id="tele-system">452</span>
+                        <span class="telemetry-label">System Directives</span>
+                    </div>
+                    <div class="telemetry-block">
+                        <span class="telemetry-num" id="tele-total">452</span>
+                        <span class="telemetry-label">Cumulative Matrix Total</span>
+                    </div>
+                </div>
+                <div class="buffer-meter-container">
+                    <div id="buffer-indicator" class="buffer-bar" style="width: 1.4125%; background-color: rgb(16, 185, 129);"></div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-title">Downstream Session Continuity Trigger</div>
+                <div class="grid-options" style="grid-template-columns: 1fr 2fr; gap: 20px; align-items: center;">
+                    <label class="checkbox-container">
+                        <input type="checkbox" id="cmd-continuity-trigger" checked onchange="recalculateTelemetry()"> Inject Chat Capsule Trigger
+                        <div class="tooltip">Weaves an automated trigger key sequence rule into the layout prompt.</div>
+                    </label>
+                    <div class="form-group" style="margin-bottom:0;">
+                        <input type="text" id="continuity-keyword" value="/freeze" placeholder="Shortcut phrase..." oninput="recalculateTelemetry()">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Self-Evolution Studio -->
+            <div class="card">
+                <div class="card-title collapsible-trigger" id="evolution-accordion-bar">
+                    <span>🛠️ Self-Evolution Studio</span>
+                    <span id="trigger-icon">▲</span>
+                </div>
+                <div class="collapsible-content" id="evolution-content" style="display: block;">
+                    <div class="form-group">
+                        <label>App Upgrades / Modifications Request</label>
+                        <textarea id="evolution-instructions" style="height: 80px; font-size: 0.8rem; margin-bottom: 10px;" placeholder="Describe layout additions..."></textarea>
+                        <button class="btn-action" onclick="generateEvolutionCodePrompt()" style="margin-top:0; margin-bottom:14px;">Compile Pure HTML Evolution Payload</button>
+                    </div>
+                    <div class="form-group">
+                        <label>Project Origin &amp; Chat Continuity Blueprint</label>
+                        <textarea id="origin-capsule-text" readonly style="height: 100px; font-family: monospace; font-size: 0.75rem; background-color: var(--bg-primary); color: var(--text-muted);"></textarea>
+                        <button class="btn-secondary" style="width: 100%; margin-top: 6px;" onclick="copyOriginCapsule()">Copy Origin Blueprint</button>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- RIGHT SIDEBAR PANEL: 4. Multi-Agent Transmission Sandbox (Scrollable, Unpinned) & Session Freeze/Studio -->
+        <div class="sidebar-panel">
+            <div class="card sandbox-card">
+                <div class="card-title"><span class="box-num">4</span>Multi-Agent Transmission Sandbox</div>
+                <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 12px;">
+                    Copies compiled configuration matrix parameters straight to system clipboard and spawns the target routing tab channel. Deploy instantly after selecting options.
+                </p>
+                <div class="routing-deck">
+                    <button class="btn-gemini" onclick="executeRoutingGate('gemini')">🚀 Launch Google Gemini</button>
+                    <button class="btn-chatgpt" onclick="executeRoutingGate('chatgpt')">🟢 Launch OpenAI ChatGPT</button>
+                    <button class="btn-claude" onclick="executeRoutingGate('claude')">🟠 Launch Anthropic Claude</button>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-title">Session Freeze-Drying Deck</div>
+                <div class="form-group">
+                    <label for="session-capsule">Active Workspace State Capsule</label>
+                    <textarea id="session-capsule" style="height: 80px; font-family: monospace; font-size: 0.75rem;" placeholder="Compressed state code variables..."></textarea>
+                </div>
+                <div style="display: flex; gap: 8px; margin-bottom: 12px;">
+                    <button class="btn-secondary" style="flex-grow: 1;" onclick="freezeActiveSession()">Freeze</button>
+                    <button class="btn-secondary" style="flex-grow: 1;" onclick="rehydrateActiveSession()">Rehydrate</button>
+                </div>
+                <div class="form-group">
+                    <label>Historical Snapshots Registry</label>
+                    <div class="history-list" id="history-container"></div>
+                </div>
+                <button class="btn-danger" style="width: 100%; margin-top: 10px; padding: 6px;" onclick="purgeFullHistoryLog()">Purge All History Logs</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let profileRegistryStore = {};
+        let operationalHistoryLog = [];
+
+        const projectOriginBlueprint = `[SYSTEM CONTEXT RESUMPTION BLUEPRINT]
+PROJECT: Universal Multi-Agent Prompt Architect Matrix (HTML Dashboard)
+CURRENT STATUS: Production Version 7.4.0-PRO-EVO Completed.
+CORE TECH STACK: Single-file HTML5, CSS3, Vanilla JS, LocalStorage.`;
+
+        window.onload = function() {
+            initializeStorageLayers();
+            updateSliderLabels();
+            document.getElementById('origin-capsule-text').value = projectOriginBlueprint;
+            applySavedTheme();
+            
+            document.getElementById('evolution-accordion-bar').addEventListener('click', function(e) {
+                e.preventDefault();
+                toggleCollapsiblePanel('evolution-content', 'trigger-icon');
+            });
+
+            document.getElementById('hyperparams-accordion-bar').addEventListener('click', function(e) {
+                e.preventDefault();
+                toggleCollapsiblePanel('hyperparams-content', 'hyperparams-icon');
+            });
+
+            recalculateTelemetry();
+        };
+
+        function toggleThemeMode() {
+            document.body.classList.toggle('light-theme');
+            const isLight = document.body.classList.contains('light-theme');
+            localStorage.setItem('promptMatrixTheme', isLight ? 'light' : 'dark');
+        }
+
+        function applySavedTheme() {
+            const savedTheme = localStorage.getItem('promptMatrixTheme');
+            if (savedTheme === 'light') {
+                document.body.classList.add('light-theme');
+            }
+        }
+
+        function toggleCollapsiblePanel(contentId, iconId) {
+            const panel = document.getElementById(contentId);
+            const icon = document.getElementById(iconId);
+            if (panel.style.display === "block" || panel.classList.contains('active')) {
+                panel.style.display = "none";
+                panel.classList.remove('active');
+                if (icon) icon.innerText = "▼";
+            } else {
+                panel.style.display = "block";
+                panel.classList.add('active');
+                if (icon) icon.innerText = "▲";
+            }
+        }
+
+        function updateSliderLabels() {
+            document.getElementById('val-temp').innerText = parseFloat(document.getElementById('param-temp').value).toFixed(2);
+            document.getElementById('val-tokens').innerText = document.getElementById('param-tokens').value;
+            recalculateTelemetry();
+        }
+
+        function compileStructuralPayload() {
+            const rawScopeText = document.getElementById('main-text-input').value;
+            const targetPersona = document.getElementById('preset-persona').value;
+            const targetFormat = document.getElementById('output-format').value;
+            const sampleTemp = document.getElementById('param-temp').value;
+            const maxTokens = document.getElementById('param-tokens').value;
+
+            let prompt = "=== SYSTEM PARAMETERS & CONSTRAINT DIRECTIVES ===\n";
+            prompt += `[SAMPLING TEMPERATURE] : ${sampleTemp}\n`;
+            prompt += `[MAXIMUM OUTPUT CLAUSE] : Target allocation limit set to ${maxTokens} response units.\n\n`;
+
+            if (targetPersona === 'scholar') prompt += "[PERSONA DIRECTIVE] : Act exclusively as a Distinguished Academic Scholar.\n";
+            if (targetPersona === 'sme') prompt += "[PERSONA DIRECTIVE] : Act as an elite Domain Subject Matter Expert.\n";
+            if (targetPersona === 'dev') prompt += "[PERSONA DIRECTIVE] : Act as a Principal Systems Architect.\n";
+            if (targetPersona === 'advocate') prompt += "[PERSONA DIRECTIVE] : Act as a Consumer Financial & Housing Advocate.\n";
+
+            if (document.getElementById('cmd-hallucination').checked) prompt += "[CONSTRAINT] Zero-Hallucination Mode ACTIVE.\n";
+            if (document.getElementById('cmd-experts').checked) prompt += "[LOGIC ENGINE] Panel of Experts Enabled.\n";
+            if (document.getElementById('cmd-advocate').checked) prompt += "[LOGIC ENGINE] Devil's Advocate Review.\n";
+            if (document.getElementById('cmd-verification').checked) prompt += "[DATA LAYER] Source Cross-Verification Enforced.\n";
+            if (document.getElementById('cmd-ats').checked) prompt += "[MATRIX SPECIFIC] ATS Filter Optimization.\n";
+            if (document.getElementById('cmd-housing').checked) prompt += "[MATRIX SPECIFIC] HUD/USDA Grant Frameworks.\n";
+            if (document.getElementById('cmd-scannable').checked) prompt += "[FORMAT RULE] Ultra-Scannable Density Enforced.\n";
+            if (document.getElementById('cmd-anticlip').checked) prompt += "[SAFETY CLAUSE] Anti-Clipping Guard Active.\n";
+
+            if (document.getElementById('cmd-continuity-trigger').checked) {
+                const keyword = document.getElementById('continuity-keyword').value.trim() || "/freeze";
+                prompt += `\n[CONVERSATION CONTINUITY]: Typing "${keyword}" requests a Context Dehydration Capsule.\n`;
+            }
+
+            prompt += `\n[TARGET STRUCTURAL LAYOUT Strategy] : Output response using format: ${targetFormat}.\n\n`;
+            prompt += "=== PROMPT USER WORKSPACE INSTRUCTIONS ===\n";
+            prompt += rawScopeText ? rawScopeText : "[No raw context query parameters supplied]";
+
+            return prompt;
+        }
+
+        function recalculateTelemetry() {
+            const rawUserLength = document.getElementById('main-text-input').value.length;
+            const generatedPrompt = compileStructuralPayload();
+            const absoluteTotalLength = generatedPrompt.length;
+            const computedSystemLength = Math.max(0, absoluteTotalLength - rawUserLength);
+
+            document.getElementById('tele-user').innerText = rawUserLength;
+            document.getElementById('tele-system').innerText = computedSystemLength;
+            document.getElementById('tele-total').innerText = absoluteTotalLength;
+
+            const targetThreshold = 32000;
+            const computePercent = Math.min(100, (absoluteTotalLength / targetThreshold) * 100);
+            const indicator = document.getElementById('buffer-indicator');
+            indicator.style.width = `${computePercent}%`;
+
+            if (absoluteTotalLength > 24000) indicator.style.backgroundColor = '#ef4444';
+            else if (absoluteTotalLength > 12000) indicator.style.backgroundColor = '#f59e0b';
+            else indicator.style.backgroundColor = '#10b981';
+        }
+
+        function executeRoutingGate(targetPlatform) {
+            const compiledPrompt = compileStructuralPayload();
+            navigator.clipboard.writeText(compiledPrompt).then(() => {
+                alert(`Prompt architecture copied to clipboard. Launching ${targetPlatform}...`);
+                let targetUrl = "https://gemini.google.com";
+                if (targetPlatform === 'chatgpt') targetUrl = "https://chatgpt.com";
+                if (targetPlatform === 'claude') targetUrl = "https://claude.ai";
+                window.open(targetUrl, '_blank');
+            });
+        }
+
+        function initializeStorageLayers() {
+            const savedProfiles = localStorage.getItem('promptMatrixProfiles');
+            if (savedProfiles) {
+                try {
+                    profileRegistryStore = JSON.parse(savedProfiles);
+                    populateProfileSelector();
+                } catch(e) {
+                    profileRegistryStore = {};
+                }
+            }
+            const savedHistory = localStorage.getItem('promptMatrixHistory');
+            if (savedHistory) {
+                try {
+                    operationalHistoryLog = JSON.parse(savedHistory);
+                    renderHistoryList();
+                } catch(e) {
+                    operationalHistoryLog = [];
+                }
+            }
+        }
+
+        function saveProfileBlueprint() {
+            const nameInput = document.getElementById('new-profile-name').value.trim();
+            if (!nameInput) {
+                alert("Please enter a valid profile name.");
+                return;
+            }
+            const profileData = {
+                persona: document.getElementById('preset-persona').value,
+                format: document.getElementById('output-format').value,
+                temp: document.getElementById('param-temp').value,
+                tokens: document.getElementById('param-tokens').value,
+                hallucination: document.getElementById('cmd-hallucination').checked,
+                experts: document.getElementById('cmd-experts').checked,
+                advocate: document.getElementById('cmd-advocate').checked,
+                verification: document.getElementById('cmd-verification').checked,
+                ats: document.getElementById('cmd-ats').checked,
+                housing: document.getElementById('cmd-housing').checked,
+                scannable: document.getElementById('cmd-scannable').checked,
+                anticlip: document.getElementById('cmd-anticlip').checked,
+                textInput: document.getElementById('main-text-input').value
+            };
+            profileRegistryStore[nameInput] = profileData;
+            localStorage.setItem('promptMatrixProfiles', JSON.stringify(profileRegistryStore));
+            populateProfileSelector();
+            document.getElementById('new-profile-name').value = '';
+            alert(`Profile "${nameInput}" saved successfully.`);
+        }
+
+        function populateProfileSelector() {
+            const selector = document.getElementById('profile-selector');
+            selector.innerHTML = '<option value="default">-- Select Blueprint Profile --</option>';
+            for (const key in profileRegistryStore) {
+                const opt = document.createElement('option');
+                opt.value = key;
+                opt.innerText = key;
+                selector.appendChild(opt);
+            }
+        }
+
+        function loadSelectedProfileBlueprint() {
+            const selector = document.getElementById('profile-selector');
+            const val = selector.value;
+            if (val === 'default' || !profileRegistryStore[val]) return;
+            const data = profileRegistryStore[val];
+            document.getElementById('preset-persona').value = data.persona || 'none';
+            document.getElementById('output-format').value = data.format || 'markdown';
+            document.getElementById('param-temp').value = data.temp || 0.2;
+            document.getElementById('param-tokens').value = data.tokens || 3000;
+            document.getElementById('cmd-hallucination').checked = !!data.hallucination;
+            document.getElementById('cmd-experts').checked = !!data.experts;
+            document.getElementById('cmd-advocate').checked = !!data.advocate;
+            document.getElementById('cmd-verification').checked = !!data.verification;
+            document.getElementById('cmd-ats').checked = !!data.ats;
+            document.getElementById('cmd-housing').checked = !!data.housing;
+            document.getElementById('cmd-scannable').checked = !!data.scannable;
+            document.getElementById('cmd-anticlip').checked = !!data.anticlip;
+            if (data.textInput !== undefined) {
+                document.getElementById('main-text-input').value = data.textInput;
+            }
+            updateSliderLabels();
+        }
+
+        function deleteProfileBlueprint() {
+            const selector = document.getElementById('profile-selector');
+            const val = selector.value;
+            if (val === 'default' || !profileRegistryStore[val]) {
+                alert("Please select a valid saved profile to delete.");
+                return;
+            }
+            delete profileRegistryStore[val];
+            localStorage.setItem('promptMatrixProfiles', JSON.stringify(profileRegistryStore));
+            populateProfileSelector();
+            alert(`Profile "${val}" deleted.`);
+        }
+
+        function freezeActiveSession() {
+            const stateObj = {
+                timestamp: new Date().toISOString(),
+                text: document.getElementById('main-text-input').value,
+                persona: document.getElementById('preset-persona').value,
+                format: document.getElementById('output-format').value
+            };
+            const capsuleStr = btoa(JSON.stringify(stateObj));
+            document.getElementById('session-capsule').value = capsuleStr;
+            operationalHistoryLog.unshift({ id: Date.now(), label: `Snapshot @ ${new Date().toLocaleTimeString()}`, data: capsuleStr });
+            if (operationalHistoryLog.length > 20) operationalHistoryLog.pop();
+            localStorage.setItem('promptMatrixHistory', JSON.stringify(operationalHistoryLog));
+            renderHistoryList();
+        }
+
+        function rehydrateActiveSession() {
+            const capsuleStr = document.getElementById('session-capsule').value.trim();
+            if (!capsuleStr) {
+                alert("Provide a capsule string in the deck to rehydrate.");
+                return;
+            }
+            try {
+                const decoded = JSON.parse(atob(capsuleStr));
+                if (decoded.text !== undefined) document.getElementById('main-text-input').value = decoded.text;
+                if (decoded.persona) document.getElementById('preset-persona').value = decoded.persona;
+                if (decoded.format) document.getElementById('output-format').value = decoded.format;
+                recalculateTelemetry();
+                alert("Workspace state successfully rehydrated.");
+            } catch(e) {
+                alert("Failed to decode session capsule token string.");
+            }
+        }
+
+        function renderHistoryList() {
+            const container = document.getElementById('history-container');
+            container.innerHTML = '';
+            operationalHistoryLog.forEach(item => {
+                const div = document.createElement('div');
+                div.className = 'history-item';
+                div.innerHTML = `
+                    <div class="history-item-left" onclick="loadHistoryItem('${item.data}')" title="Click to load snapshot">
+                        <span>🕒</span> <span>${item.label}</span>
+                    </div>
+                    <button class="btn-secondary" style="padding: 2px 6px; font-size: 0.7rem;" onclick="removeHistoryItem(${item.id})">Del</button>
+                `;
+                container.appendChild(div);
+            });
+        }
+
+        function loadHistoryItem(dataStr) {
+            document.getElementById('session-capsule').value = dataStr;
+            rehydrateActiveSession();
+        }
+
+        function removeHistoryItem(id) {
+            operationalHistoryLog = operationalHistoryLog.filter(i => i.id !== id);
+            localStorage.setItem('promptMatrixHistory', JSON.stringify(operationalHistoryLog));
+            renderHistoryList();
+        }
+
+        function purgeFullHistoryLog() {
+            if (confirm("Are you sure you want to purge all history snapshots?")) {
+                operationalHistoryLog = [];
+                localStorage.removeItem('promptMatrixHistory');
+                renderHistoryList();
+            }
+        }
+
+        function copyOriginCapsule() {
+            const txt = document.getElementById('origin-capsule-text');
+            navigator.clipboard.writeText(txt.value).then(() => {
+                alert("Origin Blueprint copied to clipboard.");
+            });
+        }
+
+        function generateEvolutionCodePrompt() {
+            const instructions = document.getElementById('evolution-instructions').value.trim();
+            if (!instructions) {
+                alert("Please describe requested modifications in the evolution text box.");
+                return;
+            }
+            const payload = `=== SELF-EVOLUTION STUDIO INSTRUCTION ===\nRequested Upgrades:\n${instructions}\n\nPlease generate the updated full HTML layout block incorporating these requirements.`;
+            navigator.clipboard.writeText(payload).then(() => {
+                alert("Evolution request payload copied to clipboard.");
+            });
+        }
+    </script>
+</body>
+</html>

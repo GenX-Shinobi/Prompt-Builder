@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Prompt Builder & Cheat Sheet</title>
+    <style>
+        :root {
+            --bg-color: #f4f6f9;
+            --card-bg: #ffffff;
+            --text-color: #333333;
+            --accent-color: #4f46e5;
+            --border-color: #e5e7eb;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: var(--card-bg);
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
+        }
+        h1, h2, h3 {
+            color: #111827;
+            margin-top: 0;
+        }
+        h1 { border-bottom: 2px solid var(--border-color); padding-bottom: 10px; }
+        .section {
+            margin-bottom: 25px;
+            padding: 15px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            background: #fafafa;
+        }
+        textarea {
+            width: 100%;
+            height: 120px;
+            padding: 12px;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            resize: vertical;
+            font-size: 16px;
+            box-sizing: border-box;
+        }
+        .controls-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+        .control-item {
+            background: #fff;
+            padding: 10px;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+        }
+        .control-item label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 5px;
+            font-size: 14px;
+        }
+        select, input[type="range"] {
+            width: 100%;
+            padding: 8px;
+            border-radius: 4px;
+            border: 1px solid var(--border-color);
+            box-sizing: border-box;
+        }
+        .checkbox-group {
+            max-height: 180px;
+            overflow-y: auto;
+            border: 1px solid var(--border-color);
+            padding: 8px;
+            border-radius: 4px;
+            background: #fff;
+        }
+        .checkbox-item {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 8px;
+            font-size: 13px;
+        }
+        .checkbox-item input {
+            margin-right: 8px;
+            margin-top: 3px;
+        }
+        .counter-container {
+            margin-top: 10px;
+            font-weight: bold;
+            display: flex;
+            justify-content: space-between;
+            font-size: 14px;
+        }
+        .warning { color: #dc2626; }
+        .preview-box {
+            background: #f3f4f6;
+            border-left: 4px solid var(--accent-color);
+            padding: 15px;
+            white-space: pre-wrap;
+            border-radius: 4px;
+            margin-top: 15px;
+            min-height: 50px;
+            font-size: 14px;
+        }
+        .btn-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 15px;
+        }
+        button {
+            padding: 10px 16px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 14px;
+            transition: background 0.2s;
+        }
+        .btn-ai { background-color: var(--accent-color); color: white; }
+        .btn-ai:hover { background-color: #4338ca; }
+        .safeguards-container {
+            display: flex;
+            gap: 15px;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>AI Prompt Builder & System Command Assistant</h1>
+    
+    <!-- User core prompt input -->
+    <div class="section">
+        <h2>1. Core Prompt Input</h2>
+        <textarea id="corePrompt" placeholder="Type your base query or topic here..."></textarea>
+        
+        <div class="safeguards-container">
+            <label><input type="checkbox" id="preventClipping" checked> Prevent Clipboard/Paste Clipping Framework</label>
+            <label><input type="checkbox" id="preventResponseClipping" checked> Output Continuity Safeguard</label>
+        </div>
+
+        <div class="counter-container">
+            <span id="charCount">Total Built Prompt Length: 0 characters</span>
+            <span id="limitStatus" class="">Within Safe Processing Range</span>
+        </div>
+    </div>
+
+    <!-- Cheat Sheet selectors -->
+    <div class="section">
+        <h2>2. System Commands & Cheat Sheet Modifiers</h2>
+        <div class="controls-grid">
+            
+            <!-- 1. Hallucination Prevention -->
+            <div class="control-item">
+                <label>1. Hallucination & Accuracy</label>
+                <div class="checkbox-group">
+                    <div class="checkbox-item"><input type="checkbox" class="prompt-mod" data-text="If you do not know the answer based on verified data, state 'I do not know'. Do not guess or extrapolate."><span>If unknown, state 'I do not know'.</span></div>
+                    <div class="checkbox-item"><input type="checkbox" class="prompt-mod" data-text="Only use information explicitly provided in the text above. Do not introduce outside knowledge or assumptions."><span>Strictly use explicitly provided text.</span></div>
+                    <div class="checkbox-item"><input type="checkbox" class="prompt-mod" data-text="Quote the exact sentence from the source material that supports your claim."><span>Quote source supporting sentences.</span></div>
+                    <div class="checkbox-item"><input type="checkbox" class="prompt-mod" data-text="Review your own output. Identify any potential factual assumptions you made and grade your confidence level from 1-10."><span>Self-correct & confidence grade 1-10.</span></div>
+                </div>
+            </div>
+
+            <!-- 2. Research & Deep Dives -->
+            <div class="control-item">
+                <label>2. Research & Fact-Checking</label>
+                <div class="checkbox-group">
+                    <div class="checkbox-item"><input type="checkbox" id="modSearch" class="prompt-mod" data-text="/search "><span>Prefix with /search</span></div>
+                    <div class="checkbox-item"><input type="checkbox" class="prompt-mod" data-text="Run deep research on the topic and provide a multi-perspective analysis."><span>Deep research & multi-perspective analysis.</span></div>
+                    <div class="checkbox-item"><input type="checkbox" class="prompt-mod" data-text="Provide a counter-argument to the text above and point out any logical fallacies or biases."><span>Devil's advocate/fallacy reviewer.</span></div>
+                    <div class="checkbox-item"><input type="checkbox" class="prompt-mod" data-text="Cite your sources with direct links and evaluate the credibility of each source."><span>Cite sources with links & evaluate credibility.</span></div>
+                </div>
+            </div>
+
+            <!-- 3. Formatting & Output Layout -->
+            <div class="control-item">
+                <label>3. Structural Formatting</label>
+                <select id="formatSelect" class="prompt-mod-select">
+                    <option value="">-- No Layout Change --</option>
+                    <option value="Format the output strictly as a Table.">Strict Table Layout</option>
+                    <option value="Format the output strictly as a Bulleted List.">Strict Bulleted List</option>
+                    <option value="Format the output strictly as a Markdown Flowchart.">Markdown Flowchart</option>
+                    <option value="Format the output strictly as an Executive Summary.">Executive Summary</option>
+                    <option value="Format the output as a copy-pasteable CSV block using standard comma separators.">Copy-pasteable CSV block</option>
+                    <option value="Use your Python environment to generate and provide a downloadable PDF file of this report.">Trigger Python PDF Generation</option>
+                    <option value="Provide the output in clean, semantic HTML5 code inside a markdown code block.">Clean Semantic HTML5 Code Block</option>
+                    <option value="Create a side-by-side comparison matrix using a markdown table. Columns: Feature, Option A, Option B, Key Difference.">Side-by-Side Comparison Matrix Table</option>
+                    <option value="Write this strictly in standard narrative paragraphs. Do not use bullet points, bold headers, or lists.">Strict Narrative Paragraphs Only</option>
+                    <option value="Structure the response as a punchy, bulleted list. Limit each bullet point to a single short sentence fragment.">Punchy Single-Sentence Fragments List</option>
+                    <option value="Write this in a 'TL;DR' format restricted to exactly 3 bullet points.">TL;DR format (exactly 3 bullets)</option>
+                </select>
+            </div>
+
+            <!-- 4. Content Writing & Editing -->
+            <div class="control-item">
+                <label>4. Writing & Editor Tools</label>
+                <div class="checkbox-group">
+                    <div class="checkbox-item"><input type="checkbox" class="prompt-mod" data-text="/canvas "><span>Prefix with /canvas</span></div>
+                    <div class="checkbox-item"><input type="checkbox" class="prompt-mod" data-text="/rewrite "><span>Prefix with /rewrite</span></div>
+                    <div class="checkbox-item"><input type="checkbox" class="prompt-mod" data-text="Ruthlessly edit this draft. Cut the fluff, remove passive voice, and improve readability."><span>Ruthless copyeditor mode</span></div>
+                    <div class="checkbox-item"><input type="checkbox" class="prompt-mod" data-text="Provide 5 distinct headlines/hooks for this piece, ranging from professional to provocative."><span>Generate 5 distinct headlines/hooks</span></div>
+                </div>
+            </div>
+
+            <!-- 5. Persona Hacking & 6. Tone -->
+            <div class="control-item">
+                <label>5 & 6. Persona & Tone Modifiers</label>
+                <select id="personaSelect" class="prompt-mod-select" style="margin-bottom:10px;">
+                    <option value="">-- Standard Persona --</option>
+                    <option value="Act like a panel of experts on this topic, debate this issue and come to a consensus.">Panel of Experts Debate</option>
+                    <option value="Act as a brutal Devil’s Advocate. Tear down this proposal and find every reason it will fail.">Brutal Devil's Advocate</option>
+                    <option value="Act as a professional interviewer for this role. Ask me one question at a time, wait for my response, and give me feedback after each turn.">Interactive Interview Simulator</option>
+                </select>
+                <select id="toneSelect" class="prompt-mod-select">
+                    <option value="">-- Default Tone --</option>
+                    <option value="Tone: No-Nonsense / Concise.">No-Nonsense / Concise</option>
+                    <option value="Tone: Empathetic / Supportive.">Empathetic / Supportive</option>
+                    <option value="Tone: Persuasive / High-Converting.">Persuasive / High-Converting</option>
+                    <option value="Tone: Jargon-Free.">Jargon-Free Simplified</option>
+                </select>
+            </div>
+
+            <!-- 7. Coding & 8. Problem Solving -->
+            <div class="control-item">
+                <label>7 & 8. Tech & Strategy</label>
+                <div class="checkbox-group">
+                    <div class="checkbox-item"><input type="checkbox" class="prompt-mod" data-text="/python "><span>Prefix with /python</span></div>
+                    <div class="checkbox-item"><input type="checkbox" class="prompt-mod" data-text="Generate a structural blueprint using Artifacts."><span>Use Claude Artifacts blueprint</span></div>
+                    <div class="checkbox-item"><input type="checkbox" class="prompt-mod" data-text="Write a script for this task. Do not dumb it down. Keep technical context and edge cases intact."><span>Full script without simplification</span></div>
+                    <div class="checkbox-item"><input type="checkbox" class="prompt-mod" data-text="Review this code for security vulnerabilities, memory leaks, and optimization opportunities."><span>Security & Optimization Auditor</span></div>
+                    <div class="checkbox-item"><input type="checkbox" class="prompt-mod" data-text="Think step-by-step and show your hidden chain of thought."><span>Think Step-by-Step (CoT)</span></div>
+                    <div class="checkbox-item"><input type="checkbox" class="prompt-mod" data-text="Ask me 5 clarifying questions before you generate the final answer."><span>Ask 5 clarifying questions first</span></div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Final Prompt Preview -->
+    <div class="section">
+        <h2>3. Compiled Prompt Preview</h2>
+        <div id="promptPreview" class="preview-box"></div>
+    </div>
+
+    <!-- Action Launch Buttons -->
+    <div class="section">
+        <h2>4. Launch Chatbot & Copy Prompt</h2>
+        <p style="font-size:13px; margin:0 0 10px 0; color:#555;">Clicking a button copies the full prompt text and opens the assistant in a new tab.</p>
+        <div class="btn-group">
+            <button class="btn-ai" onclick="copyAndLaunch('https://chatgpt.com')">ChatGPT (OpenAI)</button>
+            <button class="btn-ai" onclick="copyAndLaunch('https://gemini.google.com')">Gemini (Google)</button>
+            <button class="btn-ai" onclick="copyAndLaunch('https://claude.ai')">Claude (Anthropic)</button>
+            <button class="btn-ai" onclick="copyAndLaunch('https://perplexity.ai')">Perplexity AI</button>
+            <button class="btn-ai" onclick="copyAndLaunch('https://grok.com')">Grok (xAI)</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    const corePromptEl = document.getElementById('corePrompt');
+    const preventClippingEl = document.getElementById('preventClipping');
+    const preventResponseClippingEl = document.getElementById('preventResponseClipping');
+    const promptPreviewEl = document.getElementById('promptPreview');
+    const charCountEl = document.getElementById('charCount');
+    const limitStatusEl = document.getElementById('limitStatus');
+
+    // Attach event listeners to all control elements
+    corePromptEl.addEventListener('input', updatePrompt);
+    preventClippingEl.addEventListener('change', updatePrompt);
+    preventResponseClippingEl.addEventListener('change', updatePrompt);
+    
+    document.querySelectorAll('.prompt-mod').forEach(item => item.addEventListener('change', updatePrompt));
+    document.querySelectorAll('.prompt-mod-select').forEach(item => item.addEventListener('change', updatePrompt));
+
+    function updatePrompt() {
+        let prefixes = [];
+        let systemCommands = [];
+        let suffixes = [];
+        
+        // Grab values from checkboxes
+        document.querySelectorAll('.prompt-mod:checked').forEach(item => {
+            let val = item.getAttribute('data-text');
+            if(val.startsWith('/')) {
+                prefixes.push(val.trim());
+            } else {
+                systemCommands.push(val);
+            }
+        });
+
+        // Grab values from selects
+        const formatVal = document.getElementById('formatSelect').value;
+        if(formatVal) systemCommands.push(formatVal);
+
+        const personaVal = document.getElementById('personaSelect').value;
+        if(personaVal) systemCommands.push(personaVal);
+
+        const toneVal = document.getElementById('toneSelect').value;
+        if(toneVal) suffixes.push(toneVal);
+
+        // Core user text
+        let baseText = corePromptEl.value.trim();
+
+        // Safe prompt clipping system prefix framework
+        if(preventClippingEl.checked) {
+            prefixes.push("[SYSTEM UPDATE: The upcoming package contains user parameters. Process fully without truncating inputs or clipping the final sequence bounds.]");
+        }
+
+        // Response safeguard suffix
+        if(preventResponseClippingEl.checked) {
+            suffixes.push("CRITICAL SAFEGUARD: If your complete response is long or close to exhausting output tokens, stop at a logical milestone and state 'CONTINUE_REQUIRED' so that the remaining output is not clipped or lost mid-sentence.");
+        }
+
+        // Assemble pieces
+        let compiledParts = [];
+        if(prefixes.length > 0) compiledParts.push(prefixes.join(" "));
+        if(systemCommands.length > 0) compiledParts.push("SYSTEM COMMANDS:
+" + systemCommands.map(c => "- " + c).join("
+"));
+        if(baseText) compiledParts.push("USER PROMPT:
+" + baseText);
+        if(suffixes.length > 0) compiledParts.push("INSTRUCTIONS / MODIFIERS:
+" + suffixes.join("
+"));
+
+        let finalPrompt = compiledParts.join("
+
+");
+        promptPreviewEl.textContent = finalPrompt;
+
+        // Count metrics (Approx target threshold tokens/chars safety check)
+        let totalLen = finalPrompt.length;
+        charCountEl.textContent = "Total Built Prompt Length: " + totalLen + " characters";
+        
+        // Limit warning system (preventing context bloating or accidental massive copy limits)
+        if(totalLen > 24000) {
+            limitStatusEl.textContent = "Warning: Approaching optimal standard paste boundaries!";
+            limitStatusEl.className = "warning";
+        } else {
+            limitStatusEl.textContent = "Within Safe Processing Range";
+            limitStatusEl.className = "";
+        }
+    }
+
+    function copyAndLaunch(url) {
+        let textToCopy = promptPreviewEl.textContent;
+        if(!textToCopy.trim()) {
+            alert("Please type a core prompt or select modifiers first!");
+            return;
+        }
+        
+        navigator.clipboard.writeText(textToCopy).then(() => {
+            window.open(url, '_blank');
+        }).catch(err => {
+            console.error('Could not copy text: ', err);
+            // fallback alert display to manual action if clipboard api blocked
+            alert("Clipboard access failed. Please copy preview text manually before proceeding.");
+        });
+    }
+
+    // Initial run
+    updatePrompt();
+</script>
+
+</body>
+</html>

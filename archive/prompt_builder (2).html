@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Prompt Builder & Code Migrator</title>
+    <style>
+        :root {
+            --bg-color: #f4f6f9;
+            --card-bg: #ffffff;
+            --text-color: #333333;
+            --accent-color: #4f46e5;
+            --border-color: #e5e7eb;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: var(--card-bg);
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
+        }
+        h1 { border-bottom: 2px solid var(--border-color); padding-bottom: 10px; margin-top: 0;}
+        .section { margin-bottom: 25px; padding: 15px; border: 1px solid var(--border-color); border-radius: 8px; background: #fafafa; }
+        textarea { width: 100%; height: 120px; padding: 12px; border: 1px solid var(--border-color); border-radius: 6px; resize: vertical; font-size: 16px; box-sizing: border-box; }
+        .controls-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 15px; margin-top: 15px; }
+        .control-item { background: #fff; padding: 10px; border: 1px solid var(--border-color); border-radius: 6px; }
+        .control-item label { display: block; font-weight: 600; margin-bottom: 5px; font-size: 14px; }
+        select { width: 100%; padding: 8px; border-radius: 4px; border: 1px solid var(--border-color); box-sizing: border-box; }
+        .checkbox-group { max-height: 150px; overflow-y: auto; border: 1px solid var(--border-color); padding: 8px; border-radius: 4px; background: #fff; }
+        .checkbox-item { display: flex; align-items: flex-start; margin-bottom: 8px; font-size: 13px; }
+        .checkbox-item input { margin-right: 8px; margin-top: 3px; }
+        .counter-container { margin-top: 10px; font-weight: bold; display: flex; justify-content: space-between; font-size: 14px; }
+        .warning { color: #dc2626; }
+        .preview-box { background: #1e293b; color: #f8fafc; padding: 15px; white-space: pre-wrap; border-radius: 6px; margin-top: 15px; min-height: 80px; font-size: 14px; font-family: monospace; border: 1px solid #334155; }
+        .btn-group { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 15px; }
+        button { padding: 10px 16px; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; font-size: 14px; transition: background 0.2s; }
+        .btn-ai { background-color: var(--accent-color); color: white; }
+        .btn-ai:hover { background-color: #4338ca; }
+        .btn-copy { background-color: #10b981; color: white; }
+        .btn-copy:hover { background-color: #059669; }
+        .btn-mod-trigger { background-color: #db2777; color: white; }
+        .btn-mod-trigger:hover { background-color: #be185d; }
+        
+        /* Modal Window Styles */
+        .modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.5); align-items: center; justify-content: center; }
+        .modal-content { background-color: white; padding: 25px; border-radius: 8px; max-width: 600px; width: 90%; box-sizing: border-box; box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1); }
+        .modal-header { font-size: 18px; font-weight: bold; margin-bottom: 15px; }
+        .modal-body label { display: block; font-weight: bold; margin: 10px 0 5px 0; font-size: 14px; }
+        .modal-footer { margin-top: 20px; display: flex; justify-content: flex-end; gap: 10px; }
+        .btn-secondary { background-color: #6b7280; color: white; }
+        .btn-secondary:hover { background-color: #4b5563; }
+        .input-text { width: 100%; padding: 8px; border: 1px solid var(--border-color); border-radius: 4px; font-size: 14px; box-sizing: border-box; }
+    </style>
+</head>
+<body>
+
+<!-- 
+========================================================================
+IMMUTABLE CODE METADATA & VERSION MIGRATION HISTORY LOG
+========================================================================
+This block acts as an unalterable log. Every future AI Chatbot updating this file MUST read this history,
+increment the minor/major version string below, append a new historical array object, and preserve the template structure.
+
+[ACTIVE CONFIGURATION]
+- currentVersion: "3.0.0"
+
+[MIGRATION HISTORY MATRIX]
+[
+  {
+    "version": "3.0.0",
+    "bot": "Claude (Anthropic)",
+    "change": "Removed visual version labels from UI. Added Modification Input Modal popup feature. Duplemented Chatbot launch hub to specifically handle file mutation injection requests.",
+    "why": "User requested cleaner visual canvas with an isolated pop-up query window to instruct upcoming bots and package both the command parameters and source code together cleanly."
+  },
+  {
+    "version": "2.0.0",
+    "bot": "Claude (Anthropic)",
+    "change": "Re-architected prompt preview pipeline using textContent. Repaired platform redirection click isolation loops, built structured history tracker grid.",
+    "why": "User reported blank text box errors and broken assistant routing actions."
+  },
+  {
+    "version": "1.0.0",
+    "bot": "Initial System Base",
+    "change": "Created base HTML document containing core user prompt space, standard cheat sheet modifiers, and basic platform redirection blocks.",
+    "why": "Initial build request."
+  }
+]
+========================================================================
+-->
+
+<div class="container">
+    <h1>AI Prompt Builder Hub</h1>
+    
+    <!-- Section 1: Standard Prompt Building Workflow -->
+    <div class="section">
+        <h2>1. Standard User Prompt Construction</h2>
+        <textarea id="corePrompt" placeholder="Type your prompt details here..."></textarea>
+        <div style="margin-top:10px; display:flex; gap:15px; font-size:14px;">
+            <label><input type="checkbox" id="preventClipping" checked> Prevent Input Truncation Framework</label>
+            <label><input type="checkbox" id="preventResponseClipping" checked> Output Continuity Safeguard</label>
+        </div>
+        <div class="counter-container">
+            <span id="charCount">Total Built Prompt Length: 0 characters</span>
+            <span id="limitStatus">Within Safe Processing Range</span>
+        </div>
+    </div>
+
+    <!-- Section 2: Cheat Sheet Selectors -->
+    <div class="section">
+        <h2>2. Cheat Sheet Modifiers</h2>
+        <div class="controls-grid">
+            <div class="control-item">
+                <label>1. Hallucination Prevention</label>
+                <div class="checkbox-group">
+                    <div class="checkbox-item"><input type="checkbox" class="prompt-mod" data-text="If you do not know the answer based on verified data, state 'I do not know'. Do not guess or extrapolate."><span>If unknown, state 'I do not know'.</span></div>
+                    <div class="checkbox-item"><input type="checkbox" class="prompt-mod" data-text="Only use information explicitly provided in the text above. Do not introduce outside knowledge or assumptions."><span>Strictly use explicitly provided text.</span></div>
+                    <div class="checkbox-item"><input type="checkbox" class="prompt-mod" data-text="Quote the exact sentence from the source material that supports your claim."><span>Quote source supporting sentences.</span></div>
+                </div>
+            </div>
+
+            <div class="control-item">
+                <label>2. Research & Fact-Check</label>
+                <div class="checkbox-group">
+                    <div class="checkbox-item"><input type="checkbox" class="prompt-mod" data-text="/search "><span>Prefix with /search</span></div>
+                    <div class="checkbox-item"><input type="checkbox" class="prompt-mod" data-text="Run deep research on the topic and provide a multi-perspective analysis."><span>Deep research multi-agent mode.</span></div>
+                </div>
+            </div>
+
+            <div class="control-item">
+                <label>3. Structural Layout & Formats</label>
+                <select id="formatSelect" class="prompt-mod-select">
+                    <option value="">-- No Layout Change --</option>
+                    <option value="Format the output strictly as a Table.">Strict Table Layout</option>
+                    <option value="Format the output strictly as a Bulleted List.">Strict Bulleted List</option>
+                    <option value="Format the output strictly as a copy-pasteable .html file block.">Strict HTML File Output Layout</option>
+                    <option value="Provide the output in clean, semantic HTML5 code inside a markdown code block.">Clean Semantic HTML5 Code Block</option>
+                </select>
+            </div>
+        </div>
+    </div>
+
+    <!-- Section 3: Standard Output Area -->
+    <div class="section">
+        <h2>3. Compiled Prompt Preview Window</h2>
+        <div id="promptPreview" class="preview-box"></div>
+        <div style="margin-top:10px;">
+            <button class="btn-copy" onclick="manualCopy('promptPreview')">Copy Standard Prompt Payload</button>
+        </div>
+    </div>
+
+    <!-- Section 4: Standard Portal Launchers -->
+    <div class="section">
+        <h2>4. Launch Workspace Portal & Paste Standard Prompt</h2>
+        <div class="btn-group">
+            <button class="btn-ai" onclick="copyAndLaunch('promptPreview', 'https://chatgpt.com')">ChatGPT (OpenAI)</button>
+            <button class="btn-ai" onclick="copyAndLaunch('promptPreview', 'https://gemini.google.com')">Gemini (Google)</button>
+            <button class="btn-ai" onclick="copyAndLaunch('promptPreview', 'https://claude.ai')">Claude (Anthropic)</button>
+            <button class="btn-ai" onclick="copyAndLaunch('promptPreview', 'https://perplexity.ai')">Perplexity AI</button>
+            <button class="btn-ai" onclick="copyAndLaunch('promptPreview', 'https://grok.com')">Grok (xAI)</button>
+        </div>
+    </div>
+
+    <!-- Section 5: Code Modification Feature Portal -->
+    <div class="section" style="border: 2px dashed #db2777; background: #fff5f7;">
+        <h2>5. Advanced Code Modification Pipeline</h2>
+        <p style="font-size:13px; margin:0 0 10px 0; color:#555;">Use this module to package instructions along with this complete file's source code to transmit to the modifying AI Assistant.</p>
+        <button class="btn-mod-trigger" onclick="openModificationModal()">Initialize Code Modification Sequence</button>
+        
+        <div id="modificationPayloadWrapper" style="display:none; margin-top:15px;">
+            <h3>Compiled Modification Prompt Package Output</h3>
+            <div id="modificationPreview" class="preview-box" style="background:#0f172a; border-left:4px solid #db2777;"></div>
+            
+            <h3 style="margin-top:20px;">Launch Chatbot Destination for File Modification</h3>
+            <p style="font-size:12px; color:#666; margin:0 0 8px 0;">This separate channel copies both your update instructions AND the current page source context, then routes you to the chosen workbench model.</p>
+            <div class="btn-group">
+                <button class="btn-ai" style="background-color:#db2777;" onclick="copyAndLaunch('modificationPreview', 'https://chatgpt.com')">ChatGPT (Mod Hub)</button>
+                <button class="btn-ai" style="background-color:#db2777;" onclick="copyAndLaunch('modificationPreview', 'https://gemini.google.com')">Gemini (Mod Hub)</button>
+                <button class="btn-ai" style="background-color:#db2777;" onclick="copyAndLaunch('modificationPreview', 'https://claude.ai')">Claude (Mod Hub)</button>
+                <button class="btn-ai" style="background-color:#db2777;" onclick="copyAndLaunch('modificationPreview', 'https://perplexity.ai')">Perplexity (Mod Hub)</button>
+                <button class="btn-ai" style="background-color:#db2777;" onclick="copyAndLaunch('modificationPreview', 'https://grok.com')">Grok (Mod Hub)</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modification Modal Popup Window -->
+<div id="modModal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">Define Code Base Changes</div>
+        <div class="modal-body">
+            <label for="modalAI">Target Modifying AI Engine</label>
+            <select id="modalAI">
+                <option value="ChatGPT (OpenAI)">ChatGPT (OpenAI)</option>
+                <option value="Gemini (Google)">Gemini (Google)</option>
+                <option value="Claude (Anthropic)">Claude (Anthropic)</option>
+                <option value="Perplexity AI">Perplexity AI</option>
+                <option value="Grok (xAI)">Grok (xAI)</option>
+            </select>
+            
+            <label for="modalChange">What changes are required?</label>
+            <input type="text" id="modalChange" class="input-text" placeholder="e.g. Add .html files as an output format option">
+            
+            <label for="modalWhy">Why is this change required?</label>
+            <input type="text" id="modalWhy" class="input-text" placeholder="e.g. Need direct code layout templates block options">
+        </div>
+        <div class="modal-footer">
+            <button class="btn-secondary" onclick="closeModificationModal()">Cancel</button>
+            <button class="btn-ai" onclick="compileModificationPayload()">Generate Package</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    const corePromptEl = document.getElementById('corePrompt');
+    const preventClippingEl = document.getElementById('preventClipping');
+    const preventResponseClippingEl = document.getElementById('preventResponseClipping');
+    const promptPreviewEl = document.getElementById('promptPreview');
+    const charCountEl = document.getElementById('charCount');
+    const limitStatusEl = document.getElementById('limitStatus');
+    
+    // Core Prompt Assembly Pipeline
+    function updateStandardPrompt() {
+        let prefixes = [];
+        let systemCommands = [];
+        let suffixes = [];
+
+        document.querySelectorAll('.prompt-mod:checked').forEach(item => {
+            let val = item.getAttribute('data-text');
+            if (val) {
+                if (val.startsWith('/')) prefixes.push(val.trim());
+                else systemCommands.push(val);
+            }
+        });
+
+        const fmt = document.getElementById('formatSelect').value;
+        if (fmt) systemCommands.push(fmt);
+
+        let baseText = corePromptEl.value.trim();
+
+        if (preventClippingEl.checked) {
+            prefixes.push("[SYSTEM UPDATE: Process fully without truncating inputs or clipping sequence bounds.]");
+        }
+        if (preventResponseClippingEl.checked) {
+            suffixes.push("CRITICAL SAFEGUARD: If output limits loom, stop at a safe milestone and state 'CONTINUE_REQUIRED'.");
+        }
+
+        let compiled = [];
+        if (prefixes.length > 0) compiled.push(prefixes.join(" "));
+        if (systemCommands.length > 0) compiled.push("SYSTEM PROTOCOLS:\n" + systemCommands.map(c => "- " + c).join("\n"));
+        if (baseText) compiled.push("USER PROMPT TARGETS:\n" + baseText);
+        if (suffixes.length > 0) compiled.push("EMISSION RULES:\n" + suffixes.join("\n"));
+
+        let outText = compiled.join("\n\n");
+        promptPreviewEl.textContent = outText;
+
+        charCountEl.textContent = "Total Built Prompt Length: " + outText.length + " characters";
+        if (outText.length > 24000) {
+            limitStatusEl.textContent = "Warning: Nearing context threshold limits.";
+            limitStatusEl.className = "warning";
+        } else {
+            limitStatusEl.textContent = "Within Safe Processing Range";
+            limitStatusEl.className = "";
+        }
+    }
+
+    // Modal Display Window Interactions
+    function openModificationModal() {
+        document.getElementById('modModal').style.display = 'flex';
+    }
+    function closeModificationModal() {
+        document.getElementById('modModal').style.display = 'none';
+    }
+    
+    function compileModificationPayload() {
+        const aiEngine = document.getElementById('modalAI').value;
+        const requiredChange = document.getElementById('modalChange').value.trim();
+        const structuralWhy = document.getElementById('modalWhy').value.trim();
+        
+        if(!requiredChange || !structuralWhy) {
+            alert("Please accurately fill out all tracking criteria fields before wrapping the payload.");
+            return;
+        }
+
+        // Capture complete outer page snapshot code text actively 
+        const selfCodeSource = document.documentElement.outerHTML;
+
+        let trackingInstructionBlock = 
+            "========================================================================\n" +
+            "CORE ACTION REQUIRED: REQUEST FOR CODE REVISION AND SOURCE UPDATES\n" +
+            "========================================================================\n" +
+            "TARGET PROCESSING AGENT: " + aiEngine + "\n" +
+            "CHANGE SPECIFICATION: " + requiredChange + "\n" +
+            "CORE OBJECTIVE REASON: " + structuralWhy + "\n\n" +
+            "MIGRATION EXPECTATION FOR THE RECEIVING AI CHATBOT:\n" +
+            "1. You are being supplied with the full source code of this tool within this prompt framework below.\n" +
+            "2. Read the internal immutable comment history log located at the top of the file.\n" +
+            "3. Increment the major/minor version string appropriately inside that comment block template.\n" +
+            "4. Append a new structured log item detailing that you (" + aiEngine + ") made these updates.\n" +
+            "5. Apply the requested changes completely (" + requiredChange + ") and output the entire new .html file payload.\n\n" +
+            "========================================================================\n" +
+            "CURRENT SOURCE CODE OF THE APPARATUS FOLLOWS Below:\n" +
+            "========================================================================\n\n" +
+            selfCodeSource;
+
+        document.getElementById('modificationPreview').textContent = trackingInstructionBlock;
+        document.getElementById('modificationPayloadWrapper').style.display = 'block';
+        
+        closeModificationModal();
+        
+        // Auto scroll viewport downward to show generated bundle options instantly
+        document.getElementById('modificationPayloadWrapper').scrollIntoView({ behavior: 'smooth' });
+    }
+
+    // Event binding registrations
+    corePromptEl.addEventListener('input', updateStandardPrompt);
+    preventClippingEl.addEventListener('change', updateStandardPrompt);
+    preventResponseClippingEl.addEventListener('change', updateStandardPrompt);
+    document.querySelectorAll('.prompt-mod, .prompt-mod-select').forEach(el => el.addEventListener('change', updateStandardPrompt));
+
+    function manualCopy(elementId) {
+        let txt = document.getElementById(elementId).textContent;
+        if (!txt.trim()) { alert("Target container is empty."); return; }
+        navigator.clipboard.writeText(txt).then(() => {
+            alert("Payload successfully copied to system clipboard.");
+        }).catch(() => {
+            alert("Clipboard security blocking direct assignment. Highlight code block manually.");
+        });
+    }
+
+    function copyAndLaunch(elementId, url) {
+        let txt = document.getElementById(elementId).textContent;
+        if (!txt.trim()) {
+            alert("Please compile or load text payloads first before attempting hub propagation.");
+            return;
+        }
+        navigator.clipboard.writeText(txt).then(() => {
+            window.open(url, '_blank');
+        }).catch(() => {
+            alert("Auto-injection clipboard locked. Manually highlight and copy the displayed panel text first, then proceed.");
+            window.open(url, '_blank');
+        });
+    }
+
+    updateStandardPrompt();
+</script>
+
+</body>
+</html>

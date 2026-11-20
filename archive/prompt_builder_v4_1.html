@@ -1,0 +1,812 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Prompt Builder &amp; Code Migrator</title>
+<style>
+:root {
+    --bg: #f3efe7;
+    --bg-grid: rgba(60, 50, 90, .06);
+    --card: #fffdf8;
+    --card-2: #f8f4ea;
+    --ink: #1d1b2e;
+    --muted: #6d6a7c;
+    --line: #e4ddcc;
+    --accent: #5b4bdb;
+    --accent-2: #ff6b4a;
+    --accent-soft: #ece9ff;
+    --good: #12a36b;
+    --warn: #e0412f;
+    --shadow: 0 1px 0 rgba(0,0,0,.03), 0 12px 30px -12px rgba(40, 30, 90, .25);
+    --console-bg: #14122a;
+    --console-ink: #e9e7ff;
+    --console-line: #2b2850;
+    --radius: 16px;
+    --mono: ui-monospace, "SF Mono", "JetBrains Mono", Menlo, Consolas, monospace;
+    --sans: "Avenir Next", "Segoe UI", -apple-system, BlinkMacSystemFont, Roboto, Helvetica, Arial, sans-serif;
+}
+[data-theme="dark"] {
+    --bg: #0e0d1c;
+    --bg-grid: rgba(160, 150, 255, .05);
+    --card: #181630;
+    --card-2: #1f1c3d;
+    --ink: #ecebff;
+    --muted: #9a97b8;
+    --line: #2d2a52;
+    --accent: #8b7dff;
+    --accent-2: #ff8a6b;
+    --accent-soft: #272352;
+    --console-bg: #0a0916;
+    --console-line: #26234a;
+    --shadow: 0 12px 30px -12px rgba(0,0,0,.6);
+}
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+    margin: 0; font-family: var(--sans); color: var(--ink); background: var(--bg);
+    background-image: linear-gradient(var(--bg-grid) 1px, transparent 1px), linear-gradient(90deg, var(--bg-grid) 1px, transparent 1px);
+    background-size: 28px 28px;
+    min-height: 100vh; transition: background-color .3s, color .3s;
+}
+.wrap { max-width: 1280px; margin: 0 auto; padding: 24px 22px 60px; }
+
+/* ---------- Hero ---------- */
+.hero {
+    position: relative; overflow: hidden; border-radius: 24px; padding: 34px 36px;
+    background: linear-gradient(120deg, #2a1f78 0%, #5b4bdb 45%, #ff6b4a 120%);
+    color: #fff; box-shadow: var(--shadow);
+}
+.hero::before, .hero::after { content: ""; position: absolute; border-radius: 50%; filter: blur(2px); opacity: .22; background: #fff; }
+.hero::before { width: 320px; height: 320px; right: -80px; top: -140px; animation: drift 14s ease-in-out infinite alternate; }
+.hero::after  { width: 180px; height: 180px; right: 220px; bottom: -110px; animation: drift 10s ease-in-out infinite alternate-reverse; }
+@keyframes drift { to { transform: translate(-30px, 24px) scale(1.12); } }
+.hero .eyebrow { font: 600 11px/1 var(--mono); letter-spacing: .22em; text-transform: uppercase; opacity: .8; }
+.hero h1 { margin: 10px 0 8px; font-size: clamp(26px, 4vw, 40px); letter-spacing: -.02em; line-height: 1.05; }
+.hero p { margin: 0; max-width: 620px; opacity: .88; font-size: 15px; line-height: 1.5; }
+.hero-tools { position: absolute; top: 18px; right: 20px; z-index: 2; display: flex; gap: 8px; }
+.icon-btn {
+    background: rgba(255,255,255,.16); color: #fff; border: 1px solid rgba(255,255,255,.3);
+    padding: 8px 12px; border-radius: 999px; font-size: 13px; backdrop-filter: blur(6px);
+}
+.icon-btn:hover { background: rgba(255,255,255,.28); }
+
+/* ---------- Layout ---------- */
+.layout { display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(340px, .9fr); gap: 22px; margin-top: 22px; align-items: start; }
+@media (max-width: 980px) { .layout { grid-template-columns: 1fr; } .console { position: static !important; } }
+.card { background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); box-shadow: var(--shadow); padding: 20px; }
+.card + .card { margin-top: 22px; }
+.step { display: flex; align-items: center; gap: 12px; margin-bottom: 14px; }
+.step .num {
+    width: 30px; height: 30px; border-radius: 10px; display: grid; place-items: center;
+    background: var(--accent); color: #fff; font: 700 14px var(--mono); transform: rotate(-6deg);
+}
+.step h2 { margin: 0; font-size: 18px; letter-spacing: -.01em; }
+.step small { color: var(--muted); display: block; font-size: 12.5px; margin-top: 2px; }
+
+textarea, select, .input-text {
+    width: 100%; font: inherit; font-size: 15px; color: var(--ink); background: var(--card-2);
+    border: 1.5px solid var(--line); border-radius: 12px; padding: 12px 14px; transition: border-color .2s, box-shadow .2s;
+}
+textarea { height: 150px; resize: vertical; line-height: 1.5; }
+textarea:focus, select:focus, .input-text:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 4px var(--accent-soft); }
+select { appearance: none; cursor: pointer; padding-right: 36px;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'><path d='M1 1l5 5 5-5' fill='none' stroke='%238a87a0' stroke-width='2' stroke-linecap='round'/></svg>");
+    background-repeat: no-repeat; background-position: right 14px center; }
+
+.switches { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 12px; }
+.switch { display: inline-flex; align-items: center; gap: 10px; cursor: pointer; font-size: 13.5px; padding: 8px 12px; border: 1px solid var(--line); border-radius: 999px; background: var(--card-2); user-select: none; }
+.switch input { display: none; }
+.switch .track { width: 32px; height: 18px; border-radius: 99px; background: #b9b5cc; position: relative; transition: background .2s; flex: none; }
+.switch .track::after { content: ""; position: absolute; width: 14px; height: 14px; border-radius: 50%; background: #fff; top: 2px; left: 2px; transition: transform .2s; }
+.switch input:checked + .track { background: var(--good); }
+.switch input:checked + .track::after { transform: translateX(14px); }
+
+/* ---------- Tabs ---------- */
+.tabs { display: flex; gap: 6px; overflow-x: auto; padding-bottom: 4px; scrollbar-width: thin; }
+.tab {
+    flex: none; display: inline-flex; align-items: center; gap: 8px; padding: 9px 14px; border-radius: 12px;
+    background: transparent; color: var(--muted); border: 1.5px solid transparent; font-size: 13.5px; font-weight: 600;
+}
+.tab:hover { background: var(--card-2); color: var(--ink); }
+.tab.active { background: var(--accent-soft); color: var(--accent); border-color: var(--accent); }
+.tab .badge { min-width: 20px; padding: 1px 6px; border-radius: 99px; font: 700 11px var(--mono); background: var(--line); color: var(--muted); text-align: center; }
+.tab .badge.on { background: var(--accent); color: #fff; }
+.panel { display: none; margin-top: 14px; animation: rise .25s ease; }
+.panel.active { display: block; }
+@keyframes rise { from { opacity: 0; transform: translateY(6px); } }
+.panel-desc { margin: 0 0 12px; color: var(--muted); font-size: 13px; }
+.pills { display: flex; flex-wrap: wrap; gap: 8px; }
+.pill { cursor: pointer; }
+.pill input { position: absolute; opacity: 0; pointer-events: none; }
+.pill span {
+    display: inline-flex; align-items: center; gap: 7px; padding: 8px 13px; border-radius: 999px; font-size: 13px;
+    border: 1.5px solid var(--line); background: var(--card-2); transition: all .15s;
+}
+.pill span::before { content: "+"; font: 700 13px var(--mono); color: var(--muted); transition: transform .2s; }
+.pill:hover span { border-color: var(--accent); }
+.pill input:checked + span { background: var(--accent); color: #fff; border-color: var(--accent); box-shadow: 0 6px 14px -6px var(--accent); }
+.pill input:checked + span::before { content: "\2713"; color: #fff; }
+.pill input:focus-visible + span { outline: 3px solid var(--accent-soft); }
+.pill.cmd span { font-family: var(--mono); font-size: 12.5px; border-style: dashed; }
+.field { margin-top: 12px; }
+.field label { display: block; font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); margin-bottom: 6px; }
+
+/* ---------- Console ---------- */
+.console {
+    position: sticky; top: 16px; background: var(--console-bg); color: var(--console-ink);
+    border: 1px solid var(--console-line); border-radius: 20px; box-shadow: var(--shadow); overflow: hidden;
+}
+.console-bar { display: flex; align-items: center; gap: 8px; padding: 12px 16px; border-bottom: 1px solid var(--console-line); }
+.dot { width: 11px; height: 11px; border-radius: 50%; }
+.console-bar .title { margin-left: 8px; font: 600 12px var(--mono); opacity: .7; letter-spacing: .08em; }
+.console-bar .chips { margin-left: auto; font: 600 11px var(--mono); padding: 3px 9px; border-radius: 99px; background: #2b2850; color: #cfc9ff; }
+.meter { display: flex; align-items: center; gap: 16px; padding: 16px; border-bottom: 1px solid var(--console-line); }
+.ring { width: 64px; height: 64px; flex: none; position: relative; }
+.ring svg { transform: rotate(-90deg); }
+.ring .bg { stroke: #2b2850; } .ring .fg { stroke: var(--good); transition: stroke-dashoffset .35s, stroke .2s; stroke-linecap: round; }
+.ring .pct { position: absolute; inset: 0; display: grid; place-items: center; font: 700 12px var(--mono); }
+.meter .stats { font-size: 13px; line-height: 1.55; }
+.meter .stats b { font-family: var(--mono); }
+#limitStatus { display: inline-block; margin-top: 2px; font-size: 12px; color: #7ff0bd; }
+#limitStatus.warning { color: #ff9b8a; }
+.preview-box {
+    margin: 0; padding: 16px; min-height: 220px; max-height: 52vh; overflow: auto; white-space: pre-wrap; word-break: break-word;
+    font: 13px/1.6 var(--mono); color: #dcd9ff;
+}
+.preview-box:empty::before { content: "Your compiled prompt will materialise here\2026"; opacity: .4; }
+.console-actions { display: flex; flex-wrap: wrap; gap: 8px; padding: 14px 16px; border-top: 1px solid var(--console-line); }
+.launch-label { padding: 0 16px; font: 700 11px var(--mono); letter-spacing: .14em; text-transform: uppercase; opacity: .55; }
+.launchers { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 8px; padding: 10px 16px 18px; }
+
+/* ---------- Buttons ---------- */
+button { font: inherit; cursor: pointer; border: none; border-radius: 12px; padding: 10px 16px; font-weight: 600; font-size: 14px; transition: transform .12s, background .2s, box-shadow .2s; }
+button:active { transform: translateY(1px) scale(.98); }
+.btn-copy { background: var(--good); color: #fff; }
+.btn-copy:hover { filter: brightness(1.08); }
+.btn-ghost { background: transparent; color: inherit; border: 1.5px solid currentColor; opacity: .7; }
+.btn-ghost:hover { opacity: 1; }
+.btn-ai { background: var(--accent); color: #fff; }
+.btn-ai:hover { filter: brightness(1.1); }
+.btn-secondary { background: var(--card-2); color: var(--ink); border: 1.5px solid var(--line); }
+.btn-mod-trigger { background: linear-gradient(120deg, var(--accent-2), #e0348a); color: #fff; box-shadow: 0 10px 22px -10px #e0348a; }
+.btn-mod-trigger:hover { filter: brightness(1.08); }
+.launch {
+    display: flex; align-items: center; gap: 8px; justify-content: flex-start; text-align: left;
+    background: #1f1c3d; color: #ece9ff; border: 1px solid #332f63; padding: 10px 12px; font-size: 13px;
+}
+.launch:hover { background: #2a2656; border-color: var(--bc, #8b7dff); }
+.launch .bd { width: 9px; height: 9px; border-radius: 50%; background: var(--bc); flex: none; box-shadow: 0 0 10px var(--bc); }
+.launch.suggested { border-color: var(--bc); box-shadow: 0 0 0 2px var(--bc) inset; }
+
+/* ---------- Dev bay ---------- */
+.devbay {
+    margin-top: 22px; border-radius: 22px; padding: 22px; position: relative;
+    background: repeating-linear-gradient(135deg, transparent 0 14px, rgba(224, 52, 138, .05) 14px 28px), var(--card);
+    border: 2px dashed #e0348a;
+}
+.devbay .tag { position: absolute; top: -12px; left: 22px; background: #e0348a; color: #fff; font: 700 11px var(--mono); letter-spacing: .14em; padding: 4px 12px; border-radius: 99px; }
+.devbay h2 { margin: 6px 0 6px; font-size: 20px; }
+.devbay p { margin: 0 0 14px; color: var(--muted); font-size: 14px; max-width: 760px; line-height: 1.5; }
+#modificationPayloadWrapper { display: none; margin-top: 20px; }
+#modificationPayloadWrapper h3 { margin: 0 0 8px; font-size: 15px; }
+.mod-preview { background: var(--console-bg); border: 1px solid var(--console-line); border-left: 4px solid #e0348a; border-radius: 12px; max-height: 320px; min-height: 0; }
+.mod-meta { font: 12px var(--mono); color: var(--muted); margin: 8px 0 14px; }
+.mod-launchers { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 8px; margin-top: 8px; }
+
+/* ---------- Modal ---------- */
+.modal { position: fixed; inset: 0; z-index: 1000; display: none; align-items: center; justify-content: center; background: rgba(10, 8, 30, .6); backdrop-filter: blur(5px); padding: 16px; }
+.modal.open { display: flex; animation: fade .2s ease; }
+@keyframes fade { from { opacity: 0; } }
+.modal-content { background: var(--card); color: var(--ink); border: 1px solid var(--line); padding: 26px; border-radius: 20px; max-width: 620px; width: 100%; box-shadow: 0 30px 60px -20px rgba(0,0,0,.5); animation: rise .25s ease; }
+.modal-header { font-size: 20px; font-weight: 800; letter-spacing: -.01em; }
+.modal-sub { color: var(--muted); font-size: 13px; margin: 4px 0 8px; }
+.modal-body label { display: block; font-weight: 700; margin: 14px 0 6px; font-size: 12px; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); }
+.modal-body textarea { height: 90px; }
+.modal-footer { margin-top: 22px; display: flex; justify-content: flex-end; gap: 10px; }
+
+
+/* ---------- Tooltips & fill-ins ---------- */
+#tip { position: fixed; z-index: 3000; max-width: 320px; padding: 10px 13px; border-radius: 10px; background: #14122a; color: #ecebff;
+    font-size: 12.5px; line-height: 1.45; border: 1px solid #3a3670; box-shadow: 0 14px 30px -10px rgba(0,0,0,.55);
+    opacity: 0; transform: translateY(-4px); pointer-events: none; transition: opacity .15s, transform .15s; }
+#tip.show { opacity: 1; transform: none; }
+#tip.flip { transform: translateY(4px); } #tip.flip.show { transform: none; }
+[data-tip] { cursor: help; }
+.pillwrap { display: inline-flex; flex-direction: column; gap: 6px; max-width: 100%; }
+.pill-fields { display: none; flex-direction: column; gap: 6px; padding-left: 4px; }
+.pillwrap.open .pill-fields { display: flex; animation: rise .2s ease; }
+.pill-fields .input-text { padding: 8px 11px; font-size: 13px; border-radius: 10px; min-width: 220px; }
+.sel-desc { margin-top: 8px; font-size: 12.5px; color: var(--muted); line-height: 1.45; min-height: 0; }
+.sel-desc:not(:empty) { padding: 8px 12px; border-left: 3px solid var(--accent); background: var(--accent-soft); border-radius: 0 10px 10px 0; color: var(--ink); }
+.panel .pills + .field { margin-top: 18px; }
+
+/* ---------- Toast ---------- */
+#toast { position: fixed; left: 50%; bottom: 28px; transform: translate(-50%, 30px); opacity: 0; pointer-events: none; z-index: 2000;
+    background: #1d1b2e; color: #fff; padding: 12px 20px; border-radius: 99px; font-size: 14px; box-shadow: 0 14px 30px -10px rgba(0,0,0,.5); transition: all .3s; max-width: 90vw; }
+#toast.show { opacity: 1; transform: translate(-50%, 0); }
+#toast.err { background: var(--warn); }
+.foot { margin-top: 30px; text-align: center; color: var(--muted); font: 12px var(--mono); }
+</style>
+</head>
+<body>
+<!--
+========================================================================
+IMMUTABLE CODE METADATA & VERSION MIGRATION HISTORY LOG
+========================================================================
+This block acts as an unalterable log. Every future AI Chatbot updating this file MUST read this history,
+increment the minor/major version string below, append a new historical array object, and preserve the template structure.
+
+[ACTIVE CONFIGURATION]
+- currentVersion: "4.1.0"
+
+[MIGRATION HISTORY MATRIX]
+[
+  {
+    "version": "4.1.0",
+    "bot": "Claude (Anthropic)",
+    "change": "Added hover/focus tooltips (data-tip attributes + one floating #tip element) describing what every command, tab, dropdown and button does, using the wording of the original Cheat Sheet PDF. Dropdowns also show a description panel for the selected option. Restored cheat-sheet commands missing from all earlier versions: write from a perspective for an audience, emulate a famous style, explain an error with 3 fixes, /explain, and explain at three levels. Commands that contain [bracketed] blanks now reveal inline fill-in boxes (pill 'f' arrays, {0}/{1} tokens); empty boxes compile as visible [placeholders]. MODULES pill entries are now objects {t, l, d, cmd, f}.",
+    "why": "User asked for descriptors on hover so people know what each function does, and supplied the original PDF showing the full cheat sheet."
+  },
+  {
+    "version": "4.0.0",
+    "bot": "Claude (Anthropic)",
+    "change": "Merged the full cheat-sheet library from v1 (accuracy, research, structural formats, writing tools, persona, tone, tech/strategy) into the v3 modification pipeline. Fixed v1 syntax error (raw line breaks inside JS string literals). Controls are now data-driven (MODULES config in the script) and rendered into tabs. Persona and tone selects are wired into the compiler again. Source snapshot sent to the modification pipeline is now sanitised (previews cleared, rendered controls stripped) so payloads no longer balloon with each generation. Added clipboard fallback, toasts instead of alerts, live token/length ring, light/dark theme, reset button, Esc/backdrop modal close, suggested-engine highlight. Full visual redesign.",
+    "why": "User asked to integrate the features missing from v3 (file 2) from the original builder, repair anything broken, and refresh the page design."
+  },
+  {
+    "version": "3.0.0",
+    "bot": "Claude (Anthropic)",
+    "change": "Removed visual version labels from UI. Added Modification Input Modal popup feature. Implemented Chatbot launch hub to specifically handle file mutation injection requests.",
+    "why": "User requested cleaner visual canvas with an isolated pop-up query window to instruct upcoming bots and package both the command parameters and source code together cleanly."
+  },
+  {
+    "version": "2.0.0",
+    "bot": "Claude (Anthropic)",
+    "change": "Re-architected prompt preview pipeline using textContent. Repaired platform redirection click isolation loops, built structured history tracker grid.",
+    "why": "User reported blank text box errors and broken assistant routing actions."
+  },
+  {
+    "version": "1.0.0",
+    "bot": "Initial System Base",
+    "change": "Created base HTML document containing core user prompt space, standard cheat sheet modifiers, and basic platform redirection blocks.",
+    "why": "Initial build request."
+  }
+]
+========================================================================
+-->
+
+<div class="wrap">
+
+    <header class="hero">
+        <div class="hero-tools">
+            <button class="icon-btn" id="themeBtn" type="button" title="Toggle light / dark">&#9680; Theme</button>
+        </div>
+        <div class="eyebrow">Prompt Forge &middot; Cheat Sheet &middot; Code Migrator</div>
+        <h1>AI Prompt Builder Hub</h1>
+        <p>Write your idea, stack the system commands that tame hallucinations, shape the output and set the voice &mdash; then fire the finished prompt at your chatbot of choice.</p>
+    </header>
+
+    <div class="layout">
+
+        <!-- LEFT: build -->
+        <main>
+            <section class="card">
+                <div class="step"><div class="num">1</div><div><h2>Core prompt</h2><small>Your base query, topic or source text</small></div></div>
+                <textarea id="corePrompt" placeholder="Type your base query or topic here..."></textarea>
+                <div class="switches">
+                    <label class="switch" data-tip="Adds a leading notice telling the chatbot to process your whole input without truncating or clipping it. Recommended for long pastes."><input type="checkbox" id="preventClipping" checked><span class="track"></span>Prevent input truncation framework</label>
+                    <label class="switch" data-tip="Adds a rule so that if the reply is about to run out of space, the AI stops at a clean milestone and says CONTINUE_REQUIRED. Reply 'continue' to get the rest."><input type="checkbox" id="preventResponseClipping" checked><span class="track"></span>Output continuity safeguard</label>
+                </div>
+            </section>
+
+            <section class="card">
+                <div class="step"><div class="num">2</div><div><h2>System commands &amp; cheat-sheet modifiers</h2><small>Mix and match &mdash; the console updates live</small></div></div>
+                <div class="tabs" id="tabs" role="tablist" data-render></div>
+                <div id="panels" data-render></div>
+            </section>
+
+            <!-- Advanced code modification pipeline -->
+            <section class="devbay">
+                <span class="tag">DEV BAY</span>
+                <h2>Advanced code modification pipeline</h2>
+                <p>Package your change request together with this page&rsquo;s complete source code and the version-log instructions, ready to hand to any AI assistant for the next revision.</p>
+                <button class="btn-mod-trigger" type="button" data-tip="Opens a form where you describe the change you want. The result bundles it with this page's full source and the version-log rules for any AI to follow." onclick="openModificationModal()">&#9881; Initialize code modification sequence</button>
+
+                <div id="modificationPayloadWrapper">
+                    <h3>Compiled modification prompt package</h3>
+                    <pre id="modificationPreview" class="preview-box mod-preview"></pre>
+                    <div class="mod-meta" id="modMeta"></div>
+                    <div class="btn-group">
+                        <button class="btn-copy" type="button" onclick="manualCopy('modificationPreview')">Copy modification package</button>
+                    </div>
+                    <h3 style="margin-top:18px;">Launch a chatbot for file modification</h3>
+                    <div class="mod-launchers" id="modLaunchers" data-render></div>
+                </div>
+            </section>
+        </main>
+
+        <!-- RIGHT: console -->
+        <aside class="console" aria-label="Compiled prompt console">
+            <div class="console-bar">
+                <span class="dot" style="background:#ff5f57"></span><span class="dot" style="background:#febc2e"></span><span class="dot" style="background:#28c840"></span>
+                <span class="title">COMPILED PROMPT</span>
+                <span class="chips" id="activeCount" data-tip="How many system commands are currently selected.">0 active</span>
+            </div>
+            <div class="meter">
+                <div class="ring" data-tip="Share of the safe paste budget (about 24,000 characters) used by your compiled prompt. Updates live as you add commands.">
+                    <svg width="64" height="64" viewBox="0 0 64 64"><circle class="bg" cx="32" cy="32" r="27" fill="none" stroke-width="6"/><circle class="fg" id="ringFg" cx="32" cy="32" r="27" fill="none" stroke-width="6" stroke-dasharray="169.6" stroke-dashoffset="169.6"/></svg>
+                    <div class="pct" id="ringPct">0%</div>
+                </div>
+                <div class="stats">
+                    <div id="charCount">Total Built Prompt Length: 0 characters</div>
+                    <div>&asymp; <b id="tokenCount">0</b> tokens &middot; <b id="wordCount">0</b> words</div>
+                    <span id="limitStatus">Within Safe Processing Range</span>
+                </div>
+            </div>
+            <pre id="promptPreview" class="preview-box"></pre>
+            <div class="console-actions">
+                <button class="btn-copy" type="button" data-tip="Copies the full compiled prompt to your clipboard." onclick="manualCopy('promptPreview')">Copy prompt</button>
+                <button class="btn-ghost" type="button" data-tip="Clears the prompt text and every selected command." onclick="resetAll()">Reset all</button>
+            </div>
+            <div class="launch-label">Copy &amp; launch</div>
+            <div class="launchers" id="launchers" data-render></div>
+        </aside>
+    </div>
+
+    <div class="foot">built to be rebuilt &middot; see the version log at the top of the source</div>
+</div>
+
+<!-- Modification modal -->
+<div id="modModal" class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+    <div class="modal-content">
+        <div class="modal-header" id="modalTitle">Define code base changes</div>
+        <div class="modal-sub">Tell the next AI exactly what to change and why. Both go into the package.</div>
+        <div class="modal-body">
+            <label for="modalAI">Target modifying AI engine</label>
+            <select id="modalAI" data-render></select>
+
+            <label for="modalChange">What changes are required?</label>
+            <textarea id="modalChange" placeholder="e.g. Add .html files as an output format option"></textarea>
+
+            <label for="modalWhy">Why is this change required?</label>
+            <input type="text" id="modalWhy" class="input-text" placeholder="e.g. Need direct code layout templates block options">
+        </div>
+        <div class="modal-footer">
+            <button class="btn-secondary" type="button" onclick="closeModificationModal()">Cancel</button>
+            <button class="btn-ai" type="button" onclick="compileModificationPayload()">Generate package</button>
+        </div>
+    </div>
+</div>
+
+<div id="toast" role="status" aria-live="polite" data-render></div>
+<div id="tip" role="tooltip" data-render></div>
+
+<script>
+/* =====================================================================
+   CONFIGURATION  (edit these arrays to add commands / chatbots)
+   - Pill with text starting "/" is treated as a slash-command PREFIX.
+   - Select options are single-choice. "slot" decides where text lands:
+       "command" -> SYSTEM COMMANDS list, "suffix" -> INSTRUCTIONS / MODIFIERS
+   ===================================================================== */
+const MODULES = [
+    {
+        id: 'accuracy', icon: '\u{1F6E1}', title: 'Accuracy',
+        desc: 'Hallucination prevention & accuracy anchors. Use for medical, legal, financial or highly precise data where mistakes are unacceptable.',
+        pills: [
+            { t: "If you do not know the answer based on verified data, state 'I do not know'. Do not guess or extrapolate.", l: "If unknown, state 'I do not know'",
+              d: "Shuts down the AI's tendency to please you by inventing a plausible-sounding answer. It admits gaps instead." },
+            { t: "Only use information explicitly provided in the text above. Do not introduce outside knowledge or assumptions.", l: "Strictly use explicitly provided text",
+              d: "Freezes the AI's training data so it acts purely as a reading-comprehension tool on the documents you paste in." },
+            { t: "Quote the exact sentence from the source material that supports your claim.", l: "Quote source supporting sentences",
+              d: "Anchors every claim to a specific sentence, forcing the AI to verify its own logic against your source." },
+            { t: "Review your own output. Identify any potential factual assumptions you made and grade your confidence level from 1-10.", l: "Self-correct & confidence grade 1-10",
+              d: "Triggers a self-correction loop: the AI audits its own answer and rates its confidence before finalizing." }
+        ]
+    },
+    {
+        id: 'research', icon: '\u{1F50E}', title: 'Research',
+        desc: 'Research, deep dives & fact-checking. Use for up-to-date information, competitive analysis, or validating complex facts.',
+        pills: [
+            { t: "/search ", l: "/search", cmd: true,
+              d: "Slash command: makes the chatbot skip its static training data and search the live internet for real-time information. Goes at the very start of the prompt." },
+            { t: "Run deep research on the topic and provide a multi-perspective analysis.", l: "Deep research & multi-perspective analysis",
+              d: "Triggers multi-step research agents that browse dozens of sources and compile a detailed report on their own." },
+            { t: "Provide a counter-argument to the text above and point out any logical fallacies or biases.", l: "Devil's advocate / fallacy reviewer",
+              d: "Turns the AI into a critical red-team reviewer for your theories or arguments." },
+            { t: "Cite your sources with direct links and evaluate the credibility of each source.", l: "Cite sources with links & evaluate credibility",
+              d: "Crucial for academic or legal research: makes the AI show where facts came from so you can spot hallucinated data." }
+        ]
+    },
+    {
+        id: 'format', icon: '\u{1F4D0}', title: 'Format',
+        desc: 'Structural & file output formatting. Force exact layouts and code structures instead of plain chat text.',
+        selects: [{
+            id: 'formatSelect', label: 'Output layout', slot: 'command', empty: '-- No Layout Change --',
+            tip: 'Pick ONE layout. Dictates the exact shape of the answer so you do not have to reformat it yourself.',
+            options: [
+                ["Format the output strictly as a Table.", "Strict Table Layout", "Dictates the exact layout (a table) so you don't have to reformat the answer yourself."],
+                ["Format the output strictly as a Bulleted List.", "Strict Bulleted List", "Dictates the exact layout (a bulleted list) so you don't have to reformat the answer yourself."],
+                ["Format the output strictly as a Markdown Flowchart.", "Markdown Flowchart", "Draws a process or decision path as a Markdown flowchart."],
+                ["Format the output strictly as an Executive Summary.", "Executive Summary", "Condenses everything into a short, decision-maker-friendly summary."],
+                ["Format the output as a copy-pasteable CSV block using standard comma separators.", "Copy-pasteable CSV block", "Generates a raw data block you can paste straight into Notepad, save as .csv, and open in Excel."],
+                ["Use your Python environment to generate and provide a downloadable PDF file of this report.", "Trigger Python PDF Generation", "Triggers Code Interpreter / the Python sandbox to build a real, downloadable PDF document."],
+                ["Format the output strictly as a copy-pasteable .html file block.", "Strict HTML File Output Layout", "Returns a complete .html file in one code block that you can copy, save and open in a browser."],
+                ["Provide the output in clean, semantic HTML5 code inside a markdown code block.", "Clean Semantic HTML5 Code Block", "Packages the text as web-ready HTML5 with proper headers, paragraphs and lists."],
+                ["Create a side-by-side comparison matrix using a markdown table. Columns: Feature, Option A, Option B, Key Difference.", "Side-by-Side Comparison Matrix Table", "Builds an aligned visual grid (Feature / Option A / Option B / Key Difference) for fast decisions."],
+                ["Write this strictly in standard narrative paragraphs. Do not use bullet points, bold headers, or lists.", "Strict Narrative Paragraphs Only", "Forces traditional essay or email flow when the AI leans too hard on lists and headers."],
+                ["Structure the response as a punchy, bulleted list. Limit each bullet point to a single short sentence fragment.", "Punchy Single-Sentence Fragments List", "Eliminates blocks of text for maximum scannability."],
+                ["Write this in a 'TL;DR' format restricted to exactly 3 bullet points.", "TL;DR format (exactly 3 bullets)", "Forces extreme brevity: the whole answer in exactly three bullets."]
+            ]
+        }]
+    },
+    {
+        id: 'writing', icon: '\u270D\uFE0F', title: 'Writing',
+        desc: 'Content writing & editing. Use when drafting emails, articles or reports, or collaborating in a dedicated workspace.',
+        pills: [
+            { t: "/canvas ", l: "/canvas", cmd: true,
+              d: "Slash command: opens a separate side-by-side writing window so your draft does not clutter the main chat timeline." },
+            { t: "/rewrite ", l: "/rewrite", cmd: true,
+              d: "Slash command: brings up structural adjustment menus to fix grammar, flow or style." },
+            { t: "Write this from the perspective of a {0} addressing {1}.", l: "Write from a perspective, for an audience", f: ["Profession / Persona", "Target Audience"],
+              d: "Shifts voice, vocabulary and tone to match an exact demographic. Fill in who is speaking and who is listening." },
+            { t: "Ruthlessly edit this draft. Cut the fluff, remove passive voice, and improve readability.", l: "Ruthless copyeditor mode",
+              d: "Makes the AI act like a strict copyeditor rather than a polite assistant." },
+            { t: "Provide 5 distinct headlines/hooks for this piece, ranging from professional to provocative.", l: "Generate 5 distinct headlines/hooks",
+              d: "Great for brainstorming marketing copy or email subject lines." }
+        ]
+    },
+    {
+        id: 'voice', icon: '\u{1F3AD}', title: 'Persona & Tone',
+        desc: 'Persona hacking, "Act As" frameworks and tone modifiers. Push the AI out of its default polite persona.',
+        pills: [
+            { t: "Emulate the writing style, vocabulary, and rhythm of {0} to write the following text.", l: "Emulate a famous writing style", f: ["Famous Author / Figure"],
+              d: "Matches a specific, recognizable voice (e.g. Steve Jobs, Ernest Hemingway). Type who to imitate." }
+        ],
+        selects: [
+            {
+                id: 'personaSelect', label: 'Persona', slot: 'command', empty: '-- Standard Persona --',
+                tip: 'Pick ONE persona to push the AI out of its standard polite assistant mode.',
+                options: [
+                    ["Act like a panel of experts on this topic, debate this issue and come to a consensus.", "Panel of Experts Debate", "Simulates a boardroom of experts debating to a consensus. Excellent for vetting ideas and spotting blind spots."],
+                    ["Act as a brutal Devil\u2019s Advocate. Tear down this proposal and find every reason it will fail.", "Brutal Devil's Advocate", "Stress-tests your idea with no politeness: the AI hunts for every reason it could fail."],
+                    ["Act as a professional interviewer for this role. Ask me one question at a time, wait for my response, and give me feedback after each turn.", "Interactive Interview Simulator", "Turns the chat into a live interview-prep session: one question at a time, with feedback after each answer."]
+                ]
+            },
+            {
+                id: 'toneSelect', label: 'Tone', slot: 'suffix', empty: '-- Default Tone --',
+                tip: 'Pick ONE tone. It is appended at the end of the prompt to control vocabulary and delivery style.',
+                options: [
+                    ["Tone: No-Nonsense / Concise.", "No-Nonsense / Concise", "Direct, zero filler, highly efficient."],
+                    ["Tone: Empathetic / Supportive.", "Empathetic / Supportive", "Warm and understanding, either clinical or conversational."],
+                    ["Tone: Persuasive / High-Converting.", "Persuasive / High-Converting", "Copywriting-focused, with psychological hooks."],
+                    ["Tone: Jargon-Free.", "Jargon-Free Simplified", "Explains high-level concepts in simple, universal words."]
+                ]
+            }
+        ]
+    },
+    {
+        id: 'tech', icon: '\u2699\uFE0F', title: 'Tech & Strategy',
+        desc: 'Coding, technical work, complex problem solving and strategy. Use for debugging, scripts, planning and learning dense topics.',
+        pills: [
+            { t: "/python ", l: "/python", cmd: true,
+              d: "Slash command: launches a sandboxed back-end environment to run script calculations or build charts natively." },
+            { t: "Generate a structural blueprint using Artifacts.", l: "Use Claude Artifacts blueprint",
+              d: "Tells the AI (specifically Claude) to put big code outputs into a clean, standalone, renderable container." },
+            { t: "Write a script for this task. Do not dumb it down. Keep technical context and edge cases intact.", l: "Full script without simplification",
+              d: "Overcomes the habit of bots to over-simplify or truncate long code blocks." },
+            { t: "Review this code for security vulnerabilities, memory leaks, and optimization opportunities.", l: "Security & optimization auditor",
+              d: "Transforms the chatbot into an automated code auditor." },
+            { t: "Explain what this error message means and provide three potential fixes: {0}", l: "Explain an error + 3 fixes", f: ["Paste the error message"],
+              d: "Rapid troubleshooting during active development. Paste the error text in the box that appears." },
+            { t: "Think step-by-step and show your hidden chain of thought.", l: "Think step-by-step (CoT)",
+              d: "Forces visible reasoning, which dramatically reduces logic errors and hallucinations on math or logic puzzles." },
+            { t: "Ask me 5 clarifying questions before you generate the final answer.", l: "Ask 5 clarifying questions first",
+              d: "Flips the workflow: the AI collects missing background itself, so you don't need to write a massive first prompt." },
+            { t: "/explain ", l: "/explain", cmd: true,
+              d: "Slash command: triggers an automated learning workflow that breaks a complex concept down with analogies. Put the concept in your core prompt." },
+            { t: "Explain this concept to me at three levels: a 10-year-old, a college student, and an industry expert.", l: "Explain at three levels",
+              d: "Lets you grasp the baseline idea first, then move into the advanced technical nuance." }
+        ]
+    }
+];
+
+const CHATBOTS = [
+    { name: 'ChatGPT',    maker: 'OpenAI',    url: 'https://chatgpt.com',          color: '#10a37f' },
+    { name: 'Gemini',     maker: 'Google',    url: 'https://gemini.google.com',    color: '#4f8cff' },
+    { name: 'Claude',     maker: 'Anthropic', url: 'https://claude.ai',            color: '#d97757' },
+    { name: 'Perplexity', maker: 'AI',        url: 'https://perplexity.ai',        color: '#20b8cd' },
+    { name: 'Grok',       maker: 'xAI',       url: 'https://grok.com',             color: '#c9c9d6' }
+];
+
+const LIMIT_CHARS = 24000;
+
+/* ---------------------------------------------------------------- DOM */
+const corePromptEl = document.getElementById('corePrompt');
+const preventClippingEl = document.getElementById('preventClipping');
+const preventResponseClippingEl = document.getElementById('preventResponseClipping');
+const promptPreviewEl = document.getElementById('promptPreview');
+const charCountEl = document.getElementById('charCount');
+const limitStatusEl = document.getElementById('limitStatus');
+const tabsEl = document.getElementById('tabs');
+const panelsEl = document.getElementById('panels');
+
+function esc(s) { return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'); }
+
+/* ------------------------------------------------------- Render controls */
+function renderControls() {
+    MODULES.forEach((m, i) => {
+        const tab = document.createElement('button');
+        tab.type = 'button'; tab.className = 'tab' + (i === 0 ? ' active' : '');
+        tab.dataset.target = m.id; tab.setAttribute('role', 'tab'); tab.setAttribute('data-tip', m.desc);
+        tab.innerHTML = '<span>' + m.icon + '</span>' + esc(m.title) + '<span class="badge" id="badge-' + m.id + '">0</span>';
+        tab.addEventListener('click', () => switchTab(m.id));
+        tabsEl.appendChild(tab);
+
+        const panel = document.createElement('div');
+        panel.className = 'panel' + (i === 0 ? ' active' : ''); panel.id = 'panel-' + m.id;
+        let html = '<p class="panel-desc">' + esc(m.desc) + '</p>';
+        if (m.pills) {
+            html += '<div class="pills">' + m.pills.map(p =>
+                '<div class="pillwrap"><label class="pill' + (p.cmd ? ' cmd' : '') + '" data-tip="' + esc(p.d) + '">' +
+                '<input type="checkbox" class="prompt-mod" data-module="' + m.id + '" data-text="' + esc(p.t) + '"><span>' + esc(p.l) + '</span></label>' +
+                (p.f ? '<div class="pill-fields">' + p.f.map(f => '<input type="text" class="input-text pf" placeholder="' + esc(f) + '" aria-label="' + esc(f) + '">').join('') + '</div>' : '') +
+                '</div>'
+            ).join('') + '</div>';
+        }
+        if (m.selects) {
+            html += m.selects.map(sl =>
+                '<div class="field"><label for="' + sl.id + '">' + esc(sl.label) + '</label>' +
+                '<select id="' + sl.id + '" class="prompt-mod-select" data-module="' + m.id + '" data-slot="' + sl.slot + '" data-tip="' + esc(sl.tip) + '"><option value="">' + esc(sl.empty) + '</option>' +
+                sl.options.map(o => '<option value="' + esc(o[0]) + '" data-desc="' + esc(o[2]) + '" title="' + esc(o[2]) + '">' + esc(o[1]) + '</option>').join('') +
+                '</select><div class="sel-desc" id="desc-' + sl.id + '"></div></div>'
+            ).join('');
+        }
+        panel.innerHTML = html;
+        panelsEl.appendChild(panel);
+    });
+
+    document.getElementById('launchers').innerHTML = CHATBOTS.map(c =>
+        '<button class="launch" type="button" data-tip="Copies the compiled prompt, then opens ' + esc(c.name) + ' in a new tab. Paste it into the chat box." style="--bc:' + c.color + '" onclick="copyAndLaunch(\'promptPreview\', \'' + c.url + '\')"><span class="bd"></span>' + esc(c.name) + '</button>'
+    ).join('');
+
+    document.getElementById('modLaunchers').innerHTML = CHATBOTS.map(c =>
+        '<button class="launch" type="button" data-tip="Copies the modification package (your request plus this page\'s source), then opens ' + esc(c.name) + '. Paste it in." data-engine="' + esc(c.name + ' (' + c.maker + ')') + '" style="--bc:' + c.color + ';background:#1f1c3d" onclick="copyAndLaunch(\'modificationPreview\', \'' + c.url + '\')"><span class="bd"></span>' + esc(c.name) + ' &middot; mod hub</button>'
+    ).join('');
+
+    document.getElementById('modalAI').innerHTML = CHATBOTS.map(c =>
+        '<option value="' + esc(c.name + ' (' + c.maker + ')') + '">' + esc(c.name + ' (' + c.maker + ')') + '</option>'
+    ).join('');
+}
+
+function switchTab(id) {
+    document.querySelectorAll('.tab').forEach(t => t.classList.toggle('active', t.dataset.target === id));
+    document.querySelectorAll('.panel').forEach(p => p.classList.toggle('active', p.id === 'panel-' + id));
+}
+
+/* --------------------------------------------------------- Prompt compiler */
+function updateStandardPrompt() {
+    const prefixes = [], systemCommands = [], suffixes = [];
+    const perModule = {};
+    const bump = id => { perModule[id] = (perModule[id] || 0) + 1; };
+
+    document.querySelectorAll('.pillwrap').forEach(w => w.classList.toggle('open', w.querySelector('.prompt-mod').checked));
+
+    document.querySelectorAll('.prompt-mod:checked').forEach(item => {
+        let val = item.getAttribute('data-text');
+        if (!val) return;
+        const wrap = item.closest('.pillwrap');
+        if (wrap) {
+            const ins = wrap.querySelectorAll('.pf');
+            val = val.replace(/\{(\d+)\}/g, (m, i) => {
+                const inp = ins[+i];
+                return inp && inp.value.trim() ? inp.value.trim() : '[' + (inp ? inp.placeholder : '?') + ']';
+            });
+        }
+        bump(item.dataset.module);
+        if (val.startsWith('/')) prefixes.push(val.trim());
+        else systemCommands.push(val);
+    });
+
+    document.querySelectorAll('.prompt-mod-select').forEach(sel => {
+        const dEl = document.getElementById('desc-' + sel.id);
+        const opt = sel.options[sel.selectedIndex];
+        if (dEl) dEl.textContent = sel.value ? (opt.getAttribute('data-desc') || '') : '';
+        if (!sel.value) return;
+        bump(sel.dataset.module);
+        (sel.dataset.slot === 'suffix' ? suffixes : systemCommands).push(sel.value);
+    });
+
+    const baseText = corePromptEl.value.trim();
+    if (preventClippingEl.checked) {
+        prefixes.push("[SYSTEM UPDATE: The upcoming package contains user parameters. Process fully without truncating inputs or clipping the final sequence bounds.]");
+    }
+    if (preventResponseClippingEl.checked) {
+        suffixes.push("CRITICAL SAFEGUARD: If your complete response is long or close to exhausting output tokens, stop at a logical milestone and state 'CONTINUE_REQUIRED' so that the remaining output is not clipped or lost mid-sentence.");
+    }
+
+    const compiled = [];
+    if (prefixes.length) compiled.push(prefixes.join(" "));
+    if (systemCommands.length) compiled.push("SYSTEM COMMANDS:\n" + systemCommands.map(c => "- " + c).join("\n"));
+    if (baseText) compiled.push("USER PROMPT:\n" + baseText);
+    if (suffixes.length) compiled.push("INSTRUCTIONS / MODIFIERS:\n" + suffixes.join("\n"));
+
+    const outText = compiled.join("\n\n");
+    promptPreviewEl.textContent = outText;
+
+    // metrics
+    const len = outText.length;
+    charCountEl.textContent = "Total Built Prompt Length: " + len.toLocaleString() + " characters";
+    document.getElementById('tokenCount').textContent = Math.ceil(len / 4).toLocaleString();
+    document.getElementById('wordCount').textContent = outText.trim() ? outText.trim().split(/\s+/).length.toLocaleString() : 0;
+    const ratio = Math.min(len / LIMIT_CHARS, 1);
+    const ring = document.getElementById('ringFg');
+    ring.style.strokeDashoffset = (169.6 * (1 - ratio)).toFixed(1);
+    ring.style.stroke = ratio > 1 - 1e-9 || len > LIMIT_CHARS * .85 ? 'var(--warn)' : (ratio > .6 ? '#e8b030' : 'var(--good)');
+    document.getElementById('ringPct').textContent = Math.round(ratio * 100) + '%';
+
+    if (len > LIMIT_CHARS) {
+        limitStatusEl.textContent = "Warning: Nearing context threshold limits.";
+        limitStatusEl.className = "warning";
+    } else {
+        limitStatusEl.textContent = "Within Safe Processing Range";
+        limitStatusEl.className = "";
+    }
+
+    // badges
+    let total = 0;
+    MODULES.forEach(m => {
+        const n = perModule[m.id] || 0; total += n;
+        const b = document.getElementById('badge-' + m.id);
+        b.textContent = n; b.classList.toggle('on', n > 0);
+    });
+    document.getElementById('activeCount').textContent = total + ' active';
+}
+
+function resetAll() {
+    corePromptEl.value = '';
+    document.querySelectorAll('.prompt-mod').forEach(c => c.checked = false);
+    document.querySelectorAll('.prompt-mod-select').forEach(s => s.value = '');
+    document.querySelectorAll('.pf').forEach(i => i.value = '');
+    preventClippingEl.checked = true; preventResponseClippingEl.checked = true;
+    updateStandardPrompt(); toast('Everything reset');
+}
+
+/* -------------------------------------------------------------- Clipboard */
+function copyText(txt) {
+    if (navigator.clipboard && window.isSecureContext) {
+        return navigator.clipboard.writeText(txt).catch(() => legacyCopy(txt));
+    }
+    return legacyCopy(txt);
+}
+function legacyCopy(txt) {
+    return new Promise((resolve, reject) => {
+        const ta = document.createElement('textarea');
+        ta.value = txt; ta.style.cssText = 'position:fixed;opacity:0;top:0;left:0;';
+        document.body.appendChild(ta); ta.focus(); ta.select();
+        let ok = false;
+        try { ok = document.execCommand('copy'); } catch (e) {}
+        document.body.removeChild(ta);
+        ok ? resolve() : reject(new Error('copy blocked'));
+    });
+}
+function manualCopy(elementId) {
+    const txt = document.getElementById(elementId).textContent;
+    if (!txt.trim()) { toast('Nothing to copy yet', true); return; }
+    copyText(txt).then(() => toast('Copied to clipboard \u2713'))
+        .catch(() => toast('Clipboard blocked \u2014 highlight the text and copy manually', true));
+}
+function copyAndLaunch(elementId, url) {
+    const txt = document.getElementById(elementId).textContent;
+    if (!txt.trim()) { toast('Type a prompt or pick some modifiers first', true); return; }
+    // open synchronously so popup blockers see the user gesture
+    const win = window.open(url, '_blank');
+    copyText(txt).then(() => toast('Copied \u2014 paste it into the new tab'))
+        .catch(() => toast('Auto-copy was blocked. Copy the panel text manually, then paste.', true));
+    if (!win) toast('Popup blocked \u2014 allow popups or open the chatbot manually', true);
+}
+
+let toastTimer;
+function toast(msg, isErr) {
+    const t = document.getElementById('toast');
+    t.textContent = msg; t.className = (isErr ? 'err ' : '') + 'show';
+    clearTimeout(toastTimer); toastTimer = setTimeout(() => t.className = isErr ? 'err' : '', 2600);
+}
+
+/* ------------------------------------------------ Modification pipeline */
+function openModificationModal() {
+    document.getElementById('modModal').classList.add('open');
+    setTimeout(() => document.getElementById('modalChange').focus(), 50);
+}
+function closeModificationModal() { document.getElementById('modModal').classList.remove('open'); }
+
+// Build a CLEAN copy of this page's source (no previews, no rendered controls, no theme state)
+function getCleanSource() {
+    const clone = document.documentElement.cloneNode(true);
+    clone.querySelectorAll('[data-render]').forEach(el => { el.innerHTML = ''; });
+    ['promptPreview', 'modificationPreview', 'modMeta'].forEach(id => { const e = clone.querySelector('#' + id); if (e) e.textContent = ''; });
+    const wrap = clone.querySelector('#modificationPayloadWrapper'); if (wrap) wrap.removeAttribute('style');
+    const modal = clone.querySelector('#modModal'); if (modal) modal.classList.remove('open');
+    const tipC = clone.querySelector('#tip'); if (tipC) tipC.removeAttribute('class');
+    const toastEl = clone.querySelector('#toast'); if (toastEl) toastEl.removeAttribute('class');
+    clone.setAttribute('data-theme', 'light');
+    return '<!DOCTYPE html>\n' + clone.outerHTML;
+}
+
+function compileModificationPayload() {
+    const aiEngine = document.getElementById('modalAI').value;
+    const requiredChange = document.getElementById('modalChange').value.trim();
+    const structuralWhy = document.getElementById('modalWhy').value.trim();
+    if (!requiredChange || !structuralWhy) { toast('Fill in both the change and the reason first', true); return; }
+
+    const selfCodeSource = getCleanSource();
+    const bar = "========================================================================\n";
+    const payload =
+        bar + "CORE ACTION REQUIRED: REQUEST FOR CODE REVISION AND SOURCE UPDATES\n" + bar +
+        "TARGET PROCESSING AGENT: " + aiEngine + "\n" +
+        "CHANGE SPECIFICATION: " + requiredChange + "\n" +
+        "CORE OBJECTIVE REASON: " + structuralWhy + "\n\n" +
+        "MIGRATION EXPECTATION FOR THE RECEIVING AI CHATBOT:\n" +
+        "1. You are being supplied with the full source code of this tool within this prompt framework below.\n" +
+        "2. Read the internal immutable comment history log located at the top of the file.\n" +
+        "3. Increment the major/minor version string appropriately inside that comment block template.\n" +
+        "4. Append a new structured log item detailing that you (" + aiEngine + ") made these updates.\n" +
+        "5. Apply the requested changes completely (" + requiredChange + ") and output the entire new .html file payload.\n\n" +
+        bar + "CURRENT SOURCE CODE OF THE APPARATUS FOLLOWS BELOW:\n" + bar + "\n" +
+        selfCodeSource;
+
+    document.getElementById('modificationPreview').textContent = payload;
+    document.getElementById('modMeta').textContent = payload.length.toLocaleString() + ' characters \u00B7 \u2248 ' + Math.ceil(payload.length / 4).toLocaleString() + ' tokens (includes full source)';
+    document.getElementById('modificationPayloadWrapper').style.display = 'block';
+
+    document.querySelectorAll('#modLaunchers .launch').forEach(b => b.classList.toggle('suggested', b.dataset.engine === aiEngine));
+    closeModificationModal();
+    document.getElementById('modificationPayloadWrapper').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    toast('Modification package ready');
+}
+
+
+/* ------------------------------------------------------------ Tooltips */
+const tipEl = document.getElementById('tip');
+let tipTarget = null;
+function showTip(el) {
+    const txt = el.getAttribute('data-tip');
+    if (!txt) return;
+    tipTarget = el; tipEl.textContent = txt; tipEl.classList.add('show');
+    const r = el.getBoundingClientRect(), t = tipEl.getBoundingClientRect();
+    let left = Math.min(Math.max(8, r.left + r.width / 2 - t.width / 2), window.innerWidth - t.width - 8);
+    let top = r.bottom + 10, flip = false;
+    if (top + t.height > window.innerHeight - 8) { top = r.top - t.height - 10; flip = true; }
+    tipEl.style.left = left + 'px'; tipEl.style.top = Math.max(8, top) + 'px';
+    tipEl.classList.toggle('flip', flip);
+}
+function hideTip() { tipTarget = null; tipEl.classList.remove('show'); }
+document.addEventListener('mouseover', e => { const el = e.target.closest && e.target.closest('[data-tip]'); if (el && el !== tipTarget) showTip(el); else if (!el) hideTip(); });
+document.addEventListener('focusin', e => { const el = e.target.closest && e.target.closest('[data-tip]'); if (el) showTip(el); });
+document.addEventListener('focusout', hideTip);
+document.addEventListener('mouseleave', hideTip);
+window.addEventListener('scroll', hideTip, true);
+document.addEventListener('click', e => { if (e.target.closest && e.target.closest('select')) hideTip(); });
+
+/* ------------------------------------------------------------ Theme & init */
+function applyTheme(t) { document.documentElement.setAttribute('data-theme', t); }
+document.getElementById('themeBtn').addEventListener('click', () => {
+    const next = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+    applyTheme(next);
+    try { localStorage.setItem('pb-theme', next); } catch (e) {}
+});
+try { const saved = localStorage.getItem('pb-theme'); if (saved) applyTheme(saved); } catch (e) {}
+
+document.getElementById('modModal').addEventListener('click', e => { if (e.target.id === 'modModal') closeModificationModal(); });
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModificationModal(); });
+
+renderControls();
+corePromptEl.addEventListener('input', updateStandardPrompt);
+preventClippingEl.addEventListener('change', updateStandardPrompt);
+preventResponseClippingEl.addEventListener('change', updateStandardPrompt);
+panelsEl.addEventListener('change', updateStandardPrompt);
+panelsEl.addEventListener('input', updateStandardPrompt);
+updateStandardPrompt();
+</script>
+</body>
+</html>

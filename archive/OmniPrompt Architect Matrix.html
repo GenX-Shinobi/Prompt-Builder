@@ -1,0 +1,608 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Universal Prompt Architect Matrix</title>
+    <!--
+      Meta Information & Blueprint Blueprint
+      =======================================================
+      Engineered by: Advanced AI Prompt Architect
+      Generation: Fully automated structural code generation via Python Environment
+      Version: 4.2.0-Enterprise-Omni
+      Release Date: 2026-10-27 17:11 UTC
+      Architecture Model: Multi-Agent Targeting & Cognitive Parameter Engine
+      File Purpose: Client-Side GUI to eliminate manual prompt engineering bloat.
+    -->
+    <style>
+        :root {
+            --bg-base: #0c0c0e;
+            --bg-surface: #16161a;
+            --bg-card: #1f1f24;
+            --border: #2d2d34;
+            --text-main: #e4e4e9;
+            --text-muted: #9f9fad;
+            --primary: #3b82f6;
+            --primary-hover: #2563eb;
+            --gemini: #1a73e8;
+            --chatgpt: #10a37f;
+            --claude: #d97706;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-base);
+            color: var(--text-main);
+            padding: 2rem;
+            line-height: 1.5;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .logo-area h1 {
+            font-size: 1.8rem;
+            font-weight: 700;
+            background: linear-gradient(45deg, #3b82f6, #a855f7);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .logo-area p {
+            color: var(--text-muted);
+            font-size: 0.85rem;
+            margin-top: 0.2rem;
+        }
+
+        .signature-badge {
+            background-color: var(--bg-surface);
+            border: 1px solid var(--border);
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            font-family: monospace;
+            font-size: 0.75rem;
+            text-align: right;
+            color: var(--text-muted);
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: 7fr 5fr;
+            gap: 2rem;
+        }
+
+        @media (max-width: 968px) {
+            .grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .panel {
+            background-color: var(--bg-surface);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1.5rem;
+        }
+
+        .section-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 1.2rem;
+            border-left: 4px solid var(--primary);
+            padding-left: 0.6rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .form-group {
+            margin-bottom: 1.2rem;
+        }
+
+        label {
+            display: block;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-bottom: 0.4rem;
+            color: var(--text-main);
+        }
+
+        input[type="text"], textarea, select {
+            width: 100%;
+            background-color: var(--bg-card);
+            border: 1px solid var(--border);
+            color: var(--text-main);
+            border-radius: 6px;
+            padding: 0.75rem;
+            font-size: 0.9rem;
+            transition: border-color 0.2s;
+        }
+
+        input[type="text"]:focus, textarea:focus, select:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+
+        .matrix-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: 0.75rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .matrix-item {
+            position: relative;
+            background-color: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            padding: 0.75rem;
+            display: flex;
+            align-items: flex-start;
+            gap: 0.5rem;
+            cursor: pointer;
+            transition: background-color 0.2s, border-color 0.2s;
+        }
+
+        .matrix-item:hover {
+            border-color: #4b5563;
+        }
+
+        .matrix-item input[type="checkbox"] {
+            margin-top: 0.2rem;
+        }
+
+        .matrix-label-wrapper {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .matrix-title {
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        /* Tooltip Framework */
+        .tooltip-icon {
+            display: inline-block;
+            width: 14px;
+            height: 14px;
+            background-color: #374151;
+            border-radius: 50%;
+            text-align: center;
+            font-size: 10px;
+            line-height: 14px;
+            margin-left: 4px;
+            color: var(--text-muted);
+            cursor: help;
+        }
+
+        .matrix-item .tooltip-text {
+            visibility: hidden;
+            width: 240px;
+            background-color: #1f2937;
+            color: #fff;
+            text-align: left;
+            border-radius: 6px;
+            padding: 0.6rem;
+            position: absolute;
+            z-index: 10;
+            bottom: 125%;
+            left: 50%;
+            transform: translateX(-50%);
+            opacity: 0;
+            transition: opacity 0.2s;
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.5);
+            font-size: 0.75rem;
+            font-weight: 400;
+            border: 1px solid #4b5563;
+            pointer-events: none;
+        }
+
+        .matrix-item:hover .tooltip-text {
+            visibility: visible;
+            opacity: 1;
+        }
+
+        /* Telemetry Tracking Widget */
+        .telemetry-container {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .telemetry-header {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.8rem;
+            margin-bottom: 0.4rem;
+        }
+
+        .meter-bar {
+            height: 8px;
+            background-color: #27272a;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .meter-fill {
+            height: 100%;
+            width: 0%;
+            background-color: var(--success);
+            transition: width 0.2s, background-color 0.2s;
+        }
+
+        .telemetry-status {
+            font-weight: 600;
+        }
+
+        /* Target Platform Grid */
+        .platform-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 0.5rem;
+            margin-top: 1rem;
+        }
+
+        .btn-platform {
+            padding: 0.75rem;
+            border: none;
+            border-radius: 6px;
+            color: white;
+            font-weight: 600;
+            font-size: 0.85rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.4rem;
+            transition: opacity 0.2s;
+        }
+
+        .btn-platform:hover {
+            opacity: 0.9;
+        }
+
+        .btn-gemini { background-color: var(--gemini); }
+        .btn-chatgpt { background-color: var(--chatgpt); }
+        .btn-claude { background-color: var(--claude); }
+
+        .output-box {
+            width: 100%;
+            height: 380px;
+            background-color: var(--bg-card);
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 0.85rem;
+            padding: 1rem;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            resize: none;
+            color: #a7f3d0;
+        }
+
+        .toast {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            background-color: var(--success);
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 6px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            font-weight: 600;
+            font-size: 0.9rem;
+            display: none;
+            z-index: 100;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <div class="logo-area">
+            <h1>OmniPrompt Architect Matrix</h1>
+            <p>Cross-Model System Control Pipeline & Output Formatter</p>
+        </div>
+        <div class="signature-badge">
+            ENGINE: Python-Gen v4.2.0<br>
+            STAMP: 2026-10-27 17:11 UTC<br>
+            STATUS: Multi-Agent Ready
+        </div>
+    </header>
+
+    <div class="grid">
+        <!-- Configuration Control Panel -->
+        <div class="panel">
+            <div class="section-title">1. Dynamic System Configuration</div>
+            
+            <div class="form-group">
+                <label for="core-input">Primary Prompt Payload / Core Request</label>
+                <textarea id="core-input" rows="4" placeholder="Enter your core query, question, code task, or data set here..."></textarea>
+            </div>
+
+            <div class="form-group">
+                <label for="preset-domain">Structural Blueprint Preset</label>
+                <select id="preset-domain">
+                    <option value="general">Standard Open-Ended Exploration</option>
+                    <option value="job-hunting">Job Search, ATS Resume Optimization, & Cover Letters</option>
+                    <option value="housing-grants">HUD / USDA Housing Grants & Public Assistance Nav</option>
+                    <option value="smart-shopping">Smart Shopper & Cross-Review Aggregator</option>
+                    <option value="legal-research">Legal Framework Audit & Case Structuring</option>
+                    <option value="software-dev">Production-Grade Coding & Structural Debugging</option>
+                </select>
+            </div>
+
+            <div class="form-group" style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                <div>
+                    <label for="persona-select">Persona & Vantage Point</label>
+                    <select id="persona-select">
+                        <option value="none">Standard System Native</option>
+                        <option value="scholar">Distinguished Academic Scholar</option>
+                        <option value="expert">Subject Matter Expert (SME)</option>
+                        <option value="engineer">Principal Staff Engineer</option>
+                        <option value="critic">Skeptical Consumer Advocate</option>
+                    </select>
+                </div>
+                <div>
+                    <label for="format-select">Output Format Simulation</label>
+                    <select id="format-select">
+                        <option value="bullet">High-Density Fragmented Bullet List</option>
+                        <option value="table">Side-by-Side Comparison Table (Markdown)</option>
+                        <option value="paragraph">Structured Prose / Narrative Chapters</option>
+                        <option value="code">Pure Code Block Wireframe Only</option>
+                        <option value="html">Raw Web-Ready (.html File Simulation)</option>
+                        <option value="txt">Formatted Clean Text Layout (.txt System)</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="section-title" style="margin-top: 1.5rem;">2. Cognitive Constraints & Reasoning Engine</div>
+            <div class="matrix-grid">
+                <label class="matrix-item">
+                    <input type="checkbox" id="c-hallucination" checked>
+                    <div class="matrix-label-wrapper">
+                        <span class="matrix-title">Zero-Hallucination<span class="tooltip-icon">?</span></span>
+                        <span class="tooltip-text">Forces the model to explicitly flag assumptions and isolate unverified claims completely.</span>
+                    </div>
+                </label>
+                <label class="matrix-item">
+                    <input type="checkbox" id="c-scannable">
+                    <div class="matrix-label-wrapper">
+                        <span class="matrix-title">Max Scannability<span class="tooltip-icon">?</span></span>
+                        <span class="tooltip-text">Strips greeting fluff, introductory conversational delays, and polite padding text.</span>
+                    </div>
+                </label>
+                <label class="matrix-item">
+                    <input type="checkbox" id="c-expert-panel">
+                    <div class="matrix-label-wrapper">
+                        <span class="matrix-title">Panel of Experts<span class="tooltip-icon">?</span></span>
+                        <span class="tooltip-text">Forces a simulated roundtable discussion between 3 independent domain experts.</span>
+                    </div>
+                </label>
+                <label class="matrix-item">
+                    <input type="checkbox" id="c-advocate">
+                    <div class="matrix-label-wrapper">
+                        <span class="matrix-title">Devil's Advocate<span class="tooltip-icon">?</span></span>
+                        <span class="tooltip-text">Directs the engine to aggressively stress-test its own rationale and find flaws.</span>
+                    </div>
+                </label>
+                <label class="matrix-item">
+                    <input type="checkbox" id="c-verification">
+                    <div class="matrix-label-wrapper">
+                        <span class="matrix-title">Source Audit Vector<span class="tooltip-icon">?</span></span>
+                        <span class="tooltip-text">Demands explicit verification metrics and cross-referencing criteria vectors.</span>
+                    </div>
+                </label>
+                <label class="matrix-item">
+                    <input type="checkbox" id="c-cot">
+                    <div class="matrix-label-wrapper">
+                        <span class="matrix-title">Chain-of-Thought<span class="tooltip-icon">?</span></span>
+                        <span class="tooltip-text">Triggers deep step-by-step logic detailing before rendering structural final answers.</span>
+                    </div>
+                </label>
+            </div>
+        </div>
+
+        <!-- Compiled Compiler Pipeline & Telemetry -->
+        <div class="panel" style="display: flex; flex-direction: column; justify-content: space-between;">
+            <div>
+                <div class="section-title">3. Telemetric Tracking Suite</div>
+                <div class="telemetry-container">
+                    <div class="telemetry-header">
+                        <span>Compiled Prompt Size</span>
+                        <span id="char-count">0 / 4000 chars</span>
+                    </div>
+                    <div class="meter-bar">
+                        <div id="meter-fill" class="meter-fill"></div>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; margin-top: 0.4rem; font-size: 0.75rem;">
+                        <span>Status: <span id="status-label" class="telemetry-status" style="color: var(--success);">Safe Range</span></span>
+                        <span id="clipping-warning" style="color: var(--danger); display: none; font-weight: bold;">Clipping Hazard!</span>
+                    </div>
+                </div>
+
+                <div class="section-title">4. Real-time Prompt Compilation Output</div>
+                <textarea id="prompt-output" class="output-box" readonly></textarea>
+            </div>
+
+            <div>
+                <label style="margin-top: 1rem; display: block;">5. Multi-Agent Transmission Target</label>
+                <div class="platform-grid">
+                    <button class="btn-platform btn-gemini" onclick="dispatchPrompt('gemini')">🚀 Launch Gemini</button>
+                    <button class="btn-platform btn-chatgpt" onclick="dispatchPrompt('chatgpt')">✨ Launch ChatGPT</button>
+                    <button class="btn-platform btn-claude" onclick="dispatchPrompt('claude')">🧠 Launch Claude</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="toast" class="toast">Prompt Copied to Clipboard! Redirecting...</div>
+
+<script>
+    const coreInput = document.getElementById('core-input');
+    const presetDomain = document.getElementById('preset-domain');
+    const personaSelect = document.getElementById('persona-select');
+    const formatSelect = document.getElementById('format-select');
+    const promptOutput = document.getElementById('prompt-output');
+    const charCount = document.getElementById('char-count');
+    const meterFill = document.getElementById('meter-fill');
+    const statusLabel = document.getElementById('status-label');
+    const clippingWarning = document.getElementById('clipping-warning');
+    const toast = document.getElementById('toast');
+
+    const checkboxes = [
+        'c-hallucination', 'c-scannable', 'c-expert-panel', 
+        'c-advocate', 'c-verification', 'c-cot'
+    ];
+
+    const presets = {
+        general: "Execute this task comprehensively, focusing on balance, clarity, and precision.",
+        'job-hunting': "Focus heavily on parsing ATS parameters, keyword matching density, clear formatting, high-impact professional metrics, and alignment with target corporate specifications.",
+        'housing-grants': "Apply deep programmatic tracking of federal housing guidelines. Align precisely with HUD/USDA structural guidelines, asset limitations, application pathways, and regional sub-grant qualifications.",
+        'smart-shopping': "Conduct an exhaustive market aggregation analysis. Eliminate marketing hyperbole, isolate hidden design drawbacks, perform consumer utility value modeling, and emphasize authentic long-term user satisfaction metrics.",
+        'legal-research': "Process through an analytical legal matrix. Maintain strict structural separation of statutory definitions, core case holdings, procedural posture elements, and precise jurisdiction vectors.",
+        'software-dev': "Generate enterprise-grade clean architecture. Emphasize defensive code design patterns, scale efficiency considerations, comprehensive exception handlers, and dry optimization guidelines."
+    };
+
+    function compilePrompt() {
+        const core = coreInput.value.trim();
+        if (!core) {
+            promptOutput.value = "[Awaiting primary payload data input...]";
+            updateTelemetry(0);
+            return;
+        }
+
+        let p = `### CORE TASK / PAYLOAD REQUEST:\n${core}\n\n`;
+        p += `### OPERATIONAL PARAMETERS & CONSTRAINTS:\n`;
+        p += `- **Domain Context:** ${presets[presetDomain.value]}\n`;
+
+        if (personaSelect.value !== 'none') {
+            const personaMap = {
+                scholar: "A highly decorated Academic Scholar, using rigorous analytical models, high peer-reviewed precision vocabulary, and clear structural citation principles.",
+                expert: "A seasoned Subject Matter Expert (SME), operating at an executive consultancy scale, avoiding basic hand-holding explanations to deliver rapid execution architectures.",
+                engineer: "A Principal Staff Infrastructure Engineer, maximizing structural logic, clear architecture principles, extreme modular clarity, and fail-safe planning models.",
+                critic: "A fiercely objective Consumer Advocate, committed to transparency, aggressively separating marketing noise from authentic metric reality."
+            };
+            p += `- **Persona Directive:** Adopt the perspective of ${personaMap[personaSelect.value]}\n`;
+        }
+
+        const formatMap = {
+            bullet: "High-density fragmented bullet points optimized for scannable read rates. No narrative fluff.",
+            table: "A meticulously organized Markdown comparison table showing structured side-by-side columns.",
+            paragraph: "Deep, fully continuous explanatory prose split systematically into highly organized thematic chapters.",
+            code: "A pure wireframe code structural output without secondary narrative text descriptions.",
+            html: "Raw, fully structured web-ready format simulated within code block syntax tags.",
+            txt: "Plain-text clean system output utilizing explicit visual structural boundaries."
+        };
+        p += `- **Required Structural Output Format:** Render results purely as: ${formatMap[formatSelect.value]}\n\n`;
+
+        p += `### CRITICAL SYSTEM INSTRUCTIONS:\n`;
+        if (document.getElementById('c-hallucination').checked) {
+            p += `- [STRICT: ZERO-HALLUCINATION MODE] If a fact or dataset cannot be verified with absolute cross-referenced certainty, explicitly state the limitation. Do not invent details or metrics.\n`;
+        }
+        if (document.getElementById('c-scannable').checked) {
+            p += `- [STRICT: MAXIMUM SCANNABILITY] Omit conversational pleasantries, introductory padding elements ('Sure, here is...'), and wrap-up summaries. Start directly with data execution.\n`;
+        }
+        if (document.getElementById('c-expert-panel').checked) {
+            p += `- [COGNITIVE MODE: PANEL OF EXPERTS] Simulating a debate among 3 elite independent specialists. Show their divergent analytical viewpoints before synthesizing a unified resolution.\n`;
+        }
+        if (document.getElementById('c-advocate').checked) {
+            p += `- [COGNITIVE MODE: DEVIL'S ADVOCATE] Aggressively stress-test your primary output hypotheses. Intentionally dedicate an explicit section to evaluating all potential failures, counter-arguments, and weak points.\n`;
+        }
+        if (document.getElementById('c-verification').checked) {
+            p += `- [EVIDENCE REQUIREMENT] Embed explicit indicators explaining how the provided claims can be verified or audited against actual baseline data vectors.\n`;
+        }
+        if (document.getElementById('c-cot').checked) {
+            p += `- [EXECUTION ROUTINE: CHAIN-of-THOUGHT] Thoroughly document your underlying calculation sequence or logic paths prior to generating final declarative claims.\n`;
+        }
+
+        promptOutput.value = p;
+        updateTelemetry(p.length);
+    }
+
+    function updateTelemetry(length) {
+        charCount.textContent = `${length} / 4000 chars`;
+        const percentage = Math.min((length / 4000) * 100, 100);
+        meterFill.style.width = `${percentage}%`;
+
+        if (percentage < 60) {
+            meterFill.style.backgroundColor = 'var(--success)';
+            statusLabel.textContent = 'Safe Range';
+            statusLabel.style.color = 'var(--success)';
+            clippingWarning.style.display = 'none';
+        } else if (percentage < 85) {
+            meterFill.style.backgroundColor = 'var(--warning)';
+            statusLabel.textContent = 'Approaching Limit';
+            statusLabel.style.color = 'var(--warning)';
+            clippingWarning.style.display = 'none';
+        } else {
+            meterFill.style.backgroundColor = 'var(--danger)';
+            statusLabel.textContent = 'High Clipping Risk';
+            statusLabel.style.color = 'var(--danger)';
+            clippingWarning.style.display = 'inline';
+        }
+    }
+
+    function dispatchPrompt(target) {
+        const text = promptOutput.value;
+        if (!coreInput.value.trim()) {
+            alert("Please provide a core input payload before attempting transmission.");
+            return;
+        }
+
+        // Automated Clipboard Synchronization
+        navigator.clipboard.writeText(text).then(() => {
+            // Trigger Toast Feedback System
+            toast.style.display = 'block';
+            setTimeout(() => { toast.style.display = 'none'; }, 2500);
+
+            // Platform Endpoint Routing Vectors
+            let url = '';
+            switch(target) {
+                case 'gemini': url = 'https://gemini.google.com'; break;
+                case 'chatgpt': url = 'https://chatgpt.com'; break;
+                case 'claude': url = 'https://claude.ai'; break;
+            }
+            window.open(url, '_blank');
+        }).catch(err => {
+            console.error('System Clipboard Intercept Failure: ', err);
+            alert("Clipboard injection blocked by system security settings. Please manually copy the output container text.");
+        });
+    }
+
+    // Assign Telemetric Listener Intercepts
+    coreInput.addEventListener('input', compilePrompt);
+    presetDomain.addEventListener('change', compilePrompt);
+    personaSelect.addEventListener('change', compilePrompt);
+    formatSelect.addEventListener('change', compilePrompt);
+    checkboxes.forEach(id => document.getElementById(id).addEventListener('change', compilePrompt));
+
+    // Initialize Blueprint Matrix State
+    compilePrompt();
+</script>
+
+</body>
+</html>

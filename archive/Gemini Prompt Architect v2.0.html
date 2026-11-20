@@ -1,0 +1,639 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gemini Systemic Prompt Architect</title>
+    <style>
+        :root {
+            --bg-base: #0f0f11;
+            --bg-surface: #16161a;
+            --bg-card: #1f1f24;
+            --border: #2e2e36;
+            --text-main: #e4e4ed;
+            --text-muted: #9fa0a6;
+            --accent: #3b82f6;
+            --accent-hover: #2563eb;
+            --accent-glow: rgba(59, 130, 246, 0.15);
+            --danger: #ef4444;
+            --success: #10b981;
+            --warning: #f59e0b;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-base);
+            color: var(--text-main);
+            padding: 2rem 1rem;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 1.5rem;
+        }
+
+        @media (min-width: 992px) {
+            .container {
+                grid-template-columns: 7fr 5fr;
+            }
+            header, .full-width {
+                grid-column: span 2;
+            }
+        }
+
+        header {
+            background: linear-gradient(135deg, var(--bg-surface), var(--bg-card));
+            padding: 1.5rem;
+            border-radius: 12px;
+            border: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .brand h1 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            background: linear-gradient(to right, #60a5fa, #a78bfa);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .brand p {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            margin-top: 0.25rem;
+        }
+
+        .grid-section {
+            background-color: var(--bg-surface);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1.25rem;
+        }
+
+        .section-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            border-left: 4px solid var(--accent);
+            padding-left: 0.5rem;
+            margin-bottom: 0.25rem;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        label {
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: var(--text-main);
+        }
+
+        input[type="text"], textarea, select {
+            width: 100%;
+            background-color: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            padding: 0.75rem;
+            color: var(--text-main);
+            font-size: 0.9rem;
+            transition: all 0.2s;
+        }
+
+        input[type="text"]:focus, textarea:focus, select:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px var(--accent-glow);
+        }
+
+        .options-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: 0.75rem;
+        }
+
+        .checkbox-card {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            padding: 0.75rem;
+            display: flex;
+            align-items: flex-start;
+            gap: 0.5rem;
+            cursor: pointer;
+            position: relative;
+            transition: background-color 0.2s;
+        }
+
+        .checkbox-card:hover {
+            background-color: #26262d;
+        }
+
+        .checkbox-card input[type="checkbox"] {
+            margin-top: 0.2rem;
+            accent-color: var(--accent);
+        }
+
+        .checkbox-label-wrapper {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .checkbox-title {
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
+
+        /* Tooltip Framework */
+        .tooltip-trigger {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 14px;
+            height: 14px;
+            font-size: 10px;
+            background-color: var(--border);
+            color: var(--text-muted);
+            border-radius: 50%;
+            margin-left: 4px;
+            cursor: help;
+        }
+
+        .has-tooltip {
+            position: relative;
+        }
+
+        .tooltip-text {
+            visibility: hidden;
+            width: 250px;
+            background-color: #0b0b0d;
+            color: #fff;
+            text-align: left;
+            border-radius: 6px;
+            padding: 0.75rem;
+            position: absolute;
+            z-index: 100;
+            bottom: 125%;
+            left: 50%;
+            transform: translateX(-50%);
+            opacity: 0;
+            transition: opacity 0.2s;
+            font-size: 0.8rem;
+            font-weight: 400;
+            line-height: 1.3;
+            border: 1px solid var(--border);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+            pointer-events: none;
+        }
+
+        .has-tooltip:hover .tooltip-text {
+            visibility: visible;
+            opacity: 1;
+        }
+
+        /* Telemetry Elements */
+        .counter-container {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.8rem;
+            margin-top: 0.25rem;
+        }
+
+        .counter-good { color: var(--success); }
+        .counter-warn { color: var(--warning); }
+        .counter-danger { color: var(--danger); }
+
+        /* Output Column Styling */
+        .output-panel {
+            position: sticky;
+            top: 2rem;
+            height: fit-content;
+        }
+
+        .output-actions {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.75rem;
+            margin-top: 1rem;
+        }
+
+        button {
+            padding: 0.85rem 1rem;
+            border-radius: 6px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            border: none;
+        }
+
+        .btn-primary {
+            background-color: var(--accent);
+            color: white;
+            grid-column: span 2;
+        }
+
+        .btn-primary:hover {
+            background-color: var(--accent-hover);
+        }
+
+        .btn-secondary {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border);
+            color: var(--text-main);
+        }
+
+        .btn-secondary:hover {
+            background-color: var(--border);
+        }
+
+        .toast {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            background-color: var(--success);
+            color: #000;
+            font-weight: 600;
+            padding: 0.75rem 1.5rem;
+            border-radius: 6px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            opacity: 0;
+            transform: translateY(10px);
+            transition: all 0.3s ease;
+            z-index: 1000;
+            pointer-events: none;
+        }
+
+        .toast.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <header>
+            <div class="brand">
+                <h1>Gemini Prompt Architect v2.0</h1>
+                <p>Systemic Control Dashboard • Native Battery-Saving Dark Mode</p>
+            </div>
+        </header>
+
+        <!-- Configuration Engine -->
+        <main class="grid-section">
+            <div class="section-title">Core Objective & Input Context</div>
+            <div class="form-group">
+                <label for="userObjective">What are you trying to accomplish?</label>
+                <textarea id="userObjective" rows="4" placeholder="Enter your core raw prompt, problem statement, or request details here..."></textarea>
+                <div class="counter-container">
+                    <span id="charCounter">Characters: 0 / 30000</span>
+                    <span id="clippingWarning" class="counter-good">Safe Range</span>
+                </div>
+            </div>
+
+            <!-- Row 1: Domain Presets -->
+            <div class="form-group">
+                <label class="has-tooltip">Domain Specialization Task
+                    <span class="tooltip-trigger">?</span>
+                    <span class="tooltip-text">Appends hardcoded behavioral guardrails optimized for highly unique public workflows.</span>
+                </label>
+                <select id="domainPreset">
+                    <option value="">General Optimization (No specialized domain)</option>
+                    <option value="resume">Job Hunting & Resume Optimization (ATS Bypass, Impact Matrix)</option>
+                    <option value="housing">HUD / USDA Housing Grants & Public Assistance Navigation</option>
+                    <option value="coding">Software Architecture & Clean Code Refinement</option>
+                    <option value="legal">Legal Research, Contract Auditing & Statutory Compliance</option>
+                    <option value="shopping">Smart Shopper, Pricing Arbitrage & Review Triangulation</option>
+                    <option value="academic">Academic Literature Synthesis & Scientific Review</option>
+                </select>
+            </div>
+
+            <!-- Row 2: Personas & Directives -->
+            <div class="form-group">
+                <label class="has-tooltip">Persona & Architectural Lens
+                    <span class="tooltip-trigger">?</span>
+                    <span class="tooltip-text">Forces Gemini to simulate a high-context cognitive framework with strict communication habits.</span>
+                </label>
+                <select id="personaPreset">
+                    <option value="expert">Subject Matter Expert (High depth, domain terminology, technical rigor)</option>
+                    <option value="scholar">Distinguished Scholar (Academic neutrality, dense sourcing framework)</option>
+                    <option value="advocate">Consumer Advocate (Skeptical, value-focused, alternative-driven)</option>
+                    <option value="panel">Panel of Experts (Simulates a roundtable review among 3 distinct specialists)</option>
+                    <option value="critic">Devil's Advocate (Aggressively stress-tests assumptions and exposes logic flaws)</option>
+                </select>
+            </div>
+
+            <!-- Row 3: Output Formatting -->
+            <div class="form-group">
+                <label class="has-tooltip">Output Format Structure
+                    <span class="tooltip-trigger">?</span>
+                    <span class="tooltip-text">Sets strict structural rules for structural output rendering layout.</span>
+                </label>
+                <select id="formatPreset">
+                    <option value="bulleted">High-Density Bulleted List (Fragmented, zero conversational fluff)</option>
+                    <option value="comparison">Side-by-Side Column Comparison / Markdown Table</option>
+                    <option value="structured">Multi-Section Narrative (Numbered headers with deep logical flows)</option>
+                    <option value="raw">Raw Unformatted Text Snippet (Ideal for code injection or copy-pasting)</option>
+                </select>
+            </div>
+
+            <!-- Row 4: Technical Target Format Wrapper -->
+            <div class="form-group">
+                <label class="has-tooltip">Emulated Target File Layout
+                    <span class="tooltip-trigger">?</span>
+                    <span class="tooltip-text">Directs the model to generate syntax clean enough to save directly into specific formats.</span>
+                </label>
+                <select id="filePreset">
+                    <option value="markdown">Markdown (.md Format with strict semantic headings)</option>
+                    <option value="html">Self-Contained Clean HTML/CSS Layout Code</option>
+                    <option value="csv">Standard CSV / Spreadable Dataset Format</option>
+                    <option value="txt">Plain Standard Text (.txt layout wrapper)</option>
+                </select>
+            </div>
+
+            <!-- Row 5: Constraints Grid -->
+            <div class="form-group">
+                <label class="has-tooltip">Systemic Constraints & Directives
+                    <span class="tooltip-trigger">?</span>
+                    <span class="tooltip-text">Activates programmatic limitations to modify the core generation engine behavior.</span>
+                </label>
+                <div class="options-grid">
+                    <label class="checkbox-card has-tooltip">
+                        <input type="checkbox" id="constHallucinate">
+                        <div class="checkbox-label-wrapper">
+                            <span class="checkbox-title">Zero-Hallucination Mode</span>
+                        </div>
+                        <span class="tooltip-text">Forces Gemini to clearly state what it doesn't know and strictly stick to verified training or provided facts.</span>
+                    </label>
+
+                    <label class="checkbox-card has-tooltip">
+                        <input type="checkbox" id="constVerification">
+                        <div class="checkbox-label-wrapper">
+                            <span class="checkbox-title">Source Cross-Verification</span>
+                        </div>
+                        <span class="tooltip-text">Demands step-by-step metadata verification and cross-referenced claims.</span>
+                    </label>
+
+                    <label class="checkbox-card has-tooltip">
+                        <input type="checkbox" id="constFluff">
+                        <div class="checkbox-label-wrapper">
+                            <span class="checkbox-title">Strip Conversational Fluff</span>
+                        </div>
+                        <span class="tooltip-text">Removes conversational filler like "Sure, I can help with that" or "Here is the result".</span>
+                    </label>
+
+                    <label class="checkbox-card has-tooltip">
+                        <input type="checkbox" id="constCot">
+                        <div class="checkbox-label-wrapper">
+                            <span class="checkbox-title">Chain-of-Thought Grid</span>
+                        </div>
+                        <span class="tooltip-text">Forces the model to explicitly lay out its underlying reasoning steps prior to giving final answers.</span>
+                    </label>
+                </div>
+            </div>
+        </main>
+
+        <!-- Live Compiler Panel -->
+        <aside class="grid-section output-panel">
+            <div class="section-title">Compiled Prompt Preview</div>
+            <div class="form-group" style="flex-grow: 1;">
+                <textarea id="promptOutput" readonly style="height: 320px; font-family: monospace; font-size: 0.85rem; resize: none; background-color: var(--bg-base);"></textarea>
+            </div>
+            
+            <div class="output-actions">
+                <button class="btn-primary" id="btnExecute">
+                    <span>🚀 Copy & Launch Gemini</span>
+                </button>
+                <button class="btn-secondary" id="btnCopy">📋 Only Copy to Clipboard</button>
+                <button class="btn-secondary" id="btnSavePreset">💾 Save State</button>
+            </div>
+        </aside>
+    </div>
+
+    <div class="toast" id="toastMessage">Prompt copied to clipboard!</div>
+
+    <script>
+        const userObjective = document.getElementById('userObjective');
+        const charCounter = document.getElementById('charCounter');
+        const clippingWarning = document.getElementById('clippingWarning');
+        const promptOutput = document.getElementById('promptOutput');
+        const toastMessage = document.getElementById('toastMessage');
+
+        // Form elements array for event mapping
+        const formInputs = [
+            userObjective, 'domainPreset', 'personaPreset', 'formatPreset', 
+            'filePreset', 'constHallucinate', 'constVerification', 'constFluff', 'constCot'
+        ].map(el => typeof el === 'string' ? document.getElementById(el) : el);
+
+        // Core prompt assembly engine
+        function compilePrompt() {
+            const rawText = userObjective.value.trim();
+            const charCount = rawText.length;
+            
+            // Track character counts and warnings
+            charCounter.textContent = `Characters: ${charCount.toLocaleString()} / 30,000`;
+            if (charCount > 25000) {
+                clippingWarning.textContent = "Clipping Risk (High)";
+                clippingWarning.className = "counter-danger";
+            } else if (charCount > 15000) {
+                clippingWarning.textContent = "Approaching Limit";
+                clippingWarning.className = "counter-warning";
+            } else {
+                clippingWarning.textContent = "Safe Range";
+                clippingWarning.className = "counter-good";
+            }
+
+            if (!rawText) {
+                promptOutput.value = "[Enter target details or problem parameters on the left to automatically construct your structural prompt matrix...]";
+                return;
+            }
+
+            let systemDirectives = [];
+            let structuralRules = [];
+
+            // 1. Process Domain Selection
+            const domain = document.getElementById('domainPreset').value;
+            if (domain === 'resume') {
+                systemDirectives.push("[DOMAIN TARGET: JOB HUNTING & ATS OPTIMIZATION] Scan text for rigid tracking system matching. Reframe competencies using high-impact metric formatting. Flag hidden keyword gaps.");
+            } else if (domain === 'housing') {
+                systemDirectives.push("[DOMAIN TARGET: PUBLIC ASSISTANCE & HOUSING GRANTS] cross-verify steps with official HUD/USDA program compliance structures. Prioritize asset thresholds and local area median income criteria mappings.");
+            } else if (domain === 'coding') {
+                systemDirectives.push("[DOMAIN TARGET: SOFTWARE ARCHITECTURE & REFACTORING] Prioritize algorithmic performance, time/space complexity, scale boundaries, clean coding guidelines, and defensive error-handling architectures.");
+            } else if (domain === 'legal') {
+                systemDirectives.push("[DOMAIN TARGET: LEGAL RESEARCH & CONTRACT AUDITING] Enforce granular structural dissection. Identify liability exposure patterns, vague terms, and conditional logical escape loops.");
+            } else if (domain === 'shopping') {
+                systemDirectives.push("[DOMAIN TARGET: CONSUMER VALUE ANALYSIS] Filter out sponsored product biases. Cross-examine user review platforms, spot pattern manipulation, and map out cost-per-unit metrics.");
+            } else if (domain === 'academic') {
+                systemDirectives.push("[DOMAIN TARGET: ACADEMIC REVIEW & SYNTHESIS] Analyze material using formal methodological rigor. Highlight systemic data biases, sample limitations, and gaps in study architectures.");
+            }
+
+            // 2. Process Persona Framing
+            const persona = document.getElementById('personaPreset').value;
+            if (persona === 'expert') {
+                systemDirectives.push("[ROLE ASSIGNMENT: SUBJECT MATTER EXPERT] Provide deep engineering/domain logic. Avoid surface-level definitions. Utilize high-density industry terminology.");
+            } else if (persona === 'scholar') {
+                systemDirectives.push("[ROLE ASSIGNMENT: DISTINGUISHED ACADEMIC SCHOLAR] Maintain absolute analytical detachment. Rely on deep citation frameworks and emphasize comparative study paradigms.");
+            } else if (persona === 'advocate') {
+                systemDirectives.push("[ROLE ASSIGNMENT: CONSUMER ADVOCATE] Focus on hidden risks, user financial implications, true value optimization, and consumer protections.");
+            } else if (persona === 'panel') {
+                systemDirectives.push("[ROLE ASSIGNMENT: COGNITIVE PANEL OF EXPERTS] Simulates a collaborative critique among 3 distinct top-tier specialists. Show their quick individual perspectives, synthesize common ground, and note any edge-case disputes.");
+            } else if (persona === 'critic') {
+                systemDirectives.push("[ROLE ASSIGNMENT: DEVIL'S ADVOCATE] Aggressively expose hidden confirmation biases. Challenge all assumptions, outline key vulnerabilities, and detail counter-arguments.");
+            }
+
+            // 3. Output Format Directives
+            const format = document.getElementById('formatPreset').value;
+            if (format === 'bulleted') {
+                structuralRules.push("- Layout format: Generate a dense bulleted list comprised of scannable fragments.
+- Do not output long introductory descriptions.");
+            } else if (format === 'comparison') {
+                structuralRules.push("- Layout format: Render all core parameters into a clean, comparative Markdown table mapping out specific attributes side-by-side.");
+            } else if (format === 'structured') {
+                structuralRules.push("- Layout format: Organize via sequential numbered headers. Dive deep into logical steps chronologically.");
+            } else if (format === 'raw') {
+                structuralRules.push("- Layout format: Provide raw unformatted block output only. Strip away decorative text elements.");
+            }
+
+            // 4. Document File Encodings
+            const fileEncoding = document.getElementById('filePreset').value;
+            structuralRules.push(`- Formatting Encoding Wrapper: Format all structural content syntax to perfectly match standard \`.${fileEncoding === 'markdown' ? 'md' : fileEncoding}\` parameters for direct clean system exports.`);
+
+            // 5. Systemic Checks (Checkboxes)
+            if (document.getElementById('constHallucinate').checked) {
+                systemDirectives.push("[CRITICAL DIRECTIVE: ZERO-HALLUCINATION GUARDRAIL] If a fact, regulatory clause, or data metric is not explicitly verified, clearly state your tracking limit. Never extrapolate or construct placeholder information.");
+            }
+            if (document.getElementById('constVerification').checked) {
+                systemDirectives.push("[CRITICAL DIRECTIVE: TRACKABLE VERIFICATION] Provide clear verification vectors. Explicitly outline how a user can double-check the authenticity of this output data.");
+            }
+            if (document.getElementById('constFluff').checked) {
+                systemDirectives.push("[CRITICAL DIRECTIVE: ZERO CHAT FILLER] Do not append polite preambles or conversational closing remarks. Output only the requested systemic prompt results directly.");
+            }
+            if (document.getElementById('constCot').checked) {
+                systemDirectives.push("[CRITICAL DIRECTIVE: CHAIN-OF-THOUGHT EXECUTION] Break down your internal step-by-step logic and display it under a dedicated 'Reasoning Architecture' section before showing your final resolution.");
+            }
+
+            // Construct Final High-Context Structural Prompt Block
+            let compiledText = "### SYSTEM OPERATIONAL MANDATE
+";
+            compiledText += "Execute the task using these programmatic system directives:
+";
+            systemDirectives.forEach(dir => compiledText += `${dir}
+`);
+            
+            compiledText += "
+### STRUCTURAL ARCHITECTURE RULES
+";
+            structuralRules.forEach(rule => compiledText += `${rule}
+`);
+            
+            compiledText += "
+### USER OBJECTIVE DATA INPUT
+";
+            compiledText += rawText;
+
+            promptOutput.value = compiledText;
+        }
+
+        // Notification Engine
+        function triggerToast(text) {
+            toastMessage.textContent = text;
+            toastMessage.classList.add('show');
+            setTimeout(() => toastMessage.classList.remove('show'), 2500);
+        }
+
+        // Action Utilities
+        function copyText() {
+            if (!userObjective.value.trim()) return false;
+            promptOutput.select();
+            navigator.clipboard.writeText(promptOutput.value);
+            return true;
+        }
+
+        // Event Hookups
+        formInputs.forEach(input => {
+            input.addEventListener('input', compilePrompt);
+            input.addEventListener('change', compilePrompt);
+        });
+
+        document.getElementById('btnCopy').addEventListener('click', () => {
+            if (copyText()) {
+                triggerToast("Prompt copied to clipboard successfully!");
+            } else {
+                triggerToast("Please input an objective first!");
+            }
+        });
+
+        document.getElementById('btnExecute').addEventListener('click', () => {
+            if (copyText()) {
+                triggerToast("Copied! Routing safely to Gemini...");
+                setTimeout(() => {
+                    window.open("https://gemini.google.com", "_blank");
+                }, 400);
+            } else {
+                triggerToast("Please input an objective first!");
+            }
+        });
+
+        // State Engine Local Storage Cache
+        document.getElementById('btnSavePreset').addEventListener('click', () => {
+            const state = {
+                objective: userObjective.value,
+                domain: document.getElementById('domainPreset').value,
+                persona: document.getElementById('personaPreset').value,
+                format: document.getElementById('formatPreset').value,
+                file: document.getElementById('filePreset').value,
+                hallucinate: document.getElementById('constHallucinate').checked,
+                verification: document.getElementById('constVerification').checked,
+                fluff: document.getElementById('constFluff').checked,
+                cot: document.getElementById('constCot').checked
+            };
+            localStorage.setItem('prompt_architect_state', JSON.stringify(state));
+            triggerToast("Configuration state saved to browser storage!");
+        });
+
+        window.addEventListener('load', () => {
+            const cachedState = localStorage.getItem('prompt_architect_state');
+            if (cachedState) {
+                try {
+                    const s = JSON.parse(cachedState);
+                    userObjective.value = s.objective || "";
+                    document.getElementById('domainPreset').value = s.domain || "";
+                    document.getElementById('personaPreset').value = s.persona || "";
+                    document.getElementById('formatPreset').value = s.format || "";
+                    document.getElementById('filePreset').value = s.file || "";
+                    document.getElementById('constHallucinate').checked = !!s.hallucinate;
+                    document.getElementById('constVerification').checked = !!s.verification;
+                    document.getElementById('constFluff').checked = !!s.fluff;
+                    document.getElementById('constCot').checked = !!s.cot;
+                    compilePrompt();
+                } catch(e) { console.error("Error loading cached state matrix", e); }
+            } else {
+                compilePrompt();
+            }
+        });
+    </script>
+</body>
+</html>

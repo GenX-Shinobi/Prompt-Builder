@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Universal Gemini Prompt Architect</title>
+    <style>
+        :root {
+            --bg-color: #f8fafc;
+            --card-bg: #ffffff;
+            --text-color: #1e293b;
+            --primary-color: #4f46e5;
+            --primary-hover: #4338ca;
+            --border-color: #cbd5e1;
+            --accent-color: #0ea5e9;
+        }
+        
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            padding: 2rem 1rem;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: var(--card-bg);
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+
+        header {
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+
+        h1 {
+            color: var(--primary-color);
+            margin-bottom: 0.5rem;
+            font-size: 2rem;
+        }
+
+        p.subtitle {
+            color: #64748b;
+            font-size: 0.95rem;
+        }
+
+        .fieldset {
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        legend {
+            font-weight: 600;
+            padding: 0 0.5rem;
+            color: var(--primary-color);
+        }
+
+        .form-group {
+            margin-bottom: 1.25rem;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            font-size: 0.95rem;
+        }
+
+        textarea {
+            width: 100%;
+            height: 120px;
+            padding: 0.75rem;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            font-size: 1rem;
+            resize: vertical;
+        }
+
+        textarea:focus, select:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+        }
+
+        select {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            font-size: 1rem;
+            background-color: #fff;
+        }
+
+        .grid-options {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+            gap: 1rem;
+        }
+
+        .checkbox-card {
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            padding: 0.75rem;
+            display: flex;
+            align-items: flex-start;
+            gap: 0.5rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .checkbox-card:hover {
+            border-color: var(--accent-color);
+            background-color: rgba(14, 165, 233, 0.02);
+        }
+
+        .checkbox-card input[type="checkbox"] {
+            margin-top: 0.25rem;
+            scale: 1.1;
+        }
+
+        .checkbox-label-text {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .opt-title {
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        .opt-desc {
+            font-size: 0.8rem;
+            color: #64748b;
+        }
+
+        .actions {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        button {
+            flex: 1;
+            padding: 0.75rem 1rem;
+            border: none;
+            border-radius: 6px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .btn-primary {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: var(--primary-hover);
+        }
+
+        .output-box {
+            margin-top: 1.5rem;
+            background: #f1f5f9;
+            padding: 1rem;
+            border-radius: 6px;
+            border: 1px solid var(--border-color);
+            white-space: pre-wrap;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 0.9rem;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+
+        .toast {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            background: #22c55e;
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 4px;
+            font-weight: 600;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            display: none;
+            animation: fadeIn 0.3s, fadeOut 0.3s 2.7s;
+        }
+
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <h1>Gemini Prompt Architect</h1>
+        <p class="subtitle">Consolidate your tasks into one smart interface. Configure context, choose personas, set strict constraints, and push directly to public Gemini.</p>
+    </header>
+
+    <!-- Core Input Task -->
+    <div class="form-group">
+        <label for="userTask">Your Request / Task Directive:</label>
+        <textarea id="userTask" placeholder="Type or paste your raw core request here (e.g., 'Compare these two laptop specs' or 'Explain this legal clause')..."></textarea>
+    </div>
+
+    <!-- Dropdown: Persona / Descriptors -->
+    <div class="fieldset">
+        <label for="personaSelect">Respond as (Persona / Expertise Descriptor):</label>
+        <select id="personaSelect">
+            <option value="">-- Default AI Persona --</option>
+            <option value="Act as a distinguished Scholar and Academic Researcher. Use precise language, cite structural frameworks, and prioritize deeply analytical synthesis.">Scholar / Academic Researcher</option>
+            <option value="Act as a Subject Matter Expert (SME) in this technical domain. Focus on advanced technical exactness, industry-standard metrics, and optimized processes.">Subject Matter Expert (SME)</option>
+            <option value="Act as a Senior Software Engineer and Architect. Provide clean, secure, performant, and production-ready solutions with explanatory documentation blocks.">Senior Software Developer / Architect</option>
+            <option value="Act as a Legal Advisor and Analytical Consultant. Approach the topic with rigorous scrutiny, evaluating risk parameters, liabilities, and strict compliance structures.">Legal Consultant / Analyst</option>
+            <option value="Act as an Objective Consumer Advocate and Smart Shopper. Filter out marketing fluff, contrast true value vs cost, examine real-user review pain points, and focus on practical longevity.">Smart Shopper / Consumer Advocate</option>
+            <option value="Act as an Intuitive Technical Educator. Use clear, non-jargon analogies to demystify complex architectures for an accessible, broad audience.">Universal Educator (Plain Language)</option>
+        </select>
+    </div>
+
+    <!-- Checkboxes: Task Scopes & Context Enhancers -->
+    <fieldset class="fieldset">
+        <legend>Task Vectors & Framework Alignment</legend>
+        <div class="grid-options">
+            <label class="checkbox-card">
+                <input type="checkbox" name="taskVector" value="Execute a comprehensive review comparison. Build a structured markdown grid evaluating feature sets, operational tradeoffs, hidden ownership costs, and red flags flagged by end users.">
+                <span class="checkbox-label-text">
+                    <span class="opt-title">Shopping & Reviews Grid</span>
+                    <span class="opt-desc">Converts raw product data into a feature-vs-tradeoff comparison matrix.</span>
+                </span>
+            </label>
+            <label class="checkbox-card">
+                <input type="checkbox" name="taskVector" value="Conduct a rigorous Root Cause Analysis (RCA). Trace underlying technical failures, edge-case bottlenecks, systemic errors, or logic anti-patterns.">
+                <span class="checkbox-label-text">
+                    <span class="opt-title">Root Cause Coding Analysis</span>
+                    <span class="opt-desc">Deeply debugging software structures, code fragments, and logic anomalies.</span>
+                </span>
+            </label>
+            <label class="checkbox-card">
+                <input type="checkbox" name="taskVector" value="Deconstruct this text for structural legal and regulatory risks. Outline hidden liabilities, compliance gaps, and severe contractual pitfalls.">
+                <span class="checkbox-label-text">
+                    <span class="opt-title">Legal Risk Audit</span>
+                    <span class="opt-desc">Audits agreements, terms, or policy literature for vulnerabilities.</span>
+                </span>
+            </label>
+            <label class="checkbox-card">
+                <input type="checkbox" name="taskVector" value="Provide a detailed Step-by-Step Implementation Guide. Break down execution paths into distinct chronological phases with verifiable milestones.">
+                <span class="checkbox-label-text">
+                    <span class="opt-title">Execution Roadmap</span>
+                    <span class="opt-desc">Outputs procedural blueprints rather than high-level overviews.</span>
+                </span>
+            </label>
+        </div>
+    </fieldset>
+
+    <!-- Checkboxes: Constraints & Safety Guards -->
+    <fieldset class="fieldset">
+        <legend>Operational Constraints & Strategy</legend>
+        <div class="grid-options">
+            <label class="checkbox-card">
+                <input type="checkbox" name="constraint" value="CRITICAL CONSTRAINT: Zero Hallucinations Permitted. Rely solely on explicit fact-finding and verifiable mechanics. If data is missing or ambiguous, state your lack of visibility explicitly instead of inferring.">
+                <span class="checkbox-label-text">
+                    <span class="opt-title">Zero Hallucination Mode</span>
+                    <span class="opt-desc">Strict adherence to explicit data; flags missing or unverified facts instantly.</span>
+                </span>
+            </label>
+            <label class="checkbox-card">
+                <input type="checkbox" name="constraint" value="FORMATTING REQUIREMENT: Prioritize maximum high-density scannability. Lead directly with the bottom-line solution. Use bold labels, concise nested bullet fragments, and stark markdown tables. Omit conversational conversational preambles.">
+                <span class="checkbox-label-text">
+                    <span class="opt-title">High-Density Scannability</span>
+                    <span class="opt-desc">Strips out AI conversational preambles, fluff, and conversational fillers.</span>
+                </span>
+            </label>
+            <label class="checkbox-card">
+                <input type="checkbox" name="constraint" value="ANALYTICAL STRATEGY: Provide explicit balanced counter-arguments. Contrast structural pros and cons for every single proposed path or recommendation to counter bias.">
+                <span class="checkbox-label-text">
+                    <span class="opt-title">Balanced Friction Analysis</span>
+                    <span class="opt-desc">Forces Gemini to challenge its own recommendations with counter-arguments.</span>
+                </span>
+            </label>
+            <label class="checkbox-card">
+                <input type="checkbox" name="constraint" value="SCOPE LIMIT: Focus strictly on current structural mechanics and actionable modern rules. Avoid historical background overviews or elementary introductory summaries.">
+                <span class="checkbox-label-text">
+                    <span class="opt-title">Exclude Elementary Lore</span>
+                    <span class="opt-desc">Prevents long introductions regarding historical context or basic concepts.</span>
+                </span>
+            </label>
+        </div>
+    </fieldset>
+
+    <!-- Action Triggers -->
+    <div class="actions">
+        <button class="btn-primary" onclick="buildAndLaunchPrompt()">Generate, Copy & Launch Gemini</button>
+    </div>
+
+    <!-- Live Preview -->
+    <label style="margin-top: 1.5rem;">Compiled System Prompt Preview:</label>
+    <div class="output-box" id="promptPreview">Your fully structured system prompt preview will generate here in real-time...</div>
+</div>
+
+<div class="toast" id="toastBox">Prompt Copied to Clipboard!</div>
+
+<script>
+    const userTaskEl = document.getElementById('userTask');
+    const personaEl = document.getElementById('personaSelect');
+    const previewEl = document.getElementById('promptPreview');
+    const toastEl = document.getElementById('toastBox');
+
+    function compilePrompt() {
+        const rawTask = userTaskEl.value.trim();
+        const persona = personaEl.value;
+        
+        // Gather selected values
+        const vectors = Array.from(document.querySelectorAll('input[name="taskVector"]:checked')).map(el => el.value);
+        const constraints = Array.from(document.querySelectorAll('input[name="constraint"]:checked')).map(el => el.value);
+        
+        let finalPrompt = "";
+        
+        if (persona) {
+            finalPrompt += `[SYSTEM PERSONA]\n${persona}\n\n`;
+        }
+        
+        if (vectors.length > 0) {
+            finalPrompt += `[TASK STRATEGIES]\n` + vectors.map(v => `- ${v}`).join('\n') + `\n\n`;
+        }
+        
+        if (constraints.length > 0) {
+            finalPrompt += `[OPERATIONAL CONSTRAINTS]\n` + constraints.map(c => `- ${c}`).join('\n') + `\n\n`;
+        }
+        
+        if (rawTask) {
+            finalPrompt += `[CORE DIRECTIVE / DATA INPUT]\n${rawTask}`;
+        } else {
+            finalPrompt += `[CORE DIRECTIVE / DATA INPUT]\n(Please input your core query inside the text box above)`;
+        }
+        
+        previewEl.textContent = finalPrompt;
+        return finalPrompt;
+    }
+
+    // Live update listeners
+    userTaskEl.addEventListener('input', compilePrompt);
+    personaEl.addEventListener('change', compilePrompt);
+    document.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
+        checkbox.addEventListener('change', compilePrompt);
+    });
+
+    function buildAndLaunchPrompt() {
+        const compiledText = compilePrompt();
+        
+        // Copy to clipboard
+        navigator.clipboard.writeText(compiledText).then(() => {
+            // Show custom toast alert
+            toastEl.style.display = 'block';
+            setTimeout(() => {
+                toastEl.style.display = 'none';
+            }, 3000);
+            
+            // Open Gemini in a separate window/tab
+            window.open('https://gemini.google.com', '_blank');
+        }).catch(err => {
+            alert('Failed to copy text automatically. Please copy the text manually from the preview window.');
+            window.open('https://gemini.google.com', '_blank');
+        });
+    }
+
+    // Initialize preview view on mount
+    compilePrompt();
+</script>
+
+</body>
+</html>

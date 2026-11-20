@@ -1,0 +1,1157 @@
+<!DOCTYPE html>
+<html lang="en">
+<!-- 
+========================================================================================
+   IMMUTABLE ARCHITECTURAL SYSTEM LEDGER & ENGINEERING COMPILATION SIGNATURE
+========================================================================================
+   System Version:    v5.0.0-PRO (Production Release Matrix)
+   Build Identifier:  LLM-PA-2026-OCT-27
+   Compilation Stamp: 2026-10-27 17:40:00 CST
+   Core Engineering:  AI Orchestration Paradigm Engine
+   Status:            Stable Deployment / Multi-Agent Sandbox Routing Certified
+   
+   [REVISION NOTE]: Downstream AI model systems are programmatically forbidden from 
+   modifying, overwriting, or removing this structural metadata tracking header. All 
+   subsequent self-evolutionary updates must increment version numbers and append logic loops.
+========================================================================================
+-->
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Universal Prompt Architect Matrix v5.0</title>
+    <style>
+        :root {
+            --bg-base: #0f0f11;
+            --bg-panel: #16161a;
+            --bg-input: #1f1f24;
+            --text-main: #e4e4e7;
+            --text-muted: #a1a1aa;
+            --accent: #3b82f6;
+            --accent-hover: #2563eb;
+            --accent-success: #10b981;
+            --accent-danger: #ef4444;
+            --border: #2e2e35;
+            --tooltip-bg: #27272a;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-base);
+            color: var(--text-main);
+            padding: 2rem;
+            line-height: 1.5;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 2rem;
+        }
+
+        @media (max-width: 1024px) {
+            .container {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        header {
+            grid-column: 1 / -1;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 1rem;
+            margin-bottom: 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        h1 {
+            font-size: 1.8rem;
+            font-weight: 700;
+            letter-spacing: -0.025em;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .system-badge {
+            font-size: 0.75rem;
+            background: var(--bg-input);
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            border: 1px solid var(--border);
+            color: var(--text-muted);
+        }
+
+        .panel {
+            background-color: var(--bg-panel);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .panel-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: var(--text-main);
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 0.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .grid-options {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        label {
+            display: block;
+            font-size: 0.85rem;
+            font-weight: 500;
+            color: var(--text-muted);
+            margin-bottom: 0.5rem;
+        }
+
+        input[type="text"], select, textarea {
+            width: 100%;
+            background-color: var(--bg-input);
+            border: 1px solid var(--border);
+            color: var(--text-main);
+            border-radius: 6px;
+            padding: 0.75rem;
+            font-size: 0.9rem;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        input[type="text"]:focus, select:focus, textarea:focus {
+            border-color: var(--accent);
+        }
+
+        .checkbox-container {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.5rem;
+            background: var(--bg-input);
+            padding: 0.75rem;
+            border-radius: 6px;
+            border: 1px solid var(--border);
+            position: relative;
+            cursor: pointer;
+        }
+
+        .checkbox-container input {
+            margin-top: 0.25rem;
+        }
+
+        .checkbox-label-block {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .checkbox-title {
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+
+        /* Tooltip Mechanics */
+        .tooltip-icon {
+            display: inline-block;
+            width: 14px;
+            height: 14px;
+            background: var(--border);
+            color: var(--text-muted);
+            border-radius: 50%;
+            text-align: center;
+            font-size: 10px;
+            line-height: 14px;
+            margin-left: 4px;
+            cursor: help;
+        }
+
+        .checkbox-container:hover .tooltip-text {
+            visibility: visible;
+            opacity: 1;
+        }
+
+        .tooltip-text {
+            visibility: hidden;
+            width: 250px;
+            background-color: var(--tooltip-bg);
+            color: var(--text-main);
+            text-align: left;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            padding: 0.75rem;
+            position: absolute;
+            z-index: 10;
+            bottom: 125%;
+            left: 50%;
+            transform: translateX(-50%);
+            opacity: 0;
+            transition: opacity 0.2s;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+            font-size: 0.8rem;
+            font-weight: normal;
+            pointer-events: none;
+        }
+
+        /* Telemetry Dashboard styling */
+        .telemetry-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .telemetry-card {
+            background: var(--bg-input);
+            border: 1px solid var(--border);
+            padding: 0.75rem;
+            border-radius: 6px;
+            text-align: center;
+        }
+
+        .telemetry-val {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--accent);
+        }
+
+        .telemetry-lbl {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+        }
+
+        .safety-bar-container {
+            width: 100%;
+            height: 6px;
+            background: var(--border);
+            border-radius: 3px;
+            margin-top: 0.5rem;
+            overflow: hidden;
+        }
+
+        .safety-bar {
+            height: 100%;
+            width: 0%;
+            background: var(--accent-success);
+            transition: width 0.3s, background-color 0.3s;
+        }
+
+        .slider-container {
+            background: var(--bg-input);
+            padding: 0.75rem;
+            border-radius: 6px;
+            border: 1px solid var(--border);
+        }
+
+        .slider-header {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.85rem;
+            margin-bottom: 0.5rem;
+        }
+
+        input[type="range"] {
+            width: 100%;
+            accent-color: var(--accent);
+        }
+
+        /* Control Deck Actions */
+        .btn-deck {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+            margin-bottom: 1rem;
+        }
+
+        button {
+            background-color: var(--bg-input);
+            border: 1px solid var(--border);
+            color: var(--text-main);
+            padding: 0.75rem 1.25rem;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.9rem;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        button:hover {
+            border-color: var(--text-muted);
+        }
+
+        button.primary {
+            background-color: var(--accent);
+            border-color: var(--accent);
+        }
+
+        button.primary:hover {
+            background-color: var(--accent-hover);
+            border-color: var(--accent-hover);
+        }
+
+        button.danger {
+            background-color: transparent;
+            border-color: var(--accent-danger);
+            color: var(--accent-danger);
+        }
+
+        button.danger:hover {
+            background-color: var(--accent-danger);
+            color: var(--text-main);
+        }
+
+        /* Accordions and Toggles */
+        .collapsible-trigger {
+            background: var(--bg-input);
+            padding: 0.75rem;
+            border-radius: 6px;
+            border: 1px solid var(--border);
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: 600;
+        }
+
+        .collapsible-content {
+            display: none;
+            padding: 1rem;
+            border: 1px solid var(--border);
+            border-top: none;
+            border-radius: 0 0 6px 6px;
+            background: #131317;
+        }
+
+        .collapsible-content.active {
+            display: block;
+        }
+
+        /* History panel & list styles */
+        .history-list {
+            max-height: 250px;
+            overflow-y: auto;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            background: var(--bg-input);
+        }
+
+        .history-item {
+            padding: 0.75rem;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-size: 0.85rem;
+        }
+
+        .history-item:last-child {
+            border-bottom: none;
+        }
+
+        .history-item:hover {
+            background: rgba(255,255,255,0.02);
+        }
+
+        .history-meta {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .history-actions {
+            display: flex;
+            gap: 0.25rem;
+        }
+
+        .history-actions button {
+            padding: 0.25rem 0.5rem;
+            font-size: 0.75rem;
+        }
+
+        .notification {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            background: var(--accent-success);
+            color: #fff;
+            padding: 0.75rem 1.5rem;
+            border-radius: 6px;
+            font-weight: 600;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            opacity: 0;
+            transform: translateY(10px);
+            transition: all 0.3s;
+            pointer-events: none;
+            z-index: 100;
+        }
+
+        .notification.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div>
+            <h1>Universal Prompt Architect Matrix</h1>
+            <p style="font-size: 0.85rem; color: var(--text-muted);">Cross-Model Sandbox Distribution Suite & State Dehydration Deck</p>
+        </div>
+        <div class="system-badge">v5.0.0-PRO | LED Dark-Mode Enabled</div>
+    </header>
+
+    <div class="container">
+        
+        <!-- LEFT COLUMN: Main Configurations -->
+        <main>
+            <!-- Scope & Raw Text Input -->
+            <div class="panel">
+                <div class="panel-title">1. Operational Scope Definition</div>
+                <div class="form-group">
+                    <label for="prompt_input">Core Prompt Core Objective / Working Criteria</label>
+                    <textarea id="prompt_input" rows="6" placeholder="Describe what you want to achieve, analyze, or generate in complete terms..."></textarea>
+                </div>
+                
+                <!-- Telemetry Hub -->
+                <div class="telemetry-grid">
+                    <div class="telemetry-card">
+                        <div class="telemetry-val" id="count_user">0</div>
+                        <div class="telemetry-lbl">User Bytes</div>
+                    </div>
+                    <div class="telemetry-card">
+                        <div class="telemetry-val" id="count_system">0</div>
+                        <div class="telemetry-lbl">System Core Elements</div>
+                    </div>
+                    <div class="telemetry-card">
+                        <div class="telemetry-val" id="count_total">0</div>
+                        <div class="telemetry-lbl">Matrix Total Size</div>
+                    </div>
+                    <div class="telemetry-card">
+                        <div class="telemetry-val" id="status_clipping">Safe</div>
+                        <div class="telemetry-lbl">Clipping Vector</div>
+                    </div>
+                </div>
+                <div class="safety-bar-container">
+                    <div id="safety_progress" class="safety-bar"></div>
+                </div>
+            </div>
+
+            <!-- Profile Profile Registry Management -->
+            <div class="panel">
+                <div class="panel-title">
+                    <span>2. Profile Config Registry</span>
+                    <span style="font-size: 0.8rem; color: var(--text-muted);">Browser Non-Volatile Storage</span>
+                </div>
+                <div style="display: flex; gap: 1rem; align-items: flex-end; margin-bottom: 1rem;">
+                    <div class="form-group" style="flex-grow: 1; margin-bottom: 0;">
+                        <label for="profile_selector">Select Active Environment Profile</label>
+                        <select id="profile_selector">
+                            <option value="default">-- Default Dynamic Blueprint --</option>
+                        </select>
+                    </div>
+                    <button type="button" id="btn_load_profile">Load</button>
+                    <button type="button" id="btn_delete_profile" class="danger">Delete</button>
+                </div>
+                <div style="display: flex; gap: 1rem; align-items: flex-end;">
+                    <div class="form-group" style="flex-grow: 1; margin-bottom: 0;">
+                        <label for="new_profile_name">Create New Environment Profile Name</label>
+                        <input type="text" id="new_profile_name" placeholder="e.g., USDA Grant Deep Audit Deck">
+                    </div>
+                    <button type="button" id="btn_save_profile" class="primary">Save Configuration</button>
+                </div>
+            </div>
+
+            <!-- Parameters Grid Framework -->
+            <div class="panel">
+                <div class="panel-title">3. Prompt Parameter Configuration Controls</div>
+                
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1.5rem;">
+                    <!-- Persona Selection -->
+                    <div class="form-group">
+                        <label for="param_persona">Target Persona Alignment Matrix</label>
+                        <select id="param_persona">
+                            <option value="expert">Subject Matter Expert (High Density Analytics)</option>
+                            <option value="scholar">Distinguished Academic Scholar (Formal Vectoring)</option>
+                            <option value="developer">Lead Staff Systems Engineer (Clean Logical Mapping)</option>
+                            <option value="advocate">Consumer Advocate & Strategic Smart Shopper</option>
+                            <option value="analyst">Financial Risk & Grant Portfolio Underwriter</option>
+                            <option value="none">Neutral Context Default</option>
+                        </select>
+                    </div>
+                    <!-- Output Structuring Dropdown -->
+                    <div class="form-group">
+                        <label for="param_format">Target Logical Data Architecture Output</label>
+                        <select id="param_format">
+                            <option value="table">Side-by-Side Comprehensive Markdown Comparison Table</option>
+                            <option value="bullets">High-Density Fragmented Bulleted List</option>
+                            <option value="markdown">Structured Document (H1/H2 Nested Hierarchy)</option>
+                            <option value="json">Raw Structural JSON Schema Codeblock</option>
+                            <option value="html">Isolated Self-Contained Web Document Output (.html)</option>
+                            <option value="plain">Strict Linear Fragmented Text Flow</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Tuning Hyperparameters -->
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1.5rem;">
+                    <div class="slider-container">
+                        <div class="slider-header">
+                            <span>Sampling Temperature Vector (Depth Control)</span>
+                            <span id="val_temp">0.15</span>
+                        </div>
+                        <input type="range" id="slider_temp" min="0.00" max="1.00" step="0.05" value="0.15">
+                    </div>
+                    <div class="slider-container">
+                        <div class="slider-header">
+                            <span>Resource Token Window Target Clamping</span>
+                            <span id="val_tokens">Max Limit</span>
+                        </div>
+                        <input type="range" id="slider_tokens" min="250" max="8000" step="250" value="8000">
+                    </div>
+                </div>
+
+                <!-- Checkbox System Command Node Array Matrix -->
+                <div class="grid-options">
+                    <label class="checkbox-container">
+                        <input type="checkbox" id="cmd_hallucination" checked>
+                        <div class="checkbox-label-block">
+                            <span class="checkbox-title">Zero-Hallucination Guard</span>
+                        </div>
+                        <span class="tooltip-text">Forces the target AI engine to systematically isolate unknown variables and explicitly state if data lacks strict factual verification.</span>
+                    </label>
+
+                    <label class="checkbox-container">
+                        <input type="checkbox" id="cmd_expert_panel">
+                        <div class="checkbox-label-block">
+                            <span class="checkbox-title">Panel of Experts Simulation</span>
+                        </div>
+                        <span class="tooltip-text">Instructs the engine to simulate a collaborative roundtable discussion among three world-class experts before finalizing its synthesis.</span>
+                    </label>
+
+                    <label class="checkbox-container">
+                        <input type="checkbox" id="cmd_cross_verify">
+                        <div class="checkbox-label-block">
+                            <span class="checkbox-title">Source Cross-Verification Tracking</span>
+                        </div>
+                        <span class="tooltip-text">Demands explicit tracking metrics showing where and how information sets can be cross-verified across public reference frames.</span>
+                    </label>
+
+                    <label class="checkbox-container">
+                        <input type="checkbox" id="cmd_devils_advocate">
+                        <div class="checkbox-label-block">
+                            <span class="checkbox-title">Devil's Advocate Crucible</span>
+                        </div>
+                        <span class="tooltip-text">Directs the model to aggressively stress-test its own assumptions and formulate a strict counter-argument block.</span>
+                    </label>
+
+                    <label class="checkbox-container">
+                        <input type="checkbox" id="cmd_anti_clip" checked>
+                        <div class="checkbox-label-block">
+                            <span class="checkbox-title">Anti-Clipping Output Guard</span>
+                        </div>
+                        <span class="tooltip-text">Injects system code constraints forcing the model to wrap and structuralize text lengths to prevent mid-sentence token cutoff errors.</span>
+                    </label>
+
+                    <label class="checkbox-container">
+                        <input type="checkbox" id="cmd_hud_usda">
+                        <div class="checkbox-label-block">
+                            <span class="checkbox-title">HUD / USDA Regulation Filter</span>
+                        </div>
+                        <span class="tooltip-text">Appends specific statutory filtering constraints to screen outputs for alignment with public housing grants and criteria.</span>
+                    </label>
+
+                    <label class="checkbox-container">
+                        <input type="checkbox" id="cmd_ats_resume">
+                        <div class="checkbox-label-block">
+                            <span class="checkbox-title">ATS Matrix Optimization Control</span>
+                        </div>
+                        <span class="tooltip-text">Structures language sets to pass high-density semantic scans used by corporate Applicant Tracking Systems.</span>
+                    </label>
+
+                    <label class="checkbox-container">
+                        <input type="checkbox" id="cmd_temporal">
+                        <div class="checkbox-label-block">
+                            <span class="checkbox-title">Real-Time Temporal Calibration</span>
+                        </div>
+                        <span class="tooltip-text">Injects the current calendar state and precise system clock boundaries directly into the prompt framework.</span>
+                    </label>
+                </div>
+            </div>
+        </main>
+
+        <!-- RIGHT COLUMN: Sandbox Routing & Freeze-Dry Sessions -->
+        <aside>
+            <!-- Execution Panel -->
+            <div class="panel" style="position: sticky; top: 1rem;">
+                <div class="panel-title">4. Multi-Agent Transmission Sandbox</div>
+                <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 1rem;">
+                    Clicking a channel compiles the prompt to your clipboard and opens the playground environment.
+                </p>
+                <div class="btn-deck" style="flex-direction: column;">
+                    <button type="button" class="primary" style="width: 100%;" onclick="dispatchAgent('gemini')">
+                        🚀 Dispatch to Google Gemini
+                    </button>
+                    <button type="button" style="width: 100%;" onclick="dispatchAgent('chatgpt')">
+                        🤖 Dispatch to OpenAI ChatGPT
+                    </button>
+                    <button type="button" style="width: 100%;" onclick="dispatchAgent('claude')">
+                        ⚡ Dispatch to Anthropic Claude
+                    </button>
+                </div>
+
+                <!-- Session Freeze-Drying Controls -->
+                <div style="border-top: 1px solid var(--border); padding-top: 1rem; margin-top: 1rem;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+                        <span style="font-size: 0.9rem; font-weight: 600;">Active Context Storage State</span>
+                    </div>
+                    <div style="display: flex; gap: 0.5rem;">
+                        <button type="button" style="padding: 0.5rem; flex-grow: 1; font-size: 0.8rem;" onclick="freezeSession()">🧊 Freeze Session</button>
+                        <button type="button" style="padding: 0.5rem; flex-grow: 1; font-size: 0.8rem;" onclick="rehydrateSession()">🔥 Rehydrate</button>
+                    </div>
+                </div>
+
+                <!-- Session Capsule Vault -->
+                <div style="margin-top: 1rem;">
+                    <label for="session_capsule">Dehydrated Session Context Capsule Block</label>
+                    <textarea id="session_capsule" rows="3" style="font-family: monospace; font-size: 0.75rem;" placeholder="Compressed state matrix output string goes here..."></textarea>
+                    <button type="button" style="padding: 0.4rem; font-size: 0.75rem; margin-top: 0.5rem; width: 100%; justify-content: center;" onclick="copyCapsule()">
+                        📋 Copy Session Capsule String
+                    </button>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- PERSISTENT HISTORICAL PERSISTENCE DECK PANELS -->
+    <div class="container" style="margin-top: 2rem;">
+        <div class="panel" style="grid-column: 1 / -1;">
+            <div class="panel-title">
+                <span>5. Immutable Historic Freeze-Dry Session Log Directory</span>
+                <div class="history-actions">
+                    <button type="button" onclick="deleteSelectedHistory()" class="danger" style="padding: 0.4rem 0.8rem; font-size: 0.8rem;">Delete Selected Items</button>
+                    <button type="button" onclick="clearAllHistory()" class="danger" style="padding: 0.4rem 0.8rem; font-size: 0.8rem; background: var(--accent-danger); color: white;">Purge Full History</button>
+                </div>
+            </div>
+            
+            <!-- History List Table Grid Container -->
+            <div class="history-list" id="history_root">
+                <!-- Javascript will inject entries dynamically here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- EVO-STUDIO DECK PANEL FRAMEWORK -->
+    <div class="container" style="margin-top: 2rem;">
+        <div class="panel" style="grid-column: 1 / -1;">
+            <div class="collapsible-trigger" onclick="toggleAccordion('evo_studio')">
+                <span>🛠️ Advanced Evolutionary Studio Meta-Coding Matrix</span>
+                <span>▼</span>
+            </div>
+            <div id="evo_studio" class="collapsible-content">
+                <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 1rem;">
+                    Describe new structural code additions, new checkboxes, or style re-configurations. This module automatically packages the entire underlying code framework and generates an operational system mutation instruction set to copy. Feed this direct package to an elite AI model to immediately generate your next evolved standalone file.
+                </p>
+                <div class="form-group">
+                    <label for="evolution_requirements">Desired Architectural Modifications or Features</label>
+                    <textarea id="evolution_requirements" rows="3" placeholder="e.g., Add a dark-to-light mode button toggle, and integrate two new checkbox modules tracking Medical Regulatory Validation."></textarea>
+                </div>
+                <button type="button" class="primary" onclick="compileEvolutionPrompt()">
+                    🧠 Generate Self-Evolution System Mutation Prompt
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Dynamic Overlay Display Notification -->
+    <div id="toast" class="notification">Action Synchronized Successfully.</div>
+
+    <script>
+        // System Character Weights Definitions
+        const MAX_SAFE_CEILING = 16000;
+
+        // Core Default Profile Registries Object Initialization
+        let systemProfiles = {
+            "default": {
+                persona: "expert", format: "table", temp: 0.15, tokens: 8000,
+                checks: { cmd_hallucination: true, cmd_anti_clip: true }
+            }
+        };
+        
+        let sessionHistory = [];
+
+        // UI Target Caches
+        const promptInput = document.getElementById('prompt_input');
+        const countUser = document.getElementById('count_user');
+        const countSystem = document.getElementById('count_system');
+        const countTotal = document.getElementById('count_total');
+        const statusClipping = document.getElementById('status_clipping');
+        const safetyProgress = document.getElementById('safety_progress');
+
+        const sliderTemp = document.getElementById('slider_temp');
+        const valTemp = document.getElementById('val_temp');
+        const sliderTokens = document.getElementById('slider_tokens');
+        const valTokens = document.getElementById('val_tokens');
+
+        // Dynamic State Listeners Setup
+        promptInput.addEventListener('input', runTelemetryDiagnostics);
+        document.querySelectorAll('input[type="checkbox"], select').forEach(elem => {
+            elem.addEventListener('change', runTelemetryDiagnostics);
+        });
+        
+        sliderTemp.addEventListener('input', () => { valTemp.textContent = sliderTemp.value; runTelemetryDiagnostics(); });
+        sliderTokens.addEventListener('input', () => { 
+            valTokens.textContent = sliderTokens.value == 8000 ? "Max Limit" : sliderTokens.value + " Tokens";
+            runTelemetryDiagnostics(); 
+        });
+
+        // Initialize Core Component States On Document Mount
+        window.addEventListener('DOMContentLoaded', () => {
+            // Load saved settings profiles out of localStorage
+            const savedProfiles = localStorage.getItem('LLM_PROMPT_ARCH_PROFILES');
+            if (savedProfiles) {
+                systemProfiles = JSON.parse(savedProfiles);
+            }
+            
+            const savedHistory = localStorage.getItem('LLM_PROMPT_ARCH_HISTORY');
+            if (savedHistory) {
+                sessionHistory = JSON.parse(savedHistory);
+            }
+
+            repopulateProfileDropdown();
+            renderHistoryDirectory();
+            runTelemetryDiagnostics();
+        });
+
+        function showToast(msg) {
+            const toast = document.getElementById('toast');
+            toast.textContent = msg;
+            toast.classList.add('show');
+            setTimeout(() => toast.classList.remove('show'), 2500);
+        }
+
+        function toggleAccordion(id) {
+            document.getElementById(id).classList.toggle('active');
+        }
+
+        // Telemetry Engine Calculation Matrix
+        function runTelemetryDiagnostics() {
+            const userText = promptInput.value;
+            const systemInstructionsBlock = assembleSystemPromptBlock(true); // run check without scope text append
+            
+            const userSize = userText.length;
+            const systemSize = systemInstructionsBlock.length;
+            const absoluteTotal = userSize + systemSize;
+
+            countUser.textContent = userSize;
+            countSystem.textContent = systemSize;
+            countTotal.textContent = absoluteTotal;
+
+            // Compute Safety Vector Progress Bars
+            const usagePercentage = Math.min((absoluteTotal / MAX_SAFE_CEILING) * 100, 100);
+            safetyProgress.style.width = usagePercentage + '%';
+
+            if (absoluteTotal > (MAX_SAFE_CEILING * 0.85)) {
+                statusClipping.textContent = "High Risk";
+                statusClipping.style.color = 'var(--accent-danger)';
+                safetyProgress.style.backgroundColor = 'var(--accent-danger)';
+            } else if (absoluteTotal > (MAX_SAFE_CEILING * 0.60)) {
+                statusClipping.textContent = "Warning Zone";
+                statusClipping.style.color = '#f59e0b';
+                safetyProgress.style.backgroundColor = '#f59e0b';
+            } else {
+                statusClipping.textContent = "Safe Range";
+                statusClipping.style.color = 'var(--accent-success)';
+                safetyProgress.style.backgroundColor = 'var(--accent-success)';
+            }
+        }
+
+        // Structural System Command Assembly Pipeline
+        function assembleSystemPromptBlock(diagnosticMode = false) {
+            let core = "";
+            
+            // 1. Appending Persona Alignment Structures
+            const persona = document.getElementById('param_persona').value;
+            if (persona === 'expert') {
+                core += "[SYSTEM DIRECTIVE: Act as an elite Subject Matter Expert. Provide high-density, granular, analytical breakdowns stripping all surface-level introductory text.]
+";
+            } else if (persona === 'scholar') {
+                core += "[SYSTEM DIRECTIVE: Act as a distinguished Academic Scholar. Maintain formal authoritative syntax, strict variable constraints, and peer-reviewed style frameworks.]
+";
+            } else if (persona === 'developer') {
+                core += "[SYSTEM DIRECTIVE: Act as a Principal Software Systems Engineer. Map logical structures cleanly using optimal code constructs, data hierarchy, and dry architecture mapping.]
+";
+            } else if (persona === 'advocate') {
+                core += "[SYSTEM DIRECTIVE: Act as a consumer advocate and smart shopping specialist. Cross-evaluate reviews, analyze hidden costs, prioritize value metrics, and identify manipulation vectors.]
+";
+            } else if (persona === 'analyst') {
+                core += "[SYSTEM DIRECTIVE: Act as a Senior Public Housing & Financial Grant Underwriter. Cross-examine inputs against strict statutory metrics, HUD allocations, and USDA regional income caps.]
+";
+            }
+
+            // 2. Formatting Configurations
+            const fmt = document.getElementById('param_format').value;
+            core += `[OUTPUT CONFIGURATION: Structure the entirety of your response response strictly using a: ${fmt} layout.]
+`;
+
+            // 3. Hyperparameter Directives
+            core += `[SAMPLING TUNING EXPECTATION: internal logic variance calibrated to temperature ${sliderTemp.value}.]
+`;
+            if (sliderTokens.value != 8000) {
+                core += `[GENERATION DEPTH CONSTRAINT: Force termination of output parameters strictly within a ${sliderTokens.value} token window space.]
+`;
+            }
+
+            // 4. Command Switches Checkbox Injections
+            if (document.getElementById('cmd_hallucination').checked) {
+                core += "[STRICT CONSTRAINT: Zero-Hallucination Protocol. If any data vector, fact, or metric cannot be absolute validated from core contextual parameters, explicitly tag it as 'UNVERIFIED VARIABLE' and refuse to invent placeholders.]
+";
+            }
+            if (document.getElementById('cmd_expert_panel').checked) {
+                core += "[OPERATIONAL LAYER: Panel of Experts Simulation. Simulate a peer-review panel consisting of 3 elite industry minds checking your logic workflows. Show the core friction points and consensus before finalizing output.]
+";
+            }
+            if (document.getElementById('cmd_cross_verify').checked) {
+                core += "[METRIC TRACKING: Source Cross-Verification. Track, structure, and provide audit trails indicating where claims can be validated against structural public reference datasets.]
+";
+            }
+            if (document.getElementById('cmd_devils_advocate').checked) {
+                core += "[CRITIQUE ENGINE: Devil's Advocate Simulation. Actively challenge the primary hypothesis. Dedicate an explicit section exposure block highlighting potential points of logical failure or systemic bias.]
+";
+            }
+            if (document.getElementById('cmd_anti_clip').checked) {
+                core += "[GUARD SYSTEM: Anti-Clipping Protocol. Dynamically balance linguistic efficiency. Group structural details compactly to prevent execution from getting terminated mid-sentence due to context boundary overflow.]
+";
+            }
+            if (document.getElementById('cmd_hud_usda').checked) {
+                core += "[DOMAIN FILTER: Filter outputs aggressively targeting compliance with United States HUD Title 24 regulations and USDA Rural Development housing criteria matrices.]
+";
+            }
+            if (document.getElementById('cmd_ats_resume').checked) {
+                core += "[COMPLIANCE TUNING: Target semantic weights optimized for corporate parsing frameworks and high-density keyword evaluation architectures.]
+";
+            }
+            if (document.getElementById('cmd_temporal').checked) {
+                core += `[TEMPORAL BOUNDARY: Calibration state fixed to current date/time framework: 2026-10-27 17:40:00 CST.]
+`;
+            }
+
+            if (!diagnosticMode) {
+                core += "
+=== USER TARGET FOCUS & OBJECTIVE SUMMARY ===
+";
+                core += promptInput.value;
+            }
+
+            return core;
+        }
+
+        // Transmission Portal Sandbox Dispatch System
+        function dispatchAgent(agentKey) {
+            const completePrompt = assembleSystemPromptBlock(false);
+            
+            if (!promptInput.value.trim()) {
+                alert("Cannot compile transmission matrix. Please input core prompt parameters first.");
+                return;
+            }
+
+            // Automated System Clipboard Hook Execution
+            navigator.clipboard.writeText(completePrompt).then(() => {
+                showToast("System Prompt Compiled & Captured to Clipboard!");
+                
+                // Sandbox Target URL Matrix Switching Lookups
+                let sandboxTargetUrl = "";
+                if (agentKey === 'gemini') sandboxTargetUrl = "https://gemini.google.com";
+                else if (agentKey === 'chatgpt') sandboxTargetUrl = "https://chatgpt.google.com";
+                else if (agentKey === 'claude') sandboxTargetUrl = "https://claude.ai";
+
+                // Spawning sandboxed isolated browser tab parameters safely
+                window.open(sandboxTargetUrl, '_blank');
+            }).catch(err => {
+                console.error("Clipboard routing failed: ", err);
+                alert("Clipboard sync failed. Manually capture generated prompt arrays.");
+            });
+        }
+
+        // Profile Configuration Management Logic Layouts
+        function repopulateProfileDropdown() {
+            const selector = document.getElementById('profile_selector');
+            selector.innerHTML = "";
+            for (let name in systemProfiles) {
+                let opt = document.createElement('option');
+                opt.value = name;
+                opt.textContent = name === 'default' ? "-- Default Dynamic Blueprint --" : name;
+                selector.appendChild(opt);
+            }
+        }
+
+        document.getElementById('btn_save_profile').addEventListener('click', () => {
+            const name = document.getElementById('new_profile_name').value.trim();
+            if (!name) {
+                alert("Please enter a valid string configuration name profile registry.");
+                return;
+            }
+
+            let profileData = {
+                persona: document.getElementById('param_persona').value,
+                format: document.getElementById('param_format').value,
+                temp: sliderTemp.value,
+                tokens: sliderTokens.value,
+                checks: {}
+            };
+
+            document.querySelectorAll('.grid-options input[type="checkbox"]').forEach(chk => {
+                profileData.checks[chk.id] = chk.checked;
+            });
+
+            systemProfiles[name] = profileData;
+            localStorage.setItem('LLM_PROMPT_ARCH_PROFILES', JSON.stringify(systemProfiles));
+            repopulateProfileDropdown();
+            document.getElementById('profile_selector').value = name;
+            document.getElementById('new_profile_name').value = "";
+            showToast(`Profile Configuration '${name}' Registered!`);
+        });
+
+        document.getElementById('btn_load_profile').addEventListener('click', () => {
+            const activeProfile = document.getElementById('profile_selector').value;
+            const target = systemProfiles[activeProfile];
+            if (!target) return;
+
+            document.getElementById('param_persona').value = target.persona;
+            document.getElementById('param_format').value = target.format;
+            sliderTemp.value = target.temp;
+            valTemp.textContent = target.temp;
+            sliderTokens.value = target.tokens;
+            valTokens.textContent = target.tokens == 8000 ? "Max Limit" : target.tokens + " Tokens";
+
+            document.querySelectorAll('.grid-options input[type="checkbox"]').forEach(chk => {
+                chk.checked = !!target.checks[chk.id];
+            });
+
+            runTelemetryDiagnostics();
+            showToast(`Active environment profile switched to '${activeProfile}'`);
+        });
+
+        document.getElementById('btn_delete_profile').addEventListener('click', () => {
+            const activeProfile = document.getElementById('profile_selector').value;
+            if (activeProfile === 'default') {
+                alert("Cannot clear absolute master framework baseline defaults.");
+                return;
+            }
+            if (confirm(`Confirm destruction of configuration profile registry path: '${activeProfile}'?`)) {
+                delete systemProfiles[activeProfile];
+                localStorage.setItem('LLM_PROMPT_ARCH_PROFILES', JSON.stringify(systemProfiles));
+                repopulateProfileDropdown();
+                runTelemetryDiagnostics();
+                showToast("Configuration profile registry path terminated.");
+            }
+        });
+
+        // Advanced Session Dehydration Context Capsule Framework Engines
+        function compileActiveStateMatrix() {
+            let activeStateObj = {
+                v: "5.0.0-PRO",
+                ts: new Date().toISOString(),
+                txt: promptInput.value,
+                persona: document.getElementById('param_persona').value,
+                format: document.getElementById('param_format').value,
+                temp: sliderTemp.value,
+                tok: sliderTokens.value,
+                chk: {}
+            };
+            document.querySelectorAll('.grid-options input[type="checkbox"]').forEach(chk => {
+                activeStateObj.chk[chk.id] = chk.checked;
+            });
+            // Convert to string base64 encoding to build a clean immutable capsule text string block
+            return btoa(unescape(encodeURIComponent(JSON.stringify(activeStateObj))));
+        }
+
+        function freezeSession() {
+            if (!promptInput.value.trim()) {
+                alert("Input text structure must contain data prior to session freeze dehydration loops.");
+                return;
+            }
+            const capsuleStr = compileActiveStateMatrix();
+            document.getElementById('session_capsule').value = capsuleStr;
+
+            // Log into historical tracking index array array
+            let preview = promptInput.value.substring(0, 45) + "...";
+            let historyEntry = {
+                id: 'h-' + Date.now(),
+                timestamp: new Date().toLocaleString(),
+                previewText: preview,
+                payloadCapsule: capsuleStr
+            };
+            
+            sessionHistory.unshift(historyEntry);
+            localStorage.setItem('LLM_PROMPT_ARCH_HISTORY', JSON.stringify(sessionHistory));
+            renderHistoryDirectory();
+            showToast("Session frozen and compressed into ledger block!");
+        }
+
+        function rehydrateSession(explicitCapsule = null) {
+            const targetCapsule = explicitCapsule || document.getElementById('session_capsule').value.trim();
+            if (!targetCapsule) {
+                alert("Please paste an active dehydrated session context capsule block string.");
+                return;
+            }
+            try {
+                const decodedJson = decodeURIComponent(escape(atob(targetCapsule)));
+                const data = JSON.parse(decodedJson);
+
+                promptInput.value = data.txt || "";
+                document.getElementById('param_persona').value = data.persona;
+                document.getElementById('param_format').value = data.format;
+                sliderTemp.value = data.temp;
+                valTemp.textContent = data.temp;
+                sliderTokens.value = data.tok;
+                valTokens.textContent = data.tok == 8000 ? "Max Limit" : data.tok + " Tokens";
+
+                document.querySelectorAll('.grid-options input[type="checkbox"]').forEach(chk => {
+                    chk.checked = !!data.chk[chk.id];
+                });
+
+                runTelemetryDiagnostics();
+                showToast("State rehydration completed flawlessly.");
+            } catch(e) {
+                console.error(e);
+                alert("Rehydration process failure. The context capsule structure is warped or incomplete.");
+            }
+        }
+
+        function copyCapsule() {
+            const capsule = document.getElementById('session_capsule');
+            if(!capsule.value) {
+                alert("No active session capsule generated to transfer.");
+                return;
+            }
+            navigator.clipboard.writeText(capsule.value).then(() => {
+                showToast("Session capsule string copied to clipboard.");
+            });
+        }
+
+        // Historic Directory Log Renderer Grid Framework
+        function renderHistoryDirectory() {
+            const root = document.getElementById('history_root');
+            if (sessionHistory.length === 0) {
+                root.innerHTML = `<div style="padding: 1.5rem; text-align: center; color: var(--text-muted); font-size: 0.9rem;">No historical freeze-dried sessions detected in browser scope storage.</div>`;
+                return;
+            }
+
+            root.innerHTML = "";
+            sessionHistory.forEach(item => {
+                let row = document.createElement('div');
+                row.className = "history-item";
+                
+                row.innerHTML = `
+                    <input type="checkbox" class="history-select-node" data-id="${item.id}">
+                    <div class="history-meta">
+                        <span style="font-weight: 600; color: var(--text-main);">${item.previewText}</span>
+                        <span style="font-size: 0.75rem; color: var(--text-muted);">${item.timestamp}</span>
+                    </div>
+                    <div class="history-actions">
+                        <button type="button" class="primary" onclick="rehydrateSession('${item.payloadCapsule}')">Restore</button>
+                        <button type="button" class="danger" onclick="deleteSingleHistoryItem('${item.id}')">✕</button>
+                    </div>
+                `;
+                root.appendChild(row);
+            });
+        }
+
+        function deleteSingleHistoryItem(id) {
+            sessionHistory = sessionHistory.filter(i => i.id !== id);
+            localStorage.setItem('LLM_PROMPT_ARCH_HISTORY', JSON.stringify(sessionHistory));
+            renderHistoryDirectory();
+            showToast("Item scrubbed from history ledger.");
+        }
+
+        function deleteSelectedHistory() {
+            const checkedNodes = document.querySelectorAll('.history-select-node:checked');
+            if(checkedNodes.length === 0) {
+                alert("Please check at least one session item node row selector first.");
+                return;
+            }
+            if(confirm(`Purge ${checkedNodes.length} checked history ledger targets?`)) {
+                let targetsToRemove = Array.from(checkedNodes).map(node => node.getAttribute('data-id'));
+                sessionHistory = sessionHistory.filter(item => !targetsToRemove.includes(item.id));
+                localStorage.setItem('LLM_PROMPT_ARCH_HISTORY', JSON.stringify(sessionHistory));
+                renderHistoryDirectory();
+                showToast("Selected items purged successfully.");
+            }
+        }
+
+        function clearAllHistory() {
+            if (confirm("DANGER ALERT: Completely wipe out all historical freeze-dried context logs? This action is immutable.")) {
+                sessionHistory = [];
+                localStorage.removeItem('LLM_PROMPT_ARCH_HISTORY');
+                renderHistoryDirectory();
+                showToast("Full history matrix logs vaporized.");
+            }
+        }
+
+        // Meta-Evolution Framework Mutation Prompt Compilation Engine
+        function compileEvolutionPrompt() {
+            const reqs = document.getElementById('evolution_requirements').value.trim();
+            if (!reqs) {
+                alert("Please state your engineering expansion requirements for evolution scripting.");
+                return;
+            }
+
+            // Scrape own raw outer source code structure completely
+            const currentSourceCodeHtml = document.documentElement.outerHTML;
+
+            let structuralMetaMutationPrompt = `=== METACONTROL CODE EVOLUTION SYSTEM DIRECTIVE ===
+`;
+            structuralMetaMutationPrompt += `You are an elite expert software compiler engineer and AI tool designer.
+`;
+            structuralMetaMutationPrompt += `Your task is to take the current complete HTML file provided below and modify it according to these expansion specifications:
+`;
+            structuralMetaMutationPrompt += `[SPECIFICATIONS]: "${reqs}"
+
+`;
+            structuralMetaMutationPrompt += `CRITICAL COMPLIANCE AND ARCHITECTURAL INTEGRITY RULES:
+`;
+            structuralMetaMutationPrompt += `1. RETAIN THE IMMUTABLE ARCHITECTURAL SYSTEM LEDGER METADATA SIGNATURE block at the very top of the document code structure. You MUST update the system version incrementally (e.g., v5.0.1 or higher), modify the time to match the current execution matrix, and append details of the feature modifications you implemented.
+`;
+            structuralMetaMutationPrompt += `2. Ensure ALL existing features remain completely unbroken, including the localStorage Profile Config Registry, the telemetry character monitors, the tooltips, the Multi-Agent Dispatch array, and the base64 Session Freeze-Drying Dehydration/Rehydration Engine and History Panel logs.
+`;
+            structuralMetaMutationPrompt += `3. Return the code as a single completely self-contained copy-pasteable HTML document framework block. No descriptions, no filler, just pure functional web code arrays.
+
+`;
+            structuralMetaMutationPrompt += `=== CURRENT SYSTEM SOURCE ARRAYS TO MUTATE ===
+`;
+            structuralMetaMutationPrompt += currentSourceCodeHtml;
+
+            navigator.clipboard.writeText(structuralMetaMutationPrompt).then(() => {
+                showToast("Evolution Engine Package Compiled & Saved to Clipboard!");
+                alert("Self-Evolution Prompt Ready! It has captured this app's full source code and your modification requests to your clipboard. Paste it into an advanced AI model (Gemini, Claude, or ChatGPT) to instantly generate your updated standalone .html app file!");
+            }).catch(err => {
+                console.error("Clipboard failure: ", err);
+            });
+        }
+    </script>
+</body>
+</html>

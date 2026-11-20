@@ -1,0 +1,793 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Universal Prompt Architect & Evolutionary Workspace</title>
+    <!--
+    ========================================================================================
+    ARCHITECTURAL METADATA & IMMUTABLE EVOLUTIONARY LEDGER
+    ========================================================================================
+    [ENGINEERING DESIGN]: Universal Cross-Model Prompt Studio & Context Hydrator
+    [CURRENT VERSION]: 4.5.0-PRO (Stateful Memory & Session Dehydration Update)
+    [INITIAL RELEASE]: October 2026
+    [LAST MODIFIED]: October 27, 2026, 17:33:45 CST
+    [CREDIT SIGNATURE]: Advanced Prompt Engineering Matrix AI System (Collaborative Build)
+    
+    [EVOLUTIONARY HISTORIC LEDGER]:
+    - v1.0.0: Single-task prompt constructor with clipboard integration.
+    - v2.0.0: OLED Dark Mode suite & hover tooltips matrix added.
+    - v3.0.0: Profile preservation sub-system (localStorage config save/load nodes).
+    - v4.0.0: Multi-metric telemetry track (Real-time dynamic system constraint calculator).
+    - v4.5.0: Session Dehydration Engine & Immutable Modification Ledger implementation.
+    ========================================================================================
+    -->
+    <style>
+        :root {
+            --bg-base: #0a0a0c;
+            --bg-surface: #121216;
+            --bg-card: #1a1a24;
+            --border: #2c2c3d;
+            --text-primary: #f1f1f7;
+            --text-muted: #9a9aab;
+            --accent-gemini: #4285f4;
+            --accent-chatgpt: #10a37f;
+            --accent-claude: #d97752;
+            --accent-evolution: #a855f7;
+            --accent-session: #06b6d4;
+            --warning: #eab308;
+            --danger: #ef4444;
+            --success: #22c55e;
+            --font: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: var(--font); }
+        body { background-color: var(--bg-base); color: var(--text-primary); padding: 2rem; line-height: 1.5; }
+        .wrapper { max-width: 1400px; margin: 0 auto; display: grid; grid-template-columns: 1fr 400px; gap: 2rem; }
+        header { grid-column: span 2; margin-bottom: 1rem; border-bottom: 1px solid var(--border); padding-bottom: 1rem; display: flex; justify-content: space-between; align-items: center; }
+        h1 { font-size: 1.8rem; font-weight: 700; color: #fff; letter-spacing: -0.5px; }
+        .version-badge { background: var(--bg-card); border: 1px solid var(--border); padding: 0.25rem 0.75rem; border-radius: 20px; font-size: 0.8rem; color: var(--text-muted); }
+        
+        .main-panel { display: flex; flex-direction: column; gap: 1.5rem; }
+        .side-panel { display: flex; flex-direction: column; gap: 1.5rem; }
+        
+        .card { background-color: var(--bg-surface); border: 1px solid var(--border); border-radius: 12px; padding: 1.5rem; }
+        .card-title { font-size: 1.1rem; font-weight: 600; margin-bottom: 1rem; display: flex; align-items: center; gap: 0.5rem; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 0.5rem; }
+        
+        label { display: block; margin-bottom: 0.5rem; font-weight: 500; font-size: 0.9rem; color: var(--text-primary); }
+        select, textarea, input[type="text"] { width: 100%; background-color: var(--bg-base); border: 1px solid var(--border); border-radius: 6px; color: #fff; padding: 0.75rem; font-size: 0.95rem; transition: border-color 0.2s; }
+        select:focus, textarea:focus, input[type="text"]:focus { border-color: var(--accent-gemini); outline: none; }
+        
+        .grid-options { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 0.75rem; }
+        
+        /* Tooltip Container */
+        .control-node { position: relative; display: flex; align-items: center; gap: 0.5rem; background: var(--bg-base); border: 1px solid var(--border); padding: 0.75rem; border-radius: 8px; cursor: pointer; }
+        .control-node input[type="checkbox"] { width: 16px; height: 16px; accent-color: var(--accent-gemini); }
+        .control-node label { margin-bottom: 0; cursor: pointer; width: 100%; font-size: 0.85rem; }
+        
+        /* Native Hover Tooltip */
+        .control-node:hover::after {
+            content: attr(data-tooltip);
+            position: absolute; bottom: 125%; left: 50%; transform: translateX(-50%);
+            background-color: #000; color: #fff; text-align: left; padding: 0.75rem;
+            border-radius: 6px; font-size: 0.75rem; z-index: 1000; width: 260px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.5); border: 1px solid var(--border);
+            line-height: 1.3; font-weight: 400; pointer-events: none;
+        }
+        
+        .slider-group { display: flex; flex-direction: column; gap: 1rem; margin-top: 0.5rem; }
+        .slider-item { background: var(--bg-base); padding: 0.75rem; border-radius: 8px; border: 1px solid var(--border); }
+        .slider-header { display: flex; justify-content: space-between; font-size: 0.85rem; margin-bottom: 0.5rem; color: var(--text-muted); }
+        input[type="range"] { width: 100%; accent-color: var(--accent-gemini); }
+
+        /* Configuration Profile Suite Layout */
+        .profile-bar { display: flex; gap: 0.5rem; margin-bottom: 1rem; }
+        .btn { padding: 0.5rem 1rem; border-radius: 6px; font-size: 0.85rem; font-weight: 600; cursor: pointer; border: 1px solid transparent; transition: all 0.2s; display: inline-flex; align-items: center; gap: 0.25rem; }
+        .btn-primary { background: #2c2c3d; color: #fff; border-color: var(--border); }
+        .btn-primary:hover { background: #3d3d52; }
+        .btn-success { background: var(--success); color: #000; }
+        .btn-danger { background: var(--danger); color: #fff; }
+
+        /* Dispatch Action Port Layout */
+        .dispatch-deck { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.75rem; margin-top: 1rem; }
+        .btn-dispatch { padding: 0.85rem; border-radius: 8px; color: #fff; font-weight: 700; text-align: center; border: none; font-size: 0.9rem; transition: transform 0.1s, opacity 0.2s; }
+        .btn-dispatch:active { transform: scale(0.98); }
+        .gemini-port { background-color: var(--accent-gemini); color: #fff; }
+        .chatgpt-port { background-color: var(--accent-chatgpt); color: #fff; }
+        .claude-port { background-color: var(--accent-claude); color: #fff; }
+        
+        /* Telemetry Display */
+        .telemetry-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.5rem; font-size: 0.8rem; margin-bottom: 0.75rem; }
+        .metric-card { background: var(--bg-base); padding: 0.5rem; border-radius: 6px; border: 1px solid var(--border); }
+        .metric-label { color: var(--text-muted); display: block; margin-bottom: 0.15rem; }
+        .metric-value { font-weight: 700; font-family: monospace; font-size: 0.95rem; }
+        .buffer-track { width: 100%; height: 6px; background: var(--border); border-radius: 3px; overflow: hidden; margin-top: 0.25rem; }
+        .buffer-bar { height: 100%; width: 0%; transition: width 0.3s, background-color 0.3s; }
+        
+        /* Collapsible Mechanism */
+        .collapsible-trigger { display: flex; justify-content: space-between; align-items: center; cursor: pointer; user-select: none; }
+        .collapsible-content { display: none; margin-top: 1rem; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 1rem; flex-direction: column; gap: 1rem; }
+        .collapsible-content.active { display: flex; }
+        .arrow-icon { transition: transform 0.3s; font-size: 0.8rem; }
+        .arrow-icon.rotated { transform: rotate(180deg); }
+
+        .session-btn-group { display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem; }
+        .btn-session-save { background: rgba(6, 182, 212, 0.15); border: 1px solid var(--accent-session); color: #67e8f9; }
+        .btn-session-save:hover { background: rgba(6, 182, 212, 0.3); }
+        .btn-session-load { background: rgba(168, 85, 247, 0.15); border: 1px solid var(--accent-evolution); color: #c084fc; }
+        .btn-session-load:hover { background: rgba(168, 85, 247, 0.3); }
+        
+        .alert-toast { display: none; position: fixed; bottom: 2rem; right: 2rem; background: var(--bg-card); border-left: 4px solid var(--success); padding: 1rem 1.5rem; border-radius: 6px; z-index: 10000; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div>
+            <h1>Universal Prompt Architect</h1>
+            <p style="color: var(--text-muted); font-size: 0.85rem; margin-top: 0.2rem;">Cross-Model Prompt Optimization & Session Management Environment</p>
+        </div>
+        <div class="version-badge">v4.5.0-PRO [OLED Optimized]</div>
+    </header>
+
+    <div class="wrapper">
+        <!-- MAIN OPERATIONAL MATRIX PANEL -->
+        <div class="main-panel">
+            
+            <!-- SCOPE AND CORE CORE INPUT CONTEXT -->
+            <div class="card">
+                <div class="card-title">📝 Core Objective & Raw Scope Context</div>
+                <label for="promptScope">Specify the raw prompt topic, goals, data inputs, or core task text:</label>
+                <textarea id="promptScope" rows="8" placeholder="Type or paste your unstructured parameters, code snippets, goals, HUD details, or raw text blocks here..."></textarea>
+            </div>
+
+            <!-- SYSTEM COMMAND MATRIX GRIDS -->
+            <div class="card">
+                <div class="card-title">⚙️ System Directive Control Deck</div>
+                <div class="grid-options">
+                    <div class="control-node" data-tooltip="Forces model to rigorously verify data inputs and explicitly flag assumptions or untrusted vectors." data-id="zero_hallucinate">
+                        <input type="checkbox" id="cmd1"><label for="cmd1">Zero-Hallucination Guard</label>
+                    </div>
+                    <div class="control-node" data-tooltip="Forces model to show its step-by-step reasoning tree and intermediate mathematical or structural calculations." data-id="chain_thought">
+                        <input type="checkbox" id="cmd2"><label for="cmd2">Chain-of-Thought Engine</label>
+                    </div>
+                    <div class="control-node" data-tooltip="Directs model to construct a distinct panel of three simulated subject matter specialists debating points." data-id="panel_experts">
+                        <input type="checkbox" id="cmd3"><label for="cmd3">Panel of Experts Suite</label>
+                    </div>
+                    <div class="control-node" data-tooltip="Appends explicit system instructions to challenge assumptions, pick holes in arguments, and act as opposition." data-id="devils_advocate">
+                        <input type="checkbox" id="cmd4"><label for="cmd4">Devil's Advocate Crucible</label>
+                    </div>
+                    <div class="control-node" data-tooltip="Optimizes information layout for lightning-fast scannability, utilizing bold fragments and stripping filler phrases." data-id="hi_density">
+                        <input type="checkbox" id="cmd5"><label for="cmd5">High-Density Scannability</label>
+                    </div>
+                    <div class="control-node" data-tooltip="Configures specialized constraints to pull and parse complex government HUD/USDA grant structural matrices safely." data-id="hud_grant">
+                        <input type="checkbox" id="cmd6"><label for="cmd6">HUD/USDA Assistance Deck</label>
+                    </div>
+                    <div class="control-node" data-tooltip="Injects deep applicant tracking system keyword vectors to reformat profile elements to pass automated scans." data-id="ats_job">
+                        <input type="checkbox" id="cmd7"><label for="cmd7">ATS Resume / Job Optimization</label>
+                    </div>
+                    <div class="control-node" data-tooltip="Demands inline citation mappings, verifiable reference markers, and source tracking parameters." data-id="source_audit">
+                        <input type="checkbox" id="cmd8"><label for="cmd8">Verifiable Source Auditor</label>
+                    </div>
+                    <div class="control-node" data-tooltip="Forces structural content encapsulation routines to stop model text truncation, buffer drops, or missing code sections." data-id="anti_clip">
+                        <input type="checkbox" id="cmd9" checked><label for="cmd9">Anti-Clipping Output Guard</label>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- SELF-EVOLUTION ENGINE PLATFORM -->
+            <div class="card" style="border-color: var(--accent-evolution);">
+                <div class="card-title collapsible-trigger" onclick="toggleCollapsible('evolutionDeck', 'evoArrow')" style="color: #c084fc; margin-bottom: 0;">
+                    <span>🧬 Self-Evolutionary Development Studio</span>
+                    <span class="arrow-icon" id="evoArrow">▼</span>
+                </div>
+                <div class="collapsible-content" id="evolutionDeck">
+                    <p style="font-size: 0.85rem; color: var(--text-muted);">
+                        Describe architectural shifts, UI structural nodes, or parameter additions you wish to construct. The engine generates a meta-programming instruction payload enclosing the system's own source variables, allowing any advanced AI to cleanly write an upgraded, self-contained HTML build.
+                    </p>
+                    <label for="evolutionSpecs">Evolutionary Modification Specifications:</label>
+                    <textarea id="evolutionSpecs" rows="3" placeholder="Example: Add an automated token estimator display component and a third slider for target model Top-P constraints..."></textarea>
+                    <button class="btn btn-primary" onclick="compileEvolutionPrompt()" style="align-self: flex-start; border-color: var(--accent-evolution); color: #c084fc;">
+                        Generate Evolutionary Prompt Payload
+                    </button>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- RIGHT METRIC MANAGEMENT PANEL -->
+        <div class="side-panel">
+            
+            <!-- SAVED CONFIGURATION PROFILES PLATFORM -->
+            <div class="card">
+                <div class="card-title">💾 Environment Profile Suite</div>
+                <div class="profile-bar">
+                    <select id="profileDropdown" onchange="loadSelectedProfile()">
+                        <option value="default">-- Active Workspace Configuration --</option>
+                    </select>
+                </div>
+                <div style="display: flex; gap: 0.5rem;">
+                    <input type="text" id="newProfileName" placeholder="Profile Title..." style="padding: 0.4rem 0.5rem; font-size: 0.85rem;">
+                    <button class="btn btn-success" onclick="saveCurrentProfile()" style="font-size: 0.8rem;">Save</button>
+                    <button class="btn btn-danger" onclick="deleteSelectedProfile()" style="font-size: 0.8rem;">Delete</button>
+                </div>
+            </div>
+
+            <!-- ARCHITECTURAL HYPERPARAMETER VARIABLE SLIDERS -->
+            <div class="card">
+                <div class="card-title">🎚️ Prompt Parameter Modifiers</div>
+                <div class="slider-group">
+                    <div class="slider-item">
+                        <div class="slider-header">
+                            <span>Sampling Temperature Depth</span>
+                            <span id="valTemp" style="font-weight:700; color:var(--accent-gemini);">0.40</span>
+                        </div>
+                        <input type="range" id="paramTemp" min="0.00" max="1.00" step="0.05" value="0.40" oninput="updateSliderDisplay()">
+                    </div>
+                    <div class="slider-item">
+                        <div class="slider-header">
+                            <span>Target Generation Windows</span>
+                            <span id="valTokens" style="font-weight:700; color:var(--accent-gemini);">2048 ch</span>
+                        </div>
+                        <input type="range" id="paramTokens" min="512" max="8192" step="256" value="2048" oninput="updateSliderDisplay()">
+                    </div>
+                </div>
+            </div>
+
+            <!-- STRUCTURAL OUTPUT PRESETS -->
+            <div class="card">
+                <div class="card-title">📐 Behavioral Matrix Tuning</div>
+                <div style="display:flex; flex-direction:column; gap:0.75rem;">
+                    <div>
+                        <label for="targetPersona">Functional System Persona:</label>
+                        <select id="targetPersona">
+                            <option value="scholar">Distinguished Academic Scholar / Researcher</option>
+                            <option value="expert" selected>Elite Domain Subject Matter Expert (SME)</option>
+                            <option value="engineer">Principal Staff Systems Architect / Engineer</option>
+                            <option value="advocate">Consumer Rights & Grant Welfare Advocate</option>
+                            <option value="critic">Skeptical Systems Analyst & Peer Reviewer</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label for="outputFormat">Target Layout Structure:</label>
+                        <select id="outputFormat">
+                            <option value="table">Side-by-Side Comparative Markdown Matrix Table</option>
+                            <option value="bullets">High-Density Fragmented Bullet Array</option>
+                            <option value="paragraphs">Structured Linear Analysis Paragraph Blocks</option>
+                            <option value="code">Raw Code Block Encapsulation Structure</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label for="fileSimulation">Target File Type Envelope Simulation:</label>
+                        <select id="fileSimulation">
+                            <option value="none">Standard Markdown Output Formats</option>
+                            <option value="html">Simulated UTF-8 Single-File HTML / CSS Asset</option>
+                            <option value="csv">Structured Tabular Comma-Separated Dataset (.csv)</option>
+                            <option value="txt">Clean Unformatted Plain Text Buffer Layout (.txt)</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <!-- DISPATCH SYSTEM AND REAL-TIME TELEMETRY TRACKER -->
+            <div class="card" style="border-color: rgba(255,255,255,0.15);">
+                <div class="card-title">📊 Dynamic Telemetry & Dispatch Port</div>
+                
+                <div class="telemetry-grid">
+                    <div class="metric-card">
+                        <span class="metric-label">User Raw Load</span>
+                        <span class="metric-value" id="meterUser">0 ch</span>
+                    </div>
+                    <div class="metric-card">
+                        <span class="metric-label">System Directive Payload</span>
+                        <span class="metric-value" id="meterSystem">0 ch</span>
+                    </div>
+                    <div class="metric-card" style="grid-column: span 2;">
+                        <div style="display:flex; justify-content:space-between; margin-bottom:0.15rem;">
+                            <span class="metric-label">Cumulative Total Footprint</span>
+                            <span id="meterStatus" style="font-size:0.75rem; font-weight:700;">Safe Range</span>
+                        </div>
+                        <span class="metric-value" id="meterTotal">0 / 12000 ch</span>
+                        <div class="buffer-track">
+                            <div class="buffer-bar" id="meterBar"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="dispatch-deck">
+                    <button class="btn-dispatch gemini-port" onclick="dispatchPayload('https://gemini.google.com')">Gemini</button>
+                    <button class="btn-dispatch chatgpt-port" onclick="dispatchPayload('https://chatgpt.com')">ChatGPT</button>
+                    <button class="btn-dispatch claude-port" onclick="dispatchPayload('https://claude.ai')">Claude</button>
+                </div>
+            </div>
+
+            <!-- STATEFUL SESSION DEHYDRATOR PLATFORM (SESSION PAUSE/RESUME ENGINE) -->
+            <div class="card" style="border-color: var(--accent-session);">
+                <div class="card-title collapsible-trigger" onclick="toggleCollapsible('sessionDeck', 'sessionArrow')" style="color: #67e8f9; margin-bottom: 0;">
+                    <span>⏳ Active Session Persistence Deck</span>
+                    <span class="arrow-icon" id="sessionArrow">▼</span>
+                </div>
+                <div class="collapsible-content" id="sessionDeck">
+                    <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 0.5rem;">
+                        Freeze your entire active conversational state (including instructions, structural choices, and scope context) into a portable text capsule, or rehydrate an archived capsule block directly below.
+                    </p>
+                    <div class="session-btn-group">
+                        <button class="btn btn-session-save" onclick="generateSessionCapsule()">Freeze Active Session</button>
+                        <button class="btn btn-session-load" onclick="hydrateSessionCapsule()">Rehydrate Session</button>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- NOTIFICATION SYSTEM TOAST LAYOUT -->
+    <div class="alert-toast" id="alertToast">Dynamic Prompt Compiled & Synced to Clipboard Successfully!</div>
+
+    <script>
+        // System Directives Value Registry
+        const SYSTEM_COMMANDS_REGISTRY = {
+            zero_hallucinate: "Directive [Zero-Hallucination Guard Activated]: Execute rigorous operational scrutiny on data parameters. Explicitly identify and classify any logical assumptions, information blindspots, or untrusted vectors. Never extrapolate facts beyond the explicit textual reference framework provided.",
+            chain_thought: "Directive [Chain-of-Thought Engine Engaged]: You must detail your internal analytical reasoning step-by-step. Map out your full architectural logic pathways, structural formulas, or code processing decisions before presenting the final aggregated output solution block.",
+            panel_experts: "Directive [Panel of Experts Synthesis Activated]: Simulate an active roundtable board containing 3 distinct, top-tier domain-specialist AI personas. Run a rapid collaborative debate loop regarding the task parameters, synthesize their respective domain perspectives, and present their unified expert concensus resolution.",
+            devils_advocate: "Directive [Devil's Advocate Crucible Engaged]: Critically stress-test all assertions, solutions, or logical lines presented. Actively scan for structural failure points, alternative theories, hidden cognitive biases, or counter-arguments to ensure deep validation.",
+            hi_density: "Directive [High-Density Scannability Optimization]: Output must conform to maximum information density parameters. Eliminate conversational introductions, boilerplate conclusions, and pleasantries. Utilize heavily fragmented structural bolding matrices to maximize scan efficiency.",
+            hud_grant: "Directive [HUD / USDA Specialized Regulatory Parser Engaged]: Apply strict systemic screening frameworks targeting United States housing assistance infrastructure parameters. Parse the prompt against current public grant parameters, financial brackets, qualification thresholds, and programmatic constraints.",
+            ats_job: "Directive [Applicant Tracking System Optimization Algorithm Engaged]: Cross-reference text arrays directly against modern enterprise ATS parsing algorithms. Inject missing strategic high-frequency industry key phrases, parse vocabulary to maximize algorithmic matching score parameters, and structure blocks cleanly for immediate automated processing.",
+            source_audit: "Directive [Verifiable Source Auditor Active]: Provide checkable reference vectors, explicit text trace vectors, and validation audit frameworks for all empirical facts or data components asserted.",
+            anti_clip: "Directive [Systemic Anti-Clipping Output Guard Engaged]: Enforce rigorous tracking of generation buffer levels. Structure layout architecture specifically to stay within token allocation arrays. Do not truncate mid-sentence, omit trailing configuration codes, or drop context arrays near boundary parameters."
+        };
+
+        // UI Collapsible Control Matrix
+        function toggleCollapsible(elementId, arrowId) {
+            const content = document.getElementById(elementId);
+            const arrow = document.getElementById(arrowId);
+            content.classList.toggle('active');
+            arrow.classList.toggle('rotated');
+        }
+
+        // Live Hyperparameter Readout Vector Synchronization
+        function updateSliderDisplay() {
+            const tempVal = document.getElementById('paramTemp').value;
+            const tokenVal = document.getElementById('paramTokens').value;
+            
+            document.getElementById('valTemp').innerText = tempVal;
+            document.getElementById('valTokens').innerText = tokenVal + " ch";
+            
+            calculateTelemetryMetrics();
+        }
+
+        // Core Real-Time Telemetry Tracking Sub-System
+        function calculateTelemetryMetrics() {
+            const promptScope = document.getElementById('promptScope').value;
+            let userLength = promptScope.length;
+            
+            let systemLength = 0;
+            // Iterate over all active checkboxes
+            const checkboxes = document.querySelectorAll('.grid-options input[type="checkbox"]');
+            checkboxes.forEach(box => {
+                if (box.checked) {
+                    const dataId = box.closest('.control-node').getAttribute('data-id');
+                    if (SYSTEM_COMMANDS_REGISTRY[dataId]) {
+                        systemLength += SYSTEM_COMMANDS_REGISTRY[dataId].length;
+                    }
+                }
+            });
+            
+            // Add custom slider parameters overhead characters
+            const tempVal = document.getElementById('paramTemp').value;
+            const tokenVal = document.getElementById('paramTokens').value;
+            const personaText = document.getElementById('targetPersona').value;
+            const formatText = document.getElementById('outputFormat').value;
+            const fileSimText = document.getElementById('fileSimulation').value;
+            
+            systemLength += (tempVal.length + tokenVal.length + personaText.length + formatText.length + fileSimText.length + 150);
+            
+            let cumulativeTotal = userLength + systemLength;
+            
+            // Render UI metrics
+            document.getElementById('meterUser').innerText = userLength + " ch";
+            document.getElementById('meterSystem').innerText = systemLength + " ch";
+            document.getElementById('meterTotal').innerText = cumulativeTotal + " / 12000 ch";
+            
+            // Calculate safety ceiling bounds
+            const percentage = Math.min((cumulativeTotal / 12000) * 100, 100);
+            const bar = document.getElementById('meterBar');
+            const statusLabel = document.getElementById('meterStatus');
+            
+            bar.style.width = percentage + "%";
+            
+            if (cumulativeTotal > 9500) {
+                bar.style.backgroundColor = 'var(--danger)';
+                statusLabel.innerText = "High Clipping Risk";
+                statusLabel.style.color = 'var(--danger)';
+            } else if (cumulativeTotal > 6000) {
+                bar.style.backgroundColor = 'var(--warning)';
+                statusLabel.innerText = "Approaching Limit";
+                statusLabel.style.color = 'var(--warning)';
+            } else {
+                bar.style.backgroundColor = 'var(--success)';
+                statusLabel.innerText = "Safe Range";
+                statusLabel.style.color = 'var(--success)';
+            }
+            
+            return cumulativeTotal;
+        }
+
+        // Global Event Listener Registry for Telemetry Processing
+        document.getElementById('promptScope').addEventListener('input', calculateTelemetryMetrics);
+        document.querySelectorAll('.grid-options input[type="checkbox"]').forEach(box => {
+            box.addEventListener('change', calculateTelemetryMetrics);
+        });
+        document.getElementById('targetPersona').addEventListener('change', calculateTelemetryMetrics);
+        document.getElementById('outputFormat').addEventListener('change', calculateTelemetryMetrics);
+        document.getElementById('fileSimulation').addEventListener('change', calculateTelemetryMetrics);
+
+        // Core Compiler Pipeline
+        function compileStructuralPrompt() {
+            const scopeText = document.getElementById('promptScope').value;
+            const tempVal = document.getElementById('paramTemp').value;
+            const maxTokens = document.getElementById('paramTokens').value;
+            const personaEl = document.getElementById('targetPersona');
+            const formatEl = document.getElementById('outputFormat');
+            const fileSimEl = document.getElementById('fileSimulation');
+            
+            let compiledBlock = "========================================================================
+";
+            compiledBlock += "SYSTEM RUNTIME PARAMETER PRESETS & INSTRUCTION EMBEDDING
+";
+            compiledBlock += "========================================================================
+
+";
+            
+            compiledBlock += `[TARGET HYPERPARAMETERS]: Temperature Bias = ${tempVal} | Bound Output Constraint Ceiling = ${maxTokens} characters.
+`;
+            compiledBlock += `[REQUIRED SYSTEM PERSONA]: Direct execution utilizing the structural logic architecture of a: ${personaEl.options[personaEl.selectedIndex].text}.
+`;
+            compiledBlock += `[TARGET LAYOUT FORMAT]: Encapsulate response layout structurally matching a: ${formatEl.options[formatEl.selectedIndex].text}.
+`;
+            
+            if (fileSimEl.value !== 'none') {
+                compiledBlock += `[FILE ENVIRONMENT ENVELOPE]: Format internal syntax parameters to directly match raw save requirements for a standard ${fileSimEl.options[fileSimEl.selectedIndex].text} architecture.
+`;
+            }
+            
+            compiledBlock += "
+------------------------------------------------------------------------
+";
+            compiledBlock += "ACTIVE OPERATIONAL DIRECTIVE MATRIX CHECKS
+";
+            compiledBlock += "------------------------------------------------------------------------
+";
+            
+            const checkboxes = document.querySelectorAll('.grid-options input[type="checkbox"]');
+            checkboxes.forEach(box => {
+                if (box.checked) {
+                    const dataId = box.closest('.control-node').getAttribute('data-id');
+                    if (SYSTEM_COMMANDS_REGISTRY[dataId]) {
+                        compiledBlock += `* ${SYSTEM_COMMANDS_REGISTRY[dataId]}
+`;
+                    }
+                }
+            });
+            
+            compiledBlock += "
+------------------------------------------------------------------------
+";
+            compiledBlock += "CORE OBJECTIVE & RAW SCOPE CONTEXT
+";
+            compiledBlock += "------------------------------------------------------------------------
+";
+            compiledBlock += scopeText ? scopeText : "[No user scope text defined. Execute system baseline diagnostic queries.]";
+            compiledBlock += "
+
+========================================================================";
+            
+            return compiledBlock;
+        }
+
+        // Action Port Routing Dispatch
+        function dispatchPayload(targetUrl) {
+            const promptPayload = compileStructuralPrompt();
+            
+            // Clipboard capture matrix execution
+            navigator.clipboard.writeText(promptPayload).then(() => {
+                showToastNotification("Dynamic Prompt Compiled & Synced to Clipboard!");
+                // Open runtime environment tab instance
+                window.open(targetUrl, '_blank');
+            }).catch(err => {
+                console.error('System Failure: Clipboard channel write blocked.', err);
+                alert("Failed to write to system clipboard automatically. Copy text manually.");
+            });
+        }
+
+        // Toast Notification HUD
+        function showToastNotification(message) {
+            const toast = document.getElementById('alertToast');
+            toast.innerText = message;
+            toast.style.display = 'block';
+            setTimeout(() => {
+                toast.style.display = 'none';
+            }, 3000);
+        }
+
+        // Non-Volatile Local Configuration Profile Controller Suite
+        function saveCurrentProfile() {
+            const profileNameInput = document.getElementById('newProfileName').value.trim();
+            if (!profileNameInput) {
+                alert("Please provide a name descriptor to save this environment config mapping.");
+                return;
+            }
+            
+            const checkboxesState = [];
+            document.querySelectorAll('.grid-options input[type="checkbox"]').forEach(box => {
+                checkboxesState.push({
+                    id: box.closest('.control-node').getAttribute('data-id'),
+                    checked: box.checked
+                });
+            });
+            
+            const environmentConfig = {
+                scope: document.getElementById('promptScope').value,
+                temp: document.getElementById('paramTemp').value,
+                tokens: document.getElementById('paramTokens').value,
+                persona: document.getElementById('targetPersona').value,
+                format: document.getElementById('outputFormat').value,
+                fileSim: document.getElementById('fileSimulation').value,
+                checkboxes: checkboxesState
+            };
+            
+            localStorage.setItem('config_profile_' + profileNameInput, JSON.stringify(environmentConfig));
+            document.getElementById('newProfileName').value = "";
+            refreshProfileDropdown();
+            document.getElementById('profileDropdown').value = 'config_profile_' + profileNameInput;
+            showToastNotification(`Configuration '${profileNameInput}' Saved Successfully!`);
+        }
+
+        function refreshProfileDropdown() {
+            const dropdown = document.getElementById('profileDropdown');
+            dropdown.innerHTML = '<option value="default">-- Active Workspace Configuration --</option>';
+            
+            for (let i = 0; i < localStorage.length; i++) {
+                const key = localStorage.key(i);
+                if (key.startsWith('config_profile_')) {
+                    const profileTitle = key.replace('config_profile_', '');
+                    const option = document.createElement('option');
+                    option.value = key;
+                    option.innerText = profileTitle;
+                    dropdown.appendChild(option);
+                }
+            }
+        }
+
+        function loadSelectedProfile() {
+            const dropdown = document.getElementById('profileDropdown');
+            const targetKey = dropdown.value;
+            
+            if (targetKey === 'default') return;
+            
+            const dataStr = localStorage.getItem(targetKey);
+            if (!dataStr) return;
+            
+            const config = JSON.parse(dataStr);
+            
+            document.getElementById('promptScope').value = config.scope || "";
+            document.getElementById('paramTemp').value = config.temp || 0.40;
+            document.getElementById('paramTokens').value = config.tokens || 2048;
+            document.getElementById('targetPersona').value = config.persona || "expert";
+            document.getElementById('outputFormat').value = config.format || "table";
+            document.getElementById('fileSimulation').value = config.fileSim || "none";
+            
+            if (config.checkboxes) {
+                config.checkboxes.forEach(item => {
+                    const node = document.querySelector(`.control-node[data-id="${item.id}"] input[type="checkbox"]`);
+                    if (node) node.checked = item.checked;
+                });
+            }
+            
+            updateSliderDisplay();
+            calculateTelemetryMetrics();
+            showToastNotification("Workspace Settings Rehydrated from Profile!");
+        }
+
+        function deleteSelectedProfile() {
+            const dropdown = document.getElementById('profileDropdown');
+            const targetKey = dropdown.value;
+            
+            if (targetKey === 'default') {
+                alert("Cannot delete baseline workspace state option configurations.");
+                return;
+            }
+            
+            if (confirm("Confirm permanent removal of this workspace profile array mapping?")) {
+                localStorage.removeItem(targetKey);
+                refreshProfileDropdown();
+                updateSliderDisplay();
+                calculateTelemetryMetrics();
+                showToastNotification("Profile Configuration Dropped.");
+            }
+        }
+
+        // 🧬 Self-Evolutionary Program Generation Studio Pipeline
+        function compileEvolutionPrompt() {
+            const specs = document.getElementById('evolutionSpecs').value.trim();
+            if (!specs) {
+                alert("Provide engineering specification layout terms inside the development text field parameter first.");
+                return;
+            }
+            
+            let rawSelfSource = document.documentElement.outerHTML;
+            
+            let evoPrompt = "========================================================================
+";
+            evoPrompt += "META-PROGRAMMING INTERFACE STRUCTURAL EVOLUTION SPECIFICATION
+";
+            evoPrompt += "========================================================================
+
+";
+            evoPrompt += "[OBJECTIVE]: Act as an Elite UI Engineer and Senior Systems Architect. You are tasked with upgrading the user interface tool script passed below.
+
+";
+            evoPrompt += "[MANDATORY PRESERVATION INSTRUCTION]: Under all iterations, you must retain, expand, and update the existing IMMUTABLE EVOLUTIONARY LEDGER header information embedded in the HTML file comments. Increment version tracking configurations using strict semantic version paths. Log modifications with modern timestamps, ensuring original collaborative authors retain full structural credit markers.
+
+";
+            evoPrompt += "[REQUESTED SYSTEM UPGRADES & STRUCTURAL INTEGRATION SPECIFICATIONS]:
+";
+            evoPrompt += `>>> ${specs}
+
+`;
+            evoPrompt += "------------------------------------------------------------------------
+";
+            evoPrompt += "RAW APPLICATION RUNTIME CODE BASELINE ASSET (SOURCE TARGET)
+";
+            evoPrompt += "------------------------------------------------------------------------
+";
+            evoPrompt += rawSelfSource;
+            evoPrompt += "
+
+========================================================================";
+            
+            navigator.clipboard.writeText(evoPrompt).then(() => {
+                showToastNotification("Evolutionary Coding Prompt Captured to Clipboard!");
+                window.open('https://gemini.google.com', '_blank');
+            }).catch(err => {
+                alert("Failed auto-sync to clipboard layout channel mapping. Extract text from consoles.");
+            });
+        }
+
+        // ========================================================================
+        // ⏳ ADVANCED INTERACTIVE STATEFUL SESSION DEHYDRATOR ENGINE (NEW UPDATE)
+        // ========================================================================
+        function generateSessionCapsule() {
+            const activeScope = document.getElementById('promptScope').value;
+            
+            // Build an array mapping of current configurations active states
+            const activeDirectives = [];
+            document.querySelectorAll('.grid-options input[type="checkbox"]').forEach(box => {
+                if (box.checked) {
+                    activeDirectives.push(box.closest('.control-node').querySelector('label').innerText);
+                }
+            });
+            
+            const currentPersona = document.getElementById('targetPersona').value;
+            const currentFormat = document.getElementById('outputFormat').value;
+            
+            let capsuleBlock = "========================================================================
+";
+            capsuleBlock += "⏳ INTERACTIVE SESSION DEHYDRATION CAPSULE [ARCHIVE BUFFER BLOCK]
+";
+            capsuleBlock += "========================================================================
+";
+            capsuleBlock += "[INSTRUCTION]: You are processing a dehydrated interactive session backup state framework. Analyze this capsule block context to completely reconstruct the conversational history vector, logical trajectory paths, and parameters selected by the user. Do not break topic focus parameters upon conversation rehydration initialization.
+
+";
+            
+            capsuleBlock += "------------------------------------------------------------------------
+";
+            capsuleBlock += "METADATA CONFIGURATION STATE VECTOR METRICS
+";
+            capsuleBlock += "------------------------------------------------------------------------
+";
+            capsuleBlock += `* RUNTIME CAPTURE DATE/TIME: ${new Date().toLocaleString()}
+`;
+            capsuleBlock += `* SYSTEM PERSONA MODEL: ${currentPersona}
+`;
+            capsuleBlock += `* SYSTEM LAYOUT SCHEMATIC: ${currentFormat}
+`;
+            capsuleBlock += `* ACTIVATED DIRECTIVES ARRAYS: [${activeDirectives.join(' | ')}]
+
+`;
+            
+            capsuleBlock += "------------------------------------------------------------------------
+";
+            capsuleBlock += "FROZEN ARCHIVAL WORKING SESSION NARRATIVE FIELD CONTEXT
+";
+            capsuleBlock += "------------------------------------------------------------------------
+";
+            capsuleBlock += activeScope ? activeScope : "[Null working space input vector state data]";
+            capsuleBlock += "
+
+------------------------------------------------------------------------
+";
+            capsuleBlock += "🚀 CORE REHYDRATION BOOTSTRAPPING INSTRUCTIONS FOR SYSTEM AGENTS
+";
+            capsuleBlock += "------------------------------------------------------------------------
+";
+            capsuleBlock += "1. Read all historical context items mapped above thoroughly.
+";
+            capsuleBlock += "2. Acknowledge this session continuation point explicitly in your next line response.
+";
+            capsuleBlock += "3. Provide a high-density consolidated structural summary tracking all goals, completed research tracks, or open data parameters remaining to solve.
+";
+            capsuleBlock += "4. Await my next active user direction sequence immediately without generating filler commentary.
+";
+            capsuleBlock += "========================================================================";
+            
+            // Replace user textarea payload context directly with its own frozen state string capsule
+            document.getElementById('promptScope').value = capsuleBlock;
+            calculateTelemetryMetrics();
+            
+            navigator.clipboard.writeText(capsuleBlock).then(() => {
+                showToastNotification("Interactive Session Capsule Generated & Copied to Clipboard!");
+            });
+        }
+
+        function hydrateSessionCapsule() {
+            const rawInputText = document.getElementById('promptScope').value;
+            
+            if (!rawInputText.includes("INTERACTIVE SESSION DEHYDRATION CAPSULE")) {
+                alert("No valid structural Session Dehydration Capsule block structure discovered within the main input text area.");
+                return;
+            }
+            
+            // Core regex extraction parser matrix routines
+            try {
+                // Rehydrate Persona Parameter
+                const personaMatch = rawInputText.match(/\* SYSTEM PERSONA MODEL: (\w+)/);
+                if (personaMatch && personaMatch[1]) {
+                    document.getElementById('targetPersona').value = personaMatch[1];
+                }
+                
+                // Rehydrate Layout Format Parameter
+                const formatMatch = rawInputText.match(/\* SYSTEM LAYOUT SCHEMATIC: (\w+)/);
+                if (formatMatch && formatMatch[1]) {
+                    document.getElementById('outputFormat').value = formatMatch[1];
+                }
+                
+                // Rehydrate Checkbox Directives Matrix Options arrays
+                const directivesMatch = rawInputText.match(/\* ACTIVATED DIRECTIVES ARRAYS: \[([^\]]+)\]/);
+                if (directivesMatch && directivesMatch[1]) {
+                    const activeTitles = directivesMatch[1].split(' | ');
+                    document.querySelectorAll('.grid-options .control-node').forEach(node => {
+                        const labelTitle = node.querySelector('label').innerText;
+                        const box = node.querySelector('input[type="checkbox"]');
+                        box.checked = activeTitles.includes(labelTitle);
+                    });
+                }
+                
+                // Rehydrate Core Text Data Boundaries Block Segment
+                const boundarySplit = rawInputText.split("------------------------------------------------------------------------\n");
+                if (boundarySplit.length >= 4) {
+                    const textSegment = boundarySplit[3].split("------------------------------------------------------------------------")[0];
+                    document.getElementById('promptScope').value = textSegment.trim();
+                }
+                
+                updateSliderDisplay();
+                calculateTelemetryMetrics();
+                showToastNotification("Session Context Rehydrated into Workspace Successfully!");
+                
+            } catch(e) {
+                console.error("Hydration Module Failure: Context corrupted or manual edit mismatch.", e);
+                alert("Failed to programmatically parse structural fields inside the capsule block. Data structure mismatch.");
+            }
+        }
+
+        // Initialize Application Environment Runtime Mappings
+        window.onload = function() {
+            refreshProfileDropdown();
+            updateSliderDisplay();
+            calculateTelemetryMetrics();
+        };
+    </script>
+</body>
+</html>

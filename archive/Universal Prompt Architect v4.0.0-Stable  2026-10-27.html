@@ -1,0 +1,887 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Universal Prompt Architect & Evolutionary Studio</title>
+    <!--
+    ===========================================================================
+    SYSTEM CREDITS & METADATA
+    ===========================================================================
+    Tool Name   : Universal Prompt Architect & Evolutionary Studio
+    Version     : 4.0.0 (Release-Candidate)
+    Build Date  : 2026-10-27 17:23:00 UTC
+    Engine Base : Pure HTML5 / CSS3 Grid System / Vanilla ES6 Storage Architecture
+    Authorship  : Advanced AI Pipeline Engineering Studio
+    Purpose     : Cross-LLM Multi-Agent System Control Matrix & Self-Evolutionary Engine
+    ===========================================================================
+    -->
+    <style>
+        :root {
+            --bg-main: #0f0f11;
+            --bg-card: #16161a;
+            --bg-input: #1e1e24;
+            --bg-hover: #26262f;
+            --border: #2a2a35;
+            --text-main: #e4e4eb;
+            --text-muted: #9a9aae;
+            --accent: #3b82f6;
+            --accent-hover: #2563eb;
+            --accent-success: #10b981;
+            --accent-warning: #f59e0b;
+            --accent-danger: #ef4444;
+            --font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: var(--bg-main);
+            color: var(--text-main);
+            font-family: var(--font-family);
+            line-height: 1.5;
+            padding: 2rem;
+            display: flex;
+            justify-content: center;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 1.5rem;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 1rem;
+        }
+
+        h1 {
+            font-size: 1.75rem;
+            font-weight: 700;
+            letter-spacing: -0.025em;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .subtitle {
+            color: var(--text-muted);
+            font-size: 0.875rem;
+            margin-top: 0.25rem;
+        }
+
+        .signature-badge {
+            font-family: monospace;
+            font-size: 0.75rem;
+            background: var(--bg-input);
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            border: 1px solid var(--border);
+            color: var(--text-muted);
+        }
+
+        .grid-layout {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+        }
+
+        @media (max-width: 900px) {
+            .grid-layout {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .card {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1.25rem;
+        }
+
+        .card-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #fff;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 0.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        label {
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: var(--text-main);
+        }
+
+        textarea, select, input[type="text"] {
+            width: 100%;
+            background-color: var(--bg-input);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            color: #fff;
+            padding: 0.75rem;
+            font-family: inherit;
+            font-size: 0.95rem;
+            transition: border-color 0.2s, background-color 0.2s;
+        }
+
+        textarea:focus, select:focus, input[type="text"]:focus {
+            outline: none;
+            border-color: var(--accent);
+        }
+
+        .config-controls {
+            display: flex;
+            gap: 0.5rem;
+            align-items: center;
+        }
+
+        .btn {
+            background-color: var(--accent);
+            color: #fff;
+            border: none;
+            border-radius: 6px;
+            padding: 0.6rem 1rem;
+            font-size: 0.875rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .btn:hover {
+            background-color: var(--accent-hover);
+        }
+
+        .btn-secondary {
+            background-color: var(--bg-input);
+            border: 1px solid var(--border);
+            color: var(--text-main);
+        }
+
+        .btn-secondary:hover {
+            background-color: var(--bg-hover);
+        }
+
+        .btn-success { background-color: var(--accent-success); }
+        .btn-success:hover { background-color: #059669; }
+        .btn-danger { background-color: var(--accent-danger); }
+        .btn-danger:hover { background-color: #dc2626; }
+
+        .options-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: 0.75rem;
+        }
+
+        .checkbox-container {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.5rem;
+            padding: 0.5rem;
+            background-color: var(--bg-input);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            cursor: pointer;
+            position: relative;
+            user-select: none;
+        }
+
+        .checkbox-container:hover {
+            background-color: var(--bg-hover);
+        }
+
+        .checkbox-container input {
+            margin-top: 0.25rem;
+        }
+
+        .checkbox-label {
+            font-size: 0.85rem;
+            color: var(--text-main);
+        }
+
+        /* Pure CSS Tooltips on Hover */
+        .tooltip-icon {
+            display: inline-block;
+            margin-left: auto;
+            color: var(--text-muted);
+            cursor: help;
+            font-size: 0.8rem;
+            border: 1px solid var(--border);
+            border-radius: 50%;
+            width: 16px;
+            height: 16px;
+            text-align: center;
+            line-height: 14px;
+        }
+
+        .tooltip-text {
+            visibility: hidden;
+            width: 240px;
+            background-color: #2e2e38;
+            color: #fff;
+            text-align: left;
+            border-radius: 6px;
+            padding: 0.75rem;
+            position: absolute;
+            z-index: 10;
+            bottom: 125%;
+            left: 50%;
+            transform: translateX(-50%);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+            font-size: 0.775rem;
+            opacity: 0;
+            transition: opacity 0.2s;
+            pointer-events: none;
+            border: 1px solid #444;
+        }
+
+        .checkbox-container:hover .tooltip-text {
+            visibility: visible;
+            opacity: 1;
+        }
+
+        /* Telemetry Constraints Monitor */
+        .telemetry-bar {
+            height: 6px;
+            width: 100%;
+            background-color: var(--bg-input);
+            border-radius: 3px;
+            overflow: hidden;
+            margin-top: 0.25rem;
+        }
+
+        .telemetry-progress {
+            height: 100%;
+            width: 0%;
+            background-color: var(--accent-success);
+            transition: width 0.2s, background-color 0.2s;
+        }
+
+        .telemetry-labels {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.75rem;
+            color: var(--text-muted);
+        }
+
+        /* Model Selector Grid */
+        .dispatch-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 0.5rem;
+        }
+
+        .collapsible-panel {
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            background-color: var(--bg-input);
+            overflow: hidden;
+        }
+
+        .collapsible-trigger {
+            padding: 0.75rem;
+            font-weight: 600;
+            font-size: 0.9rem;
+            cursor: pointer;
+            background-color: var(--bg-card);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            user-select: none;
+        }
+
+        .collapsible-content {
+            padding: 1rem;
+            display: none;
+            flex-direction: column;
+            gap: 1rem;
+            border-top: 1px solid var(--border);
+        }
+
+        .collapsible-panel.active .collapsible-content {
+            display: flex;
+        }
+
+        .range-container {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .range-container input[type="range"] {
+            flex: 1;
+            accent-color: var(--accent);
+        }
+
+        .range-value {
+            font-family: monospace;
+            font-size: 0.9rem;
+            min-width: 30px;
+            text-align: right;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <div>
+            <h1>⚡ Universal Prompt Architect</h1>
+            <div class="subtitle">Multi-Agent System Control Matrix & Evolutionary Engine</div>
+        </div>
+        <div class="signature-badge">v4.0.0-Stable // 2026-10-27</div>
+    </header>
+
+    <!-- Configuration Presets Bar -->
+    <div class="card" style="padding: 1rem; flex-direction: row; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem;">
+        <div class="form-group" style="flex: 1; min-width: 250px; flex-direction: row; align-items: center; gap: 0.5rem;">
+            <label style="white-space: nowrap;">Configuration Profiles:</label>
+            <select id="configProfileSelect" onchange="loadSelectedProfile()">
+                <option value="default">Standard Workspace (Default)</option>
+            </select>
+        </div>
+        <div class="config-controls">
+            <input type="text" id="newConfigName" placeholder="New Profile Name" style="width: 160px; padding: 0.4rem 0.6rem; font-size: 0.85rem;">
+            <button class="btn btn-secondary" onclick="saveCurrentProfile()">💾 Save</button>
+            <button class="btn btn-danger" onclick="deleteCurrentProfile()" style="padding: 0.4rem 0.6rem;">🗑️ Delete</button>
+        </div>
+    </div>
+
+    <div class="grid-layout">
+        <!-- LEFT PANEL: MODULAR MATRIX CONTROLS -->
+        <div class="card">
+            <div class="card-title">🕹️ Architecture Presets</div>
+            
+            <!-- User Intent Core Input -->
+            <div class="form-group">
+                <label for="coreObjective">Core Objective / Raw Input Task:</label>
+                <textarea id="coreObjective" rows="5" placeholder="Enter your core task description, raw content, or data requirements here... (e.g., Cross-examine these tech reviews, build an ATS resume optimized for a data lead, or audit a housing grant application)"></textarea>
+                <div>
+                    <div class="telemetry-bar"><div id="telemetryProgress" class="telemetry-progress"></div></div>
+                    <div class="telemetry-labels">
+                        <span id="charCount">0 characters</span>
+                        <span id="clippingStatus">Safe Range</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Parameters Grid Split -->
+            <div class="grid-layout" style="gap: 1rem;">
+                <div class="form-group">
+                    <label for="personaSelector">Target Persona / Expert Alignment:</label>
+                    <select id="personaSelector">
+                        <option value="none">Standard AI (Objective Baseline)</option>
+                        <option value="scholar">Distinguished Academic Scholar</option>
+                        <option value="sme">Subject Matter Expert / Elite Advisor</option>
+                        <option value="dev">Principal Software Architect / Senior Dev</option>
+                        <option value="legal">Senior Legal Counsel / Regulatory Auditor</option>
+                        <option value="advocate">Consumer Advocate & Strategic Reviewer</option>
+                        <option value="recruiter">Executive Recruiter & ATS Optimizer</option>
+                        <option value="grant">Federal Grant Consultant & HUD/USDA Officer</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="formatSelector">Output Layout Structure:</label>
+                    <select id="formatSelector">
+                        <option value="standard">Natural Adaptive Prose</option>
+                        <option value="bullets">High-Density Fragmented Bullet List</option>
+                        <option value="table">Side-by-Side Columnar Comparison Table</option>
+                        <option value="markdown">Hierarchical Document (.md Ready)</option>
+                        <option value="html">Isolated Code Injection Document (.html)</option>
+                        <option value="csv">Structured Tabular Values Data (.csv)</option>
+                        <option value="json">Structured JavaScript Notation (.json)</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Dynamic Model Parameters Dropdown Container -->
+            <div class="grid-layout" style="gap: 1rem;">
+                <div class="form-group">
+                    <label for="temperatureSlider">Creativity / Depth (Temperature):</label>
+                    <div class="range-container">
+                        <input type="range" id="temperatureSlider" min="0.0" max="1.0" step="0.05" value="0.20" oninput="updateRangeLabel(this, 'tempValue')">
+                        <span class="range-value" id="tempValue">0.20</span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="tokensSlider">Response Length Cap (Tokens):</label>
+                    <div class="range-container">
+                        <input type="range" id="tokensSlider" min="256" max="8192" step="256" value="2048" oninput="updateRangeLabel(this, 'tokenValue')">
+                        <span class="range-value" id="tokenValue">2048</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Operational Directives & Constraints Grid -->
+            <div class="form-group">
+                <label>Operational Constraints & System Directives:</label>
+                <div class="options-grid">
+                    <label class="checkbox-container">
+                        <input type="checkbox" id="constraintHallucination" checked>
+                        <span class="checkbox-label">Zero-Hallucination Matrix</span>
+                        <span class="tooltip-icon">?</span>
+                        <span class="tooltip-text">Forbids speculation. Restricts output explicitly to strictly verified facts. Claims require visible anchors.</span>
+                    </label>
+                    <label class="checkbox-container">
+                        <input type="checkbox" id="constraintScannable">
+                        <span class="checkbox-label">High-Density Scannability</span>
+                        <span class="tooltip-icon">?</span>
+                        <span class="tooltip-text">Forces complete removal of conversational preambles, introductory filler, and redundant postscripts.</span>
+                    </label>
+                    <label class="checkbox-container">
+                        <input type="checkbox" id="constraintVerification">
+                        <span class="checkbox-label">Source Cross-Verification</span>
+                        <span class="tooltip-icon">?</span>
+                        <span class="tooltip-text">Requires the model to systematically evaluate evidence vectors and note contradictions.</span>
+                    </label>
+                    <label class="checkbox-container">
+                        <input type="checkbox" id="constraintPanel">
+                        <span class="checkbox-label">Panel of Experts Method</span>
+                        <span class="tooltip-icon">?</span>
+                        <span class="tooltip-text">Simulates an intra-model roundtable debate among 3 elite independent specialists before finalizing text.</span>
+                    </label>
+                    <label class="checkbox-container">
+                        <input type="checkbox" id="constraintAdvocate">
+                        <span class="checkbox-label">Devil's Advocate Crucible</span>
+                        <span class="tooltip-icon">?</span>
+                        <span class="tooltip-text">Instructs the engine to deliberately challenge its own assumptions and find blind spots.</span>
+                    </label>
+                    <label class="checkbox-container">
+                        <input type="checkbox" id="constraintChain">
+                        <span class="checkbox-label">Chain-of-Thought Exhaustion</span>
+                        <span class="tooltip-icon">?</span>
+                        <span class="tooltip-text">Demands a comprehensive step-by-step display of logic and calculation pipelines before reaching the answer.</span>
+                    </label>
+                </div>
+            </div>
+
+            <!-- COLLAPSIBLE EVOLUTIONARY ENGINEERING STUDIO -->
+            <div class="collapsible-panel" id="evolutionPanel">
+                <div class="collapsible-trigger" onclick="togglePanel('evolutionPanel')">
+                    <span>🛠️ Advanced Architecture & Self-Evolutionary Studio</span>
+                    <span id="panelIndicator">▼</span>
+                </div>
+                <div class="collapsible-content">
+                    <p style="font-size: 0.8rem; color: var(--text-muted);">
+                        Describe any physical features, control sliders, options, or domain matrices you wish to inject into this system interface. The engine will instantly package a structural prompt holding its own system code, allowing external models to output a new, updated standalone file.
+                    </p>
+                    <div class="form-group">
+                        <label for="evolutionDirectives">Desired Code Structural Upgrades:</label>
+                        <textarea id="evolutionDirectives" rows="3" placeholder="Example: Add an active toggle configuration for mobile-responsive formatting, an automatic export code module, or a veterinary healthcare matrix layout..."></textarea>
+                    </div>
+                    <button class="btn btn-secondary" onclick="compileEvolutionPrompt()">🧠 Construct Evolution Payload</button>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- RIGHT PANEL: ENGINE COMPILE & MULTI-AGENT RUNTIME DISPATCH -->
+        <div class="card">
+            <div class="card-title">🚀 Dynamic Compiler & Multi-Agent Dispatch</div>
+
+            <div class="form-group" style="flex: 1; display: flex; flex-direction: column;">
+                <label for="compiledPrompt">Compiled Production Payload:</label>
+                <textarea id="compiledPrompt" style="flex: 1; min-height: 380px; font-family: monospace; font-size: 0.85rem; color: #a6e22e; background-color: #0b0b0d;" readonly></textarea>
+            </div>
+
+            <div class="form-group">
+                <label>Target Multi-Agent Dispatch Deck:</label>
+                <div class="dispatch-grid">
+                    <button class="btn btn-success" onclick="dispatchAgent('gemini')">✨ Gemini</button>
+                    <button class="btn" style="background-color: #74aa9c;" onclick="dispatchAgent('chatgpt')">🤖 ChatGPT</button>
+                    <button class="btn" style="background-color: #d97753;" onclick="dispatchAgent('claude')">🎭 Claude</button>
+                </div>
+                <p style="font-size: 0.75rem; color: var(--text-muted); text-align: center; margin-top: 0.5rem;">
+                    Clicking a target ecosystem automatically copies the prompt matrix to your system clipboard and opens the environment runtime tab.
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // System Constants
+    const CHAR_LIMIT_MAX = 10000;
+    
+    // Core Application State Store Database Link (localStorage)
+    let systemProfiles = {
+        default: {
+            coreObjective: "",
+            personaSelector: "none",
+            formatSelector: "standard",
+            temperatureSlider: "0.20",
+            tokensSlider: "2048",
+            constraintHallucination: true,
+            constraintScannable: false,
+            constraintVerification: false,
+            constraintPanel: false,
+            constraintAdvocate: false,
+            constraintChain: false,
+            evolutionDirectives: ""
+        }
+    };
+    
+    let activeProfileKey = "default";
+
+    // Application Bootstrap Initialize Lifecycle
+    window.addEventListener('DOMContentLoaded', () => {
+        loadProfilesFromStorage();
+        attachRealtimeEventTrackers();
+        buildCompiledPrompt();
+    });
+
+    function attachRealtimeEventTrackers() {
+        const structuralInputs = [
+            'coreObjective', 'personaSelector', 'formatSelector', 
+            'temperatureSlider', 'tokensSlider', 'constraintHallucination', 
+            'constraintScannable', 'constraintVerification', 'constraintPanel', 
+            'constraintAdvocate', 'constraintChain', 'evolutionDirectives'
+        ];
+        
+        structuralInputs.forEach(id => {
+            const el = document.getElementById(id);
+            if (!el) return;
+            const evType = el.type === 'checkbox' ? 'change' : 'input';
+            el.addEventListener(evType, () => {
+                autoSyncActiveState();
+                buildCompiledPrompt();
+                if (id === 'coreObjective') updateTelemetryMonitor();
+            });
+        });
+    }
+
+    function updateRangeLabel(slider, labelId) {
+        document.getElementById(labelId).textContent = slider.value;
+    }
+
+    function togglePanel(panelId) {
+        const panel = document.getElementById(panelId);
+        panel.classList.toggle('active');
+        const indicator = document.getElementById('panelIndicator');
+        indicator.textContent = panel.classList.contains('active') ? '▲' : '▼';
+    }
+
+    function updateTelemetryMonitor() {
+        const textLen = document.getElementById('coreObjective').value.length;
+        const progressPercentage = Math.min((textLen / CHAR_LIMIT_MAX) * 100, 100);
+        
+        const bar = document.getElementById('telemetryProgress');
+        const countTxt = document.getElementById('charCount');
+        const statusTxt = document.getElementById('clippingStatus');
+        
+        bar.style.width = `${progressPercentage}%`;
+        countTxt.textContent = `${textLen} / ${CHAR_LIMIT_MAX} characters`;
+
+        if (progressPercentage < 60) {
+            bar.style.backgroundColor = 'var(--accent-success)';
+            statusTxt.textContent = 'Safe Range';
+            statusTxt.style.color = 'var(--accent-success)';
+        } else if (progressPercentage < 85) {
+            bar.style.backgroundColor = 'var(--accent-warning)';
+            statusTxt.textContent = 'Approaching Limit';
+            statusTxt.style.color = 'var(--accent-warning)';
+        } else {
+            bar.style.backgroundColor = 'var(--accent-danger)';
+            statusTxt.textContent = 'High Clipping Risk';
+            statusTxt.style.color = 'var(--accent-danger)';
+        }
+    }
+
+    // Engine Compiler Layer
+    function buildCompiledPrompt() {
+        const obj = document.getElementById('coreObjective').value.trim();
+        const persona = document.getElementById('personaSelector').value;
+        const layout = document.getElementById('formatSelector').value;
+        const temp = document.getElementById('temperatureSlider').value;
+        const tokens = document.getElementById('tokensSlider').value;
+        
+        const cH = document.getElementById('constraintHallucination').checked;
+        const cS = document.getElementById('constraintScannable').checked;
+        const cV = document.getElementById('constraintVerification').checked;
+        const cP = document.getElementById('constraintPanel').checked;
+        const cA = document.getElementById('constraintAdvocate').checked;
+        const cC = document.getElementById('constraintChain').checked;
+
+        if (!obj) {
+            document.getElementById('compiledPrompt').value = "[System Engine Standby: Awaiting raw input narrative or target task parameters to structure execution block...]";
+            return;
+        }
+
+        let prompt = `[SYSTEM INSTRUCTION PROTOCOL: CORE SPECIFICATION CONFIGURATION]\n`;
+        prompt += `========================================================================\n`;
+        prompt += `Execute the following core operations payload with absolute fidelity.\n\n`;
+        
+        prompt += `[CORE OPERATIONAL OBJECTIVE / DATA INGESTION]:\n`;
+        prompt += `"""\n${obj}\n"""\n\n`;
+
+        prompt += `[BEHAVIORAL ALIGNMENT MATRIX]:\n`;
+        switch(persona) {
+            case 'scholar':
+                prompt += `- Adopt the persona of a Distinguished Academic Scholar. Maintain complete objectivity, parse nuance, and leverage highly precise academic prose styling.\n`;
+                break;
+            case 'sme':
+                prompt += `- Adopt the persona of an elite Subject Matter Expert and Strategic Advisor. Deliver authoritative, insight-dense recommendations stripped of entry-level concepts.\n`;
+                break;
+            case 'dev':
+                prompt += `- Adopt the persona of a Principal Software Architect. Focus output heavily on computational optimization, clean structure, maintainable paradigms, and clean documentation patterns.\n`;
+                break;
+            case 'legal':
+                prompt += `- Adopt the persona of a Senior Regulatory Auditor and Legal Counsel. Meticulously evaluate text against literal compliance rules, noting exposure, risk, and statutory frameworks.\n`;
+                break;
+            case 'advocate':
+                prompt += `- Adopt the persona of a dedicated Consumer Advocate. Systematically unpack true performance vectors, contrast overlapping reviews, expose hidden cost structures, and assess long-term values.\n`;
+                break;
+            case 'recruiter':
+                prompt += `- Adopt the persona of an Executive Talent Acquisition Specialist. Optimize data nodes aggressively for Applicant Tracking Systems (ATS), surface high-impact functional keywords, and match corporate competency maps.\n`;
+                break;
+            case 'grant':
+                prompt += `- Adopt the persona of a Public Housing Grants Consultant. Review variables against literal HUD/USDA qualification metrics, compliance criteria, tracking allocations, and application requirements.\n`;
+                break;
+            default:
+                prompt += `- Maintain standard balanced neutral AI baseline optimization.\n`;
+        }
+        
+        // Runtime Metadata Indicators
+        prompt += `- Operational Hyperparameters: Target Sampling Temperature = ${temp}; Maximum Resource Token Allocation = ${tokens}.\n\n`;
+
+        prompt += `[STRUCTURAL FORMATTING CONSTRAINT COMPLIANCE]:\n`;
+        switch(layout) {
+            case 'bullets':
+                prompt += `- Do not write prose paragraphs. Output results exclusively as a high-density, highly fragmented series of independent markdown bullet points.\n`;
+                break;
+            case 'table':
+                prompt += `- Render the entire analysis layout using markdown table notation, ensuring a clean side-by-side multi-column comparison format.\n`;
+                break;
+            case 'markdown':
+                prompt += `- Package text cleanly inside standard semantic markdown (.md) syntax utilizing tiered headers, code wrappers, bold anchors, and clean blockquotes.\n`;
+                break;
+            case 'html':
+                prompt += `- Generate the response wrapped completely within valid, isolated code blocks of clean HTML5/CSS code, ready to be immediately exported as a standalone document.\n`;
+                break;
+            case 'csv':
+                prompt += `- Convert data exclusively into standard comma-separated tabular values formatting (.csv blocks), using clear column headers on line one.\n`;
+                break;
+            case 'json':
+                prompt += `- Construct response strictly as a valid, parsable JSON data block schema without trailing commas or conversational filler wrappers.\n`;
+                break;
+            default:
+                prompt += `- Use fluid natural prose paragraphs organized logically under appropriate semantic markdown section headers.\n`;
+        }
+        prompt += `\n`;
+
+        // Directives Block Injections
+        if (cH || cS || cV || cP || cA || cC) {
+            prompt += `[EXECUTION DIRECTIVES MATRIX]:\n`;
+            if (cH) prompt += `- [CRITICAL] ZERO-HALLUCINATION CONFIGURATION: Restrict assertions strictly to verified objective text facts. If a parameter is unstated or missing, note it explicitly as missing rather than assuming or extrapolating.\n`;
+            if (cS) prompt += `- [CRITICAL] HIGH-DENSITY SCANNABILITY: Strip all conversational framing code, introductory greetings, polite preambles, and wrap-up summaries. Start immediately with the first item of content.\n`;
+            if (cV) prompt += `- SOURCE CROSS-VERIFICATION DIRECTIVE: Audit the logical vectors of your claims. Track potential internal contradictions or data gaps across references explicitly.\n`;
+            if (cP) prompt += `- PANEL OF EXPERTS ROUTINE: Execute a virtual panel consensus approach. Simulate arguments between three independent specialist lenses, distilling their unified insights into the final response layer.\n`;
+            if (cA) prompt += `- DEVIL'S ADVOCATE CRUCIBLE: Run an active falsification analysis step. Challenge your initial conclusions and highlight counter-arguments or edge cases.\n`;
+            if (cC) prompt += `- CHAIN-OF-THOUGHT MANDATE: Before delivering final conclusions, explicitly print out your analytical progression stages, calculations, and intermediate logic steps.\n`;
+            prompt += `\n`;
+        }
+
+        prompt += `========================================================================\n`;
+        prompt += `[INITIALIZE MATRIX EXECUTION PIPELINE]`;
+
+        document.getElementById('compiledPrompt').value = prompt;
+    }
+
+    // Evolutionary Prompter Generator Block
+    function compileEvolutionPrompt() {
+        const directives = document.getElementById('evolutionDirectives').value.trim();
+        if (!directives) {
+            alert("Please state the new physical features or modifications you want to introduce inside the evolutionary input box first.");
+            return;
+        }
+
+        // Capture complete outer system source document structure to inject inside the prompt payload loop
+        const sourceHtmlCode = document.documentElement.outerHTML;
+
+        let evoPrompt = `[SELF-EVOLUTIONARY SOFTWARE DEVELOPMENT PROTOCOL]\n`;
+        evoPrompt += `========================================================================\n`;
+        evoPrompt += `You are a Principal UI/UX Architect and Systems Engineer specializing in monolithic dashboard design.\n\n`;
+        evoPrompt += `[TASK PROFILE]:\n`;
+        evoPrompt += `Analyze the existing standalone HTML tool source code provided below and perform structural code modifications to integrate new features as specified by the user.\n\n`;
+        evoPrompt += `[USER DESIRED UPGRADES]:\n`;
+        evoPrompt += `"""\n${directives}\n"""\n\n`;
+        evoPrompt += `[ARCHITECTURAL COMPLIANCE PARAMS]:\n`;
+        evoPrompt += `1. Preserve the full structural theme: OLED dark mode styles (#0f0f11), clean grid architectures, hover CSS text tooltips, state tracking, and character meter configurations.\n`;
+        evoPrompt += `2. Ensure all data structures and logic elements remain completely native, client-side, self-contained, and standalone (do not link external code packages or remote assets).\n`;
+        evoPrompt += `3. Output your response wrapped entirely within one clean, copy-pasteable HTML block containing the full modified source code, updating version numbers and headers accordingly.\n\n`;
+        evoPrompt += `[SOURCE CODE BASE TO REFINE]:\n`;
+        evoPrompt += `"""\n${sourceHtmlCode}\n"""\n`;
+        evoPrompt += `========================================================================\n`;
+        evoPrompt += `[INITIALIZE INTEGRATED CODE REFACTOR ENGINE]`;
+
+        document.getElementById('compiledPrompt').value = evoPrompt;
+        
+        // Dynamic clipboard auto capture mechanism
+        navigator.clipboard.writeText(evoPrompt).then(() => {
+            alert("Success! The Self-Evolution Engine payload has been built and automatically captured to your clipboard. You can now paste this directly into any advanced AI model to receive your new upgraded standalone HTML file.");
+        }).catch(err => {
+            console.error("Clipboard routing failed, text block remains accessible in prompt pane.", err);
+        });
+    }
+
+    // Storage and Profile Layer (localStorage Engines)
+    function loadProfilesFromStorage() {
+        try {
+            const saved = localStorage.getItem('prompt_architect_profiles');
+            if (saved) {
+                systemProfiles = JSON.parse(saved);
+            }
+        } catch (e) {
+            console.error("Local storage sync error: state defaults restored.", e);
+        }
+        rebuildProfileDropdown();
+    }
+
+    function rebuildProfileDropdown() {
+        const select = document.getElementById('configProfileSelect');
+        select.innerHTML = '';
+        Object.keys(systemProfiles).forEach(key => {
+            const opt = document.createElement('option');
+            opt.value = key;
+            opt.textContent = key === 'default' ? "Standard Workspace (Default)" : key;
+            select.appendChild(opt);
+        });
+        select.value = activeProfileKey;
+    }
+
+    function autoSyncActiveState() {
+        if (!systemProfiles[activeProfileKey]) systemProfiles[activeProfileKey] = {};
+        
+        systemProfiles[activeProfileKey] = {
+            coreObjective: document.getElementById('coreObjective').value,
+            personaSelector: document.getElementById('personaSelector').value,
+            formatSelector: document.getElementById('formatSelector').value,
+            temperatureSlider: document.getElementById('temperatureSlider').value,
+            tokensSlider: document.getElementById('tokensSlider').value,
+            constraintHallucination: document.getElementById('constraintHallucination').checked,
+            constraintScannable: document.getElementById('constraintScannable').checked,
+            constraintVerification: document.getElementById('constraintVerification').checked,
+            constraintPanel: document.getElementById('constraintPanel').checked,
+            constraintAdvocate: document.getElementById('constraintAdvocate').checked,
+            constraintChain: document.getElementById('constraintChain').checked,
+            evolutionDirectives: document.getElementById('evolutionDirectives').value
+        };
+        
+        try {
+            localStorage.setItem('prompt_architect_profiles', JSON.stringify(systemProfiles));
+        } catch(e) {
+            console.error("State persist failed.", e);
+        }
+    }
+
+    function loadSelectedProfile() {
+        const select = document.getElementById('configProfileSelect');
+        activeProfileKey = select.value;
+        const p = systemProfiles[activeProfileKey];
+        if (!p) return;
+
+        document.getElementById('coreObjective').value = p.coreObjective || "";
+        document.getElementById('personaSelector').value = p.personaSelector || "none";
+        document.getElementById('formatSelector').value = p.formatSelector || "standard";
+        
+        document.getElementById('temperatureSlider').value = p.temperatureSlider || "0.20";
+        document.getElementById('tempValue').textContent = p.temperatureSlider || "0.20";
+        
+        document.getElementById('tokensSlider').value = p.tokensSlider || "2048";
+        document.getElementById('tokenValue').textContent = p.tokensSlider || "2048";
+
+        document.getElementById('constraintHallucination').checked = p.constraintHallucination !== false;
+        document.getElementById('constraintScannable').checked = !!p.constraintScannable;
+        document.getElementById('constraintVerification').checked = !!p.constraintVerification;
+        document.getElementById('constraintPanel').checked = !!p.constraintPanel;
+        document.getElementById('constraintAdvocate').checked = !!p.constraintAdvocate;
+        document.getElementById('constraintChain').checked = !!p.constraintChain;
+        document.getElementById('evolutionDirectives').value = p.evolutionDirectives || "";
+
+        updateTelemetryMonitor();
+        buildCompiledPrompt();
+    }
+
+    function saveCurrentProfile() {
+        const nameInput = document.getElementById('newConfigName');
+        const name = nameInput.value.trim().replace(/[^a-zA-Z0-9 _-]/g, "");
+        if (!name) {
+            alert("Please type a clear, clean profile name tag to store configurations.");
+            return;
+        }
+
+        activeProfileKey = name;
+        autoSyncActiveState();
+        rebuildProfileDropdown();
+        nameInput.value = "";
+        alert(`Profile profile matrix saved under: "${name}"`);
+    }
+
+    function deleteCurrentProfile() {
+        if (activeProfileKey === 'default') {
+            alert("The baseline Default system configuration profile workspace cannot be deleted.");
+            return;
+        }
+        if (confirm(`Confirm destruction of configuration profile workspace: "${activeProfileKey}"?`)) {
+            delete systemProfiles[activeProfileKey];
+            activeProfileKey = 'default';
+            try {
+                localStorage.setItem('prompt_architect_profiles', JSON.stringify(systemProfiles));
+            } catch(e) {}
+            rebuildProfileDropdown();
+            loadSelectedProfile();
+        }
+    }
+
+    // Multi-Agent Ecosystem Dispatcher Pipeline
+    function dispatchAgent(target) {
+        const textBlock = document.getElementById('compiledPrompt').value;
+        if (!textBlock || textBlock.startsWith("[")) {
+            alert("The output production box is empty. Please supply objective parameters or raw task parameters on the left deck first.");
+            return;
+        }
+
+        navigator.clipboard.writeText(textBlock).then(() => {
+            let targetUrl = "";
+            switch(target) {
+                case 'gemini': targetUrl = "https://gemini.google.com"; break;
+                case 'chatgpt': targetUrl = "https://chatgpt.com"; break;
+                case 'claude': targetUrl = "https://claude.ai"; break;
+            }
+            window.open(targetUrl, '_blank');
+        }).catch(err => {
+            alert("Clipboard sync interrupted by browser permission layers. Please manually copy the production text from the compilation view frame.");
+            console.error("Clipboard error:", err);
+        });
+    }
+</script>
+
+</body>
+</html>

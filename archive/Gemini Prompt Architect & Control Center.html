@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gemini Command Center & Prompt Architect</title>
+    <style>
+        :root {
+            --bg-primary: #121214;
+            --bg-secondary: #1a1a1e;
+            --bg-tertiary: #26262b;
+            --text-main: #e2e8f0;
+            --text-muted: #94a3b8;
+            --accent: #38bdf8;
+            --accent-hover: #0ea5e9;
+            --border: #334155;
+            --success: #10b981;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-primary);
+            color: var(--text-main);
+            padding: 2rem;
+            line-height: 1.5;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 1rem;
+        }
+
+        h1 {
+            font-size: 1.75rem;
+            font-weight: 600;
+            color: var(--accent);
+        }
+
+        .subtitle {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            margin-top: 0.25rem;
+        }
+
+        .main-layout {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+        }
+
+        @media (max-width: 900px) {
+            .main-layout {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .panel {
+            background-color: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .section-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            border-left: 4px solid var(--accent);
+            padding-left: 0.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        label {
+            font-weight: 500;
+            font-size: 0.9rem;
+        }
+
+        input[type="text"], select, textarea {
+            width: 100%;
+            background-color: var(--bg-tertiary);
+            border: 1px solid var(--border);
+            color: var(--text-main);
+            padding: 0.75rem;
+            border-radius: 6px;
+            font-size: 0.95rem;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        input[type="text"]:focus, select:focus, textarea:focus {
+            border-color: var(--accent);
+        }
+
+        .grid-options {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: 0.75rem;
+        }
+
+        .checkbox-card {
+            background-color: var(--bg-tertiary);
+            border: 1px solid var(--border);
+            padding: 0.75rem;
+            border-radius: 6px;
+            display: flex;
+            align-items: flex-start;
+            gap: 0.5rem;
+            cursor: pointer;
+            position: relative;
+            transition: background-color 0.2s;
+        }
+
+        .checkbox-card:hover {
+            background-color: #2e2e35;
+        }
+
+        .checkbox-card input[type="checkbox"] {
+            margin-top: 0.25rem;
+            accent-color: var(--accent);
+        }
+
+        .checkbox-label {
+            font-size: 0.85rem;
+            font-weight: 500;
+            user-select: none;
+        }
+
+        /* Tooltip style */
+        .info-icon {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 14px;
+            height: 14px;
+            background-color: var(--border);
+            border-radius: 50%;
+            font-size: 0.7rem;
+            margin-left: 4px;
+            cursor: help;
+        }
+
+        .has-tooltip {
+            position: relative;
+        }
+
+        .has-tooltip:hover::after {
+            content: attr(data-tooltip);
+            position: absolute;
+            bottom: 125%;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: #000;
+            color: #fff;
+            padding: 0.5rem 0.75rem;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            width: 250px;
+            z-index: 10;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+            white-space: normal;
+            pointer-events: none;
+            border: 1px solid var(--border);
+        }
+
+        .preview-box {
+            background-color: var(--bg-tertiary);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            padding: 1rem;
+            min-height: 200px;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 0.9rem;
+            white-space: pre-wrap;
+            overflow-y: auto;
+            max-height: 400px;
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 1rem;
+        }
+
+        button {
+            flex: 1;
+            padding: 0.85rem;
+            border: none;
+            border-radius: 6px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.2s, transform 0.1s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        button:active {
+            transform: scale(0.98);
+        }
+
+        .btn-primary {
+            background-color: var(--accent);
+            color: #121214;
+        }
+
+        .btn-primary:hover {
+            background-color: var(--accent-hover);
+        }
+
+        .btn-secondary {
+            background-color: var(--border);
+            color: var(--text-main);
+        }
+
+        .btn-secondary:hover {
+            background-color: #475569;
+        }
+
+        .toast {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            background-color: var(--success);
+            color: #fff;
+            padding: 0.75rem 1.5rem;
+            border-radius: 4px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+            display: none;
+            animation: fadeIn 0.3s forwards;
+            z-index: 100;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <div>
+            <h1>Gemini Prompt Architect & Control Center</h1>
+            <div class="subtitle">A unified system GUI for engineered prompts</div>
+        </div>
+        <div style="font-size: 0.85rem; color: var(--text-muted); background: var(--bg-secondary); padding: 0.4rem 0.8rem; border-radius: 20px; border: 1px solid var(--border);">
+            🌙 Dark Mode Active (Battery Saving)
+        </div>
+    </header>
+
+    <div class="main-layout">
+        <!-- Control Interface Panel -->
+        <div class="panel">
+            <div class="form-group">
+                <label for="user-core-input" class="section-title">Core Query / Objective</label>
+                <textarea id="user-core-input" rows="4" placeholder="Describe what you want to achieve, find, compile, or build..."></textarea>
+            </div>
+
+            <!-- Target Framework Domains -->
+            <div>
+                <div class="section-title">Domain / Task Framework</div>
+                <div class="form-group">
+                    <select id="task-domain" onchange="updatePrompt()">
+                        <option value="">-- General / Flexible Mode --</option>
+                        <option value="career">Job Search, Resume Optimization & Cover Letters</option>
+                        <option value="housing">Housing Assistance, HUD / USDA Grants & Programs</option>
+                        <option value="shopping">Smart Shopper, Price Matching & Review Comparison</option>
+                        <option value="coding">Software Architecture, Code Refactoring & Testing</option>
+                        <option value="legal">Legal Framework Analysis & Document Audit</option>
+                        <option value="scholar">Academic Research, Literature Review & Citations</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Persona Descriptors Dropdown -->
+            <div>
+                <div class="section-title">System Persona</div>
+                <div class="form-group">
+                    <select id="system-persona" onchange="updatePrompt()">
+                        <option value="">Default AI Assistant</option>
+                        <option value="scholar">Academic Scholar / Critic (Rigorous, structured, cited)</option>
+                        <option value="sme">Subject Matter Expert / Consultant (High density, pragmatic)</option>
+                        <option value="engineer">Senior Systems Engineer (Modular, dry code, edge-cases)</option>
+                        <option value="advocate">Consumer & Housing Advocate (Grant-focused, systemic navigation)</option>
+                        <option value="recruiter">Executive Tech Recruiter (ATS optimization, impactful formatting)</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Core Directives & Constraints Grid -->
+            <div>
+                <div class="section-title">Operational Constraints</div>
+                <div class="grid-options">
+                    <label class="checkbox-card has-tooltip" data-tooltip="Forces Gemini to strictly state when information is unavailable rather than speculating or manufacturing details.">
+                        <input type="checkbox" id="c-hallucination" onchange="updatePrompt()">
+                        <span class="checkbox-label">Zero-Hallucination Mode</span>
+                    </label>
+                    <label class="checkbox-card has-tooltip" data-tooltip="Eliminates all filler preamble like 'Sure, I can help you with that!' or conversational summaries.">
+                        <input type="checkbox" id="c-nofluff" onchange="updatePrompt()">
+                        <span class="checkbox-label">Strip Conversational Fluff</span>
+                    </label>
+                    <label class="checkbox-card has-tooltip" data-tooltip="Forces the model to present strong alternative arguments, risks, or potential failures.">
+                        <input type="checkbox" id="c-balanced" onchange="updatePrompt()">
+                        <span class="checkbox-label">Balanced Counter-Arguments</span>
+                    </label>
+                    <label class="checkbox-card has-tooltip" data-tooltip="Formats information explicitly into highly scannable Markdown charts, matrices, or clean tables.">
+                        <input type="checkbox" id="c-tabular" onchange="updatePrompt()">
+                        <span class="checkbox-label">Tabular Format Preference</span>
+                    </label>
+                </div>
+            </div>
+
+            <!-- Context Parameters Grid -->
+            <div>
+                <div class="section-title">Analysis Depth & Output Tuning</div>
+                <div class="grid-options">
+                    <label class="checkbox-card has-tooltip" data-tooltip="Instructs Gemini to provide step-by-step reasoning or break down complex structural frameworks.">
+                        <input type="checkbox" id="c-chain" onchange="updatePrompt()">
+                        <span class="checkbox-label">Chain-of-Thought (Show Logic)</span>
+                    </label>
+                    <label class="checkbox-card has-tooltip" data-tooltip="Prioritizes checking public data or criteria up through the current timeline limits.">
+                        <input type="checkbox" id="c-verify" onchange="updatePrompt()">
+                        <span class="checkbox-label">Deep Fact Verification</span>
+                    </label>
+                </div>
+            </div>
+        </div>
+
+        <!-- Output & Automation Panel -->
+        <div class="panel" style="justify-content: space-between;">
+            <div class="form-group" style="height: 100%;">
+                <div class="section-title">Engineered Output Preview</div>
+                <div id="prompt-preview" class="preview-box">Your engineered prompt will auto-assemble here as you adjust parameters...</div>
+            </div>
+
+            <div class="btn-group">
+                <button class="btn-secondary" onclick="copyToClipboard()">
+                    📋 Copy Prompt
+                </button>
+                <button class="btn-primary" onclick="executeAutomation()">
+                    🚀 Copy & Go to Gemini
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="toast" class="toast">Prompt copied to clipboard!</div>
+
+<script>
+    const domainPrompts = {
+        career: "FRAMEWORK: Career Optimization & Employment Strategy.\n- Format all output to maximize impact against ATS (Applicant Tracking Systems).\n- Focus heavily on hard metrics, structural accomplishments, action verbs, and alignment to job descriptions.\n- Organize sections with explicit dividers (e.g., Summary, Target Keywords, Metrics, Revisions).",
+        housing: "FRAMEWORK: Public Housing Assistance & Federal Grant Navigation.\n- Cross-examine details against standard HUD criteria, USDA Rural Development programs, eligibility brackets, and local authority processes.\n- Provide dynamic, actionable paths for grant applications, voucher requirements, and home-buying assistance programs.",
+        shopping: "FRAMEWORK: Strategic Consumer Intelligence & Deep Review Audits.\n- Ignore sponsored marketing content and focus solely on critical long-term owner reviews, verified purchase data, and warranty vulnerabilities.\n- Produce an objective cost-to-benefit ratio matrix and highlight hidden flaws or common return vectors.",
+        coding: "FRAMEWORK: Production-Grade Software Engineering.\n- Provide modular, exceptionally documented code blocks adhering strictly to optimal design patterns (SOLID/DRY).\n- Include explicit edge-case coverage, comprehensive error handling, unit test strategies, and architectural complexity analysis (Big O).",
+        legal: "FRAMEWORK: Structural Legal Research & Document Auditing.\n- Break down statutory text, contractual elements, and regulatory guidelines systematically.\n- Highlight conditional liabilities, hidden escape clauses, structural risks, and compliance vectors with complete objectivity.",
+        scholar: "FRAMEWORK: Formal Academic Research & Systematic Analysis.\n- Utilize clear peer-reviewed methodologies, dense terminology, synthesis of literature, and strict intellectual categorization.\n- Identify consensus points, foundational data disparities, and critical methodological limitations."
+    };
+
+    const personaPrompts = {
+        scholar: "ROLE: You will execute this task exclusively as an Academic Scholar and Senior Research Fellow. Maintain a highly analytical, detached tone. Prioritize formal structural frameworks, comprehensive citation patterns, and deep thematic synthesis over casual explanation.",
+        sme: "ROLE: You will operate as a world-class Subject Matter Expert and Principal Consultant in this specific domain. Deliver dense, high-utility insights optimized for executive decision-making. Cut standard baseline explanations; provide immediate strategic value.",
+        engineer: "ROLE: You will act as a Principal Systems Architect and Senior Developer. Think through absolute scalability, rigorous optimization, memory efficiency, and structural durability. Write code that minimizes technical debt and maximizes readability.",
+        advocate: "ROLE: You will act as a dedicated Housing and Public Assistance Program Advocate. Speak with absolute clarity, avoiding obfuscated bureaucratic terminology. Empower the end-user by translating complex public policies into actionable, transparent, step-by-step pathways.",
+        recruiter: "ROLE: You will act as a seasoned Corporate Executive Recruiter and Resume Consultant. View this through the lens of hiring managers and automated filtering software. Focus ruthlessly on keyword density, high-velocity accomplishments, and clean typographic structure."
+    };
+
+    const coreInput = document.getElementById('user-core-input');
+    coreInput.addEventListener('input', updatePrompt);
+
+    function buildPrompt() {
+        let core = coreInput.value.trim();
+        if (!core) return "Your engineered prompt will auto-assemble here as you adjust parameters...";
+
+        let sections = [];
+
+        // 1. System Personas
+        const persona = document.getElementById('system-persona').value;
+        if (persona && personaPrompts[persona]) {
+            sections.push(personaPrompts[persona]);
+        }
+
+        // 2. Domain Frameworks
+        const domain = document.getElementById('task-domain').value;
+        if (domain && domainPrompts[domain]) {
+            sections.push(domainPrompts[domain]);
+        }
+
+        // 3. Operational Constraints Matrix
+        let constraints = [];
+        if (document.getElementById('c-hallucination').checked) {
+            constraints.push("- ZERO-HALLUCINATION REQUIREMENT: You are under strict command to restrict answers only to verified data points. If a fact, grant deadline, link, or specification cannot be directly verified, explicitly state 'Data Unverifiable' rather than speculating or filling gaps.");
+        }
+        if (document.getElementById('c-nofluff').checked) {
+            constraints.push("- NO CONVERSATIONAL FLUFF: Skip all conversational components, introductory pleasantries, and meta-commentary (e.g., do not say 'Sure, I can help you with that' or 'Here is the summary'). Begin directly with the requested output.");
+        }
+        if (document.getElementById('c-balanced').checked) {
+            constraints.push("- COMPREHENSIVE BALANCED ANALYSIS: For every solution provided, you must deliberately outline exactly two counter-arguments, structural liabilities, or alternative risks to maintain complete framework balance.");
+        }
+        if (document.getElementById('c-tabular').checked) {
+            constraints.push("- TABULAR STRUCTURING: Where metrics, requirements, options, or data features are present, format them explicitly inside clear Markdown tables or comparison grids.");
+        }
+        if (document.getElementById('c-chain').checked) {
+            constraints.push("- CHAIN-OF-THOUGHT EXHAUSTION: Before outputting your final recommendation or summary, write out your step-by-step structural logic and parsing process so the intermediate calculations are clear.");
+        }
+        if (document.getElementById('c-verify').checked) {
+            constraints.push("- DENSE FACT VERIFICATION: Audit the core assertions against current real-world metrics, regulatory standards, or product states up through the current 2026 framework.");
+        }
+
+        if (constraints.length > 0) {
+            sections.push("STRICT OPERATIONAL DIRECTIVES:\n" + constraints.join("\n"));
+        }
+
+        // 4. Core Query
+        sections.push("CORE OBJECTIVE / INPUT TASK:\n" + core);
+
+        return sections.join("\n\n");
+    }
+
+    function updatePrompt() {
+        document.getElementById('prompt-preview').innerText = buildPrompt();
+    }
+
+    function copyToClipboard() {
+        const text = buildPrompt();
+        if (text.startsWith("Your engineered prompt")) return false;
+
+        navigator.clipboard.writeText(text).then(() => {
+            const toast = document.getElementById('toast');
+            toast.style.display = 'block';
+            setTimeout(() => { toast.style.display = 'none'; }, 2000);
+        });
+        return true;
+    }
+
+    function executeAutomation() {
+        if (copyToClipboard()) {
+            window.open('https://gemini.google.com', '_blank');
+        } else {
+            alert('Please input a core query first before generating the prompt.');
+        }
+    }
+</script>
+</body>
+</html>

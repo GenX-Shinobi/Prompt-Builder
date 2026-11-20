@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Prompt Builder & Self-Tracking Assistant</title>
+    <style>
+        :root {
+            --bg-color: #f4f6f9;
+            --card-bg: #ffffff;
+            --text-color: #333333;
+            --accent-color: #4f46e5;
+            --border-color: #e5e7eb;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: var(--card-bg);
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
+        }
+        h1 { border-bottom: 2px solid var(--border-color); padding-bottom: 10px; display: flex; justify-content: space-between; align-items: center; margin-top: 0;}
+        .version-tag { font-size: 16px; background: #e0e7ff; color: #4338ca; padding: 4px 12px; border-radius: 9999px; font-weight: bold; }
+        .section { margin-bottom: 25px; padding: 15px; border: 1px solid var(--border-color); border-radius: 8px; background: #fafafa; }
+        textarea { width: 100%; height: 120px; padding: 12px; border: 1px solid var(--border-color); border-radius: 6px; resize: vertical; font-size: 16px; box-sizing: border-box; }
+        .controls-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 15px; margin-top: 15px; }
+        .control-item { background: #fff; padding: 10px; border: 1px solid var(--border-color); border-radius: 6px; }
+        .control-item label { display: block; font-weight: 600; margin-bottom: 5px; font-size: 14px; }
+        select { width: 100%; padding: 8px; border-radius: 4px; border: 1px solid var(--border-color); box-sizing: border-box; }
+        .checkbox-group { max-height: 150px; overflow-y: auto; border: 1px solid var(--border-color); padding: 8px; border-radius: 4px; background: #fff; }
+        .checkbox-item { display: flex; align-items: flex-start; margin-bottom: 8px; font-size: 13px; }
+        .checkbox-item input { margin-right: 8px; margin-top: 3px; }
+        .counter-container { margin-top: 10px; font-weight: bold; display: flex; justify-content: space-between; font-size: 14px; }
+        .warning { color: #dc2626; }
+        .preview-box { background: #1e293b; color: #f8fafc; padding: 15px; white-space: pre-wrap; border-radius: 6px; margin-top: 15px; min-height: 80px; font-size: 14px; font-family: monospace; border: 1px solid #334155; }
+        .btn-group { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 15px; }
+        button { padding: 10px 16px; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; font-size: 14px; transition: background 0.2s; }
+        .btn-ai { background-color: var(--accent-color); color: white; }
+        .btn-ai:hover { background-color: #4338ca; }
+        .btn-copy { background-color: #10b981; color: white; }
+        .btn-copy:hover { background-color: #059669; }
+        .history-table { width: 100%; border-collapse: collapse; margin-top: 10px; background: #fff; font-size: 13px; }
+        .history-table th, .history-table td { border: 1px solid var(--border-color); padding: 8px; text-align: left; }
+        .history-table th { background: #f3f4f6; }
+        .input-inline { padding: 6px; border: 1px solid var(--border-color); border-radius: 4px; font-size: 13px; box-sizing: border-box; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>
+        <span>AI Prompt Builder Hub</span>
+        <span class="version-tag" id="currentVersionDisplay">v2.0.0</span>
+    </h1>
+    
+    <div class="section">
+        <h2>1. Core Prompt Input</h2>
+        <textarea id="corePrompt" placeholder="Type your prompt details or file updates context here..."></textarea>
+        <div style="margin-top:10px; display:flex; gap:15px; font-size:14px;">
+            <label><input type="checkbox" id="preventClipping" checked> Prevent Input Truncation Framework</label>
+            <label><input type="checkbox" id="preventResponseClipping" checked> Output Continuity Safeguard</label>
+        </div>
+        <div class="counter-container">
+            <span id="charCount">Total Built Prompt Length: 0 characters</span>
+            <span id="limitStatus">Within Safe Processing Range</span>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>2. Cheat Sheet Modifiers</h2>
+        <div class="controls-grid">
+            <div class="control-item">
+                <label>1. Hallucination Prevention</label>
+                <div class="checkbox-group">
+                    <div class="checkbox-item"><input type="checkbox" class="prompt-mod" data-text="If you do not know the answer based on verified data, state 'I do not know'. Do not guess or extrapolate."><span>If unknown, state 'I do not know'.</span></div>
+                    <div class="checkbox-item"><input type="checkbox" class="prompt-mod" data-text="Only use information explicitly provided in the text above. Do not introduce outside knowledge or assumptions."><span>Strictly use explicitly provided text.</span></div>
+                    <div class="checkbox-item"><input type="checkbox" class="prompt-mod" data-text="Quote the exact sentence from the source material that supports your claim."><span>Quote source supporting sentences.</span></div>
+                    <div class="checkbox-item"><input type="checkbox" class="prompt-mod" data-text="Review your own output. Identify any potential factual assumptions you made and grade your confidence level from 1-10."><span>Self-correct loop & grade 1-10.</span></div>
+                </div>
+            </div>
+
+            <div class="control-item">
+                <label>2. Research & Fact-Check</label>
+                <div class="checkbox-group">
+                    <div class="checkbox-item"><input type="checkbox" class="prompt-mod" data-text="/search "><span>Prefix with /search</span></div>
+                    <div class="checkbox-item"><input type="checkbox" class="prompt-mod" data-text="Run deep research on the topic and provide a multi-perspective analysis."><span>Deep research multi-agent mode.</span></div>
+                    <div class="checkbox-item"><input type="checkbox" class="prompt-mod" data-text="Provide a counter-argument to the text above and point out any logical fallacies or biases."><span>Logical fallacy/bias check.</span></div>
+                </div>
+            </div>
+
+            <div class="control-item">
+                <label>3. Structural Layout</label>
+                <select id="formatSelect" class="prompt-mod-select">
+                    <option value="">-- No Layout Change --</option>
+                    <option value="Format the output strictly as a Table.">Strict Table Layout</option>
+                    <option value="Format the output strictly as a Bulleted List.">Strict Bulleted List</option>
+                    <option value="Format the output as a copy-pasteable CSV block using standard comma separators.">Copy-pasteable CSV block</option>
+                    <option value="Provide the output in clean, semantic HTML5 code inside a markdown code block.">Clean Semantic HTML5 Code Block</option>
+                    <option value="Write this strictly in standard narrative paragraphs. Do not use bullet points, bold headers, or lists.">Strict Narrative Paragraphs Only</option>
+                </select>
+            </div>
+
+            <div class="control-item">
+                <label>4, 5 & 6. Context & Style</label>
+                <select id="personaSelect" class="prompt-mod-select" style="margin-bottom:8px;">
+                    <option value="">-- Default Persona --</option>
+                    <option value="Act like a panel of experts on this topic, debate this issue and come to a consensus.">Panel of Experts Debate</option>
+                    <option value="Act as a brutal Devil’s Advocate. Tear down this proposal and find every reason it will fail.">Brutal Devil's Advocate</option>
+                </select>
+                <select id="toneSelect" class="prompt-mod-select">
+                    <option value="">-- Default Tone --</option>
+                    <option value="Tone: No-Nonsense / Concise.">No-Nonsense / Concise</option>
+                    <option value="Tone: Jargon-Free.">Jargon-Free Simplified</option>
+                </select>
+            </div>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>3. Code Version Tracking & Continuous Migration Metadata</h2>
+        <p style="font-size:13px; margin:0 0 10px 0; color:#555;">Record modification parameters below when migrating code bases across different AI agents.</p>
+        <div class="controls-grid" style="grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));">
+            <div class="control-item">
+                <label>Target Editing AI Bot</label>
+                <select id="modAI">
+                    <option value="ChatGPT (OpenAI)">ChatGPT (OpenAI)</option>
+                    <option value="Gemini (Google)">Gemini (Google)</option>
+                    <option value="Claude (Anthropic)">Claude (Anthropic)</option>
+                    <option value="Perplexity AI">Perplexity AI</option>
+                    <option value="Grok (xAI)">Grok (xAI)</option>
+                </select>
+            </div>
+            <div class="control-item">
+                <label>Modifications Made</label>
+                <input type="text" id="modChange" class="input-inline" style="width:100%;" placeholder="e.g. Fixed output logic & buttons scope">
+            </div>
+            <div class="control-item">
+                <label>Core Objective Reason</label>
+                <input type="text" id="modWhy" class="input-inline" style="width:100%;" placeholder="e.g. Elements missing and button scopes failed">
+            </div>
+        </div>
+        <div style="margin-top:10px;">
+            <label><input type="checkbox" id="includeHistoryInPrompt"> Inject structural self-tracking migration request into compiled preview stream</label>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>4. Compiled Prompt Preview Window</h2>
+        <div id="promptPreview" class="preview-box"></div>
+        <div style="margin-top:10px;">
+            <button class="btn-copy" onclick="manualCopy()">Copy Built Prompt Securely</button>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>5. Dispatch Hub & Open Assistant Portals</h2>
+        <div class="btn-group">
+            <button class="btn-ai" onclick="copyAndLaunch('https://chatgpt.com')">ChatGPT (OpenAI)</button>
+            <button class="btn-ai" onclick="copyAndLaunch('https://gemini.google.com')">Gemini (Google)</button>
+            <button class="btn-ai" onclick="copyAndLaunch('https://claude.ai')">Claude (Anthropic)</button>
+            <button class="btn-ai" onclick="copyAndLaunch('https://perplexity.ai')">Perplexity AI</button>
+            <button class="btn-ai" onclick="copyAndLaunch('https://grok.com')">Grok (xAI)</button>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>6. Immutable Structural Version History Ledger</h2>
+        <table class="history-table">
+            <thead>
+                <tr>
+                    <th>Version</th>
+                    <th>Modifying Actor</th>
+                    <th>Logged Change Specification</th>
+                    <th>Core Objective Context (Why)</th>
+                </tr>
+            </thead>
+            <tbody id="historyLogBody">
+                <tr>
+                    <td><b>v2.0.0</b></td>
+                    <td>Claude (Anthropic)</td>
+                    <td>Re-architected prompt rendering pipeline using textContent injection. Fixed platform integration click bindings and injected self-tracking development logs.</td>
+                    <td>User reported broken prompt generation window outputs, inactive dashboard button bindings, and requested multi-agent auditing tools.</td>
+                </tr>
+                <tr>
+                    <td><b>v1.0.0</b></td>
+                    <td>Initial System Base</td>
+                    <td>Assembled preliminary layout containing core cheat sheet selections and copy/paste handlers.</td>
+                    <td>Baseline implementation.</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<script>
+    const corePromptEl = document.getElementById('corePrompt');
+    const preventClippingEl = document.getElementById('preventClipping');
+    const preventResponseClippingEl = document.getElementById('preventResponseClipping');
+    const promptPreviewEl = document.getElementById('promptPreview');
+    const charCountEl = document.getElementById('charCount');
+    const limitStatusEl = document.getElementById('limitStatus');
+    const modAIEl = document.getElementById('modAI');
+    const modChangeEl = document.getElementById('modChange');
+    const modWhyEl = document.getElementById('modWhy');
+    const includeHistoryInPromptEl = document.getElementById('includeHistoryInPrompt');
+    const versionStr = document.getElementById('currentVersionDisplay').textContent;
+
+    function runUpdate() {
+        let prefixes = [];
+        let systemCommands = [];
+        let suffixes = [];
+
+        document.querySelectorAll('.prompt-mod:checked').forEach(item => {
+            let val = item.getAttribute('data-text');
+            if (val) {
+                if (val.startsWith('/')) prefixes.push(val.trim());
+                else systemCommands.push(val);
+            }
+        });
+
+        const fmt = document.getElementById('formatSelect').value;
+        if (fmt) systemCommands.push(fmt);
+
+        const pers = document.getElementById('personaSelect').value;
+        if (pers) systemCommands.push(pers);
+
+        const tone = document.getElementById('toneSelect').value;
+        if (tone) suffixes.push(tone);
+
+        let baseText = corePromptEl.value.trim();
+
+        if (preventClippingEl.checked) {
+            prefixes.push("[SYSTEM UPDATE: The upcoming package contains user parameters. Process fully without truncating inputs or clipping final sequence bounds.]");
+        }
+        if (preventResponseClippingEl.checked) {
+            suffixes.push("CRITICAL SAFEGUARD: If your complete response is long or close to exhausting output tokens, stop at a logical milestone and state 'CONTINUE_REQUIRED' so that the remaining output is not clipped or lost mid-sentence.");
+        }
+
+        if (includeHistoryInPromptEl && includeHistoryInPromptEl.checked) {
+            let metaBlock = "[IMMUTABLE TRACKING UPDATE TASK]\n" +
+                            "- Base Working Version: " + versionStr + "\n" +
+                            "- Instructing Actor: " + modAIEl.value + "\n" +
+                            "- Scope Of Required Modification: " + (modChangeEl.value.trim() || "[Not set]") + "\n" +
+                            "- Context Objective: " + (modWhyEl.value.trim() || "[Not set]") + "\n\n" +
+                            "TASK DIRECTION FOR RECEIVING AI: Modify the source code of this file. Increment the minor version number shown in 'currentVersionDisplay' and append a new immutable <tr> entry into 'historyLogBody' preserving prior history log architecture.";
+            systemCommands.unshift(metaBlock);
+        }
+
+        let compiled = [];
+        if (prefixes.length > 0) compiled.push(prefixes.join(" "));
+        if (systemCommands.length > 0) compiled.push("SYSTEM PROTOCOLS:\n" + systemCommands.map(c => "- " + c).join("\n"));
+        if (baseText) compiled.push("USER PROMPT TARGETS:\n" + baseText);
+        if (suffixes.length > 0) compiled.push("EMISSION RULES:\n" + suffixes.join("\n"));
+
+        let outText = compiled.join("\n\n");
+        promptPreviewEl.textContent = outText;
+
+        charCountEl.textContent = "Total Built Prompt Length: " + outText.length + " characters";
+        if (outText.length > 24000) {
+            limitStatusEl.textContent = "Warning: Exceeding safe prompt constraints.";
+            limitStatusEl.className = "warning";
+        } else {
+            limitStatusEl.textContent = "Within Safe Processing Range";
+            limitStatusEl.className = "";
+        }
+    }
+
+    const bindTargets = [corePromptEl, preventClippingEl, preventResponseClippingEl, modAIEl, modChangeEl, modWhyEl, includeHistoryInPromptEl];
+    bindTargets.forEach(el => {
+        if(el) {
+            el.addEventListener('input', runUpdate);
+            el.addEventListener('change', runUpdate);
+        }
+    });
+    document.querySelectorAll('.prompt-mod, .prompt-mod-select').forEach(el => {
+        el.addEventListener('change', runUpdate);
+    });
+
+    function manualCopy() {
+        let txt = promptPreviewEl.textContent;
+        if (!txt.trim()) {
+            alert("The output preview block is completely empty.");
+            return;
+        }
+        navigator.clipboard.writeText(txt).then(() => {
+            alert("Prompt payload successfully copied to clipboard.");
+        }).catch(() => {
+            alert("Clipboard restricted. Please manually highlight and copy text from the dark code window container.");
+        });
+    }
+
+    function copyAndLaunch(url) {
+        let txt = promptPreviewEl.textContent;
+        if (!txt.trim()) {
+            alert("Construct a prompt preview before calling the destination assistant hub.");
+            return;
+        }
+        navigator.clipboard.writeText(txt).then(() => {
+            window.open(url, '_blank');
+        }).catch(() => {
+            alert("Auto-injection blocked. Manually copy the dark preview container content first, then click OK to travel to your workspace portal.");
+            window.open(url, '_blank');
+        });
+    }
+
+    runUpdate();
+</script>
+
+</body>
+</html>
