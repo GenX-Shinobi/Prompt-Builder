@@ -11,7 +11,7 @@
 
 ## Resume phrase
 
-> **Resume AI Prompt Builder Hub — v5.4.0 release closeout.** Read `PROJECT_CONTROL.md`, `docs/CURRENT_STATUS.md`, `ROADMAP.md`, `docs/AI_WORK_RULES.md`, `docs/REGRESSION_CHECKLIST.md` and `docs/CLAUDE_TASK.md`. Check live GitHub and the actual Claude workspace before acting. The immediate task is the remaining v5.4.0 catalogue-diff reviewability fix and verified test execution. Do not modify main, merge PR #1, publish, or start v5.5.0. Restore the release gates and tell me the single next action.
+> **Resume AI Prompt Builder Hub — v5.4.0 final verification.** Read `PROJECT_CONTROL.md`, `docs/CURRENT_STATUS.md`, `ROADMAP.md`, `docs/AI_WORK_RULES.md`, `docs/REGRESSION_CHECKLIST.md` and `docs/CLAUDE_TASK.md`. Check live GitHub and the actual Claude workspace before acting. The catalogue-diff implementation is already on `release/v5.4.0` at commit `5c41741`. The immediate task is to verify expandable added/removed record interactions and obtain actual results from all three documented Playwright suites. Do not modify `main`, merge PR #1, publish, or start v5.5.0. Restore the release gates and tell me the single next action.
 
 ## Mission and product principles
 
@@ -25,40 +25,33 @@ Build a free-first, chatbot-independent prompt builder that helps nontechnical p
 
 ## Verified project state at 2026-11-20
 
-- `main`: `b247aec8a1ee279b71f6aedd8fbaf4d908c22d5f` (merge commit for PR #2).
-- `release/v5.4.0`: `ce1ec19c9b8f8a8ad618d50a5a9f33d3f0618fb2` (`fix: v5.4.0 corrective pass`).
-- `main` is one merge commit ahead of release branch, but GitHub comparison reports no file differences; release branch content equals the corrective commit.
-- v5.4.0 source declares version 5.4.0. Embedded catalogue equals `catalog.json`: 9 chatbots, 81 commands, revision 1.
+- `main`: `b247aec8a1ee279b71f6aedd8fbaf4d908c22d5f`.
+- Catalogue-diff corrective commit: `5c41741ed3b75870e40bb8e3eef4a8b12a538521` on `release/v5.4.0`. The release branch's `index.html` and `tests/browser_corrective.js` match that commit's file blobs.
+- v5.4.0 source declares version 5.4.0. The catalogue baseline is 9 chatbots, 81 commands, revision 1.
 - PR #2 is merged, but that merge is not product-owner release approval.
-- PR #1 (https://github.com/GenX-Shinobi/Prompt-Builder/pull/1) remains open/draft on `docs/project-control-baseline`. Do not merge without explicit approval. Its README describes v5.3.1 and must be reconciled carefully with the v5.4.0 README; do not overwrite either.
-- No newer Claude corrective commit was found on the release branch at last check. Re-check before assigning work.
-- GitHub workflow runs/statuses and PR review submissions were not available for the corrective commit.
+- PR #1 (https://github.com/GenX-Shinobi/Prompt-Builder/pull/1) remains open/draft on `docs/project-control-baseline`. Do not merge without explicit approval. Its README is based on v5.3.1 and must be reconciled carefully with the v5.4.0 README; do not overwrite either.
+- Claude reported 160 test passes across the three suites. This is not yet independently reproduced; the current Claude task requires fresh execution evidence and explicit tests of the expandable detail interaction.
+- The owner performed a safe, limited local browser preview of one changed ChatGPT summary and canceled without installing. No claim is made that the owner tested added/removed records.
 
 ## Strict v5.4.0 release sequence
 
-1. Complete remaining v5.4.0 corrective work.
-2. Independently review code and actual test evidence.
-3. Product owner completes real-browser/device acceptance testing.
+1. Verify added/removed catalogue record expansion and actual execution of all three documented test suites.
+2. Independently review code and test evidence.
+3. Product owner completes only meaningful real-world usability/acceptance checks.
 4. Reconcile release docs and record acceptance.
 5. Owner explicitly approves release.
 6. Only then resume v5.5.0 planning/implementation.
 
-### Current blocker
-
-The catalogue diff is now schema-driven and includes the previously omitted installable fields. However, some changed human-facing fields only say “changed” without showing before/after text. The installation review should let users understand meaningful changes before approving them. The 500-line cap also needs transparent complete-review handling.
-
-The status wording and multipart protocol appear corrected in source, but automated execution is not independently verified. See [CURRENT_STATUS.md](docs/CURRENT_STATUS.md).
-
 ### Active task
 
 Canonical Claude brief: [docs/CLAUDE_TASK.md](docs/CLAUDE_TASK.md)  
-Claude Code shorthand: `/pb-v54` (defined in `.claude/commands/pb-v54.md`).
+Claude Code shorthand: `/pb-v54` (defined by `.claude/commands/pb-v54.md`).
 
-The task is limited to catalogue diff reviewability, regression coverage, running all three documented Playwright suites, and pushing a focused commit to the existing `release/v5.4.0` branch. No changes to `main`, no merge, no PR, no publication, and no v5.5.0.
+This task is verification-first. Claude should add test assertions if interaction coverage is missing, and change production code only for a reproduced defect. No changes to `main`, no merge, no publication, and no v5.5.0.
 
 ## Other unfinished work
 
-PR #1 is the draft project-control documentation PR. This branch is being updated with the current handoff and Claude task instructions, but the PR remains unmerged. Preserve its work. README reconciliation is deliberately deferred until after v5.4.0 acceptance to avoid clobbering release documentation.
+PR #1 is the draft project-control documentation PR. Preserve its work. README reconciliation is deliberately deferred until after v5.4.0 acceptance to avoid clobbering release documentation.
 
 ## Working method and authority
 
@@ -69,6 +62,7 @@ PR #1 is the draft project-control documentation PR. This branch is being update
 - Claude Code implements bounded tasks and reports exact commits, files and test evidence.
 - ChatGPT independently reviews important claims and maintains project continuity.
 - Never claim tests or browser checks passed unless actually run.
+- Do not assign the product owner developer-level fixture creation or repetitive test execution when Claude or automation can safely perform it.
 - No direct default-branch changes, merges, PR creation, publishing or release without owner approval.
 - Capture extra ideas in [IDEA_INBOX.md](docs/IDEA_INBOX.md); do not expand active scope.
 
