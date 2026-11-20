@@ -54,7 +54,15 @@ These rules apply to ChatGPT, Claude, Claude Code and any other AI-assisted cont
 - If a requested change conflicts with the architecture, free-first philosophy, reliability or accessibility, explain the trade-off and propose a smaller alternative.
 - Ask the owner when product intent or an irreversible decision is unclear.
 
-## 7. Definition of done
+## 7. Repository task briefs and Claude Code shorthand
+
+- For the current v5.4.0 closeout, the canonical, owner-approved bounded task is `docs/CLAUDE_TASK.md`.
+- In Claude Code, invoke the repository slash command `/pb-v54`, defined by `.claude/commands/pb-v54.md`. It must read the canonical task file and execute it; it is not permission to ignore newer owner instructions.
+- Always re-check the live branch head and local workspace before executing a saved task brief. Treat recorded SHAs as historical checkpoints, not overwrite targets.
+- If the task file conflicts with a newer owner instruction or live repository state, stop and ask rather than guessing.
+- Do not treat task-file presence as approval to merge, publish, deploy, or modify `main`.
+
+## 8. Definition of done
 
 A task is not complete merely because code was generated. It is complete when:
 - The change is saved on the intended branch.
