@@ -356,6 +356,104 @@ const ok = (c, m) => { if (c) { pass++; console.log('PASS ' + m); } else { fail+
     await q.context().close();
   }
 
+  /* ============ A5: every schema field of every added/removed record, collapsed-by-default, mouse + keyboard (Tab, Enter, Space), gate ============ */
+  {
+    const q = await open();
+    const base = await q.evaluate(() => JSON.parse(JSON.stringify(cleanCatalog(BUILTIN_CATALOG))));
+    const FIELDS = await q.evaluate(() => ({ bot: CATALOG_FIELDS.bot.slice(), cmd: CATALOG_FIELDS.cmd.slice(), label: FIELD_LABEL }));
+    const clone = o => JSON.parse(JSON.stringify(o));
+    const strOf = x => x === undefined ? 'none' : (typeof x === 'string' ? x : JSON.stringify(x));
+    const openDiff = async cat => { await q.evaluate(() => { document.getElementById('catImportBox').hidden = false; }); await q.fill('#catImportText', JSON.stringify(cat)); await q.click('#catImportGo'); };
+    const rowFor = prefix => q.locator('#catDiffList > li').filter({ has: q.locator('summary', { hasText: prefix }) }).first();
+    /* the record shown for a row: [{label, value}] read from what is on screen */
+    const shown = async li => li.locator('details .fullval > div').evaluateAll(ds => ds.map(d => ({ label: d.querySelector('b').textContent.replace(/:$/, ''), value: d.querySelector('pre').textContent })));
+    /* checks one record: starts collapsed and hidden; Enter/Space/mouse open+close; then every schema field is visible with the exact value */
+    const checkRecord = async (prefix, obj, keys, extra) => {
+      const li = rowFor(prefix), det = li.locator('details'), sum = li.locator('summary'); const problems = [];
+      if (await li.count() === 0) return ['no row: ' + prefix];
+      const want = keys.map(k => ({ label: FIELDS.label[k] || k, value: strOf(obj[k]) })).concat(extra || []);
+      if (await det.evaluate(d => d.open)) problems.push('starts open');
+      if (await li.locator('details pre:visible').count() !== 0) problems.push('values visible while collapsed');
+      await sum.click(); if (!(await det.evaluate(d => d.open))) problems.push('mouse click did not open');
+      await sum.click(); if (await det.evaluate(d => d.open)) problems.push('second mouse click did not close');
+      await sum.focus(); await q.keyboard.press('Enter'); if (!(await det.evaluate(d => d.open))) problems.push('Enter did not open');
+      await q.keyboard.press('Enter'); if (await det.evaluate(d => d.open)) problems.push('Enter did not close');
+      await q.keyboard.press('Space'); if (!(await det.evaluate(d => d.open))) problems.push('Space did not open');
+      const rec = await shown(li), visible = await li.locator('details pre').evaluateAll(ps => ps.every(p => p.getClientRects().length > 0));
+      if (!visible) problems.push('not all values visible when open');
+      want.forEach(w => { if (!rec.some(r => r.label === w.label && r.value === w.value)) problems.push('missing ' + w.label + '=' + w.value.slice(0, 30)); });
+      await q.keyboard.press('Space'); if (await det.evaluate(d => d.open)) problems.push('Space did not close');
+      return problems;
+    };
+    const full = (l, extra) => Object.assign({ g: 'Acme Group', k: 'ask', tier: 'account', t: 'T-' + l, l: l, w: 'W-' + l, d: 'D-' + l, f: ['F1-' + l, 'F2-' + l], v: '2026-10-05', st: 'conflicting' }, extra || {});
+
+    // added command: EVERY field in CATALOG_FIELDS.cmd
+    let c = clone(base); c.rev = 2; const addC = full('AllFieldsAdded'); c.BOT_CMDS.Claude.push(addC);
+    await openDiff(c);
+    let pr = await checkRecord('+ Claude: AllFieldsAdded', addC, FIELDS.cmd);
+    ok(pr.length === 0 && FIELDS.cmd.length >= 10, 'A5: added command - all ' + FIELDS.cmd.length + ' schema fields (' + FIELDS.cmd.join(',') + ') are shown with exact values; collapsed first; mouse, Enter and Space toggle it ' + pr.join('; '));
+
+    // removed command: EVERY field, including one that has fill-in boxes
+    const withF = base.BOT_CMDS.ChatGPT.findIndex(p => p.f && p.f.length), goneC = base.BOT_CMDS.ChatGPT[withF];
+    c = clone(base); c.rev = 2; c.BOT_CMDS.ChatGPT.splice(withF, 1);
+    await openDiff(c);
+    pr = await checkRecord('- ChatGPT: ' + goneC.l, goneC, FIELDS.cmd);
+    ok(withF >= 0 && pr.length === 0, 'A5: removed command (with fill-in boxes: ' + goneC.l + ') - all schema fields shown with their previous values ' + pr.join('; '));
+
+    // added chatbot: every CATALOG_FIELDS.bot field + notes + every command with every field
+    const nb = clone(base.CHATBOTS[1]); Object.assign(nb, { name: 'Fieldy AI', maker: 'FIELDY-MAKER', url: 'https://fieldy.example/', color: '#abcdef', limit: 54321, blurb: 'FB', brief: 'FBR', best: 'FBEST', free: 'FFREE', v: '2026-10-06', st: 'doc' });
+    const nCmds = [full('FC1'), full('FC2', { f: undefined, tier: 'paid', k: 'ui' }), full('FC3', { st: 'unverified' })]; delete nCmds[1].f;
+    c = clone(base); c.rev = 2; c.CHATBOTS.push(nb); c.BOT_NOTES['Fieldy AI'] = 'FIELDY-NOTES'; c.BOT_CMDS['Fieldy AI'] = nCmds;
+    ok((await q.evaluate(x => validateCatalog(x).length, c)) === 0, 'A5: (setup) added-chatbot catalog is valid');
+    await openDiff(c);
+    pr = await checkRecord('+ New chatbot: Fieldy AI', nb, FIELDS.bot, [{ label: 'notes', value: 'FIELDY-NOTES' }]);
+    ok(pr.length === 0 && FIELDS.bot.length >= 11, 'A5: added chatbot - all ' + FIELDS.bot.length + ' card fields (' + FIELDS.bot.join(',') + ') plus notes are shown ' + pr.join('; '));
+    const badAdd = []; for (const p of nCmds) { const r = await checkRecord('+ Fieldy AI: ' + p.l, p, FIELDS.cmd); if (r.length) badAdd.push(p.l + ': ' + r.join(', ')); }
+    ok(badAdd.length === 0, 'A5: every command of the added chatbot (' + nCmds.length + ', one without fill-in boxes) shows all ' + FIELDS.cmd.length + ' fields ' + badAdd.join(' | '));
+
+    // removed chatbot: card + notes + every removed command, all fields
+    const last = base.CHATBOTS[base.CHATBOTS.length - 1], ln = last.name, lc = base.BOT_CMDS[ln];
+    c = clone(base); c.rev = 2; c.CHATBOTS.pop(); delete c.BOT_NOTES[ln]; delete c.BOT_CMDS[ln];
+    await openDiff(c);
+    pr = await checkRecord('- Removed chatbot: ' + ln, last, FIELDS.bot, [{ label: 'notes', value: strOf(base.BOT_NOTES[ln]) }]);
+    ok(pr.length === 0, 'A5: removed chatbot (' + ln + ') - all card fields and notes shown with previous values ' + pr.join('; '));
+    const badRem = []; for (const p of lc) { const r = await checkRecord('- ' + ln + ': ' + p.l, p, FIELDS.cmd); if (r.length) badRem.push(p.l + ': ' + r.join(', ')); }
+    ok(lc.length > 0 && badRem.length === 0, 'A5: all ' + lc.length + ' commands of the removed chatbot show every schema field ' + badRem.join(' | '));
+
+    // keyboard: Tab reaches the first record from the Validate button, then moves record to record, Shift+Tab goes back
+    await q.focus('#catImportGo'); await q.keyboard.press('Tab');
+    const t1 = await q.evaluate(() => { const a = document.activeElement; return { tag: a.tagName, inList: !!a.closest('#catDiffList'), text: a.textContent.slice(0, 40) }; });
+    await q.keyboard.press('Tab');
+    const t2 = await q.evaluate(() => { const a = document.activeElement; return { tag: a.tagName, inList: !!a.closest('#catDiffList'), text: a.textContent.slice(0, 40) }; });
+    await q.keyboard.press('Shift+Tab');
+    const t3 = await q.evaluate(() => document.activeElement.textContent.slice(0, 40));
+    ok(t1.tag === 'SUMMARY' && t1.inList && t2.tag === 'SUMMARY' && t2.text !== t1.text && t3 === t1.text, 'A5: keyboard - Tab goes from "Validate" to the first record, then record to record; Shift+Tab goes back (' + t1.text.trim() + ' -> ' + t2.text.trim() + ')');
+
+    // hostile markup in an expanded ADDED record: the record text equals the hostile string exactly; nothing is created or run
+    const HOST = '<img src=x onerror="window.__pwn5=1"><script>window.__pwn5=2<\/script><b>bold</b>';
+    c = clone(base); c.rev = 2; c.BOT_CMDS.ChatGPT.push(full('HostileFive', { t: HOST, d: HOST, w: HOST, l: 'HostileFive' }));
+    await openDiff(c); await rowFor('+ ChatGPT: HostileFive').locator('summary').click();
+    const hv = await shown(rowFor('+ ChatGPT: HostileFive'));
+    ok(hv.filter(r => r.value === HOST).length === 3 && (await q.$$('#catDiff img')).length === 0 && (await q.$$('#catDiff script')).length === 0 && (await q.evaluate(() => window.__pwn5)) === undefined, 'A5: hostile markup in an opened added record is shown as exact literal text; no image or script is created and nothing runs');
+
+    // gate in the live UI: forced clicks, keyboard activation and direct calls store nothing; "Show all" then a real install works
+    const big = clone(base); big.rev = 4;
+    for (const n of Object.keys(big.BOT_CMDS)) for (let i = 0; i < 70; i++) big.BOT_CMDS[n].push(full('G' + n.replace(/\W/g, '') + i));
+    await openDiff(big);
+    const tot = +(await q.textContent('#catDiff')).match(/\((\d+) in total\)/)[1];
+    await q.locator('#catInstallBtn').click({ force: true, timeout: 2000 }).catch(() => {});
+    await q.focus('#catInstallBtn').catch(() => {}); await q.keyboard.press('Enter'); await q.keyboard.press('Space');
+    await q.evaluate(() => installCatalog());
+    const early = await q.evaluate(() => ({ stored: localStorage.getItem('pb-catalog-v1'), rev: CATALOG.rev }));
+    ok(tot > 500 && early.stored === null && early.rev === 1 && /Showing 500 of/.test(await q.textContent('#catShownCount')), 'A5: gate - with ' + tot + ' changes, forced click, Enter, Space and a direct call all fail to install while only 500 are shown');
+    await q.click('#catShowAllBtn');
+    const rows = (await q.$$('#catDiffList > li')).length;
+    await Promise.all([q.waitForEvent('load'), q.click('#catInstallBtn')]); await q.waitForTimeout(400);
+    const after = await q.evaluate(() => ({ stored: !!localStorage.getItem('pb-catalog-v1'), rev: CATALOG.rev, src: CATALOG_SRC }));
+    ok(rows === tot && after.stored && after.rev === 4 && after.src === 'saved', 'A5: gate - after "Show all" all ' + rows + ' changes are listed and Install then works (rev 4 saved)');
+    await q.context().close();
+  }
+
   /* =============================== B: status wording =============================== */
   const chipsInDom = async page => {
     let n = 0;
