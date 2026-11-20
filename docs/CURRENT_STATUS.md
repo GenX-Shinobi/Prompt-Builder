@@ -15,7 +15,7 @@
 - `release/v5.4.0` points to `ce1ec19c9b8f8a8ad618d50a5a9f33d3f0618fb2` (`fix: v5.4.0 corrective pass`).
 - Comparing `main` (base) with `release/v5.4.0` (head) reports release branch one merge commit behind, zero commits ahead, and no file differences. The release branch is identical in content to the corrective commit.
 - PR #2 (v5.4.0) is closed and merged. This is not a release approval.
-- PR #1 (project control documentation) remains open and draft: https://github.com/GenX-Shinobi/Prompt-Builder/pull/1. Its branch is `docs/project-control-baseline`, head `5ff33b354db7e13e24f747960839be5d2e1714b7` at the time checked.
+- PR #1 (project control documentation) remains open and draft: https://github.com/GenX-Shinobi/Prompt-Builder/pull/1. Its branch is `docs/project-control-baseline`. This session added the Claude task brief, slash-command definition and refreshed handoff/checklist files to that branch; always query its current head rather than relying on an embedded SHA.
 - Do not merge PR #1 without explicit owner approval. Its README is based on v5.3.1 and may conflict with the v5.4.0 README; leave README reconciliation until the release documentation can be handled deliberately.
 - No GitHub Actions workflow runs or combined commit status checks were returned for corrective commit `ce1ec19...`. PR #2 had no review submissions recorded.
 - No newer Claude corrective commit was found on `release/v5.4.0` at this check.
