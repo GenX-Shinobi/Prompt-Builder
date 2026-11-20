@@ -1,108 +1,87 @@
 # AI Prompt Builder Hub — Project Control
 
-> **This is the continuity file.** At the start of a new ChatGPT or coding-agent session, read this file first, then the linked supporting documents and the live repository state. Update it whenever an important decision, task, status, or handoff changes.
+> Central continuity and decision file. At the start of a new ChatGPT or coding-agent session, read this file and the linked project documents, then verify live GitHub and relevant local workspace state.
 
 **Repository:** https://github.com/GenX-Shinobi/Prompt-Builder  
 **Application:** AI Prompt Builder Hub  
-**Current version on `main` at last check:** 5.3.1  
-**Last repository check:** 2026-11-20  
-**Project owner:** GenX-Shinobi  
-**Project management:** ChatGPT, working with the owner's direction and final approval
+**Project owner:** repository owner; final product and release approval  
+**Project management/review:** ChatGPT  
+**Implementation engineer:** Claude Code  
+**Last checked:** 2026-11-20
 
-## Resume this project
+## Resume phrase
 
-Use this instruction in any new conversation:
+> **Resume AI Prompt Builder Hub — v5.4.0 release closeout.** Read `PROJECT_CONTROL.md`, `docs/CURRENT_STATUS.md`, `ROADMAP.md`, `docs/AI_WORK_RULES.md`, `docs/REGRESSION_CHECKLIST.md` and `docs/CLAUDE_TASK.md`. Check live GitHub and the actual Claude workspace before acting. The immediate task is the remaining v5.4.0 catalogue-diff reviewability fix and verified test execution. Do not modify main, merge PR #1, publish, or start v5.5.0. Restore the release gates and tell me the single next action.
 
-> Resume AI Prompt Builder Hub. Read `PROJECT_CONTROL.md` and the supporting project files from GitHub. Check the actual repository state, branches, recent commits and any open pull requests before making recommendations. Restore the current priorities, active work, decisions and next action. Do not assume an earlier chat summary is more current than GitHub. Preserve unfinished work and ask before overwriting or merging anything.
+## Mission and product principles
 
-## Mission
+Build a free-first, chatbot-independent prompt builder that helps nontechnical people turn an everyday goal into a useful prompt and transfer it reliably. Preserve the open-source, accessible, standalone single-file HTML architecture unless the owner explicitly approves a change.
 
-Help ordinary people turn unclear thoughts, questions and goals into useful prompts for whichever AI chatbot they can access. Make it easier to choose an appropriate chatbot, explain what they need, prepare supporting context, and transfer the finished prompt reliably.
+- Free chatbot tiers are the design baseline; paid plans are never a prerequisite.
+- Avoid provider lock-in and explain changing capabilities honestly.
+- Keep the first-use path understandable to ordinary people.
+- Keep the scope centred on prompt building and lightweight context transfer, not a full repository/context-management platform.
+- Owner has final say on product direction, merges and releases.
 
-The project began with a practical need: finding the right AI for a task and constructing a prompt that gets a useful result. It is not limited to software development. Everyday problems, learning, writing, research, decisions, hobbies and gameplay roadblocks (including the owner's use while playing Grounded 2 on PlayStation 5) are valid examples.
+## Verified project state at 2026-11-20
 
-## Non-negotiable principles
+- `main`: `b247aec8a1ee279b71f6aedd8fbaf4d908c22d5f` (merge commit for PR #2).
+- `release/v5.4.0`: `ce1ec19c9b8f8a8ad618d50a5a9f33d3f0618fb2` (`fix: v5.4.0 corrective pass`).
+- `main` is one merge commit ahead of release branch, but GitHub comparison reports no file differences; release branch content equals the corrective commit.
+- v5.4.0 source declares version 5.4.0. Embedded catalogue equals `catalog.json`: 9 chatbots, 81 commands, revision 1.
+- PR #2 is merged, but that merge is not product-owner release approval.
+- PR #1 (https://github.com/GenX-Shinobi/Prompt-Builder/pull/1) remains open/draft on `docs/project-control-baseline`. Do not merge without explicit approval. Its README describes v5.3.1 and must be reconciled carefully with the v5.4.0 README; do not overwrite either.
+- No newer Claude corrective commit was found on the release branch at last check. Re-check before assigning work.
+- GitHub workflow runs/statuses and PR review submissions were not available for the corrective commit.
 
-1. **Free-use first.** The free chatbot experience is the design baseline. Paid plans may be described where useful, but must never be required to use, understand, contribute to or benefit from this project.
-2. **Chatbot-independent.** Help people choose and use the AI that fits their task; do not lock the project to one provider.
-3. **Accessible to non-coders.** Plain language, guided workflows and AI-assisted editing. Users should not need to hand-edit JSON or understand the source code.
-4. **Open, portable and self-contained.** Preserve the zero-dependency, single-file HTML application unless the owner explicitly approves a change to that architecture.
-5. **Useful before clever.** Prioritise clear outcomes, reliability and reduced friction over feature count.
-6. **Honest about changing AI services.** Label access requirements and uncertainty. Record verification dates and credible sources; never present estimates or rumours as guarantees.
-7. **Owner has final say.** ChatGPT manages, organises, recommends and reviews. The owner decides product direction and approves releases.
+## Strict v5.4.0 release sequence
 
-## Product definition and scope
+1. Complete remaining v5.4.0 corrective work.
+2. Independently review code and actual test evidence.
+3. Product owner completes real-browser/device acceptance testing.
+4. Reconcile release docs and record acceptance.
+5. Owner explicitly approves release.
+6. Only then resume v5.5.0 planning/implementation.
 
-The product is primarily a **prompt builder** with lightweight context preparation and transfer management.
+### Current blocker
 
-- Core: chatbot choice, bot-specific commands, universal Prompt Craft, prompt compilation and task shaping.
-- Supporting layer: source text and attachments, size awareness, prompt splitting, copying/launching, local presets and Dev Bay handoff.
-- Not the current goal: a full folder/repository-scale context packer, knowledge-base manager or complex multi-file platform.
-- Keep the first-use experience obvious: a new user should be able to open the app, understand what to do, create a useful prompt and take it to an AI without assistance.
+The catalogue diff is now schema-driven and includes the previously omitted installable fields. However, some changed human-facing fields only say “changed” without showing before/after text. The installation review should let users understand meaningful changes before approving them. The 500-line cap also needs transparent complete-review handling.
 
-## Current known baseline
+The status wording and multipart protocol appear corrected in source, but automated execution is not independently verified. See [CURRENT_STATUS.md](docs/CURRENT_STATUS.md).
 
-The default branch was checked on 2026-11-20:
-- `main` points to application version **5.3.1**.
-- The app is a standalone `index.html`; no `catalog.json` was present on `main` at that check.
-- The existing app includes nine chatbot choices, Bot Commands and Prompt Craft, prompt compilation, character/word/token estimates, splitting, attachments, local presets, Dev Bay, themes and layout customisation.
-- The root README was behind the application and still described v5.2.0; a documentation update is being proposed separately.
-- The only branch visible during that check was `main`. Claude's possible local or unsaved v5.4.0 work cannot be inferred from GitHub. **Inspect Claude's actual workspace and any newly created branches/commits before restarting or replacing that work.**
+### Active task
 
-These are a dated snapshot, not a claim that no newer local work exists. Always re-check GitHub before acting.
+Canonical Claude brief: [docs/CLAUDE_TASK.md](docs/CLAUDE_TASK.md)  
+Claude Code shorthand: `/pb-v54` (defined in `.claude/commands/pb-v54.md`).
 
-## Active work and immediate priorities
+The task is limited to catalogue diff reviewability, regression coverage, running all three documented Playwright suites, and pushing a focused commit to the existing `release/v5.4.0` branch. No changes to `main`, no merge, no PR, no publication, and no v5.5.0.
 
-### Active: recover and stabilise v5.4.0
+## Other unfinished work
 
-The planned v5.4.0 work concerns separating chatbot catalogue data into `catalog.json`, keeping an embedded offline fallback, freshness metadata, safe catalog validation/import, and preset/catalog export-import improvements. This is a plan, not a verified implementation.
+PR #1 is the draft project-control documentation PR. This branch is being updated with the current handoff and Claude task instructions, but the PR remains unmerged. Preserve its work. README reconciliation is deliberately deferred until after v5.4.0 acceptance to avoid clobbering release documentation.
 
-Before continuing:
-1. Inspect the actual Claude workspace, branch, current files and uncommitted changes.
-2. Compare that state with the live repository and preserve all useful work.
-3. Identify exactly what is complete, incomplete and tested.
-4. Agree the safe source branch and next bounded task.
-5. Do not regenerate v5.4.0 from an old v5.2.0/v5.3.0 snapshot or overwrite unfinished changes.
+## Working method and authority
 
-### After v5.4.0 is recovered
+- One primary implementation task at a time.
+- Inspect GitHub and local workspace before changes; do not rely on stale chat summaries.
+- Preserve newer work; never force-push or overwrite unrelated changes.
+- Use dedicated branches and small reviewable commits.
+- Claude Code implements bounded tasks and reports exact commits, files and test evidence.
+- ChatGPT independently reviews important claims and maintains project continuity.
+- Never claim tests or browser checks passed unless actually run.
+- No direct default-branch changes, merges, PR creation, publishing or release without owner approval.
+- Capture extra ideas in [IDEA_INBOX.md](docs/IDEA_INBOX.md); do not expand active scope.
 
-- Complete the smallest reliable v5.4.0 scope.
-- Verify the app online, offline and as a downloaded `file://` HTML file where relevant.
-- Review chatbot command accuracy and freshness labels.
-- Run the regression checklist.
-- Update README, roadmap, status and migration notes to match what actually shipped.
+## Supporting documents
 
-### Next major product milestone
+- [Roadmap](ROADMAP.md)
+- [Current status](docs/CURRENT_STATUS.md)
+- [Claude task](docs/CLAUDE_TASK.md)
+- [AI work rules](docs/AI_WORK_RULES.md)
+- [Regression checklist](docs/REGRESSION_CHECKLIST.md)
+- [Idea inbox](docs/IDEA_INBOX.md)
+- [Contributing guide](contributing.md)
 
-Explore a **Guided Path** that helps a first-time user describe what they are trying to do and builds a prompt using the same compiler as the advanced builder. Candidate task areas: work/productivity, research/learning, writing/communication, career, shopping/decisions, creative projects, technology/coding and everyday life. This is a proposal, not an approved implementation scope. Validate usability before expanding it.
+## Session closeout rule
 
-## Working method
-
-- The owner can submit ideas in any order and at any level of detail. Capture first; prioritise later.
-- ChatGPT maintains the idea inbox, roadmap, status and coding-agent briefs.
-- Keep one primary implementation task active at a time.
-- Coding agents work from the live repository on a dedicated branch, preserve existing behaviour, test, and report exact files/commits/results.
-- Prefer small, reviewable changes and one coherent commit per logical documentation or code task.
-- Use Conventional Commit prefixes: `feat:`, `fix:`, `docs:`, `test:`, `refactor:`, `chore:`. Use actual Git version tags for reviewed releases, not for every documentation commit.
-- Never claim a test, browser check, upload or release happened unless it was actually performed.
-- Do not merge to `main` or publish a release without the owner's approval.
-
-## Supporting project files
-
-- [Roadmap](ROADMAP.md) — priorities and staged direction.
-- [Idea inbox](docs/IDEA_INBOX.md) — uncensored idea capture and triage.
-- [Current status](docs/CURRENT_STATUS.md) — dated technical state and handoff.
-- [AI work rules](docs/AI_WORK_RULES.md) — instructions for coding agents.
-- [Regression checklist](docs/REGRESSION_CHECKLIST.md) — repeatable acceptance tests.
-- [Contributing rules](contributing.md) — existing project-specific code conventions.
-- [Project documents](docs/) — source guides and historical reference material.
-
-## Handoff update rule
-
-At the end of each meaningful work session, update:
-1. `CURRENT_STATUS.md` with the actual repository state and tests.
-2. `PROJECT_CONTROL.md` with the active task, decisions and next action.
-3. `ROADMAP.md` if priorities or scope changed.
-4. `IDEA_INBOX.md` when ideas were added, promoted or postponed.
-
-A handoff is complete only when another session can resume from these files without needing the previous conversation.
+At each meaningful handoff, update `docs/CURRENT_STATUS.md` with verified repository/test evidence and update this file with active task, decisions and next action. Update the roadmap when priority changes. Clearly separate source inspection, automated execution, independent review and owner acceptance.
