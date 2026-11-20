@@ -255,25 +255,37 @@ button:focus-visible { outline: 3px solid var(--accent-soft); outline-offset: 2p
 .cmdgroup h4 { margin: 0 0 8px; font: 700 11px var(--mono); letter-spacing: .12em; text-transform: uppercase; color: var(--muted); }
 .cmdlist { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 10px; }
 .cmditem { display: flex; flex-direction: column; gap: 7px; padding: 10px 12px; border: 1px solid var(--line); border-radius: 12px; background: var(--card-2); }
-.cmditem .pillwrap { display: flex; }
+.cmditem .pillwrap { display: flex; min-width: 0; max-width: 100%; }
+.cmditem .pill { display: block; max-width: 100%; }
+.cmditem .pill span { max-width: 100%; flex-wrap: wrap; row-gap: 4px; border-radius: 18px; }
 .cmddesc { font-size: 12.5px; line-height: 1.45; color: var(--muted); }
 .cmddesc b { color: var(--ink); font-weight: 700; }
 .kind { margin-left: 4px; padding: 1px 7px; border-radius: 99px; font: 700 10px var(--mono); letter-spacing: .06em; text-transform: uppercase; background: var(--line); color: var(--muted); font-style: normal; }
 .pill input:checked + span .kind { background: rgba(255,255,255,.25); color: #fff; }
 
 /* ---------- v5.0 free-tier badges ---------- */
-.tier { padding: 1px 7px; border-radius: 99px; font: 700 10px var(--mono); letter-spacing: .06em; text-transform: uppercase; font-style: normal; }
-.t-free { background: #d8f5e8; color: #0b6b46; }
-.t-account { background: #dde8ff; color: #24428f; }
-.t-limited { background: #fff0c9; color: #7a5600; }
-.t-paid { background: #ffdcd5; color: #9a2a18; }
+.tier { display: inline-flex; align-items: center; gap: 5px; padding: 2px 9px; border-radius: 99px; border: 1px solid transparent; font: 700 11px/1.35 var(--mono); letter-spacing: .04em; text-transform: uppercase; font-style: normal; white-space: nowrap; }
+.tier::before { font-size: 11px; line-height: 1; }
+/* v5.2.0: dark text on light tints (light theme), light text on dark tints (dark theme); every pair is about 7.5:1 contrast or better.
+   Each tier also has its own glyph so the meaning never depends on colour alone. */
+.t-free { background: #d3f3e3; color: #064d31; border-color: #7fc9a6; }
+.t-free::before { content: "\2713"; }
+.t-account { background: #d9e6ff; color: #14306f; border-color: #8fb0f0; }
+.t-account::before { content: "\25C6"; }
+.t-limited { background: #ffeaa8; color: #5a3d00; border-color: #e0b94a; }
+.t-limited::before { content: "\25D0"; }
+.t-paid { background: #ffd3c9; color: #7a1b0c; border-color: #e68f7e; }
+.t-paid::before { content: "$"; }
+[data-theme="dark"] .t-free { background: #0f3d2c; color: #b6f5d6; border-color: #2f8f67; }
+[data-theme="dark"] .t-account { background: #1c2f66; color: #d0e0ff; border-color: #4d6fc9; }
+[data-theme="dark"] .t-limited { background: #4a3500; color: #ffe69a; border-color: #a67c12; }
+[data-theme="dark"] .t-paid { background: #5a1a10; color: #ffd6cc; border-color: #b8523f; }
 .tierkey { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin: 0 0 12px; font-size: 12px; color: var(--muted); }
 
 /* ---------- chatbot selector ---------- */
 .botbar { margin-top: 22px; background: var(--card); border: 1.5px solid var(--line); border-radius: 18px; padding: 16px; }
 .botbar-title { font: 700 11px var(--mono); letter-spacing: .16em; text-transform: uppercase; opacity: .6; margin-bottom: 10px; }
-.botgrid { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 10px; align-items: stretch; }
-@media (max-width: 959px) { .botgrid { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+.botgrid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; align-items: stretch; }
 @media (max-width: 599px) { .botgrid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
 @media (max-width: 379px) { .botgrid { grid-template-columns: minmax(0, 1fr); } }
 .botcard { min-width: 0; width: 100%; overflow-wrap: break-word; text-align: left; display: flex; flex-direction: column; gap: 4px; padding: 12px 14px; border-radius: 14px; background: var(--card-2); color: var(--ink); border: 2px solid var(--line); font-weight: 400; }
@@ -282,6 +294,7 @@ button:focus-visible { outline: 3px solid var(--accent-soft); outline-offset: 2p
 .botcard b { display: flex; align-items: center; gap: 8px; font-size: 15px; }
 .botcard b i { width: 10px; height: 10px; border-radius: 50%; background: var(--bc); flex: none; }
 .botcard small { font-size: 12px; line-height: 1.4; opacity: .8; }
+.botcard small b { display: inline; font-size: inherit; }
 .botcard em { font: 600 11px var(--mono); opacity: .6; font-style: normal; margin-top: auto; padding-top: 2px; }
 .botnote { margin-top: 10px; font-size: 13px; line-height: 1.5; opacity: .85; }
 .botopts { margin-top: 10px; }
@@ -311,10 +324,17 @@ This block acts as an unalterable log. Every future AI Chatbot updating this fil
 increment the minor/major version string below, append a new historical array object, and preserve the template structure.
 
 [ACTIVE CONFIGURATION]
-- currentVersion: "5.1.1"
+- currentVersion: "5.2.0"
 
 [MIGRATION HISTORY MATRIX]
 [
+  {
+    "version": "5.2.0",
+    "bot": "Claude (Anthropic)",
+    "change": "(1) Added four free-tier chatbots, Microsoft Copilot, DeepSeek, Meta AI and Mistral (Le Chat / Vibe), to CHATBOTS, BOT_NOTES and BOT_CMDS. Each has card copy (blurb, brief, limit), full task-fit (best) and free-tier (free) notes shown under the grid, and a tiered command list. The chatbot grid is now 3 columns at 600px and wider (3 x 3), 2 columns below 600px and 1 below 380px, so nine cards stay balanced. Paste budgets for the new bots (Copilot 8,000; DeepSeek 30,000; Meta AI 8,000; Mistral 24,000 characters) are conservative estimates, not official figures. (2) Command freshness audit against current vendor and third-party documentation (Nov 2026): Claude Connectors re-badged Free w/ account (free since Feb 2026) and the extended-thinking entry notes that newer models think adaptively; Grok Imagine video re-badged Paid plan, Grok Think mode notes that newer models may reason automatically, and Grok Tasks stays Paid with a note that a reduced version may appear on free accounts; Gemini Deep Research annotated with the reported free allowance; Perplexity deep research on free plans is reported inconsistently, so it stays Limited quota with a verify note; ChatGPT typed / and @ commands are noted as app and version dependent and file creation is noted as unreliable on free; the Research tab deep-research pill notes that DeepSeek and Meta AI have no such mode; the Think step-by-step pill now asks for visible key steps instead of a hidden chain of thought (label unchanged so saved presets still load). No command was deleted and every paid-plan option is kept and badged. Items that could not be confirmed, such as the exact ChatGPT slash command list, were left in place with a verify note. (3) Tier badges (.t-free, .t-account, .t-limited, .t-paid) were restyled: larger 11px text, a border, a small shape glyph so meaning does not rely on colour alone, dark text on light tints in the light theme and light text on dark tints in the dark theme, all at about 7.5:1 contrast or better. (4) compileModificationPayload() now adds a mandatory FRESHNESS CHECK step that must be done before any change is applied: the receiving chatbot checks current commands, modes and features for every covered engine and the target engine(s), flags or removes unsupported commands, keeps badged paid options, and reports what it verified in its log item. The step list was renumbered and now also asks for one standalone file with zero external dependencies that keeps getCleanSource() and hardReset() working. (5) Two small layout fixes found while testing: the Free plan label on chatbot cards now stays inline (it was inheriting the flex style of the card title and sat on its own line), and command pills may wrap so the larger tier badges stay inside their cards. getCleanSource(), hardReset(), presets, filtering and splitting logic are otherwise unchanged.",
+    "why": "User asked to broaden free-tier chatbot coverage with clear task-fit guidance, keep commands accurate without dropping paid options, make the tier badges easier to read in both themes, and make every future Dev Bay revision re-check command freshness.",
+    "freshnessCheck": "Reviewed Nov 19 2026 using public web sources; free-plan quotas and menu names change often, so verify in each app."
+  },
   {
     "version": "5.1.1",
     "bot": "Claude (Anthropic)",
@@ -615,7 +635,7 @@ const MODULES = [
         desc: 'Research, deep dives & fact-checking. Use for up-to-date information, competitive analysis, or validating complex facts. Deep-research modes have small free quotas, so save them for questions that need them.',
         pills: [
             { t: "Run deep research on the topic and provide a multi-perspective analysis.", l: "Deep research & multi-perspective analysis",
-              d: "Triggers multi-step research agents that browse dozens of sources and compile a detailed report on their own. On free plans this uses a limited quota." },
+              d: "Triggers multi-step research agents that browse dozens of sources and compile a detailed report on their own. On free plans this uses a limited quota. DeepSeek and Meta AI have no deep-research mode, so they simply give a normal answer." },
             { t: "Provide a counter-argument to the text above and point out any logical fallacies or biases.", l: "Devil's advocate / fallacy reviewer",
               d: "Turns the AI into a critical red-team reviewer for your theories or arguments." },
             { t: "Cite your sources with direct links and evaluate the credibility of each source.", l: "Cite sources with links & evaluate credibility",
@@ -697,8 +717,8 @@ const MODULES = [
               d: "Transforms the chatbot into an automated code auditor." },
             { t: "Explain what this error message means and provide three potential fixes: {0}", l: "Explain an error + 3 fixes", f: ["Paste the error message"],
               d: "Rapid troubleshooting during active development. Paste the error text in the box that appears." },
-            { t: "Think step-by-step and show your hidden chain of thought.", l: "Think step-by-step (CoT)",
-              d: "Forces visible reasoning, which dramatically reduces logic errors and hallucinations on math or logic puzzles." },
+            { t: "Work through this step by step and show the key steps of your reasoning before giving the final answer.", l: "Think step-by-step (CoT)",
+              d: "Asks for visible working, which reduces logic errors on maths and logic puzzles. Many current chatbots already reason internally, so this helps most in their fast or non-thinking modes. It asks for key steps, not for hidden reasoning." },
             { t: "Ask me 5 clarifying questions before you generate the final answer.", l: "Ask 5 clarifying questions first",
               d: "Flips the workflow: the AI collects missing background itself, so you don't need to write a massive first prompt." },
             { t: "Explain this concept to me at three levels: a 10-year-old, a college student, and an industry expert.", l: "Explain at three levels",
@@ -727,9 +747,25 @@ const CHATBOTS = [
       best: 'AI search engine for web research; answers usually include source citations. Keep prompts short.',
       free: 'Basic search works signed out; a free account adds history and uploads. Deep research and Pro searches are capped.' },
     { name: 'Grok',       maker: 'xAI',           url: 'https://grok.com',          color: '#c9c9d6', limit: 24000,
-      blurb: 'Current topics, tied to X.', brief: 'Daily message limits; some features need sign-in.',
+      blurb: 'Current topics, tied to X.', brief: 'Tight message limits; some features need sign-in.',
       best: 'Conversational assistant tied to X (Twitter); good for exploring current topics and discussions.',
-      free: 'Free access with daily message limits; some features need sign-in. DeeperSearch and Tasks need a paid plan.' }
+      free: 'Free access with tight message limits that change often; some features need sign-in. DeeperSearch, Imagine video and Tasks need a paid plan.' },
+    { name: 'Microsoft Copilot', maker: 'Microsoft', url: 'https://copilot.microsoft.com', color: '#b83fa0', limit: 8000,
+      blurb: 'Windows and Edge users; a free fallback bot.', brief: 'Free; sign in for history and uploads.',
+      best: 'Easily accessible on Windows and Edge, with free web answers, image generation and deeper reasoning modes. Useful as a fallback when another chatbot hits its free usage cap.',
+      free: 'Free to use. Think Deeper is free (Microsoft says use is not limited, though paid Microsoft 365 users get priority at busy times). Signing in with a Microsoft account is recommended for history and uploads. Deep Research and image creation have small allowances that change.' },
+    { name: 'DeepSeek', maker: 'DeepSeek', url: 'https://chat.deepseek.com', color: '#4d6bfe', limit: 30000,
+      blurb: 'Free reasoning, coding and maths help.', brief: 'Free account; no paid chat plan.',
+      best: 'Widely noted for generous free chat and reasoning, and for coding and maths help. A good pick when data sensitivity is not a blocker: check its privacy policy and keep confidential or personal material out of it.',
+      free: 'Free with an account; there is no paid chat plan and no published daily cap, though busy periods can slow it down. DeepThink (reasoning) and Search are switches under the message box. It cannot generate images.' },
+    { name: 'Meta AI', maker: 'Meta', url: 'https://www.meta.ai', color: '#0668e1', limit: 8000,
+      blurb: 'Quick everyday prompts in WhatsApp and Instagram.', brief: 'Free; no paid tier; uses a Meta account.',
+      best: 'Convenient if you already live inside WhatsApp, Instagram or Messenger: quick everyday questions, casual writing and image ideas without opening another app. Lighter on long documents and deep analysis.',
+      free: 'Free with no paid tier, inside those apps and at meta.ai. Features and availability vary by country and app version, and prompts may be used to improve Meta AI, so check its privacy settings.' },
+    { name: 'Mistral', maker: 'Mistral AI', url: 'https://chat.mistral.ai', color: '#e8590c', limit: 24000,
+      blurb: 'Le Chat / Vibe: a solid non-US alternative.', brief: 'Free plan with a soft daily cap.',
+      best: 'A solid non-US alternative worth considering if you want regional and ecosystem variety on a free tier. Le Chat (now branded Vibe) covers chat, web search, images, Canvas and coding help.',
+      free: 'Free account with a soft daily cap (about 25 messages has been reported). Web search, Think mode and deep research (both preview) have small allowances. Pro adds higher limits and fuller Vibe coding features.' }
 ];
 
 /* Free-tier status labels used by the badges on every BOT_CMDS item. */
@@ -747,11 +783,15 @@ const TIERS = {
    tier = free | account | limited | paid
    g = group heading, t = compiled text, l = label, d = what it does and when to use it, w = where to find it, f = fill-in boxes. */
 const BOT_NOTES = {
-    ChatGPT: "ChatGPT mixes typed commands (/ and @) with a + tools menu. A free account is needed for uploads and history, and several tools have small free quotas. Agent mode is paid.",
+    ChatGPT: "ChatGPT mixes typed commands (/ and @) with a + tools menu. The typed commands are shortcuts whose availability depends on the app and version, so if one does not appear, use the + menu instead. A free account is needed for uploads and history, and several tools have small free quotas. Agent mode is paid.",
     Gemini: "Gemini has no slash commands and needs a free Google account. It uses a Tools menu, and @ to call a Connected App. Google Maps, YouTube, Flights and Hotels are used automatically when you ask (the old @Google Maps style mentions were retired). Video generation is paid.",
-    Claude: "Claude needs a free account. Its chat has no typed slash commands: typing / just opens the same menu as the + button (Claude Code, the developer tool, is different). Most control is by switches in that menu or by asking in words. Free usage limits are tight, so keep pastes short; Research is paid.",
-    Perplexity: "Perplexity treats every message as a search and has no slash commands. You steer it with the Search mode menu and the sources picker. Free users get unlimited basic searches but only a few deep-research reports.",
-    Grok: "Grok has no slash commands. Switches sit under the message box on grok.com and in the apps. Free access has daily limits; DeeperSearch and Tasks need a paid plan."
+    Claude: "Claude needs a free account. Its chat has no typed slash commands: typing / just opens the same menu as the + button (Claude Code, the developer tool, is different). Most control is by switches in that menu or by asking in words. File creation and connectors work on free accounts, but free usage limits are tight, so keep pastes short; Research is paid.",
+    Perplexity: "Perplexity treats every message as a search and has no slash commands. You steer it with the Search mode menu and the sources picker. Free users get unlimited basic searches, a small Pro Search allowance, and little or no deep research (reports disagree, so check the menu).",
+    Grok: "Grok has no slash commands. Switches sit under the message box on grok.com and in the apps, and newer Grok models may reason automatically. Free access has tight limits; DeeperSearch, Imagine video and Tasks need a paid plan.",
+    "Microsoft Copilot": "Copilot has no slash commands. You steer it with the mode selector under the message box (Smart, Quick response, Think Deeper, Study and Learn, Search) and a separate Deep Research option. Mode names and places differ between Windows, Edge, the web and the app, so pick the closest match. Free use is generous; Deep Research and image creation have small allowances.",
+    DeepSeek: "DeepSeek has no slash commands. Under the message box you pick Instant or Expert Mode and switch DeepThink (reasoning) and Search on or off. It needs a free account, cannot generate images and has no paid chat plan. Avoid confidential or personal material.",
+    "Meta AI": "Meta AI has no slash commands. In WhatsApp or Messenger group chats you call it by typing @Meta AI, and Imagine creates images. The Meta AI app and meta.ai add voice and, where offered, a Thinking option. Features vary by country and app, and there is no paid tier.",
+    Mistral: "Mistral's assistant (Le Chat, now branded Vibe) lives at chat.mistral.ai and has no slash commands. Web search, Think mode, deep research (preview), Canvas and the code interpreter are switches in the message box or tools menu. The free plan has a soft daily cap (about 25 messages reported); coding agents in Vibe are mostly on paid plans."
 };
 const BOT_CMDS = {
     ChatGPT: [
@@ -776,13 +816,13 @@ const BOT_CMDS = {
         { g: "Ask in words", k: "ask", tier: "limited", t: "Use your Python data-analysis tool to calculate, chart or process the data provided, and show the results.", l: "Python data analysis", w: "No switch: just ask",
           d: "Runs code in ChatGPT's sandbox for calculations, charts, data cleaning and file conversions. Attach the data file to the chat (needs a free account for uploads)." },
         { g: "Ask in words", k: "ask", tier: "limited", t: "Create a downloadable file (Word, Excel, PowerPoint or PDF) containing the result.", l: "Make a downloadable file", w: "No switch: just ask",
-          d: "Asks ChatGPT to build a real file you can download rather than pasting text. Name the file type you want. File tools have limited free use." }
+          d: "Asks ChatGPT to build a real file you can download rather than pasting text. Name the file type you want. Free accounts get little or no Office-file creation, so if it only pastes text, copy it into your own app." }
     ],
     Gemini: [
         { g: "Type in the message box", k: "type", tier: "account", t: "@{0} ", l: "@connected app", f: ["App (Gmail, Google Drive, Calendar, Docs, Keep, Tasks, Photos, YouTube Music, Spotify...)"], w: "Type @ and select the app; manage in Settings > Personal Intelligence > Connected Apps",
           d: "Makes Gemini use one Connected App for this request, for example to find an email, a Drive file or a calendar slot. You must be signed in, and Keep Activity must be on. If the app is not connected yet, Gemini asks permission." },
         { g: "Tools menu", k: "ui", tier: "limited", t: "Run Deep Research on this: make a research plan, browse many sources and write a detailed report with citations.", l: "Deep Research", w: "Tools (or + > More tools) > Deep Research",
-          d: "Gemini drafts a multi-step plan, searches the web in depth and produces a long cited report. Free users have a small monthly allowance." },
+          d: "Gemini drafts a multi-step plan, searches the web in depth and produces a long cited report. Free users have a small monthly allowance (about 5 reports a month has been reported)." },
         { g: "Tools menu", k: "ui", tier: "account", t: "Use Canvas to build this so I can edit it side by side.", l: "Canvas", w: "Tools > Canvas",
           d: "An interactive workspace for documents and code. Good for drafting, small apps and games with a live preview, quizzes and flashcards." },
         { g: "Tools menu", k: "ui", tier: "account", t: "Use Guided Learning: teach me step by step with hints and knowledge checks instead of just giving the answer.", l: "Guided Learning", w: "Tools (or + > More tools) > Guided Learning",
@@ -811,12 +851,12 @@ const BOT_CMDS = {
     Claude: [
         { g: "Chat menu (+ button, or type /)", k: "ui", tier: "paid", t: "Use Research: investigate this across the web and my connected tools, then write a cited report.", l: "Research", w: "+ menu > Research (paid plans; web search must be on)",
           d: "Claude runs many searches and reads many sources, including connected Google Workspace and other connectors, then writes a cited report. Start it on the web or desktop app to include connectors; mobile uses the web only. Turn off connectors that can write or send first. Not part of free plans." },
-        { g: "Chat menu (+ button, or type /)", k: "ui", tier: "limited", t: "Think deeply and check your reasoning before giving the final answer.", l: "Extended thinking / effort", w: "Model picker > Effort / Thinking toggle (varies by model)",
-          d: "Gives Claude more reasoning time before it answers. Use for hard maths, logic, code, planning and subtle analysis; skip for quick lookups. It uses up free usage limits faster." },
+        { g: "Chat menu (+ button, or type /)", k: "ui", tier: "limited", t: "Think deeply and check your reasoning before giving the final answer.", l: "Extended thinking / effort", w: "Model picker > Extended thinking / Effort toggle (newer models decide for themselves with adaptive thinking)",
+          d: "Gives Claude more reasoning time before it answers. Use for hard maths, logic, code, planning and subtle analysis; skip for quick lookups. On newer models Claude decides by itself when to think harder, so the toggle only appears where a model supports it. It uses up free usage limits faster." },
         { g: "Chat menu (+ button, or type /)", k: "ui", tier: "account", t: "Write in a {0} style.", l: "Use a style", f: ["Style name (Concise, Explanatory, Formal, or your own)"], w: "+ menu > Use style (create styles in Settings > Styles)",
           d: "Applies a saved writing style so you do not repeat tone instructions. You can create custom styles from your own writing samples." },
-        { g: "Chat menu (+ button, or type /)", k: "ui", tier: "limited", t: "Use my connected tools (Google Drive, Gmail, Calendar, Slack, Notion and others) to find what you need before answering.", l: "Connectors", w: "+ menu > Connectors (set up in Customize > Connectors)",
-          d: "Lets Claude read from, and sometimes act in, services you have connected. Check what each connector may write before enabling. Which connectors free accounts can use varies." },
+        { g: "Chat menu (+ button, or type /)", k: "ui", tier: "account", t: "Use my connected tools (Google Drive, Gmail, Calendar, Slack, Notion and others) to find what you need before answering.", l: "Connectors", w: "+ menu > Connectors (set up in Customize > Connectors)",
+          d: "Lets Claude read from, and sometimes act in, services you have connected. Check what each connector may write before enabling. Connectors became available on free accounts in early 2026; which ones you can use still varies." },
         { g: "Ask in words", k: "ask", tier: "account", t: "Search the web for current information and cite your sources.", l: "Web search", w: "Automatic now; asking makes your intent explicit",
           d: "Claude decides on its own when to search. Saying so forces a search and asks for citations; best for quick facts that change." },
         { g: "Ask in words", k: "ask", tier: "account", t: "Create the result as an Artifact (a standalone document, page or app in its own side panel).", l: "Create an Artifact", w: "Needs Artifacts enabled in Settings > Capabilities",
@@ -830,7 +870,7 @@ const BOT_CMDS = {
     ],
     Perplexity: [
         { g: "Search modes (Search menu beside the + button)", k: "ui", tier: "limited", t: "Run Deep Research: search dozens of sources, reason across them and deliver a structured report with citations.", l: "Deep research", w: "Search menu > Deep research (limited reports on Free)",
-          d: "Performs many searches, reads many sources and writes a long, cited report in a few minutes. Use for questions you would otherwise research by hand. Free users get only a few per day." },
+          d: "Performs many searches, reads many sources and writes a long, cited report in a few minutes. Use for questions you would otherwise research by hand. Free allowance is small and has been cut back in 2026; reports disagree on whether free accounts get any, so check the Search menu." },
         { g: "Search modes (Search menu beside the + button)", k: "ui", tier: "free", t: "Teach this step by step, checking my understanding as we go.", l: "Learn step by step", w: "Search menu > Learn step by step",
           d: "A guided tutoring style instead of a single answer." },
         { g: "Sources (Connectors menu or Choose sources, set BEFORE you send)", k: "ui", tier: "free", t: "Use academic and peer-reviewed sources only (papers and journals) and cite each one.", l: "Academic sources", w: "+ menu > Connectors > Academic (untick Web for papers only)",
@@ -855,18 +895,82 @@ const BOT_CMDS = {
           d: "An agent that splits your question into sub-searches across the web, X and news, cross-checks them and cites sources. Use for anything time-sensitive. Free users get a few uses per day." },
         { g: "Toggles under the message box", k: "ui", tier: "paid", t: "Use DeeperSearch: go deeper than standard DeepSearch, checking more sources and cross-verifying key claims.", l: "DeeperSearch", w: "Higher-tier plans (SuperGrok)",
           d: "A more thorough variant of DeepSearch for research where completeness matters more than speed. Needs a paid plan." },
-        { g: "Toggles under the message box", k: "ui", tier: "limited", t: "Think step by step before answering and show your reasoning.", l: "Think mode", w: "Think toggle",
+        { g: "Toggles under the message box", k: "ui", tier: "limited", t: "Think step by step before answering and show your reasoning.", l: "Think mode", w: "Think toggle (newer Grok models may reason automatically, with no toggle)",
           d: "Switches on Grok's reasoning path for multi-step maths, logic and decisions. Turn it off for plain summarising, where extra inference can add errors. Free uses are capped." },
         { g: "Ask in words", k: "ask", tier: "limited", t: "Generate an image of: {0}", l: "Imagine: image", f: ["Describe the image"], w: "No switch: just ask (Imagine)",
           d: "Creates images from text and can edit or combine images you upload. Free daily allowance is small." },
-        { g: "Ask in words", k: "ask", tier: "limited", t: "Generate a short video of: {0}", l: "Imagine: video", f: ["Describe the scene"], w: "No switch: just ask (limits vary by plan)",
-          d: "Makes a short video clip from a description or image. Free access, if offered, is tightly capped." },
+        { g: "Ask in words", k: "ask", tier: "paid", t: "Generate a short video of: {0}", l: "Imagine: video", f: ["Describe the scene"], w: "No switch: just ask (Imagine; paid plans, limits vary)",
+          d: "Makes a short video clip from a description or image. Full video generation starts on paid SuperGrok tiers; free access is not guaranteed." },
         { g: "Ask in words", k: "ask", tier: "free", t: "Search X (Twitter) posts for what people are saying right now about this and summarise the sentiment.", l: "Search X posts", w: "No switch: just ask",
           d: "Taps live posts on X, Grok's distinctive data source. Good for breaking news and public reaction; verify claims independently." },
         { g: "Ask in words", k: "ask", tier: "limited", t: "Analyse the attached image and explain what it shows.", l: "Analyse an image", w: "Attach the image, then ask",
           d: "Describes or interprets a photo, chart or screenshot you upload. Free upload counts are limited." },
-        { g: "Ask in words", k: "ask", tier: "paid", t: "Set this up as a recurring Task: {0}", l: "Schedule a Task", f: ["What to run, how often, and what to deliver"], w: "Tasks at grok.com/tasks (availability varies)",
-          d: "Asks Grok to run a query on a schedule and report back. Needs a paid plan." }
+        { g: "Ask in words", k: "ask", tier: "paid", t: "Set this up as a recurring Task: {0}", l: "Schedule a Task", f: ["What to run, how often, and what to deliver"], w: "Tasks at grok.com/tasks (availability varies; a reduced version may appear on free accounts)",
+          d: "Asks Grok to run a query on a schedule and report back. Treat it as a paid feature; if your free account shows a reduced version, you can try it." }
+    ],
+    "Microsoft Copilot": [
+        { g: "Mode selector (under the message box)", k: "ui", tier: "free", t: "Decide how much to reason for this: answer quickly if it is simple, and think longer if it is hard.", l: "Smart (auto mode)", w: "Mode selector under the prompt > Smart (some versions label it Auto)",
+          d: "Lets Copilot choose between a fast answer and deeper reasoning for each request. A good default when you do not know which mode to pick." },
+        { g: "Mode selector (under the message box)", k: "ui", tier: "free", t: "Answer quickly and briefly. This is a simple question, so skip long explanations.", l: "Quick response", w: "Mode selector > Quick response (not shown in every version; Smart then decides)",
+          d: "Favours speed for definitions, short summaries and simple conversions." },
+        { g: "Mode selector (under the message box)", k: "ui", tier: "free", t: "Take extra time to reason step by step before you answer, and check your work.", l: "Think Deeper", w: "Mode selector > Think Deeper",
+          d: "Copilot's slower reasoning mode for hard maths, logic, programming and decisions with many variables. Microsoft's support page says use is not limited; paid Microsoft 365 users get priority at busy times." },
+        { g: "Mode selector (under the message box)", k: "ui", tier: "free", t: "Teach me this step by step: ask me questions, check my understanding and finish with a short quiz.", l: "Study and Learn", w: "Mode selector > Study and Learn",
+          d: "A tutoring style for understanding a topic rather than receiving a direct answer." },
+        { g: "Mode selector (under the message box)", k: "ui", tier: "free", t: "Search the web for current information and cite your sources.", l: "Search", w: "Mode selector > Search",
+          d: "Grounds the answer in live web results with citations. Use it for news, prices, rules and anything recent." },
+        { g: "Research and creation", k: "ui", tier: "limited", t: "Run Deep Research on this: plan the research, read many sources and write a detailed report with citations.", l: "Deep Research", w: "Deep Research option in the tools or + menu (name and place vary by app)",
+          d: "Builds a long, cited report across many sources. The free allowance is small and may change, so save it for questions that need it." },
+        { g: "Research and creation", k: "ask", tier: "limited", t: "Create an image of: {0}", l: "Create an image", f: ["Describe the image"], w: "No switch: just ask (or the image option in the + menu)",
+          d: "Generates images from a description. Say subject, style and mood. Free allowances can change." },
+        { g: "Research and creation", k: "ask", tier: "account", t: "Analyse the attached file or image, summarise the key points and flag anything unclear.", l: "Analyse a file or image", w: "Attach with the + menu, then ask",
+          d: "Reads PDFs, spreadsheets and images you upload and explains or extracts from them. Uploads usually need you to be signed in." }
+    ],
+    DeepSeek: [
+        { g: "Toggles and modes (under the message box)", k: "ui", tier: "account", t: "Use your most capable model for this task and work through it carefully.", l: "Expert Mode", w: "Mode selector under the message box > Expert Mode (Instant Mode is the fast option)",
+          d: "Picks the larger model for harder problems; Instant Mode is quicker for everyday questions. Names and placement can differ between the app and the web." },
+        { g: "Toggles and modes (under the message box)", k: "ui", tier: "account", t: "Think step by step and reason carefully before giving the final answer.", l: "DeepThink", w: "DeepThink toggle under the message box",
+          d: "Turns on DeepSeek's thinking (reasoning) mode: slower, but stronger on maths, logic and code. Turn it off for quick or simple tasks." },
+        { g: "Toggles and modes (under the message box)", k: "ui", tier: "account", t: "Search the web for current information and cite your sources.", l: "Search", w: "Search toggle under the message box",
+          d: "Lets DeepSeek pull fresh web pages into its answer. It is a manual switch, so turn it on for anything recent, and check key facts elsewhere." },
+        { g: "Ask in words", k: "ask", tier: "account", t: "Read the attached document and answer only from it. Say if it does not contain the answer.", l: "Answer from my document", w: "Attach with the paperclip, then ask",
+          d: "Summarises or answers questions about PDF, Word and text files. DeepSeek extracts the text, so charts and layout may be lost." },
+        { g: "Ask in words", k: "ask", tier: "free", t: "Write the code, explain how it works in plain language, then list edge cases and a few tests.", l: "Coding help with tests", w: "No switch: just ask (turn DeepThink on for hard problems)",
+          d: "Drafts, debugs or explains code. Asking for edge cases and tests catches the mistakes that quick answers hide." },
+        { g: "Ask in words", k: "ask", tier: "free", t: "Solve this step by step, then verify the result with a second method.", l: "Maths with a check", w: "No switch: just ask (DeepThink recommended)",
+          d: "Plays to DeepSeek's reasoning strengths; the second-method check catches arithmetic slips." }
+    ],
+    "Meta AI": [
+        { g: "Type in a chat", k: "type", tier: "account", t: "@Meta AI ", l: "@Meta AI", w: "In a WhatsApp or Messenger group chat, type @Meta AI",
+          d: "Calls Meta AI into a group chat so everyone sees the answer, for example to settle a question or plan an outing. Needs the Meta app and account. If the pasted text does not trigger it, type the @ yourself and pick Meta AI from the list. Put the question in your core prompt." },
+        { g: "Ask in words", k: "ask", tier: "free", t: "Use Imagine to create an image of: {0}", l: "Imagine: image", f: ["Describe the image"], w: "In Meta AI chats you can also start a message with the word Imagine",
+          d: "Creates an image from a description, free, and you can share it straight into a chat or story. Say subject, style and mood. Image features vary by country." },
+        { g: "Ask in words", k: "ui", tier: "free", t: "Think carefully, step by step, before answering.", l: "Thinking option", w: "Thinking or reasoning option in the Meta AI app or meta.ai, where offered",
+          d: "A slower reasoning option for harder questions. It is shown only in some regions and app versions." },
+        { g: "Ask in words", k: "ask", tier: "free", t: "Search the web for current information on this and give me the key points, with links where you can.", l: "Web lookup", w: "No switch: just ask",
+          d: "Meta AI can look things up on the web. Check important facts at the source." },
+        { g: "Ask in words", k: "ask", tier: "free", t: "Look at the attached image and explain what it shows.", l: "Analyse an image", w: "Attach the image, then ask",
+          d: "Describes or interprets photos and screenshots. Handy for everyday questions such as what a plant is or what a sign says." },
+        { g: "Ask in words", k: "ask", tier: "free", t: "Write this as a short, casual message I can send in a chat or post on social media. Give me 3 versions.", l: "Draft for chat or social", w: "No switch: just ask",
+          d: "Plays to Meta AI's strength: quick drafts for messages, captions and group plans." }
+    ],
+    Mistral: [
+        { g: "Message box toggles and tools", k: "ui", tier: "limited", t: "Search the web for current information and cite your sources.", l: "Web search", w: "Web search toggle near the message box",
+          d: "Grounds the answer in live web results. Free accounts get a small search allowance, so use it for things that change." },
+        { g: "Message box toggles and tools", k: "ui", tier: "limited", t: "Think step by step and reason carefully before giving the final answer.", l: "Think mode", w: "Think option in the tools menu (marked preview)",
+          d: "Mistral's reasoning mode for maths, logic and code. The free allowance is small." },
+        { g: "Message box toggles and tools", k: "ui", tier: "limited", t: "Run Deep Research: plan the research, run several searches and write a cited report.", l: "Deep research", w: "Deep research option in the tools menu (preview)",
+          d: "Multi-step research that ends in a cited report. Free use has a small allowance; Pro raises it." },
+        { g: "Message box toggles and tools", k: "ui", tier: "limited", t: "Open this in Canvas so I can edit it side by side and revise it directly.", l: "Canvas", w: "Canvas option in the tools menu",
+          d: "A side-by-side editor for documents and code. Limits on free accounts can differ, so check." },
+        { g: "Message box toggles and tools", k: "ask", tier: "limited", t: "Run code to analyse the data and show your calculations.", l: "Code interpreter", w: "Code interpreter in the tools menu; attach the data file",
+          d: "Runs code to calculate, clean data and make charts instead of estimating." },
+        { g: "Message box toggles and tools", k: "ask", tier: "limited", t: "Create an image of: {0}", l: "Create an image", f: ["Describe the image"], w: "No switch: just ask",
+          d: "Generates images from a description. Image creation uses up the free daily allowance faster than text." },
+        { g: "Vibe coding agents", k: "ask", tier: "limited", t: "Act as a coding agent: plan the change, edit the files, run the tests and summarise what you changed.", l: "Vibe coding agent", w: "Code Mode in the Vibe app, or the Vibe CLI (limited on free; heavy use needs Pro)",
+          d: "Mistral's coding workspace. Free plans get limited access; higher limits and more of Vibe come with Pro." },
+        { g: "Vibe coding agents", k: "ask", tier: "paid", t: "Run this as a remote coding agent task on my repository and report back with a summary of the changes.", l: "Remote coding agent", w: "Remote coding agents in Vibe (higher plans; check your plan)",
+          d: "Runs a longer coding job in the background on Mistral's side instead of in your terminal. Listed on higher plans, not on the free plan." }
     ]
 };
 
@@ -1431,9 +1535,10 @@ function compileModificationPayload() {
         "MIGRATION EXPECTATION FOR THE RECEIVING AI CHATBOT:\n" +
         "1. You are being supplied with the full source code of this tool within this prompt framework below.\n" +
         "2. Read the internal immutable comment history log located at the top of the file.\n" +
-        "3. Increment the major/minor version string appropriately inside that comment block template.\n" +
-        "4. Append a new structured log item detailing that you (" + aiEngine + ") made these updates.\n" +
-        "5. Apply the requested changes completely (" + requiredChange + ") and output the entire new .html file payload.\n\n" +
+        "3. FRESHNESS CHECK (do this BEFORE applying any change): check the current commands, modes, switches and features of every chatbot engine this tool covers (the CHATBOTS, BOT_NOTES and BOT_CMDS tables) and of the target engine(s) named in the change specification and in this package (" + aiEngine + "). Use up-to-date vendor documentation or a live web search if you can. Flag every command or option that is no longer supported, and remove or correct it. Keep useful paid-plan commands, clearly badged as paid. If you cannot verify an item, say so in your log entry and leave it in place with a note rather than guessing.\n" +
+        "4. Increment the major/minor version string appropriately inside that comment block template.\n" +
+        "5. Append a new structured log item detailing that you (" + aiEngine + ") made these updates, including what the freshness check confirmed, removed or could not verify.\n" +
+        "6. Apply the requested changes completely (" + requiredChange + ") and output the entire new .html file payload as one standalone file with zero external dependencies, keeping getCleanSource() and hardReset() working.\n\n" +
         bar + "CURRENT SOURCE CODE OF THE APPARATUS FOLLOWS BELOW:\n" + bar + "\n" +
         selfCodeSource;
 
