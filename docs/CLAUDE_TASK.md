@@ -1,6 +1,6 @@
-# Claude Code Task — Finish the v5.4.0 corrective review
+# Claude Code Task — Final v5.4.0 catalogue-diff verification
 
-> **Canonical execution brief.** Read this file before acting. It is intentionally narrow: finish the remaining v5.4.0 catalogue-review issue and produce verifiable test evidence. Do not start v5.5.0.
+> **Canonical execution brief.** The implementation work is already present in commit `5c41741` on `release/v5.4.0`. Do not repeat it. This task is to verify the real test execution and close the remaining developer-level evidence gap.
 
 ## Shorthand command
 
@@ -8,66 +8,65 @@ In Claude Code, run:
 
 `/pb-v54`
 
-The repository command at `.claude/commands/pb-v54.md` tells Claude Code to read and execute this file. If slash commands are unavailable in the current Claude Code setup, paste this fallback:
+The repository command at `.claude/commands/pb-v54.md` directs Claude Code to read and execute this file. If slash commands are unavailable, paste:
 
-`Read docs/CLAUDE_TASK.md in full and execute it exactly. First inspect the live GitHub state and local workspace; preserve unrelated work.`
+`Read docs/CLAUDE_TASK.md in full. Verify live GitHub and the actual local workspace before acting. This is a verification task, not permission to repeat completed implementation work.`
 
-## Project and authority
+## Roles and authority
 
 - Repository: https://github.com/GenX-Shinobi/Prompt-Builder
-- Required implementation branch: `release/v5.4.0`
-- Known release-branch head at task creation: `ce1ec19c9b8f8a8ad618d50a5a9f33d3f0618fb2`
-- `main` at task creation: `b247aec8a1ee279b71f6aedd8fbaf4d908c22d5f`
-- Product owner: repository owner. The owner has final approval.
-- ChatGPT is project manager/reviewer; Claude Code is implementation engineer.
+- Implementation branch: `release/v5.4.0`
+- Product owner: final product, merge and release approval.
+- Claude Code: implementation and automated test execution.
+- ChatGPT: independent project review and continuity.
 
-These SHAs are a checkpoint, not permission to overwrite. Re-check GitHub and the local workspace before editing. If the branch head has changed, inspect and preserve all newer work. Do not reset, force-push, rebase destructively, or overwrite unrelated changes.
+## Verified starting point
 
-## Current release gate
+- The catalogue-diff implementation commit is `5c41741ed3b75870e40bb8e3eef4a8b12a538521`.
+- Its changes are in `index.html` and `tests/browser_corrective.js`.
+- Added/removed commands now carry complete installable field records inside expandable details.
+- Added/removed chatbot records show card fields and notes; each associated command is listed as its own complete record.
+- HTML escaping and the 500-item review/install gate remain.
+- The product owner performed a limited real-browser check using a separate test copy: a changed ChatGPT card summary was correctly detected in the preview, then Cancel was used. Nothing was installed. This did **not** test added/removed records.
 
-v5.4.0 is **not approved for release**. The earlier corrective pass appears to have fixed status wording and unified the multipart protocol. Automated tests are present but their actual execution results have not been independently verified. Product-owner real-browser/device testing is still outstanding.
-
-The remaining code-level concern from independent review is catalogue diff readability:
-
-- The shared `CATALOG_FIELDS` mechanism now covers retained/installable fields, including chatbot maker/colour, command placeholder `f`, and tier labels/descriptions.
-- However, many changed human-facing fields are only reported as e.g. `description changed`, `text added to the prompt changed`, `where to find it changed`, or `card summary changed`.
-- A user can see that a field changed without seeing the old and new text. This weakens informed installation approval.
+Treat these as checkpoints. Re-check the live branch and actual local workspace before acting. Preserve newer work.
 
 ## Authorised work
 
-1. Inspect live GitHub state, `release/v5.4.0` head, recent commits, open PRs, and the actual local working tree before editing.
+1. Inspect live GitHub state, `release/v5.4.0` head, recent commits, open PRs, and the actual local working tree.
 2. Read `PROJECT_CONTROL.md`, `ROADMAP.md`, `docs/CURRENT_STATUS.md`, `docs/AI_WORK_RULES.md`, `docs/REGRESSION_CHECKLIST.md`, and `contributing.md`.
-3. Inspect the current `diffCatalogs()`, `CATALOG_FIELDS`, `cleanCatalog()`, catalogue diff rendering, and all related tests.
-4. Improve the review so every changed human-facing/installable field gives a meaningful before/after preview. Use safe HTML escaping. Keep the UI readable for long values (for example, concise truncation with an explicit way to inspect the full value, or a clearly bounded expandable detail). Do not silently omit changed values. Metadata-only fields may remain clearly labelled as metadata.
-5. Keep the comparison schema-driven so a future retained field cannot silently escape review. Add regression tests covering all field categories and prove old/new values are visible or deliberately inspectable.
-6. Check aggregate counts and the 500-line cap so the review never claims every difference is listed when some are hidden. If the display is capped, clearly identify the number shown and provide a way to inspect all differences or otherwise prevent installation until the complete review is available.
-7. Run the documented test suites from `contributing.md`:
+3. Inspect the current added/removed record rendering and the A3 tests in `tests/browser_corrective.js`.
+4. Verify that automated tests explicitly exercise the expandable UI behavior, not merely the presence of hidden detail text:
+   - Added command: the row has a details/summary control; activating it opens the record and exposes all installable fields.
+   - Removed command: the previous record is inspectable in the same way.
+   - Added chatbot: card fields and notes expand; each added command has its own expandable full record.
+   - Removed chatbot: card fields, notes and each removed command are inspectable.
+   - Hostile markup remains inert text.
+   - Large diffs retain the 500-item gate and require Show all before Install is enabled.
+5. If these interaction assertions are missing, add focused regression assertions to `tests/browser_corrective.js`. Change production code only if a reproducible defect is found. Keep the patch narrow.
+6. Run all three documented suites from `contributing.md`:
    - `node tests/browser_suite_1.js`
    - `node tests/browser_suite_2.js`
    - `node tests/browser_corrective.js`
-   Run any additional relevant tests and the regression checklist items affected by this change.
-8. Record exact command lines, environment/browser versions, actual pass/fail totals, failures, and fixes. Do not report a test as passing unless it was actually executed and passed.
-9. Commit and push the focused change to the existing `release/v5.4.0` branch only. Use a clear Conventional Commit message, e.g. `fix: make catalog installation diffs fully reviewable`.
-10. Report the new commit SHA, changed files, test output/totals, remaining limitations, and manual owner tests still required.
+7. Record exact command output, Node version, Playwright/browser version, pass/fail totals, failures and fixes. Do not claim tests passed unless actually executed.
+8. If a test-only or defect fix is needed, commit and push the focused change to `release/v5.4.0` only. If no change is needed, do not create an empty commit.
+9. Report the verified branch/commit, changed files (if any), exact test evidence, remaining limitations and the single next owner decision.
 
 ## Explicitly not authorised
 
 - Do not modify `main`.
-- Do not merge any pull request.
-- Do not force-push, reset, or overwrite unrelated work.
-- Do not publish, deploy, create a release, or create a version tag.
-- Do not open a new PR without separate owner approval.
-- Do not edit or merge the separate documentation PR except where a task explicitly authorises its documentation branch.
+- Do not merge PR #1 or any other PR.
+- Do not create a new PR without separate owner approval.
+- Do not force-push, reset, rebase destructively or overwrite unrelated work.
+- Do not publish, deploy, tag or create a release.
 - Do not start v5.5.0 or add unrelated features.
-- Do not claim the owner has completed real-browser/device testing.
+- Do not ask the product owner to create test fixtures, edit JSON, run developer scripts or inspect hidden implementation details.
+- Do not claim that the owner tested added/removed record expansion; that is the purpose of this automated verification.
 
 ## Definition of done
 
-This task is complete only when:
-- The full catalogue diff is understandable before installation approval.
-- Regression tests cover the new behaviour and pass in an actual run.
-- All three documented browser suites have actual recorded results.
-- The focused commit is pushed to `release/v5.4.0`.
-- The handoff includes evidence and clearly lists anything still awaiting owner testing.
+- The expandable added/removed record interactions are explicitly tested, or a reproducible defect is fixed and covered.
+- All three documented suites have actual recorded results.
+- The handoff clearly separates Claude's execution evidence, ChatGPT's independent review and the owner's remaining acceptance decision.
 
-After completing this task, stop. Do not independently proceed to release or v5.5.0. Wait for project-manager/owner review.
+After reporting, stop and wait. Do not release or start another milestone.
