@@ -349,6 +349,8 @@ button:focus-visible { outline: 3px solid var(--accent-soft); outline-offset: 2p
 .catbox textarea { margin-top: 10px; height: 120px; font: 12px/1.4 var(--mono); }
 .catbox [hidden] { display: none; }
 #catDiff ul { margin: 8px 0; padding-left: 20px; max-height: 240px; overflow: auto; font: 12px/1.5 var(--mono); }
+#catDiff .fullval pre { white-space: pre-wrap; word-break: break-word; margin: 2px 0 6px; max-height: 160px; overflow: auto; font: 12px/1.5 var(--mono); }
+#catDiff summary { cursor: pointer; }
 #catDiff .row, #catSplitBox .row { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px; }
 .preset-io { display: flex; flex-wrap: wrap; gap: 10px; margin: 10px 0 0; }
 .starthere { margin: 16px 0 0; padding: 12px 18px; border: 1.5px solid var(--line); border-radius: 16px; background: var(--card); box-shadow: var(--shadow); }
@@ -1965,46 +1967,53 @@ function renderCatalogStatus() {
     if (sel) { sel.innerHTML = CHATBOTS.map(c => '<option value="' + esc(c.name) + '">' + esc(c.name) + '</option>').join(''); const cl = CHATBOTS.find(c => c.name === 'Claude'); if (cl) sel.value = 'Claude'; }
 }
 /* Compares EVERYTHING cleanCatalog() keeps (driven by CATALOG_FIELDS), so nothing that can be installed is left out of the review.
-   Both sides must already be normalized with cleanCatalog(). Returns { lines, content, meta }:
+   Both sides must already be normalized with cleanCatalog(). Returns { items, lines, content, meta } (items = { text, full } with the untruncated before/after when a preview was shortened; lines = the text only):
    content = changes to wording, links, colours, placeholders, badges, order or entries; meta = check-date, status or revision updates. */
 const FIELD_LABEL = { maker: 'maker', url: 'link', color: 'colour', limit: 'paste limit', blurb: 'card summary', brief: 'free-plan summary', best: 'task-fit text', free: 'free-plan note',
     v: 'check date', st: 'status', g: 'group', k: 'kind', tier: 'free-tier badge', t: 'text added to the prompt', l: 'label', w: 'where to find it', d: 'description', f: 'fill-in boxes' };
-const FIELD_SHOWN = ['maker', 'url', 'color', 'limit', 'k', 'tier', 'v', 'st'];
 function diffCatalogs(a, b) {
     const content = [], meta = [];
     const same = (x, y) => JSON.stringify(x) === JSON.stringify(y);
-    const cut = (x, n) => { const t = typeof x === 'string' ? x : JSON.stringify(x); return t === undefined ? 'none' : (t.length > (n || 60) ? t.slice(0, n || 60) + '...' : t); };
-    const field = (k, o, n, where) => {
-        const nm = FIELD_LABEL[k] || k, txt = FIELD_SHOWN.includes(k) ? nm + ' ' + cut(o[k]) + ' -> ' + cut(n[k]) : k === 'f' ? nm + ' ' + cut(o[k], 70) + ' -> ' + cut(n[k], 70) : nm + ' changed';
-        (k === 'v' || k === 'st' ? meta : content).push('~ ' + where + ': ' + txt);
+    const str = x => { const t = typeof x === 'string' ? x : JSON.stringify(x); return t === undefined ? 'none' : t; };
+    const cut = (x, n) => { const t = str(x), m = n || 70; return t.length > m ? t.slice(0, m) + '...' : t; };
+    /* every changed value gets a before -> after preview; if either side was shortened, the untruncated pair is kept so the review can show it in full */
+    const change = (label, o, n, m) => {
+        const full = cut(o, m) !== str(o) || cut(n, m) !== str(n) ? { old: str(o), neu: str(n) } : null;
+        return { text: label + ' ' + cut(o, m) + ' -> ' + cut(n, m), full: full };
     };
+    const field = (k, o, n, where) => {
+        const it = change(FIELD_LABEL[k] || k, o[k], n[k]); it.text = '~ ' + where + ': ' + it.text;
+        (k === 'v' || k === 'st' ? meta : content).push(it);
+    };
+    const plain = t => ({ text: t, full: null });
     const an = a.CHATBOTS.map(x => x.name), bn = b.CHATBOTS.map(x => x.name);
-    bn.filter(n => !an.includes(n)).forEach(n => content.push('+ New chatbot: ' + n + ' (' + (b.BOT_CMDS[n] || []).length + ' commands)'));
-    an.filter(n => !bn.includes(n)).forEach(n => content.push('- Removed chatbot: ' + n + ' (and its ' + (a.BOT_CMDS[n] || []).length + ' commands)'));
-    if (!same(an.filter(n => bn.includes(n)), bn.filter(n => an.includes(n)))) content.push('~ Chatbot order changed (changes the card order)');
-    if (an[0] !== bn[0]) content.push('~ Default (first) chatbot: ' + cut(an[0]) + ' -> ' + cut(bn[0]));
+    bn.filter(n => !an.includes(n)).forEach(n => content.push(plain('+ New chatbot: ' + n + ' (' + (b.BOT_CMDS[n] || []).length + ' commands)')));
+    an.filter(n => !bn.includes(n)).forEach(n => content.push(plain('- Removed chatbot: ' + n + ' (and its ' + (a.BOT_CMDS[n] || []).length + ' commands)')));
+    if (!same(an.filter(n => bn.includes(n)), bn.filter(n => an.includes(n)))) content.push(plain('~ Chatbot order changed (changes the card order)'));
+    if (an[0] !== bn[0]) content.push(plain('~ Default (first) chatbot: ' + cut(an[0]) + ' -> ' + cut(bn[0])));
     b.CHATBOTS.forEach(nb => {
         const ob = a.CHATBOTS.find(x => x.name === nb.name); if (!ob) return;
         CATALOG_FIELDS.bot.forEach(k => { if (k !== 'name' && !same(ob[k], nb[k])) field(k, ob, nb, nb.name + ' card'); });
-        if (a.BOT_NOTES[nb.name] !== b.BOT_NOTES[nb.name]) content.push('~ ' + nb.name + ': notes changed');
+        if (a.BOT_NOTES[nb.name] !== b.BOT_NOTES[nb.name]) { const it = change('notes', a.BOT_NOTES[nb.name], b.BOT_NOTES[nb.name]); it.text = '~ ' + nb.name + ': ' + it.text; content.push(it); }
         const keyed = list => { const seen = {}; return list.map(p => { const base = p.g + '|' + p.l; seen[base] = (seen[base] || 0) + 1; return { id: base + '#' + seen[base], p: p }; }); };
         const ok = keyed(a.BOT_CMDS[nb.name] || []), nk = keyed(b.BOT_CMDS[nb.name] || []);
         nk.forEach(x => {
             const o = ok.find(y => y.id === x.id);
-            if (!o) { content.push('+ ' + nb.name + ': ' + x.p.l + ' (' + x.p.g + ')'); return; }
+            if (!o) { content.push(plain('+ ' + nb.name + ': ' + x.p.l + ' (' + x.p.g + ')')); return; }
             CATALOG_FIELDS.cmd.forEach(k => { if (k !== 'g' && k !== 'l' && !same(o.p[k], x.p[k])) field(k, o.p, x.p, nb.name + ': ' + x.p.l); });
         });
-        ok.forEach(y => { if (!nk.some(x => x.id === y.id)) content.push('- ' + nb.name + ': ' + y.p.l + ' (' + y.p.g + ')'); });
-        if (!same(ok.filter(y => nk.some(x => x.id === y.id)).map(y => y.id), nk.filter(x => ok.some(y => y.id === x.id)).map(x => x.id))) content.push('~ ' + nb.name + ': command order changed');
+        ok.forEach(y => { if (!nk.some(x => x.id === y.id)) content.push(plain('- ' + nb.name + ': ' + y.p.l + ' (' + y.p.g + ')')); });
+        if (!same(ok.filter(y => nk.some(x => x.id === y.id)).map(y => y.id), nk.filter(x => ok.some(y => y.id === x.id)).map(x => x.id))) content.push(plain('~ ' + nb.name + ': command order changed'));
     });
     TIER_KEYS.forEach(k => CATALOG_FIELDS.tierParts.forEach((part, i) => {
         const o = (a.TIERS[k] || [])[i], n = (b.TIERS[k] || [])[i];
-        if (!same(o, n)) content.push('~ Free-tier badge "' + k + '": ' + part + ' ' + cut(o, 40) + ' -> ' + cut(n, 40));
+        if (!same(o, n)) { const it = change(part, o, n); it.text = '~ Free-tier badge "' + k + '": ' + it.text; content.push(it); }
     }));
-    if (a.rev !== b.rev || a.updated !== b.updated) meta.unshift('~ Catalog revision: rev ' + a.rev + ' -> ' + b.rev + ', updated ' + cut(a.updated) + ' -> ' + cut(b.updated));
-    return { lines: content.concat(meta), content: content.length, meta: meta.length };
+    if (a.rev !== b.rev || a.updated !== b.updated) meta.unshift(plain('~ Catalog revision: rev ' + a.rev + ' -> ' + b.rev + ', updated ' + cut(a.updated) + ' -> ' + cut(b.updated)));
+    const items = content.concat(meta);
+    return { items: items, lines: items.map(x => x.text), content: content.length, meta: meta.length };
 }
-let pendingCatalog = null;
+let pendingCatalog = null, reviewComplete = false;
 function showCatalogDiff(rawCat, label) {
     const box = document.getElementById('catDiff');
     box.className = 'splitbox'; box.hidden = false; pendingCatalog = null;
@@ -2015,19 +2024,31 @@ function showCatalogDiff(rawCat, label) {
     const nc = cleanCatalog(rawCat), cur = validateCatalog(CATALOG).length ? CATALOG : cleanCatalog(CATALOG), d = diffCatalogs(cur, nc);
     if (!d.lines.length) { box.innerHTML = '<b>' + esc(label) + ':</b> you are up to date (rev ' + CATALOG.rev + ', updated ' + esc(CATALOG.updated) + ').'; return; }
     pendingCatalog = nc;
-    const CAP = 500, shown = d.lines.slice(0, CAP), parts = [];
+    const CAP = 500, total = d.items.length, parts = [];
     if (d.content) parts.push(d.content + ' change' + (d.content > 1 ? 's' : '') + ' to wording, links, settings or entries');
     if (d.meta) parts.push(d.meta + ' check-date, status or revision update' + (d.meta > 1 ? 's' : ''));
-    box.innerHTML = '<b>' + esc(label) + ': rev ' + nc.rev + ' (updated ' + esc(nc.updated) + ') compared with your rev ' + CATALOG.rev + '.</b> Installing would apply ' + parts.join(' and ') + '. ' +
-        (d.lines.length > CAP ? 'The first ' + CAP + ' of ' + d.lines.length + ' are listed; all of them will be installed.' : 'Every difference is listed:') +
-        '<ul>' + shown.map(x => '<li>' + esc(x) + '</li>').join('') + '</ul>' +
-        '<div class="row"><button type="button" class="btn-ai" id="catInstallBtn">Install and reload</button><button type="button" class="btn-secondary" id="catCancelBtn">Cancel</button></div>' +
+    const li = x => x.full
+        ? '<li><details><summary>' + esc(x.text) + '</summary><div class="fullval"><div><b>Before (full):</b><pre>' + esc(x.full.old) + '</pre></div><div><b>After (full):</b><pre>' + esc(x.full.neu) + '</pre></div></div></details></li>'
+        : '<li>' + esc(x.text) + '</li>';
+    reviewComplete = total <= CAP;
+    box.innerHTML = '<b>' + esc(label) + ': rev ' + nc.rev + ' (updated ' + esc(nc.updated) + ') compared with your rev ' + CATALOG.rev + '.</b> Installing would apply ' + parts.join(' and ') + ' (' + total + ' in total). ' +
+        '<span id="catShownCount" role="status">' + (total > CAP ? 'Showing ' + CAP + ' of ' + total + ' changes. Install is turned off until you show all of them.' : 'Showing all ' + total + ' changes. Shortened values have a "Before / After (full)" view: click the line to open it.') + '</span>' +
+        '<ul id="catDiffList">' + d.items.slice(0, CAP).map(li).join('') + '</ul>' +
+        '<div class="row">' + (total > CAP ? '<button type="button" class="btn-secondary" id="catShowAllBtn">Show all ' + total + ' changes</button>' : '') +
+        '<button type="button" class="btn-ai" id="catInstallBtn"' + (total > CAP ? ' disabled aria-disabled="true"' : '') + '>Install and reload</button><button type="button" class="btn-secondary" id="catCancelBtn">Cancel</button></div>' +
         '<div style="margin-top:6px;font-size:12px;color:var(--muted)">Reloading clears anything typed on the page. Saved presets are kept.</div>';
     document.getElementById('catInstallBtn').addEventListener('click', installCatalog);
-    document.getElementById('catCancelBtn').addEventListener('click', () => { pendingCatalog = null; box.hidden = true; box.innerHTML = ''; });
+    const all = document.getElementById('catShowAllBtn');
+    if (all) all.addEventListener('click', () => {
+        document.getElementById('catDiffList').innerHTML = d.items.map(li).join('');
+        document.getElementById('catShownCount').textContent = 'Showing all ' + total + ' of ' + total + ' changes. Shortened values have a "Before / After (full)" view: click the line to open it.';
+        all.remove(); reviewComplete = true;
+        const ib = document.getElementById('catInstallBtn'); ib.disabled = false; ib.removeAttribute('aria-disabled');
+    });
+    document.getElementById('catCancelBtn').addEventListener('click', () => { pendingCatalog = null; reviewComplete = false; box.hidden = true; box.innerHTML = ''; });
 }
 function installCatalog() {
-    if (!pendingCatalog) return;
+    if (!pendingCatalog || !reviewComplete) return;
     try { localStorage.setItem(CATALOG_KEY, JSON.stringify(pendingCatalog)); } catch (e) { toast('Could not save: this browser blocks local storage', true); return; }
     location.reload();
 }

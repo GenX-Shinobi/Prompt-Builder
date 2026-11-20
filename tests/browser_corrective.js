@@ -154,6 +154,69 @@ const ok = (c, m) => { if (c) { pass++; console.log('PASS ' + m); } else { fail+
   await p.evaluate(() => localStorage.removeItem('pb-catalog-v1'));
   await p.context().close();
 
+  /* ============ A2: every changed value is inspectable; long lists cannot be installed unseen ============ */
+  {
+    const q = await open();
+    // (1) schema-driven: EVERY field in CATALOG_FIELDS shows its old and new text, never just "changed"
+    const R = await q.evaluate(() => {
+      const base = cleanCatalog(BUILTIN_CATALOG), out = { missing: [], vague: [], tried: 0 };
+      const val = (k, tag) => k === 'f' ? ['f-' + tag] : k === 'limit' ? (tag === 'OLD' ? 11111 : 22222) : tag + '-' + k;
+      for (const [scope, keys] of [['bot', CATALOG_FIELDS.bot], ['cmd', CATALOG_FIELDS.cmd]]) {
+        keys.filter(k => k !== 'name' && k !== 'g' && k !== 'l').forEach(k => {
+          const a = JSON.parse(JSON.stringify(base)), b = JSON.parse(JSON.stringify(base));
+          if (scope === 'bot') { a.CHATBOTS[0][k] = val(k, 'OLD'); b.CHATBOTS[0][k] = val(k, 'NEW'); }
+          else { const n = a.CHATBOTS[0].name; a.BOT_CMDS[n][0][k] = val(k, 'OLD'); b.BOT_CMDS[n][0][k] = val(k, 'NEW'); }
+          const d = diffCatalogs(a, b); out.tried++;
+          const s = k === 'f' ? 'f-OLD' : String(val(k, 'OLD')), t = k === 'f' ? 'f-NEW' : String(val(k, 'NEW'));
+          const line = d.lines.find(l => l.indexOf(s) >= 0 && l.indexOf(t) >= 0);
+          if (!line) out.missing.push(scope + '.' + k);
+          if (d.lines.some(l => / changed$/.test(l))) out.vague.push(scope + '.' + k);
+        });
+      }
+      const a = JSON.parse(JSON.stringify(base)), b = JSON.parse(JSON.stringify(base)), n = a.CHATBOTS[0].name;
+      a.BOT_NOTES[n] = 'OLD-NOTE'; b.BOT_NOTES[n] = 'NEW-NOTE';
+      const dn = diffCatalogs(a, b).lines.join('|');
+      out.notes = /OLD-NOTE/.test(dn) && /NEW-NOTE/.test(dn);
+      return out;
+    });
+    ok(R.tried >= 12 && R.missing.length === 0 && R.vague.length === 0 && R.notes, 'A2: all ' + R.tried + ' bot/command fields and the chatbot notes show before -> after text (missing: ' + R.missing.join(',') + '; vague: ' + R.vague.join(',') + ')');
+
+    // (2) long values: truncated preview + full before/after on demand; markup in values stays inert text
+    const evil = '<img src=x onerror="window.__pwn=1">';
+    const base = await q.evaluate(() => JSON.parse(JSON.stringify(cleanCatalog(BUILTIN_CATALOG))));
+    const c = JSON.parse(JSON.stringify(base)); const oldD = base.BOT_CMDS.ChatGPT[0].d;
+    c.rev = 2; const longNew = evil + ' ' + 'LONGTEXT '.repeat(80) + 'THE-END-MARKER';
+    c.BOT_CMDS.ChatGPT[0].d = longNew;
+    const openDiff = async cat => { await q.evaluate(() => { document.getElementById('catImportBox').hidden = false; }); await q.fill('#catImportText', JSON.stringify(cat)); await q.click('#catImportGo'); };
+    await openDiff(c);
+    const row = q.locator('#catDiff li details').first();
+    const summary = await row.locator('summary').textContent();
+    ok(/description /.test(summary) && summary.length < 260 && !/THE-END-MARKER/.test(summary) && /\.\.\./.test(summary), 'A2: a long changed value shows a short before -> after preview (' + summary.length + ' chars)');
+    await row.locator('summary').click();
+    const fullTxt = await row.textContent();
+    ok(fullTxt.indexOf('THE-END-MARKER') >= 0 && fullTxt.indexOf(oldD) >= 0 && /Before \(full\)/.test(fullTxt) && /After \(full\)/.test(fullTxt), 'A2: opening the line shows the complete old and new values');
+    ok((await q.$$('#catDiff img')).length === 0 && (await q.evaluate(() => window.__pwn)) === undefined && fullTxt.indexOf(evil) >= 0, 'A2: markup inside catalog values is shown as text and never runs');
+    ok(/Showing all \d+ changes/.test(await q.textContent('#catShownCount')) && !(await q.locator('#catInstallBtn').isDisabled()), 'A2: a short list states it shows all changes and Install is available');
+
+    // (3) cap: >500 changes -> total vs shown stated, Install disabled until every change is displayed
+    const big = JSON.parse(JSON.stringify(base)); big.rev = 3;
+    for (const n of Object.keys(big.BOT_CMDS)) for (let i = 0; i < 70; i++) big.BOT_CMDS[n].push(Object.assign({}, big.BOT_CMDS[n][0], { l: 'Bulk item ' + i, t: 'bulk ' + i })); /* per-chatbot limit is 200 commands */
+    const wantTotal = await q.evaluate(c2 => diffCatalogs(cleanCatalog(CATALOG), cleanCatalog(c2)).lines.length, big);
+    await openDiff(big);
+    const head = await q.textContent('#catDiff');
+    ok(wantTotal > 500 && (await q.$$('#catDiffList > li')).length === 500 && new RegExp('Showing 500 of ' + wantTotal + ' changes').test(head) && !/Every difference is listed/.test(head), 'A2: over the cap it says "Showing 500 of ' + wantTotal + '" and never claims all are listed');
+    ok(new RegExp('\\(' + wantTotal + ' in total\\)').test(head), 'A2: the aggregate count covers the whole diff (' + wantTotal + '), not only the visible part');
+    ok(await q.locator('#catInstallBtn').isDisabled(), 'A2: Install is disabled while changes are hidden');
+    await q.evaluate(() => installCatalog());
+    ok(await q.evaluate(() => localStorage.getItem('pb-catalog-v1') === null), 'A2: installCatalog() refuses to store anything while the review is incomplete');
+    await q.click('#catShowAllBtn');
+    ok((await q.$$('#catDiffList > li')).length === wantTotal && !(await q.locator('#catInstallBtn').isDisabled()) && (await q.$('#catShowAllBtn')) === null && new RegExp('Showing all ' + wantTotal + ' of ' + wantTotal).test(await q.textContent('#catShownCount')), 'A2: "Show all" displays every one of the ' + wantTotal + ' changes and then enables Install');
+    await q.click('#catCancelBtn');
+    await openDiff(big);
+    ok(await q.locator('#catInstallBtn').isDisabled(), 'A2: after Cancel and re-import the gate is closed again');
+    await q.context().close();
+  }
+
   /* =============================== B: status wording =============================== */
   const chipsInDom = async page => {
     let n = 0;
