@@ -6,6 +6,7 @@ A zero-dependency, single-file web application designed to help everyday users g
 * **Live in Browser (GitHub Pages):** [Open AI Prompt Builder](https://GenX-Shinobi.github.io/Prompt-Builder/)
 * **View or Download Current File (`v5.2.0`):** [index.html](index.html)
 
+![AI Prompt Builder v5.2.0 Preview](Preview.jpg)
 ## Core Mission
 1. **Free-Tier First:** Built around free chatbot plans (with free accounts where required for uploads, history, or connectors). Every bot command includes a high-contrast free-tier availability badge (`Free`, `Free w/ account`, `Limited quota`, `Paid plan`), conservative paste budgets, and automatic multi-part prompt splitting when a prompt exceeds a bot's safe paste limit.
 2. **Self-Contained & AI-Editable:** The entire application lives in a single `.html` file (`index.html`) with zero build steps, external libraries, or backend servers. Its built-in Dev Bay packages your change request alongside a clean snapshot of the app's source code, version-log rules, and a command freshness check so any AI chatbot can generate the next version.
