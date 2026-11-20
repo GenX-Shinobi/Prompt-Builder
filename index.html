@@ -1986,9 +1986,14 @@ function diffCatalogs(a, b) {
         (k === 'v' || k === 'st' ? meta : content).push(it);
     };
     const plain = t => ({ text: t, full: null });
+    /* added/removed things carry their COMPLETE record (every installable field, untruncated) so the review shows what is really being added or removed */
+    const rows = (o, keys) => keys.map(k => [FIELD_LABEL[k] || k, str(o[k])]);
+    const cmdItem = (sign, who, p) => ({ text: sign + ' ' + who + ': ' + p.l + ' (' + p.g + ')', full: null, detail: rows(p, CATALOG_FIELDS.cmd) });
+    const botItem = (sign, label, bot, cat) => ({ text: sign + ' ' + label + ': ' + bot.name + ' (' + (cat.BOT_CMDS[bot.name] || []).length + ' commands, each listed as its own line below)', full: null, detail: rows(bot, CATALOG_FIELDS.bot).concat([['notes', str(cat.BOT_NOTES[bot.name])]]) });
+    const botFull = (sign, label, bot, cat) => [botItem(sign, label, bot, cat)].concat((cat.BOT_CMDS[bot.name] || []).map(p => cmdItem(sign, bot.name, p)));
     const an = a.CHATBOTS.map(x => x.name), bn = b.CHATBOTS.map(x => x.name);
-    bn.filter(n => !an.includes(n)).forEach(n => content.push(plain('+ New chatbot: ' + n + ' (' + (b.BOT_CMDS[n] || []).length + ' commands)')));
-    an.filter(n => !bn.includes(n)).forEach(n => content.push(plain('- Removed chatbot: ' + n + ' (and its ' + (a.BOT_CMDS[n] || []).length + ' commands)')));
+    b.CHATBOTS.filter(x => !an.includes(x.name)).forEach(x => botFull('+', 'New chatbot', x, b).forEach(it => content.push(it)));
+    a.CHATBOTS.filter(x => !bn.includes(x.name)).forEach(x => botFull('-', 'Removed chatbot', x, a).forEach(it => content.push(it)));
     if (!same(an.filter(n => bn.includes(n)), bn.filter(n => an.includes(n)))) content.push(plain('~ Chatbot order changed (changes the card order)'));
     if (an[0] !== bn[0]) content.push(plain('~ Default (first) chatbot: ' + cut(an[0]) + ' -> ' + cut(bn[0])));
     b.CHATBOTS.forEach(nb => {
@@ -1999,10 +2004,10 @@ function diffCatalogs(a, b) {
         const ok = keyed(a.BOT_CMDS[nb.name] || []), nk = keyed(b.BOT_CMDS[nb.name] || []);
         nk.forEach(x => {
             const o = ok.find(y => y.id === x.id);
-            if (!o) { content.push(plain('+ ' + nb.name + ': ' + x.p.l + ' (' + x.p.g + ')')); return; }
+            if (!o) { content.push(cmdItem('+', nb.name, x.p)); return; }
             CATALOG_FIELDS.cmd.forEach(k => { if (k !== 'g' && k !== 'l' && !same(o.p[k], x.p[k])) field(k, o.p, x.p, nb.name + ': ' + x.p.l); });
         });
-        ok.forEach(y => { if (!nk.some(x => x.id === y.id)) content.push(plain('- ' + nb.name + ': ' + y.p.l + ' (' + y.p.g + ')')); });
+        ok.forEach(y => { if (!nk.some(x => x.id === y.id)) content.push(cmdItem('-', nb.name, y.p)); });
         if (!same(ok.filter(y => nk.some(x => x.id === y.id)).map(y => y.id), nk.filter(x => ok.some(y => y.id === x.id)).map(x => x.id))) content.push(plain('~ ' + nb.name + ': command order changed'));
     });
     TIER_KEYS.forEach(k => CATALOG_FIELDS.tierParts.forEach((part, i) => {
@@ -2027,12 +2032,14 @@ function showCatalogDiff(rawCat, label) {
     const CAP = 500, total = d.items.length, parts = [];
     if (d.content) parts.push(d.content + ' change' + (d.content > 1 ? 's' : '') + ' to wording, links, settings or entries');
     if (d.meta) parts.push(d.meta + ' check-date, status or revision update' + (d.meta > 1 ? 's' : ''));
-    const li = x => x.full
+    const li = x => x.detail
+        ? '<li><details><summary>' + esc(x.text) + '</summary><div class="fullval">' + x.detail.map(r => '<div><b>' + esc(r[0]) + ':</b><pre>' + esc(r[1]) + '</pre></div>').join('') + '</div></details></li>'
+        : x.full
         ? '<li><details><summary>' + esc(x.text) + '</summary><div class="fullval"><div><b>Before (full):</b><pre>' + esc(x.full.old) + '</pre></div><div><b>After (full):</b><pre>' + esc(x.full.neu) + '</pre></div></div></details></li>'
         : '<li>' + esc(x.text) + '</li>';
     reviewComplete = total <= CAP;
     box.innerHTML = '<b>' + esc(label) + ': rev ' + nc.rev + ' (updated ' + esc(nc.updated) + ') compared with your rev ' + CATALOG.rev + '.</b> Installing would apply ' + parts.join(' and ') + ' (' + total + ' in total). ' +
-        '<span id="catShownCount" role="status">' + (total > CAP ? 'Showing ' + CAP + ' of ' + total + ' changes. Install is turned off until you show all of them.' : 'Showing all ' + total + ' changes. Shortened values have a "Before / After (full)" view: click the line to open it.') + '</span>' +
+        '<span id="catShownCount" role="status">' + (total > CAP ? 'Showing ' + CAP + ' of ' + total + ' changes. Install is turned off until you show all of them.' : 'Showing all ' + total + ' changes. Click a line to open its full values: the complete record for anything added or removed, or Before / After for shortened values.') + '</span>' +
         '<ul id="catDiffList">' + d.items.slice(0, CAP).map(li).join('') + '</ul>' +
         '<div class="row">' + (total > CAP ? '<button type="button" class="btn-secondary" id="catShowAllBtn">Show all ' + total + ' changes</button>' : '') +
         '<button type="button" class="btn-ai" id="catInstallBtn"' + (total > CAP ? ' disabled aria-disabled="true"' : '') + '>Install and reload</button><button type="button" class="btn-secondary" id="catCancelBtn">Cancel</button></div>' +
@@ -2041,7 +2048,7 @@ function showCatalogDiff(rawCat, label) {
     const all = document.getElementById('catShowAllBtn');
     if (all) all.addEventListener('click', () => {
         document.getElementById('catDiffList').innerHTML = d.items.map(li).join('');
-        document.getElementById('catShownCount').textContent = 'Showing all ' + total + ' of ' + total + ' changes. Shortened values have a "Before / After (full)" view: click the line to open it.';
+        document.getElementById('catShownCount').textContent = 'Showing all ' + total + ' of ' + total + ' changes. Click a line to open its full values: the complete record for anything added or removed, or Before / After for shortened values.';
         all.remove(); reviewComplete = true;
         const ib = document.getElementById('catInstallBtn'); ib.disabled = false; ib.removeAttribute('aria-disabled');
     });

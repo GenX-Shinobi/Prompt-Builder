@@ -217,6 +217,75 @@ const ok = (c, m) => { if (c) { pass++; console.log('PASS ' + m); } else { fail+
     await q.context().close();
   }
 
+  /* ============ A3: added/removed commands and chatbots show their complete records ============ */
+  {
+    const q = await open();
+    const base = await q.evaluate(() => JSON.parse(JSON.stringify(cleanCatalog(BUILTIN_CATALOG))));
+    const clone = o => JSON.parse(JSON.stringify(o));
+    const openDiff = async cat => { await q.evaluate(() => { document.getElementById('catImportBox').hidden = false; }); await q.fill('#catImportText', JSON.stringify(cat)); await q.click('#catImportGo'); };
+    /* content items only: the catalog-revision line is a separate, counted metadata change */
+    const liTexts = async () => (await q.$$eval('#catDiffList > li', els => els.map(e => e.textContent))).filter(t => !/Catalog revision:/.test(t));
+    const HOSTILE = '<img src=x onerror="window.__pwn3=1"><script>window.__pwn3=2</script>';
+    const cmd = (l, extra) => Object.assign({ g: 'Zed Group', k: 'type', tier: 'limited', t: 'DISTINCT-PROMPT-TEXT', l: l, w: 'DISTINCT-WHERE', d: 'DISTINCT-DESCRIPTION', f: ['DISTINCT-FIELD-A', 'DISTINCT-FIELD-B'], v: '2026-11-01', st: 'confirmed' }, extra || {});
+    const noExec = async () => (await q.$$('#catDiff img')).length === 0 && (await q.evaluate(() => window.__pwn3)) === undefined;
+
+    // (1) added command: every installable value is in the review
+    let c = clone(base); c.rev = 2; c.BOT_CMDS.ChatGPT.push(cmd('Brand New Cmd'));
+    await openDiff(c);
+    let items = await liTexts(), hit = items.find(t => /\+ ChatGPT: Brand New Cmd \(Zed Group\)/.test(t)) || '';
+    ok(items.length === 1 && ['DISTINCT-PROMPT-TEXT', 'limited', 'DISTINCT-DESCRIPTION', 'DISTINCT-WHERE', 'DISTINCT-FIELD-A', 'DISTINCT-FIELD-B', '2026-11-01', 'confirmed', 'Zed Group', 'Brand New Cmd'].every(v => hit.indexOf(v) >= 0), 'A3: an added command shows prompt text, tier, fill-in boxes, location, description, check date and status');
+
+    // (2) removed command: its previous record is inspectable
+    const gone = base.BOT_CMDS.ChatGPT[2]; c = clone(base); c.rev = 2; c.BOT_CMDS.ChatGPT.splice(2, 1);
+    await openDiff(c); items = await liTexts(); hit = items.find(t => t.indexOf('- ChatGPT: ' + gone.l) === 0) || '';
+    ok(items.length === 1 && hit.indexOf(gone.t) >= 0 && hit.indexOf(gone.d) >= 0 && hit.indexOf(gone.w) >= 0 && hit.indexOf(gone.tier) >= 0 && hit.indexOf(gone.g) >= 0, 'A3: a removed command shows its complete previous values (' + gone.l + ')');
+
+    // (3) added chatbot with notes and several commands
+    const nb = clone(base.CHATBOTS[1]); nb.name = 'Zork AI'; nb.maker = 'Zork Labs'; nb.url = 'https://zork.example/'; nb.blurb = 'ZORK-BLURB'; nb.brief = 'ZORK-BRIEF'; nb.best = 'ZORK-BEST'; nb.free = 'ZORK-FREE-NOTE'; nb.limit = 33333;
+    c = clone(base); c.rev = 2; c.CHATBOTS.push(nb); c.BOT_NOTES['Zork AI'] = 'ZORK-NOTES-TEXT'; c.BOT_CMDS['Zork AI'] = [cmd('Zork One'), cmd('Zork Two', { t: 'SECOND-PROMPT', tier: 'paid' }), cmd('Zork Three', { d: 'THIRD-DESC' })];
+    ok((await q.evaluate(c2 => validateCatalog(c2).length, c)) === 0, 'A3: (setup) the test chatbot catalog is valid');
+    await openDiff(c); items = await liTexts();
+    const card = items.find(t => /\+ New chatbot: Zork AI \(3 commands/.test(t)) || '';
+    ok(items.length === 4 && ['Zork Labs', 'https://zork.example/', 'ZORK-BLURB', 'ZORK-BRIEF', 'ZORK-BEST', 'ZORK-FREE-NOTE', '33333', 'ZORK-NOTES-TEXT'].every(v => card.indexOf(v) >= 0), 'A3: a new chatbot shows its card fields and notes (' + items.length + ' reviewable items = card + 3 commands)');
+    ok(['Zork One', 'Zork Two', 'Zork Three'].every(n => items.some(t => t.indexOf('+ Zork AI: ' + n) === 0 && t.indexOf('DISTINCT-PROMPT-TEXT') + t.indexOf('SECOND-PROMPT') > -2)) && items.find(t => /Zork Two/.test(t)).indexOf('SECOND-PROMPT') >= 0 && items.find(t => /Zork Two/.test(t)).indexOf('paid') >= 0 && items.find(t => /Zork Three/.test(t)).indexOf('THIRD-DESC') >= 0, 'A3: every command of a new chatbot is listed with its own values');
+    ok(new RegExp('\\(5 in total\\)').test(await q.textContent('#catDiff')) && (await q.$$('#catDiffList > li')).length === 5, 'A3: the aggregate count equals the listed items (4 content + 1 revision line), with nothing counted twice');
+
+    // (4) removed chatbot: card, notes and commands inspectable
+    const last = base.CHATBOTS[base.CHATBOTS.length - 1], lname = last.name, lcmds = base.BOT_CMDS[lname];
+    c = clone(base); c.rev = 2; c.CHATBOTS.pop(); delete c.BOT_NOTES[lname]; delete c.BOT_CMDS[lname];
+    await openDiff(c); items = await liTexts();
+    const rc = items.find(t => t.indexOf('- Removed chatbot: ' + lname) === 0) || '';
+    ok(items.length === 1 + lcmds.length && rc.indexOf(last.maker) >= 0 && rc.indexOf(last.url) >= 0 && rc.indexOf(last.blurb) >= 0 && rc.indexOf(base.BOT_NOTES[lname]) >= 0 && lcmds.every(p => items.some(t => t.indexOf('- ' + lname + ': ' + p.l) === 0 && t.indexOf(p.t) >= 0 && t.indexOf(p.d) >= 0)), 'A3: a removed chatbot shows its card, notes and all ' + lcmds.length + ' commands with their values');
+
+    // (5) hostile markup in ADDED content and in REMOVED content stays inert text
+    c = clone(base); c.rev = 2; c.BOT_CMDS.ChatGPT.push(cmd('Hostile Add', { d: HOSTILE, t: HOSTILE })); c.CHATBOTS.push(Object.assign(clone(nb), { name: 'Evil AI', blurb: HOSTILE })); c.BOT_NOTES['Evil AI'] = HOSTILE; c.BOT_CMDS['Evil AI'] = [cmd('Evil Cmd', { d: HOSTILE })];
+    await openDiff(c); items = await liTexts();
+    ok(items.some(t => t.indexOf(HOSTILE) >= 0) && await noExec(), 'A3: markup in added commands, chatbot cards and notes is shown as text and never runs');
+    const hostileCat = clone(base); hostileCat.rev = 2; hostileCat.BOT_CMDS.ChatGPT.push(cmd('Hostile Old', { d: HOSTILE, t: HOSTILE }));
+    await q.evaluate(h => localStorage.setItem('pb-catalog-v1', JSON.stringify(h)), hostileCat);
+    await q.reload(); await q.waitForTimeout(400);
+    c = clone(base); c.rev = 3; await openDiff(c); items = await liTexts();
+    ok(items.length === 1 && items[0].indexOf('- ChatGPT: Hostile Old') === 0 && items[0].indexOf(HOSTILE) >= 0 && await noExec(), 'A3: markup in REMOVED content is shown as text and never runs');
+
+    // (6) large removals and large additions still hit the 500-item gate
+    const bigCat = clone(base); bigCat.rev = 5;
+    for (const n of Object.keys(bigCat.BOT_CMDS)) for (let i = 0; i < 70; i++) bigCat.BOT_CMDS[n].push(cmd('Bulk ' + i, { t: 'bulk ' + i }));
+    await q.evaluate(h => localStorage.setItem('pb-catalog-v1', JSON.stringify(h)), bigCat);
+    await q.reload(); await q.waitForTimeout(400);
+    c = clone(base); c.rev = 6; await openDiff(c);
+    let total = (await q.textContent('#catDiff')).match(/\((\d+) in total\)/);
+    ok(total && +total[1] > 500 && /Showing 500 of \d+ changes/.test(await q.textContent('#catShownCount')) && await q.locator('#catInstallBtn').isDisabled() && (await q.$$('#catDiffList > li')).length === 500, 'A3: a large REMOVAL (' + (total && total[1]) + ' changes) shows 500 and keeps Install disabled');
+    await q.click('#catShowAllBtn');
+    ok((await q.$$('#catDiffList > li')).length === +total[1] && !(await q.locator('#catInstallBtn').isDisabled()), 'A3: after "Show all", every removed record is listed and Install is enabled');
+    await q.evaluate(() => localStorage.removeItem('pb-catalog-v1')); await q.reload(); await q.waitForTimeout(400);
+    c = clone(base); c.rev = 2;
+    for (let k = 0; k < 3; k++) { const x = Object.assign(clone(nb), { name: 'Bulk AI ' + k }); c.CHATBOTS.push(x); c.BOT_NOTES[x.name] = 'notes ' + k; c.BOT_CMDS[x.name] = Array.from({ length: 190 }, (_, i) => cmd('Item ' + i, { t: 'p' + i })); }
+    ok((await q.evaluate(c2 => validateCatalog(c2).length, c)) === 0, 'A3: (setup) the large new-chatbot catalog is valid');
+    await openDiff(c); total = (await q.textContent('#catDiff')).match(/\((\d+) in total\)/);
+    ok(total && +total[1] === 3 * 191 + 1 && /Showing 500 of 574 changes/.test(await q.textContent('#catShownCount')) && await q.locator('#catInstallBtn').isDisabled(), 'A3: large ADDITION of 3 chatbots counts every card and command (573, plus the revision line = 574) and keeps Install disabled until shown');
+    await q.context().close();
+  }
+
   /* =============================== B: status wording =============================== */
   const chipsInDom = async page => {
     let n = 0;
