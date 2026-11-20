@@ -6,18 +6,18 @@ The free-first, chatbot-independent mission and project scope in [PROJECT_CONTRO
 
 **Release is not approved. No v5.5.0 implementation until all v5.4.0 gates pass.**
 
-1. Complete the remaining catalogue installation-diff reviewability work. Every changed human-facing/installable field must have a meaningful before/after preview or a clear way to inspect the full values. Handle the 500-line cap transparently.
-2. Add regression tests for complete field coverage, before/after visibility and full review behaviour.
-3. Run all documented Playwright suites and record actual results:
+1. ~~Complete catalogue installation-diff reviewability~~ — **done** (`419b51f`, `5c41741`): every changed value has a before/after preview or a full-value view; added/removed commands and chatbots show complete expandable records; the 500-item cap is explicit and Install stays disabled until all changes are shown.
+2. ~~Add regression tests for field coverage, before/after visibility and full review~~ — **done** (`tests/browser_corrective.js`, including seven UI-interaction checks in `52bcdea`).
+3. ~~Run all documented Playwright suites~~ — **run and Claude-reported only**: 49 + 18 + 100 = 167 passed, 0 failed (exit 0 each). Not independently reproduced; raw logs not committed.
    - `node tests/browser_suite_1.js`
    - `node tests/browser_suite_2.js`
    - `node tests/browser_corrective.js`
-4. Independently review the final commit and evidence.
-5. Product owner performs real-browser/device acceptance tests.
-6. Reconcile README/project documentation carefully; preserve the separate draft documentation PR and v5.4.0 README.
-7. Obtain explicit owner release approval.
+4. **Independently review** the final release-branch commit (`52bcdea`) and the test evidence.
+5. **Next milestone — owner-led real-browser verification** of added/removed catalogue records, expansion/collapse, keyboard interaction (Tab, Enter/Space) and the large-diff safeguards ("Showing 500 of N", Install disabled until "Show all"), on desktop and mobile where practical. Claude provides test catalogues; the owner does not hand-edit JSON.
+6. Reconcile README/project documentation carefully; preserve the separate draft documentation PR (#1) and the v5.4.0 README. The two READMEs conflict and are deliberately unreconciled.
+7. Obtain explicit owner release approval. The owner decides how the release branch reaches `main`.
 
-**Active Claude brief:** [docs/CLAUDE_TASK.md](docs/CLAUDE_TASK.md)  
+**Claude brief:** [docs/CLAUDE_TASK.md](docs/CLAUDE_TASK.md) (executed; no open implementation task)  
 **Claude Code shorthand:** `/pb-v54`
 
 ## NEXT — resume v5.5 planning only after v5.4.0 release
@@ -31,6 +31,10 @@ Reassess the next milestone from user evidence and the idea inbox. Candidate dir
 - More reliable token/character estimates and Unicode-safe splitting.
 - Session checkpointing and reusable task loadouts.
 - Optional preset/settings portability improvements if not already delivered.
+
+## LATER — project-management improvements (owner-requested; not active)
+
+To be started only after independent review of the current documentation work, as a separate approved task: a general `/resume-project` command, a four-layer project-memory architecture, and transfer-integrity safeguards. Recorded here because they are not yet in [docs/IDEA_INBOX.md](docs/IDEA_INBOX.md); they are not a commitment.
 
 ## PARKED / outside current scope
 

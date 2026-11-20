@@ -1,6 +1,8 @@
 # Claude Code Task — Final v5.4.0 catalogue-diff verification
 
-> **Canonical execution brief.** The implementation work is already present in commit `5c41741` on `release/v5.4.0`. Do not repeat it. This task is to verify the real test execution and close the remaining developer-level evidence gap.
+> **Canonical execution brief.** The implementation work is already present on `release/v5.4.0` (commits `419b51f`, `5c41741`). Do not repeat it. This task is to verify the real test execution and close the remaining developer-level evidence gap.
+>
+> **Status (2026-11-20): executed — Claude-reported, awaiting independent review.** Claude Code added seven UI-interaction checks in commit `52bcdea` (test-only) and reported 49 + 18 + 100 = 167 passing, exit code 0 for all three suites. No production defect was found. If this brief is run again, **verify and report; do not repeat completed work or create an empty commit.** Update this brief when the owner approves a new bounded task.
 
 ## Shorthand command
 
@@ -22,14 +24,23 @@ The repository command at `.claude/commands/pb-v54.md` directs Claude Code to re
 
 ## Verified starting point
 
-- The catalogue-diff implementation commit is `5c41741ed3b75870e40bb8e3eef4a8b12a538521`.
-- Its changes are in `index.html` and `tests/browser_corrective.js`.
+- The catalogue-diff implementation commit is `5c41741ed3b75870e40bb8e3eef4a8b12a538521` (preceded by `419b51f`). Its changes are in `index.html` and `tests/browser_corrective.js`.
+- The interaction-test commit is `52bcdead070d14c2e062d28f5b7b1d0c49b518ef` on `release/v5.4.0` (test-only, `tests/browser_corrective.js`). `main` is `b247aec8a1ee279b71f6aedd8fbaf4d908c22d5f`.
 - Added/removed commands now carry complete installable field records inside expandable details.
 - Added/removed chatbot records show card fields and notes; each associated command is listed as its own complete record.
 - HTML escaping and the 500-item review/install gate remain.
 - The product owner performed a limited real-browser check using a separate test copy: a changed ChatGPT card summary was correctly detected in the preview, then Cancel was used. Nothing was installed. This did **not** test added/removed records.
 
 Treat these as checkpoints. Re-check the live branch and actual local workspace before acting. Preserve newer work.
+
+## Execution record (Claude-reported, 2026-11-20)
+
+- Environment: Node v22.23.5, Playwright 1.63.0, headless Chromium 157.0.8103.78, Claude cloud workspace.
+- `node tests/browser_suite_1.js` — exit 0, 49 passed, 0 failed.
+- `node tests/browser_suite_2.js` — exit 0, 18 passed, 0 failed.
+- `node tests/browser_corrective.js` — exit 0, 100 passed, 0 failed.
+- New tests also failed as intended against deliberately broken copies (records always open; records hidden).
+- These are **reported, not independently reproduced**; raw logs are not in the repository. Anyone can re-run the three commands above to reproduce.
 
 ## Authorised work
 
@@ -55,7 +66,7 @@ Treat these as checkpoints. Re-check the live branch and actual local workspace 
 ## Explicitly not authorised
 
 - Do not modify `main`.
-- Do not merge PR #1 or any other PR.
+- Do not merge PR #1 or any other PR. Documentation lives on `docs/project-control-baseline`; do not copy it to other branches.
 - Do not create a new PR without separate owner approval.
 - Do not force-push, reset, rebase destructively or overwrite unrelated work.
 - Do not publish, deploy, tag or create a release.

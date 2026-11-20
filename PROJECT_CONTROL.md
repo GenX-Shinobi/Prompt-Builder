@@ -4,14 +4,18 @@
 
 **Repository:** https://github.com/GenX-Shinobi/Prompt-Builder  
 **Application:** AI Prompt Builder Hub  
-**Project owner:** repository owner; final product and release approval  
-**Project management/review:** ChatGPT  
-**Implementation engineer:** Claude Code  
-**Last checked:** 2026-11-20
+**Roles (do not blur them):**
+- **Owner** — product owner; final product, merge and release approval.
+- **ChatGPT** — project manager and independent reviewer; maintains continuity.
+- **Claude Code** — implementation engineer; implements bounded tasks and runs automated tests.
+
+**Last checked:** 2026-11-20 (repository state at the checkpoint below; re-verify before acting)
+
+**Where these documents live:** on the branch `docs/project-control-baseline` (draft PR #1) until the owner approves merging it. They are **not** on `main` or `release/v5.4.0`. Read them with `git fetch origin` then `git show origin/docs/project-control-baseline:<path>`, or check that branch out in a separate worktree. Do not copy them onto other branches.
 
 ## Resume phrase
 
-> **Resume AI Prompt Builder Hub — v5.4.0 final verification.** Read `PROJECT_CONTROL.md`, `docs/CURRENT_STATUS.md`, `ROADMAP.md`, `docs/AI_WORK_RULES.md`, `docs/REGRESSION_CHECKLIST.md` and `docs/CLAUDE_TASK.md`. Check live GitHub and the actual Claude workspace before acting. The catalogue-diff implementation is already on `release/v5.4.0` at commit `5c41741`. The immediate task is to verify expandable added/removed record interactions and obtain actual results from all three documented Playwright suites. Do not modify `main`, merge PR #1, publish, or start v5.5.0. Restore the release gates and tell me the single next action.
+> **Resume AI Prompt Builder Hub — v5.4.0 acceptance.** Read `PROJECT_CONTROL.md`, `docs/CURRENT_STATUS.md`, `ROADMAP.md`, `docs/AI_WORK_RULES.md`, `docs/REGRESSION_CHECKLIST.md` and `docs/CLAUDE_TASK.md` from branch `docs/project-control-baseline`. Check live GitHub and the actual workspace before acting; the repository, not chat memory, is authoritative. The v5.4.0 catalogue-diff work is complete on `release/v5.4.0` (head `52bcdea` at the last checkpoint) with Claude-reported test results only. Do not modify `main`, merge PR #1, publish, or start v5.5.0. State the single next action.
 
 ## Mission and product principles
 
@@ -25,29 +29,58 @@ Build a free-first, chatbot-independent prompt builder that helps nontechnical p
 
 ## Verified project state at 2026-11-20
 
-- `main`: `b247aec8a1ee279b71f6aedd8fbaf4d908c22d5f`.
-- Catalogue-diff corrective commit: `5c41741ed3b75870e40bb8e3eef4a8b12a538521` on `release/v5.4.0`. The release branch's `index.html` and `tests/browser_corrective.js` match that commit's file blobs.
-- v5.4.0 source declares version 5.4.0. The catalogue baseline is 9 chatbots, 81 commands, revision 1.
-- PR #2 is merged, but that merge is not product-owner release approval.
-- PR #1 (https://github.com/GenX-Shinobi/Prompt-Builder/pull/1) remains open/draft on `docs/project-control-baseline`. Do not merge without explicit approval. Its README is based on v5.3.1 and must be reconciled carefully with the v5.4.0 README; do not overwrite either.
-- Claude reported 160 test passes across the three suites. This is not yet independently reproduced; the current Claude task requires fresh execution evidence and explicit tests of the expandable detail interaction.
-- The owner performed a safe, limited local browser preview of one changed ChatGPT summary and canceled without installing. No claim is made that the owner tested added/removed records.
+Each item below was checked against live GitHub and the Claude workspace on 2026-11-20 unless marked otherwise.
+
+### Verified facts (repository)
+
+| Ref | Commit at checkpoint | Notes |
+|---|---|---|
+| `main` | `b247aec8a1ee279b71f6aedd8fbaf4d908c22d5f` | Merge commit of PR #2. Contains `ce1ec19`; not release approval. Untouched by later work. |
+| `release/v5.4.0` | `52bcdead070d14c2e062d28f5b7b1d0c49b518ef` | 3 commits ahead of and 1 behind `main`. Local and remote heads matched; all commits pushed. |
+| `docs/project-control-baseline` | `3050480` before this checkpoint's commit | Draft PR #1. 18 commits ahead of and 3 behind `main`. |
+
+- The release branch is "3 ahead, 1 behind" because PR #2 was merged at `ce1ec19` (its merge commit `b247aec` exists only on `main`), and three further commits were then pushed to the release branch: `419b51f` (diff before/after previews and install gate), `5c41741` (complete records for added/removed commands and chatbots) and `52bcdea` (seven UI-interaction checks in `tests/browser_corrective.js`). The branches were deliberately not merged or rebased.
+- `52bcdea` changes only `tests/browser_corrective.js`; `5c41741` and `419b51f` change `index.html` and `tests/browser_corrective.js`. No catalogue or `catalog.json` change since PR #2: 9 chatbots, 81 commands, revision 1. v5.4.0 source declares version 5.4.0.
+- PR #1 (https://github.com/GenX-Shinobi/Prompt-Builder/pull/1) is open/draft, unmerged, with no reviews. PR #2 is merged. No CI or GitHub Actions results exist for any commit.
+- `readme.md` differs between branches (release: v5.4.0; docs branch: v5.3.1) and a dry-run merge conflicts there only. Do not overwrite or reconcile either README until after v5.4.0 acceptance.
+
+### Test evidence — keep these categories separate
+
+| Category | Result | Status |
+|---|---|---|
+| Earlier Claude-reported run at `5c41741` | 49 + 18 + 93 = **160** passed | Reported by Claude Code; not independently reproduced. Superseded by the next row. |
+| Later Claude-reported run at `52bcdea` | 49 + 18 + 100 = **167** passed, 0 failed, all three exit codes 0, no console errors | Reported by Claude Code. Executed in its cloud workspace (Node v22.23.5, Playwright 1.63.0, headless Chromium 157.0.8103.78). Raw logs were **not** committed to the repository. |
+| Independently reproduced results | **None** | Neither ChatGPT nor the owner has re-run the suites; there is no CI. Anyone can reproduce with the three commands in the Regression Checklist. |
+| Owner real-browser/device acceptance | **Not done** for added/removed records | See below. |
+
+Claude-reported results must never be described as independently verified. The 167 figure is a Claude Code report of its own execution; it becomes "independently reproduced" only when someone else runs the commands and records the output.
+
+### Owner verification so far
+
+The owner previewed one changed ChatGPT card summary in a separate copy and cancelled; nothing was installed. That confirms only the simple wording-change preview. **No claim is made that the owner has tested added/removed records, expansion/collapse, keyboard interaction or the large-diff safeguards.**
 
 ## Strict v5.4.0 release sequence
 
-1. Verify added/removed catalogue record expansion and actual execution of all three documented test suites.
-2. Independently review code and test evidence.
-3. Product owner completes only meaningful real-world usability/acceptance checks.
-4. Reconcile release docs and record acceptance.
+1. ~~Implement complete catalogue-diff review and expandable added/removed records; run all three suites.~~ **Done — Claude-reported only** (commits `419b51f`, `5c41741`, `52bcdea`).
+2. ChatGPT independently reviews the final release-branch code and test evidence (and, ideally, someone re-runs the three suites and records the output).
+3. **Next milestone — owner-led real-browser verification** of: added and removed catalogue records appearing in the preview; expanding and collapsing each record; keyboard interaction (Tab to a line, Enter/Space to open and close); and the large-diff safeguards ("Showing 500 of N", Install disabled until "Show all"). Desktop and mobile where practical. Claude supplies any test catalogues so the owner does not hand-edit JSON.
+4. Reconcile release documentation, including the two READMEs, and record acceptance without losing PR #1 work or the v5.4.0 README.
 5. Owner explicitly approves release.
 6. Only then resume v5.5.0 planning/implementation.
 
 ### Active task
 
-Canonical Claude brief: [docs/CLAUDE_TASK.md](docs/CLAUDE_TASK.md)  
-Claude Code shorthand: `/pb-v54` (defined by `.claude/commands/pb-v54.md`).
+There is **no open Claude implementation task.** The verification brief [docs/CLAUDE_TASK.md](docs/CLAUDE_TASK.md) has been executed (Claude-reported; see above); `/pb-v54` (defined by `.claude/commands/pb-v54.md`) remains available and, if re-run, must verify and report rather than repeat completed work.
 
-This task is verification-first. Claude should add test assertions if interaction coverage is missing, and change production code only for a reproduced defect. No changes to `main`, no merge, no publication, and no v5.5.0.
+**Single next action:** ChatGPT independent review of `release/v5.4.0` at `52bcdea`, then the owner-led verification in step 3. The owner decides whether and how branches reach `main`.
+
+### Release restrictions (apply to every session)
+
+- Do not modify `main`. Do not merge PR #1 or any other PR. Do not create a PR without owner approval.
+- Do not publish, deploy, tag or release.
+- Do not start v5.5.0.
+- Do not change production code in documentation-only tasks.
+- Do not force-push, reset or overwrite unrelated work.
 
 ## Other unfinished work
 
@@ -76,6 +109,17 @@ PR #1 is the draft project-control documentation PR. Preserve its work. README r
 - [Idea inbox](docs/IDEA_INBOX.md)
 - [Contributing guide](contributing.md)
 
-## Session closeout rule
+## Session Continuity & Context Protection Protocol
 
-At each meaningful handoff, update `docs/CURRENT_STATUS.md` with verified repository/test evidence and update this file with active task, decisions and next action. Update the roadmap when priority changes. Clearly separate source inspection, automated execution, independent review and owner acceptance.
+Purpose: let a fresh ChatGPT or Claude session resume accurately from the repository alone, without reconstructing a long conversation.
+
+1. **The repository is authoritative.** Documentation and live Git state outrank anyone's recollection of the conversation. If they disagree, trust Git, then fix the document.
+2. **Checkpoint at task or phase boundaries**, not after every message. A checkpoint updates `docs/CURRENT_STATUS.md` and, if the task, decisions or next action changed, this file.
+3. **Each checkpoint records:** exact branch and commit references; working-tree and push status; the active task and its restrictions; decisions made and who made them; test evidence with its category (verified, Claude-reported, independently reproduced, owner-tested); unresolved issues; and exactly **one** next action.
+4. **Label every claim** as one of: verified fact, Claude-reported result, independent review, owner-verified, decision awaiting the owner, or future idea. Never promote a label without new evidence.
+5. **Prepare a short resume prompt** before a session becomes unwieldy, or before a long transfer, hand-off or multi-part paste. Keep it to the resume phrase above plus anything that changed since; it points at these documents rather than copying them.
+6. **No invisible work.** Never claim background monitoring, automatic updates, scheduled checks or saved memory that has not actually happened. Say what was written, where, and at which commit.
+7. **A new session starts by verifying**, not trusting: fetch GitHub, check the actual workspace and working tree, compare with the last checkpoint, report differences, then state the single next action.
+8. **Keep it small.** One status file, one control file. Capture new ideas in [IDEA_INBOX.md](docs/IDEA_INBOX.md); do not grow the active task or add documents without need.
+
+Clearly separate source inspection, automated execution, independent review and owner acceptance in every checkpoint.

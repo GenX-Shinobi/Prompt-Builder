@@ -56,13 +56,17 @@ These rules apply to ChatGPT, Claude, Claude Code and any other AI-assisted cont
 
 ## 7. Repository task briefs and Claude Code shorthand
 
-- For the current v5.4.0 closeout, the canonical, owner-approved bounded task is `docs/CLAUDE_TASK.md`.
+- For the current v5.4.0 closeout, the canonical, owner-approved bounded task is `docs/CLAUDE_TASK.md` (currently executed and awaiting review). These management documents live on `docs/project-control-baseline` until PR #1 is approved for merge; read them from that branch and do not duplicate them onto others.
 - In Claude Code, invoke the repository slash command `/pb-v54`, defined by `.claude/commands/pb-v54.md`. It must read the canonical task file and execute it; it is not permission to ignore newer owner instructions.
 - Always re-check the live branch head and local workspace before executing a saved task brief. Treat recorded SHAs as historical checkpoints, not overwrite targets.
 - If the task file conflicts with a newer owner instruction or live repository state, stop and ask rather than guessing.
 - Do not treat task-file presence as approval to merge, publish, deploy, or modify `main`.
 
-## 8. Definition of done
+## 8. Session continuity
+
+Follow the **Session Continuity & Context Protection Protocol** in [PROJECT_CONTROL.md](../PROJECT_CONTROL.md): treat the repository as authoritative over recollection, checkpoint at task boundaries, label every claim (verified, Claude-reported, independently reviewed, owner-tested), prepare a short resume prompt before a session becomes unwieldy, name exactly one next action, and never claim background monitoring or updates that have not happened.
+
+## 9. Definition of done
 
 A task is not complete merely because code was generated. It is complete when:
 - The change is saved on the intended branch.
@@ -70,3 +74,4 @@ A task is not complete merely because code was generated. It is complete when:
 - Relevant tests have been run and results reported.
 - Documentation and project status match the actual result.
 - A reviewable handoff or pull request is available.
+- The checkpoint in `docs/CURRENT_STATUS.md` matches the actual commits, test evidence and next action.
