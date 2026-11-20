@@ -375,7 +375,7 @@ increment the minor/major version string below, append a new historical array ob
     "version": "5.4.0",
     "bot": "Claude (Anthropic)",
     "date": "2026-11-20",
-    "change": "CATALOG SPLIT (rebuilt on the published 5.3.1 after the first 5.4.0 build was lost before delivery). (1) CHATBOTS, TIERS, BOT_NOTES and BOT_CMDS moved out of the script into a JSON block (script id catalogData) that mirrors the new catalog.json file; the page reads it at load. validateCatalog() checks structure, field types, tiers, kinds, https links and lengths, and cleanCatalog() keeps only known fields. (2) Every bot card and command carries v (date last checked) and st (confirmed, doc, conflicting, unverified); grey chips show on anything not confirmed or older than 60 days (STALE_DAYS), and the bot note shows the notes check date. (3) Dev Bay catalog box: Check for newer catalog (tries catalog.json beside the page, then the raw GitHub copy; shows a diff; installs into localStorage key pb-catalog-v1 only after the user clicks Install and reloads the page), Package catalog only (a short refresh request plus the catalog, auto-split to the engine paste budget), Import catalog (accepts pasted or chatbot-returned JSON, strips code fences, validates, shows the diff), Download catalog.json, Use built-in catalog. A saved catalog is used only if its rev is at least the built-in rev. getCleanSource(cat) now embeds the active catalog in the catalogData block (from memory, never from localStorage) so every package carries the newest catalog; the Dev Bay package text tells the receiving AI to raise rev, set updated and set v and st honestly. (4) Presets: Export presets and Import presets as pb-presets.json (merge by name, 50 max, known fields only). (5) A Suggest a correction button on each command and on the bot note copies a plain-English note to paste into any chatbot. (6) A collapsible Start here panel (localStorage key pb-start-closed). hardReset() also resets the new catalog box, import box and start panel. Nothing was fetched automatically: the catalog is only fetched when the user presses Check for newer catalog.",
+    "change": "CATALOG SPLIT (rebuilt on the published 5.3.1 after the first 5.4.0 build was lost before delivery). (1) CHATBOTS, TIERS, BOT_NOTES and BOT_CMDS moved out of the script into a JSON block (script id catalogData) that mirrors the new catalog.json file; the page reads it at load. validateCatalog() checks structure, field types, tiers, kinds, https links and lengths, and cleanCatalog() keeps only known fields. (2) Every bot card and command carries v (date last checked) and st (confirmed, doc, conflicting, unverified); grey chips show on chatbot notes and on commands that are unverified, conflicting or older than 60 days (STALE_DAYS) while doc-only commands stay chip-free until old, and the bot note shows the notes check date. (3) Dev Bay catalog box: Check for newer catalog (tries catalog.json beside the page, then the raw GitHub copy; shows a diff; installs into localStorage key pb-catalog-v1 only after the user clicks Install and reloads the page), Package catalog only (a short refresh request plus the catalog, auto-split to the engine paste budget), Import catalog (accepts pasted or chatbot-returned JSON, strips code fences, validates, shows the diff), Download catalog.json, Use built-in catalog. A saved catalog is used only if its rev is at least the built-in rev. getCleanSource(cat) now embeds the active catalog in the catalogData block (from memory, never from localStorage) so every package carries the newest catalog; the Dev Bay package text tells the receiving AI to raise rev, set updated and set v and st honestly. (4) Presets: Export presets and Import presets as pb-presets.json (merge by name, 50 max, known fields only). (5) A Suggest a correction button on each command and on the bot note copies a plain-English note to paste into any chatbot. (6) A collapsible Start here panel (localStorage key pb-start-closed). hardReset() also resets the new catalog box, import box and start panel. Nothing was fetched automatically: the catalog is only fetched when the user presses Check for newer catalog. (7) Corrective pass before release (still 5.4.0): the review diff is now driven by one shared field list (CATALOG_FIELDS) used by both cleanCatalog() and diffCatalogs(), so every installable field is compared, including maker, colour, fill-in boxes, free-tier badge labels and descriptions, entry and command order and the revision; the status text now separates the count of entries needing a re-check from the count that actually show a grey chip; and one multi-part protocol (reply Received part N after each part, start work only after the FINAL PART) is used by the split prompt, the Dev Bay paste-this-first message and the on-screen instructions.",
     "why": "User requested the 5.4.0 catalog split so the free-tier chatbot data can be refreshed by any visitor through the Dev Bay without hand-editing JSON, and shipped as a separate catalog.json, so the tool does not go stale as free plans change; plus preset portability and a clearer first-run experience. The earlier 5.3.0 reasons still stand (less clutter, better clean-copy path, theme and layout options).",
     "freshnessCheck": "No new vendor research in this build: bot data is carried over unchanged from 5.3.1 (Nov 19 2026 check). Status assigned: ChatGPT, Grok, Meta AI and Mistral cards confirmed from public sources on Nov 19 2026; Perplexity free limits conflicting between sources; Gemini, Claude, Copilot and DeepSeek cards from the Grok research PDF only (doc). Individual commands are marked doc (researched earlier from vendor help pages, not re-checked in this build), except Perplexity limited-quota items marked conflicting. Not yet re-checked: ChatGPT /canvas and /image shortcuts, Mistral Flash Answers and scheduled tasks, Grok Think, Expert and Fast selectors. Next freshness pass should upgrade doc items to confirmed."
   },
@@ -511,7 +511,7 @@ paste the package into a chatbot, and save the complete .html file it returns.
             <li><b>Pick your chatbot</b> (Step 0). Its commands, notes and paste limit load automatically.</li>
             <li><b>Stack commands:</b> Bot Commands holds the switches and typed commands for that chatbot, Prompt Craft works with any of them.</li>
             <li><b>Write your prompt</b>, attach files if you need to, then press Copy &amp; launch. Long prompts split into parts for you.</li>
-            <li><b>Keep it fresh:</b> chatbots change often. Grey chips mark items that are unverified or not checked recently. The Dev Bay can refresh the catalog using any chatbot.</li>
+            <li><b>Keep it fresh:</b> chatbots change often. Each chatbot's note says when it was last checked. A grey chip means something is unverified, in conflict between sources, or has not been checked for 60 days. No chip does not mean confirmed, so check the app when it matters. The Dev Bay can refresh the catalog using any chatbot.</li>
         </ol>
     </details>
 
@@ -1004,6 +1004,14 @@ const ST_HELP = {
 };
 const TIER_KEYS = ['free', 'account', 'limited', 'paid'];
 const KIND_KEYS = ['type', 'ui', 'ask'];
+/* SINGLE SOURCE OF TRUTH for every field a catalog may carry and the app will install.
+   cleanCatalog() keeps only these fields and diffCatalogs() compares every one of them, so a field cannot be installed
+   without appearing in the review diff. To add a field: add it here AND check it in validateCatalog(). */
+const CATALOG_FIELDS = {
+    bot: ['name', 'maker', 'url', 'color', 'limit', 'blurb', 'brief', 'best', 'free', 'v', 'st'],
+    cmd: ['g', 'k', 'tier', 't', 'l', 'w', 'd', 'f', 'v', 'st'],
+    tierParts: ['label', 'help']
+};
 function isStr(x, max) { return typeof x === 'string' && x.length > 0 && x.length <= (max || 2000); }
 function isDate(x) { return typeof x === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(x); }
 /* Returns a list of plain-English problems (empty list = valid). */
@@ -1055,11 +1063,11 @@ function validateCatalog(c) {
 /* Copies only the known fields, so unexpected extras in an imported catalog are dropped. Call after validateCatalog(). */
 function cleanCatalog(c) {
     const pick = (o, ks) => { const r = {}; ks.forEach(k => { if (o[k] !== undefined) r[k] = o[k]; }); return r; };
-    const out = { schema: 1, rev: c.rev, updated: c.updated, CHATBOTS: c.CHATBOTS.map(b => pick(b, ['name', 'maker', 'url', 'color', 'limit', 'blurb', 'brief', 'best', 'free', 'v', 'st'])), TIERS: {}, BOT_NOTES: {}, BOT_CMDS: {} };
-    TIER_KEYS.forEach(k => { out.TIERS[k] = [c.TIERS[k][0], c.TIERS[k][1]]; });
+    const out = { schema: 1, rev: c.rev, updated: c.updated, CHATBOTS: c.CHATBOTS.map(b => pick(b, CATALOG_FIELDS.bot)), TIERS: {}, BOT_NOTES: {}, BOT_CMDS: {} };
+    TIER_KEYS.forEach(k => { out.TIERS[k] = CATALOG_FIELDS.tierParts.map((_, i) => c.TIERS[k][i]); });
     out.CHATBOTS.forEach(b => {
         out.BOT_NOTES[b.name] = c.BOT_NOTES[b.name];
-        out.BOT_CMDS[b.name] = c.BOT_CMDS[b.name].map(p => pick(p, ['g', 'k', 'tier', 't', 'l', 'w', 'd', 'f', 'v', 'st']));
+        out.BOT_CMDS[b.name] = c.BOT_CMDS[b.name].map(p => pick(p, CATALOG_FIELDS.cmd));
     });
     return out;
 }
@@ -1405,15 +1413,15 @@ function splitPrompt(text, limit) {
     return chunks.map((c, i) => {
         const k = i + 1, head = '[PART ' + k + ' OF ' + n + '] ';
         return (k < n
-            ? head + 'This prompt is split into ' + n + ' parts because of the input limit. Do NOT answer yet. Reply only with "Received part ' + k + '" until you have all parts.\n\n'
-            : head + 'FINAL PART. You now have all ' + n + ' parts. Combine them in order, treat them as one prompt, and respond in full.\n\n') +
+            ? head + 'This prompt is split into ' + n + ' parts because of the input limit. Do NOT answer yet. Reply only with "Received part ' + k + '" and nothing else. Do not start the task until the part marked FINAL PART arrives.\n\n'
+            : head + 'FINAL PART. You now have all ' + n + ' parts. Do not reply "Received". Combine the parts in order, treat them as one complete prompt, and respond to it in full now.\n\n') +
             c + '\n\n[END OF PART ' + k + ' OF ' + n + ']';
     });
 }
 function hideSplit() { splitParts = []; const b = document.getElementById('splitBox'); if (b) { b.hidden = true; b.innerHTML = ''; } }
 function renderSplit(bot) {
     const b = document.getElementById('splitBox'), n = splitParts.length;
-    b.innerHTML = '<b>Prompt is too long for ' + esc(bot.name) + ' in one paste.</b> It was split into ' + n + ' parts so nothing gets clipped. Part 1 is on your clipboard; paste each part in order and wait for the reply "Received part…" before the next.' +
+    b.innerHTML = '<b>Prompt is too long for ' + esc(bot.name) + ' in one paste.</b> It was split into ' + n + ' parts so nothing gets clipped. Part 1 is on your clipboard; paste each part in order and wait for the reply "Received part N" before sending the next. The chatbot should only answer after the FINAL PART.' +
         '<div class="parts">' + splitParts.map((p, i) => '<button type="button" onclick="copyPart(' + i + ')">Copy part ' + (i + 1) + ' of ' + n + '</button>').join('') + '</div>';
     b.hidden = false;
 }
@@ -1630,7 +1638,7 @@ function hideModSplit() {
 }
 function renderModSplit(bot) {
     const b = document.getElementById('modSplitBox'), n = modSplitParts.length;
-    b.innerHTML = '<b>Modification package exceeds ' + esc(bot.name) + "'s free-plan paste budget (" + bot.limit.toLocaleString() + ' chars).</b> It was split into ' + n + ' parts so nothing gets clipped (or use <b>Download clean .html</b> and attach the file directly). Part 1 is copied; paste each part in order and wait for "Received part…" before sending the next.' +
+    b.innerHTML = '<b>Modification package exceeds ' + esc(bot.name) + "'s free-plan paste budget (" + bot.limit.toLocaleString() + ' chars).</b> It was split into ' + n + ' parts so nothing gets clipped (or use <b>Download clean .html</b> and attach the file directly). Part 1 is copied; paste each part in order and wait for the reply "Received part N" before sending the next. If you use the "paste this first" message, send it first and wait for "Ready". The chatbot should only start work after the FINAL PART.' +
         '<div class="parts">' + modSplitParts.map((p, i) => '<button type="button" onclick="copyModPart(' + i + ')">Copy part ' + (i + 1) + ' of ' + n + '</button>').join('') + '</div>';
     b.hidden = false;
 }
@@ -1872,10 +1880,12 @@ function copyPasteFirst() {
     const parts = full ? (full.length > bot.limit ? splitPrompt(full, bot.limit).length : 1) : 0;
     const ch = (document.getElementById('modalChange').value || '').trim(), why = (document.getElementById('modalWhy').value || '').trim();
     const t = 'I am sending you a single-file HTML app, "AI Prompt Builder Hub", to revise.\n' +
-        '- If a .html file is attached: open it and read the PB-CHANGE-REQUEST comment (if present) and the version log at the top.\n' +
-        '- Otherwise the package arrives as ' + (parts || 'several') + ' pasted part(s). Do not reply until I say "all parts sent".\n' +
+        '- If a .html file is attached to this message: open it, read the PB-CHANGE-REQUEST comment (if present) and the version log at the top, and do the task below right away.\n' +
+        (parts === 1
+            ? '- If no file is attached, the package arrives as one pasted message. Reply to THIS message only with "Ready", then do the task when the package arrives.\n'
+            : '- If no file is attached, the package arrives as ' + (parts ? parts + ' pasted parts' : 'several pasted parts') + ', each labelled [PART k OF n]. Reply to THIS message only with "Ready". After each part reply only with "Received part k" and nothing else. Do not start the task until the part marked FINAL PART arrives, then work on all the parts combined.\n') +
         'Change wanted: ' + (ch || '(see the package)') + '\nReason: ' + (why || '(see the package)') + '\n' +
-        'Then: run the freshness check, apply the change, increment currentVersion, append a log entry naming you, and return the COMPLETE updated .html. If you run out of space, stop at a clean break and end with CONTINUE_REQUIRED.';
+        'Once you have the whole package: run the freshness check, apply the change, increment currentVersion, append a log entry naming you, and return the COMPLETE updated .html. If you run out of space, stop at a clean break and end with CONTINUE_REQUIRED.';
     copyText(t).then(() => toast('Paste-this-first prompt copied \u2713')).catch(() => toast('Clipboard blocked \u2014 copy manually', true));
 }
 
@@ -1934,37 +1944,65 @@ function downloadText(name, text, type) {
     a.href = url; a.download = name; document.body.appendChild(a); a.click(); document.body.removeChild(a);
     setTimeout(() => URL.revokeObjectURL(url), 1000);
 }
+/* total = every chatbot note and command; need = those not confirmed or due for a re-check; chips = those that actually show a grey chip
+   (chatbot notes always can; commands use quiet mode, which hides the chip for doc-only items until they are old). */
+function catalogStats() {
+    let total = 0, need = 0, chips = 0;
+    const count = (o, quiet) => { total++; const a = ageDays(o.v); if ((o.st && o.st !== 'confirmed') || (a !== null && a > STALE_DAYS) || (!o.st && !o.v)) need++; if (metaChip(o, quiet)) chips++; };
+    CHATBOTS.forEach(b => count(b, false));
+    Object.keys(BOT_CMDS).forEach(k => BOT_CMDS[k].forEach(p => count(p, true)));
+    return { total: total, need: need, chips: chips };
+}
 function catalogStatusText() {
-    let total = 0, flag = 0;
-    const count = o => { total++; const a = ageDays(o.v); if ((o.st && o.st !== 'confirmed') || (a !== null && a > STALE_DAYS) || (!o.st && !o.v)) flag++; };
-    CHATBOTS.forEach(count); Object.keys(BOT_CMDS).forEach(k => BOT_CMDS[k].forEach(count));
-    return 'Active catalog: rev ' + CATALOG.rev + ', updated ' + CATALOG.updated + ' (' + CATALOG_SRC + ' copy). ' + flag + ' of ' + total + ' items are not confirmed or are due for a re-check (grey chips mark them).';
+    const st = catalogStats();
+    return 'Active catalog: rev ' + CATALOG.rev + ', updated ' + CATALOG.updated + ' (' + CATALOG_SRC + ' copy). ' + st.need + ' of ' + st.total + ' entries (chatbot notes and commands) are not confirmed or are due for a re-check. ' +
+        'Only ' + st.chips + ' of them show a grey chip. Chips appear on chatbot notes, and on commands that are unverified, in conflict between sources, or not checked for ' + STALE_DAYS + ' days. ' +
+        'Commands taken only from a research document ("doc only") stay chip-free until they are ' + STALE_DAYS + ' days old, so no chip does not mean an entry is confirmed.';
 }
 function renderCatalogStatus() {
     const st = document.getElementById('catStatus'); if (st) st.textContent = catalogStatusText();
     const sel = document.getElementById('catEngine');
     if (sel) { sel.innerHTML = CHATBOTS.map(c => '<option value="' + esc(c.name) + '">' + esc(c.name) + '</option>').join(''); const cl = CHATBOTS.find(c => c.name === 'Claude'); if (cl) sel.value = 'Claude'; }
 }
+/* Compares EVERYTHING cleanCatalog() keeps (driven by CATALOG_FIELDS), so nothing that can be installed is left out of the review.
+   Both sides must already be normalized with cleanCatalog(). Returns { lines, content, meta }:
+   content = changes to wording, links, colours, placeholders, badges, order or entries; meta = check-date, status or revision updates. */
+const FIELD_LABEL = { maker: 'maker', url: 'link', color: 'colour', limit: 'paste limit', blurb: 'card summary', brief: 'free-plan summary', best: 'task-fit text', free: 'free-plan note',
+    v: 'check date', st: 'status', g: 'group', k: 'kind', tier: 'free-tier badge', t: 'text added to the prompt', l: 'label', w: 'where to find it', d: 'description', f: 'fill-in boxes' };
+const FIELD_SHOWN = ['maker', 'url', 'color', 'limit', 'k', 'tier', 'v', 'st'];
 function diffCatalogs(a, b) {
-    const out = [], key = p => p.g + '|' + p.l; let metaOnly = 0;
+    const content = [], meta = [];
+    const same = (x, y) => JSON.stringify(x) === JSON.stringify(y);
+    const cut = (x, n) => { const t = typeof x === 'string' ? x : JSON.stringify(x); return t === undefined ? 'none' : (t.length > (n || 60) ? t.slice(0, n || 60) + '...' : t); };
+    const field = (k, o, n, where) => {
+        const nm = FIELD_LABEL[k] || k, txt = FIELD_SHOWN.includes(k) ? nm + ' ' + cut(o[k]) + ' -> ' + cut(n[k]) : k === 'f' ? nm + ' ' + cut(o[k], 70) + ' -> ' + cut(n[k], 70) : nm + ' changed';
+        (k === 'v' || k === 'st' ? meta : content).push('~ ' + where + ': ' + txt);
+    };
     const an = a.CHATBOTS.map(x => x.name), bn = b.CHATBOTS.map(x => x.name);
-    bn.filter(n => !an.includes(n)).forEach(n => out.push('+ New chatbot: ' + n));
-    an.filter(n => !bn.includes(n)).forEach(n => out.push('- Removed chatbot: ' + n));
+    bn.filter(n => !an.includes(n)).forEach(n => content.push('+ New chatbot: ' + n + ' (' + (b.BOT_CMDS[n] || []).length + ' commands)'));
+    an.filter(n => !bn.includes(n)).forEach(n => content.push('- Removed chatbot: ' + n + ' (and its ' + (a.BOT_CMDS[n] || []).length + ' commands)'));
+    if (!same(an.filter(n => bn.includes(n)), bn.filter(n => an.includes(n)))) content.push('~ Chatbot order changed (changes the card order)');
+    if (an[0] !== bn[0]) content.push('~ Default (first) chatbot: ' + cut(an[0]) + ' -> ' + cut(bn[0]));
     b.CHATBOTS.forEach(nb => {
         const ob = a.CHATBOTS.find(x => x.name === nb.name); if (!ob) return;
-        ['url', 'limit', 'blurb', 'brief', 'best', 'free'].forEach(k => { if (ob[k] !== nb[k]) out.push('~ ' + nb.name + ' card: ' + k + (k === 'limit' ? ' ' + ob.limit + ' -> ' + nb.limit : ' changed')); });
-        if (a.BOT_NOTES[nb.name] !== b.BOT_NOTES[nb.name]) out.push('~ ' + nb.name + ': notes changed');
-        if (ob.st !== nb.st || ob.v !== nb.v) metaOnly++;
-        const oc = a.BOT_CMDS[nb.name] || [], nc = b.BOT_CMDS[nb.name] || [];
-        nc.forEach(p => {
-            const o = oc.find(x => key(x) === key(p));
-            if (!o) { out.push('+ ' + nb.name + ': ' + p.l); return; }
-            const ch = ['k', 'tier', 't', 'w', 'd'].filter(k => o[k] !== p[k]);
-            if (ch.length) out.push('~ ' + nb.name + ': ' + p.l + ' (' + ch.join(', ') + ')'); else if (o.st !== p.st || o.v !== p.v) metaOnly++;
+        CATALOG_FIELDS.bot.forEach(k => { if (k !== 'name' && !same(ob[k], nb[k])) field(k, ob, nb, nb.name + ' card'); });
+        if (a.BOT_NOTES[nb.name] !== b.BOT_NOTES[nb.name]) content.push('~ ' + nb.name + ': notes changed');
+        const keyed = list => { const seen = {}; return list.map(p => { const base = p.g + '|' + p.l; seen[base] = (seen[base] || 0) + 1; return { id: base + '#' + seen[base], p: p }; }); };
+        const ok = keyed(a.BOT_CMDS[nb.name] || []), nk = keyed(b.BOT_CMDS[nb.name] || []);
+        nk.forEach(x => {
+            const o = ok.find(y => y.id === x.id);
+            if (!o) { content.push('+ ' + nb.name + ': ' + x.p.l + ' (' + x.p.g + ')'); return; }
+            CATALOG_FIELDS.cmd.forEach(k => { if (k !== 'g' && k !== 'l' && !same(o.p[k], x.p[k])) field(k, o.p, x.p, nb.name + ': ' + x.p.l); });
         });
-        oc.forEach(p => { if (!nc.find(x => key(x) === key(p))) out.push('- ' + nb.name + ': ' + p.l); });
+        ok.forEach(y => { if (!nk.some(x => x.id === y.id)) content.push('- ' + nb.name + ': ' + y.p.l + ' (' + y.p.g + ')'); });
+        if (!same(ok.filter(y => nk.some(x => x.id === y.id)).map(y => y.id), nk.filter(x => ok.some(y => y.id === x.id)).map(x => x.id))) content.push('~ ' + nb.name + ': command order changed');
     });
-    return { lines: out, metaOnly: metaOnly };
+    TIER_KEYS.forEach(k => CATALOG_FIELDS.tierParts.forEach((part, i) => {
+        const o = (a.TIERS[k] || [])[i], n = (b.TIERS[k] || [])[i];
+        if (!same(o, n)) content.push('~ Free-tier badge "' + k + '": ' + part + ' ' + cut(o, 40) + ' -> ' + cut(n, 40));
+    }));
+    if (a.rev !== b.rev || a.updated !== b.updated) meta.unshift('~ Catalog revision: rev ' + a.rev + ' -> ' + b.rev + ', updated ' + cut(a.updated) + ' -> ' + cut(b.updated));
+    return { lines: content.concat(meta), content: content.length, meta: meta.length };
 }
 let pendingCatalog = null;
 function showCatalogDiff(rawCat, label) {
@@ -1973,14 +2011,16 @@ function showCatalogDiff(rawCat, label) {
     const errs = validateCatalog(rawCat);
     if (errs.length) { box.innerHTML = '<b>Not installed: this catalog has problems.</b><ul>' + errs.map(x => '<li>' + esc(x) + '</li>').join('') + '</ul>Ask the chatbot to fix these and return the whole catalog again.'; return; }
     if (rawCat.rev < BUILTIN_CATALOG.rev) { box.innerHTML = '<b>Not installed:</b> this catalog (rev ' + rawCat.rev + ') is older than the one built into this file (rev ' + BUILTIN_CATALOG.rev + ').'; return; }
-    const nc = cleanCatalog(rawCat), d = diffCatalogs(CATALOG, nc);
-    if (!d.lines.length && !d.metaOnly && nc.rev <= CATALOG.rev) { box.innerHTML = '<b>' + esc(label) + ':</b> you are up to date (rev ' + CATALOG.rev + ', updated ' + esc(CATALOG.updated) + ').'; return; }
+    /* both sides normalized the same way, so the diff shows exactly what installing would change */
+    const nc = cleanCatalog(rawCat), cur = validateCatalog(CATALOG).length ? CATALOG : cleanCatalog(CATALOG), d = diffCatalogs(cur, nc);
+    if (!d.lines.length) { box.innerHTML = '<b>' + esc(label) + ':</b> you are up to date (rev ' + CATALOG.rev + ', updated ' + esc(CATALOG.updated) + ').'; return; }
     pendingCatalog = nc;
-    const shown = d.lines.slice(0, 60);
-    box.innerHTML = '<b>' + esc(label) + ': rev ' + nc.rev + ' (updated ' + esc(nc.updated) + ') compared with your rev ' + CATALOG.rev + '.</b> ' +
-        (d.lines.length ? d.lines.length + ' change' + (d.lines.length > 1 ? 's' : '') + ':' : 'No wording changes.') +
-        (shown.length ? '<ul>' + shown.map(x => '<li>' + esc(x) + '</li>').join('') + (d.lines.length > 60 ? '<li>... and ' + (d.lines.length - 60) + ' more</li>' : '') + '</ul>' : '') +
-        (d.metaOnly ? '<div>' + d.metaOnly + ' item' + (d.metaOnly > 1 ? 's' : '') + ' only have a new check date or status.</div>' : '') +
+    const CAP = 500, shown = d.lines.slice(0, CAP), parts = [];
+    if (d.content) parts.push(d.content + ' change' + (d.content > 1 ? 's' : '') + ' to wording, links, settings or entries');
+    if (d.meta) parts.push(d.meta + ' check-date, status or revision update' + (d.meta > 1 ? 's' : ''));
+    box.innerHTML = '<b>' + esc(label) + ': rev ' + nc.rev + ' (updated ' + esc(nc.updated) + ') compared with your rev ' + CATALOG.rev + '.</b> Installing would apply ' + parts.join(' and ') + '. ' +
+        (d.lines.length > CAP ? 'The first ' + CAP + ' of ' + d.lines.length + ' are listed; all of them will be installed.' : 'Every difference is listed:') +
+        '<ul>' + shown.map(x => '<li>' + esc(x) + '</li>').join('') + '</ul>' +
         '<div class="row"><button type="button" class="btn-ai" id="catInstallBtn">Install and reload</button><button type="button" class="btn-secondary" id="catCancelBtn">Cancel</button></div>' +
         '<div style="margin-top:6px;font-size:12px;color:var(--muted)">Reloading clears anything typed on the page. Saved presets are kept.</div>';
     document.getElementById('catInstallBtn').addEventListener('click', installCatalog);
@@ -2044,7 +2084,7 @@ function packageCatalog() {
     const win = window.open(bot.url, '_blank');
     box.className = 'splitbox'; box.hidden = false;
     box.innerHTML = '<b>Catalog request (' + txt.length.toLocaleString() + ' characters) for ' + esc(bot.name) + '.</b> ' +
-        (parts.length > 1 ? 'It exceeds ' + esc(bot.name) + "'s paste budget, so it was split into " + parts.length + ' parts. Part 1 is copied; paste each part in order.' : 'Copied. Paste it into the chat.') +
+        (parts.length > 1 ? 'It exceeds ' + esc(bot.name) + "'s paste budget, so it was split into " + parts.length + ' parts. Part 1 is copied; paste each part in order and wait for the reply "Received part N" before sending the next. The chatbot should only answer after the FINAL PART.' : 'Copied. Paste it into the chat.') +
         ' When the chatbot replies, copy its JSON and use <b>Import catalog</b>.' +
         (parts.length > 1 ? '<div class="parts">' + parts.map((p, i) => '<button type="button" data-cpart="' + i + '">Copy part ' + (i + 1) + ' of ' + parts.length + '</button>').join('') + '</div>' : '');
     copying.then(() => toast(parts.length > 1 ? 'Part 1 of ' + parts.length + ' copied' : 'Catalog request copied ✓')).catch(() => toast('Auto-copy blocked: copy manually', true));

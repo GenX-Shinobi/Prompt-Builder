@@ -16,7 +16,7 @@ You don't need a coding background, developer tools, local servers, or an expens
 - **Built for Non-Coders & Everyday Tinkers:** Plain-English prompt building and step-by-step workflows made for people who aren't software engineers—whether you're writing, researching, planning, or building simple web tools with AI help.
 - **Free-Tier First:** Built around free chatbot plans (with free accounts where required for uploads, history, or connectors). Every bot command includes a high-contrast free-tier availability badge (`Free`, `Free w/ account`, `Limited quota`, `Paid plan`), conservative paste budgets, and automatic multi-part prompt splitting when a prompt exceeds a bot's safe paste limit.
 - **Self-Contained & AI-Editable:** The entire application lives in a single `.html` file (`index.html`) with zero build steps, external libraries, or backend servers. Its built-in Dev Bay packages your change request alongside a clean snapshot of the app's source code, version-log rules, and a command freshness check so any AI chatbot can generate the next version, and can refresh the chatbot catalog the same way.
-- **Honest About Freshness:** Free plans change constantly, so every chatbot card and command carries a last-checked date and a status (confirmed, doc-only, conflicting or unverified). Grey chips mark commands that are unverified or in conflict between sources, and anything not checked for 60 days. Each chatbot's note shows when it was last checked and whether it comes only from a research document.
+- **Honest About Freshness:** Free plans change constantly, so every chatbot card and command carries a last-checked date and a status (confirmed, doc-only, conflicting or unverified). Grey chips mark commands that are unverified or in conflict between sources, and anything not checked for 60 days. Each chatbot's note shows when it was last checked and whether it comes only from a research document. No chip does not mean confirmed: commands taken only from a research document stay chip-free until they are 60 days old.
 
 ## Versions & Older Releases
 
@@ -68,7 +68,7 @@ Each chatbot card displays task-fit guidance, free-tier availability notes, and 
 ### Refresh the Chatbot Catalog
 
 1. In the Dev Bay, use **Package catalog only** to send the current catalog to any chatbot with a refresh request, or **Check for newer catalog** to look for the latest published `catalog.json`.
-2. Paste the chatbot's reply into **Import catalog**. The app validates it and shows exactly what would change.
+2. Paste the chatbot's reply into **Import catalog**. The app validates it and lists every difference that installing would make (wording, links, colours, fill-in boxes, free-tier badge labels, order, and check dates).
 3. Click **Install and reload** only if the changes look right. **Use built-in catalog** undoes it.
 
 Nothing is fetched unless you click **Check for newer catalog**.

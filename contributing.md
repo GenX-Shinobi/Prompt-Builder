@@ -70,9 +70,11 @@ If the chatbot stops mid-file, reply `continue` until it reaches the closing `</
 | `BOT_CMDS[bot][]` | `g`, `k`, `tier`, `t`, `l`, `w`, `d`, `f` | Group, kind, free-tier badge, text added to the prompt, label, where to find it, description, optional fill-in boxes |
 | any item | `v`, `st` | Date last checked and status: `confirmed`, `doc`, `conflicting`, `unverified` |
 
-The app validates every catalog before using it, and only known fields are kept.
+The app validates every catalog before using it, and only known fields are kept. The list of known fields is one shared list in the code (`CATALOG_FIELDS`) used for both installing and for the review diff, so anything that can be installed is always shown to the user first. If you add a field, add it to that list **and** to `validateCatalog()`; the tests fail if either is missed.
 
 ## Smoke test before you share a new version
+
+Automated browser tests live in `tests/` (they need Node and Playwright; the app itself needs neither). Run `node tests/browser_suite_1.js`, `node tests/browser_suite_2.js` and `node tests/browser_corrective.js` from the repository root. They do not replace opening the file in a real browser:
 
 - Opens with no errors in the browser console.
 - Every chatbot card switches, the Bot Commands list and notes change, and the paste limit updates.

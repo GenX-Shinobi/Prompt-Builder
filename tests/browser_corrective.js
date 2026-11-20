@@ -1,0 +1,243 @@
+/* Regression tests for the v5.4.0 corrective pass:
+   A) the catalog review diff covers every installable field (schema-driven, with a canary)
+   B) the catalog status / chip wording is accurate (fresh and stale)
+   C) one multi-part transfer protocol everywhere
+   Run:  node tests/browser_corrective.js [path/to/index.html]     (needs Playwright; the app itself needs nothing) */
+const { chromium } = require('playwright');
+const fs = require('fs');
+const path = require('path');
+const ROOT = path.join(__dirname, '..');
+const HTML_PATH = path.resolve(process.argv[2] || path.join(ROOT, 'index.html'));
+const FILE = 'file://' + HTML_PATH;
+let pass = 0, fail = 0;
+const ok = (c, m) => { if (c) { pass++; console.log('PASS ' + m); } else { fail++; console.log('FAIL ' + m); } };
+
+(async () => {
+  const b = await chromium.launch();
+  const errs = [], reqs = [];
+  async function open(opts) {
+    const ctx = await b.newContext({ permissions: ['clipboard-read', 'clipboard-write'], viewport: { width: 1360, height: 900 } });
+    const p = await ctx.newPage();
+    p.on('pageerror', e => errs.push('PAGEERR ' + e.message));
+    p.on('console', m => { if (m.type() === 'error' && !/ERR_|Failed to load resource/.test(m.text())) errs.push('CONSOLE ' + m.text()); });
+    p.on('request', r => { if (!/^(file|blob|data):/.test(r.url())) reqs.push(r.url()); });
+    await p.addInitScript(() => { window.__opened = []; window.open = u => { window.__opened.push(u); return {}; }; window.confirm = () => true; });
+    if (opts && opts.plusDays) await p.addInitScript(d => { const real = Date.now.bind(Date); Date.now = () => real() + d * 864e5; }, opts.plusDays);
+    await p.goto(FILE); await p.waitForTimeout(400);
+    return p;
+  }
+
+  /* =============================== A: diff completeness =============================== */
+  let p = await open();
+  const A = await p.evaluate(() => {
+    const B = () => JSON.parse(JSON.stringify(cleanCatalog(BUILTIN_CATALOG)));
+    const diff = fn => { const a = B(), c = B(); fn(c); const d = diffCatalogs(a, cleanCatalog(c)); return { n: d.lines.length, content: d.content, meta: d.meta, text: d.lines.join(' | ') }; };
+    const r = {};
+    r.identical = diffCatalogs(B(), B()).lines.length;
+    r.maker = diff(c => { c.CHATBOTS[0].maker = 'Other Corp'; });
+    r.color = diff(c => { c.CHATBOTS[0].color = '#000000'; });
+    const fi = BUILTIN_CATALOG.BOT_CMDS.ChatGPT.findIndex(x => x.f);
+    r.fHas = fi >= 0;
+    r.fChange = diff(c => { c.BOT_CMDS.ChatGPT[fi].f = ['A different placeholder']; });
+    r.fAdd = diff(c => { c.BOT_CMDS.ChatGPT[0].f = ['New box']; });
+    r.fRemove = diff(c => { delete c.BOT_CMDS.ChatGPT[fi].f; });
+    r.tierLabel = diff(c => { c.TIERS.free[0] = 'Gratis'; });
+    r.tierHelp = diff(c => { c.TIERS.paid[1] = 'Costs money, skip it.'; });
+    r.url = diff(c => { c.CHATBOTS[1].url = 'https://example.com'; });
+    r.limit = diff(c => { c.CHATBOTS[1].limit = 31000; });
+    r.notes = diff(c => { c.BOT_NOTES.Grok += ' More.'; });
+    r.cmdText = diff(c => { c.BOT_CMDS.Claude[0].t = 'changed '; });
+    r.cmdKind = diff(c => { c.BOT_CMDS.Claude[0].k = c.BOT_CMDS.Claude[0].k === 'ui' ? 'ask' : 'ui'; });
+    r.cmdTier = diff(c => { c.BOT_CMDS.Claude[0].tier = c.BOT_CMDS.Claude[0].tier === 'paid' ? 'free' : 'paid'; });
+    r.cmdWhere = diff(c => { c.BOT_CMDS.Claude[0].w += ' x'; });
+    r.cmdDesc = diff(c => { c.BOT_CMDS.Claude[0].d += ' x'; });
+    r.cmdAdd = diff(c => { c.BOT_CMDS.Claude.push({ g: 'New group', k: 'ask', tier: 'free', t: 'x', l: 'brand new', w: 'w', d: 'd' }); });
+    r.cmdRemove = diff(c => { c.BOT_CMDS.Claude.pop(); });
+    r.cmdGroup = diff(c => { c.BOT_CMDS.Claude[0].g += ' moved'; });
+    r.cmdOrder = diff(c => { c.BOT_CMDS.Claude.reverse(); });
+    r.botOrder = diff(c => { c.CHATBOTS.reverse(); });
+    r.botAdd = diff(c => { c.CHATBOTS.push(Object.assign({}, c.CHATBOTS[0], { name: 'Newbot' })); c.BOT_NOTES.Newbot = 'n'; c.BOT_CMDS.Newbot = []; });
+    r.botRemove = diff(c => { const n = c.CHATBOTS.pop().name; delete c.BOT_NOTES[n]; delete c.BOT_CMDS[n]; });
+    r.rev = diff(c => { c.rev += 1; });
+    r.updated = diff(c => { c.updated = '2030-01-01'; });
+    r.metaV = diff(c => { c.BOT_CMDS.Claude[0].v = '2030-01-01'; });
+    r.metaSt = diff(c => { c.CHATBOTS[0].st = 'unverified'; });
+    // duplicate label + group inside one bot must not be mismatched
+    r.dup = diff(c => { const x = Object.assign({}, c.BOT_CMDS.Claude[0]); c.BOT_CMDS.Claude.push(x, Object.assign({}, x, { d: 'second copy differs' })); });
+    return r;
+  });
+  ok(A.identical === 0, 'A: identical catalogs produce no diff lines');
+  ok(A.maker.content === 1 && /maker/.test(A.maker.text), 'A: chatbot maker change detected -> ' + A.maker.text);
+  ok(A.color.content === 1 && /colour/.test(A.color.text), 'A: chatbot colour change detected -> ' + A.color.text);
+  ok(A.fHas && A.fChange.content === 1 && /fill-in boxes/.test(A.fChange.text), 'A: command placeholder (f) change detected -> ' + A.fChange.text);
+  ok(A.fAdd.content === 1 && /fill-in boxes/.test(A.fAdd.text), 'A: placeholder added detected');
+  ok(A.fRemove.content === 1 && /fill-in boxes/.test(A.fRemove.text), 'A: placeholder removed detected');
+  ok(A.tierLabel.content === 1 && /Free-tier badge "free": label/.test(A.tierLabel.text), 'A: TIERS label change detected -> ' + A.tierLabel.text);
+  ok(A.tierHelp.content === 1 && /Free-tier badge "paid": help/.test(A.tierHelp.text), 'A: TIERS description change detected -> ' + A.tierHelp.text);
+  for (const k of ['url', 'limit', 'notes', 'cmdText', 'cmdKind', 'cmdTier', 'cmdWhere', 'cmdDesc', 'cmdAdd', 'cmdRemove', 'cmdGroup', 'cmdOrder', 'botOrder', 'botAdd', 'botRemove'])
+    ok(A[k].content >= 1, 'A: ' + k + ' change detected as a content change -> ' + A[k].text.slice(0, 90));
+  ok(A.cmdOrder.content === 1 && /command order changed/.test(A.cmdOrder.text), 'A: command order change reported');
+  ok(/Default \(first\) chatbot/.test(A.botOrder.text), 'A: default chatbot change reported when order changes');
+  ok(A.rev.meta === 1 && A.rev.content === 0 && /Catalog revision/.test(A.rev.text), 'A: revision-only change is reported (not "up to date")');
+  ok(A.updated.meta === 1 && /Catalog revision/.test(A.updated.text), 'A: updated-date-only change reported');
+  ok(A.metaV.meta === 1 && A.metaV.content === 0 && A.metaSt.meta === 1, 'A: check date / status changes reported as meta updates');
+  ok(A.dup.content >= 1, 'A: duplicate label+group entries handled (' + A.dup.content + ' lines)');
+
+  // Schema-driven coverage: every accepted field, mutated generically, must show up in the diff
+  const S = await p.evaluate(() => {
+    const B = () => JSON.parse(JSON.stringify(cleanCatalog(BUILTIN_CATALOG)));
+    const mut = (o, k) => { const v = o[k]; o[k] = typeof v === 'string' ? v + '~' : typeof v === 'number' ? v + 1 : Array.isArray(v) ? v.concat(['extra~']) : 'new~'; };
+    const missed = [], tried = [];
+    const check = (label, fn) => { const c = B(); fn(c); tried.push(label); const d = diffCatalogs(B(), cleanCatalog(c)); if (!d.lines.length) missed.push(label); };
+    CATALOG_FIELDS.bot.forEach(k => check('bot.' + k, c => {
+      if (k === 'name') { const old = c.CHATBOTS[0].name; c.CHATBOTS[0].name = old + '2'; c.BOT_NOTES[old + '2'] = c.BOT_NOTES[old]; delete c.BOT_NOTES[old]; c.BOT_CMDS[old + '2'] = c.BOT_CMDS[old]; delete c.BOT_CMDS[old]; }
+      else mut(c.CHATBOTS[0], k);
+    }));
+    CATALOG_FIELDS.cmd.forEach(k => check('cmd.' + k, c => { const e = c.BOT_CMDS.ChatGPT.find(x => x[k] !== undefined) || c.BOT_CMDS.ChatGPT[0]; mut(e, k); }));
+    TIER_KEYS.forEach(tk => CATALOG_FIELDS.tierParts.forEach((part, i) => check('tier.' + tk + '.' + part, c => { c.TIERS[tk][i] += '~'; })));
+    // every accepted field must also be validated (garbage value rejected)
+    const unvalidated = () => {
+      const bad = [], inv = {};
+      CATALOG_FIELDS.bot.forEach(k => { const c = B(); c.CHATBOTS[0][k] = inv; if (!validateCatalog(c).length) bad.push('bot.' + k); });
+      CATALOG_FIELDS.cmd.forEach(k => { const c = B(); c.BOT_CMDS.ChatGPT[0][k] = inv; if (!validateCatalog(c).length) bad.push('cmd.' + k); });
+      CATALOG_FIELDS.tierParts.forEach((_, i) => { const c = B(); c.TIERS.free[i] = inv; if (!validateCatalog(c).length) bad.push('tier.' + i); });
+      return bad;
+    };
+    const unvalidatedNow = unvalidated();
+    // CANARY: a brand-new installable field must be diffed automatically, and the coverage test must flag it if it is unvalidated
+    CATALOG_FIELDS.cmd.push('zzzNew');
+    const a = B(), c = B(); c.BOT_CMDS.ChatGPT[0].zzzNew = 'hello';
+    const kept = cleanCatalog(c).BOT_CMDS.ChatGPT[0].zzzNew === 'hello';
+    const dc = diffCatalogs(cleanCatalog(a), cleanCatalog(c));
+    const canaryUnvalidated = unvalidated();
+    CATALOG_FIELDS.cmd.pop();
+    const dropped = cleanCatalog(c).BOT_CMDS.ChatGPT[0].zzzNew === undefined;
+    return { tried: tried.length, missed, unvalidatedNow, kept, canaryDiff: dc.lines.join(' | '), canaryUnvalidated, dropped };
+  });
+  ok(S.tried >= 24 && S.missed.length === 0, 'A: schema-driven: all ' + S.tried + ' accepted fields are covered by the diff (missed: ' + JSON.stringify(S.missed) + ')');
+  ok(S.unvalidatedNow.length === 0, 'A: every accepted field is also validated (unvalidated: ' + JSON.stringify(S.unvalidatedNow) + ')');
+  ok(S.kept && /zzzNew/.test(S.canaryDiff), 'A: canary: a new installable field is installed AND automatically appears in the diff -> ' + S.canaryDiff);
+  ok(S.canaryUnvalidated.join() === 'cmd.zzzNew', 'A: canary: the coverage test would flag a new field that is not validated');
+  ok(S.dropped, 'A: fields outside CATALOG_FIELDS are dropped by cleanCatalog (not installable)');
+
+  // UI-level: each omitted field shows in the on-page review and is never reported as "no changes"
+  const base = await p.evaluate(() => JSON.parse(JSON.stringify(cleanCatalog(BUILTIN_CATALOG))));
+  const fi2 = base.BOT_CMDS.ChatGPT.findIndex(x => x.f);
+  const cases = {
+    maker: c => { c.CHATBOTS[0].maker = 'Other Corp'; }, color: c => { c.CHATBOTS[0].color = '#112233'; },
+    f: c => { c.BOT_CMDS.ChatGPT[fi2].f = ['Changed placeholder']; }, tierLabel: c => { c.TIERS.limited[0] = 'Small quota'; },
+    tierHelp: c => { c.TIERS.limited[1] = 'A different help sentence.'; }, revOnly: c => { c.rev = 7; }
+  };
+  const needs = { maker: /maker Meta|maker OpenAI/, color: /colour #10a37f -> #112233/, f: /fill-in boxes/, tierLabel: /Free-tier badge "limited": label/, tierHelp: /Free-tier badge "limited": help/, revOnly: /Catalog revision: rev 1 -> 7/ };
+  for (const [name, fn] of Object.entries(cases)) {
+    const c = JSON.parse(JSON.stringify(base)); fn(c);
+    await p.evaluate(() => { document.getElementById('catImportBox').hidden = false; });
+    await p.fill('#catImportText', JSON.stringify(c)); await p.click('#catImportGo');
+    const t = await p.textContent('#catDiff'), hasInstall = !!(await p.$('#catInstallBtn'));
+    ok(needs[name].test(t) && hasInstall && !/No changes|up to date/.test(t) && /Installing would apply/.test(t), 'A (UI): ' + name + ' change is shown in the review with an Install button');
+  }
+  await p.evaluate(() => { document.getElementById('catImportBox').hidden = false; });
+  await p.fill('#catImportText', JSON.stringify(base)); await p.click('#catImportGo');
+  ok(/up to date/.test(await p.textContent('#catDiff')) && !(await p.$('#catInstallBtn')), 'A (UI): an identical catalog says up to date and offers no install');
+
+  // The diff compares exactly what gets installed: unknown fields are dropped, and diff(clean(import), installed) is empty
+  const inst = JSON.parse(JSON.stringify(base)); inst.rev = 2; inst.CHATBOTS[0].maker = 'Installed Co'; inst.CHATBOTS[0].evilField = 'nope'; inst.BOT_CMDS.ChatGPT[0].evil2 = 'nope'; inst.TIERS.free[1] = 'Installed help text.';
+  await p.evaluate(() => { document.getElementById('catImportBox').hidden = false; });
+  await p.fill('#catImportText', JSON.stringify(inst)); await p.click('#catImportGo');
+  ok(!/evilField|evil2/.test(await p.textContent('#catDiff')), 'A (UI): unknown fields are not shown (they are not installable)');
+  await Promise.all([p.waitForEvent('load'), p.click('#catInstallBtn')]); await p.waitForTimeout(400);
+  const eq = await p.evaluate(inst => {
+    const stored = localStorage.getItem('pb-catalog-v1'), want = cleanCatalog(inst);
+    return { sameAsReviewed: JSON.stringify(JSON.parse(stored)) === JSON.stringify(want), diffEmpty: diffCatalogs(want, JSON.parse(stored)).lines.length, noEvil: !/evil/.test(stored), maker: CHATBOTS[0].maker, tier: TIERS.free[1], active: CATALOG_SRC };
+  }, inst);
+  ok(eq.sameAsReviewed && eq.diffEmpty === 0 && eq.noEvil && eq.maker === 'Installed Co' && eq.tier === 'Installed help text.' && eq.active === 'saved', 'A: installed data is exactly the normalized data that was reviewed ' + JSON.stringify(eq));
+  await p.evaluate(() => localStorage.removeItem('pb-catalog-v1'));
+  await p.context().close();
+
+  /* =============================== B: status wording =============================== */
+  const chipsInDom = async page => {
+    let n = 0;
+    for (const name of await page.evaluate(() => CHATBOTS.map(c => c.name))) {
+      await page.click('.botcard[data-bot="' + name + '"]');
+      n += await page.evaluate(() => document.querySelectorAll('#botCmdPills .vchip').length + document.querySelectorAll('#botNote .vchip').length);
+    }
+    return n;
+  };
+  const statusNumbers = async page => {
+    const t = await page.textContent('#catStatus');
+    const m = t.match(/(\d+) of (\d+) entries/), c = t.match(/Only (\d+) of them show a grey chip/);
+    return { t: t, need: +m[1], total: +m[2], chips: +c[1] };
+  };
+  // fresh: doc entries are recent, so their command chips are hidden
+  p = await open();
+  const f = await statusNumbers(p);
+  const fIndep = await p.evaluate(() => { let need = 0, total = 0; const cnt = o => { total++; const a = ageDays(o.v); if ((o.st && o.st !== 'confirmed') || (a !== null && a > 60) || (!o.st && !o.v)) need++; }; CHATBOTS.forEach(cnt); Object.values(BOT_CMDS).forEach(l => l.forEach(cnt)); return { need, total }; });
+  const fDom = await chipsInDom(p);
+  ok(f.need === fIndep.need && f.total === fIndep.total, 'B (fresh): the counted total/needing re-check match an independent count ' + JSON.stringify(fIndep));
+  ok(f.chips < f.need, 'B (fresh): chips shown (' + f.chips + ') is fewer than entries needing re-check (' + f.need + '), and the text says so');
+  ok(f.chips === fDom, 'B (fresh): chip count in the sentence (' + f.chips + ') equals real grey chips on screen across all chatbots (' + fDom + ')');
+  ok(!/grey chips mark them/i.test(f.t) && /doc only/.test(f.t) && /no chip does not mean an entry is confirmed/.test(f.t) && /stay chip-free until they are 60 days old/.test(f.t), 'B (fresh): wording does not claim every counted entry has a chip and explains suppressed doc chips');
+  const docHidden = await p.evaluate(() => { const i = BOT_CMDS.ChatGPT.findIndex(x => x.st === 'doc'); return { fresh: i >= 0 }; });
+  await p.click('.botcard[data-bot="ChatGPT"]');
+  ok(docHidden.fresh && await p.evaluate(() => !document.querySelector('#botCmdPills .vc-doc')), 'B (fresh): doc-only commands show no chip in the command list');
+  const sh = await p.textContent('#startHere');
+  ok(/No chip does not mean confirmed/.test(sh) && !/Grey chips mark items that are unverified or not checked recently/.test(sh) && /has not been checked for 60 days/.test(sh), 'B: Start here wording is accurate (no chip is not a guarantee)');
+  ok(!/grey chips mark them/i.test(await p.evaluate(() => document.body.innerText)), 'B: no remaining "grey chips mark them" wording anywhere on the page');
+  await p.context().close();
+  // stale: 100 days later, every entry is old; chips must now appear on doc commands too
+  p = await open({ plusDays: 100 });
+  const s2 = await statusNumbers(p), s2Dom = await chipsInDom(p);
+  ok(s2.need === s2.total && s2.chips === s2.total && s2.chips === s2Dom, 'B (stale): all ' + s2.total + ' entries need a re-check and show a chip; sentence matches the screen (' + s2Dom + ')');
+  await p.click('.botcard[data-bot="ChatGPT"]');
+  ok(await p.evaluate(() => [...document.querySelectorAll('#botCmdPills .vchip')].some(x => /Doc only · old/.test(x.textContent))), 'B (stale): doc-only commands now show a "Doc only · old" chip');
+  ok(/not checked for 60 days/.test(s2.t) && !/grey chips mark them/i.test(s2.t), 'B (stale): wording remains accurate');
+  await p.context().close();
+
+  /* =============================== C: multi-part protocol =============================== */
+  const html = fs.readFileSync(HTML_PATH, 'utf8');
+  ok(!/all parts sent|Do not reply until I say|until I say/.test(html), 'C: the old "do not reply until I say all parts sent" instruction is gone from the source');
+  p = await open();
+  const C = await p.evaluate(() => {
+    const body = Array.from({ length: 60 }, (_, i) => 'Paragraph MARK' + i + ' ' + 'lorem ipsum '.repeat(12)).join('\n\n');
+    const limit = 3000, parts = splitPrompt(body, limit), n = parts.length;
+    const joined = parts.map(x => x.replace(/^\[PART \d+ OF \d+\] [^\n]*\n\n/, '').replace(/\n\n\[END OF PART \d+ OF \d+\]$/, '')).join('\n\n');
+    let allMarks = true; for (let i = 0; i < 60; i++) if (!joined.includes('MARK' + i + ' ')) allMarks = false;
+    return { n, maxLen: Math.max(...parts.map(x => x.length)), limit, first: parts[0], mid: parts[1], last: parts[n - 1], allMarks };
+  });
+  ok(C.n >= 3 && C.maxLen <= C.limit && C.allMarks, 'C: splitting keeps every paragraph and every part within the budget (' + C.n + ' parts, longest ' + C.maxLen + ')');
+  ok(/Do NOT answer yet/.test(C.first) && /Reply only with "Received part 1" and nothing else/.test(C.first) && /Do not start the task until the part marked FINAL PART arrives/.test(C.first), 'C: part 1 instruction = acknowledge only, do not start until FINAL PART');
+  ok(/Received part 2"/.test(C.mid) && /FINAL PART arrives/.test(C.mid), 'C: middle parts use the same protocol with their own number');
+  ok(/FINAL PART\. You now have all \d+ parts/.test(C.last) && /Do not reply "Received"/.test(C.last) && /respond to it in full now/.test(C.last) && !/Do NOT answer yet/.test(C.last), 'C: final part clearly tells the chatbot to answer now, not acknowledge');
+  // Dev Bay paste-this-first
+  await p.evaluate(() => { openModificationModal(); document.getElementById('modalChange').value = 'Test change'; document.getElementById('modalWhy').value = 'Test reason'; document.getElementById('modalAI').value = CHATBOTS.find(c => c.name === 'Claude').name + ' (Anthropic)'; compileModificationPayload(); });
+  await p.click('#modFirstBtn'); await p.waitForTimeout(150);
+  const first = await p.evaluate(() => navigator.clipboard.readText());
+  const real = await p.evaluate(() => { const bot = CHATBOTS.find(c => c.name === 'Claude'); return splitPrompt(document.getElementById('modificationPreview').textContent, bot.limit).length; });
+  const claimed = +(first.match(/arrives as (\d+) pasted parts/) || [])[1];
+  ok(claimed === real && real > 1, 'C: paste-this-first states the real number of parts (' + claimed + ' vs ' + real + ')');
+  ok(/Reply to THIS message only with "Ready"/.test(first) && /reply only with "Received part k" and nothing else/.test(first) && /Do not start the task until the part marked FINAL PART arrives/.test(first), 'C: paste-this-first uses the same acknowledge-only / FINAL PART protocol');
+  ok(!/all parts sent|until I say/.test(first) && /If a \.html file is attached to this message/.test(first) && /CONTINUE_REQUIRED/.test(first), 'C: paste-this-first has no contradictory instruction and keeps the attach-file route');
+  ok(/\[PART k OF n\]/.test(first) && /^\[PART 1 OF/.test(C.first) && /Received part/.test(first) && /Received part/.test(C.first) && /FINAL PART/.test(first) && /FINAL PART/.test(C.first), 'C: the first prompt and the split parts use the same labels ([PART k OF n], Received part, FINAL PART)');
+  await p.evaluate(() => { document.getElementById('modificationPreview').textContent = 'short package'; }); await p.click('#modFirstBtn'); await p.waitForTimeout(150);
+  const one = await p.evaluate(() => navigator.clipboard.readText());
+  ok(/one pasted message/.test(one) && /"Ready"/.test(one) && !/Received part/.test(one), 'C: single-message package gets a matching one-message instruction');
+  // on-screen instructions
+  await p.evaluate(() => { openModificationModal(); document.getElementById('modalChange').value = 'x'; document.getElementById('modalWhy').value = 'y'; compileModificationPayload(); launchMod(); });
+  const modBox = await p.textContent('#modSplitBox');
+  ok(/Received part N/.test(modBox) && /FINAL PART/.test(modBox) && /"Ready"/.test(modBox) && !/all parts sent/.test(modBox), 'C: Dev Bay on-screen instructions describe the same protocol');
+  await p.click('.botcard[data-bot="Perplexity"]'); await p.fill('#corePrompt', 'word '.repeat(4000)); await p.waitForTimeout(150); await p.click('#launchBtn'); await p.waitForTimeout(200);
+  const splitBox = await p.textContent('#splitBox');
+  ok(/Received part N/.test(splitBox) && /FINAL PART/.test(splitBox) && !/all parts sent/.test(splitBox), 'C: main prompt split instructions describe the same protocol');
+  await p.selectOption('#catEngine', 'Perplexity'); await p.click('#catPackBtn'); await p.waitForTimeout(200);
+  const catBox = await p.textContent('#catSplitBox');
+  ok(/Received part N/.test(catBox) && /FINAL PART/.test(catBox) && !/all parts sent/.test(catBox), 'C: catalog package split instructions describe the same protocol');
+  ok(!/all parts sent|until I say/.test(await p.evaluate(() => document.body.innerText)), 'C: no contradictory wording anywhere on screen after using all three split flows');
+  await p.context().close();
+
+  /* =============================== general =============================== */
+  ok(reqs.length === 0, 'no network requests in any scenario (' + reqs.length + ')');
+  console.log('errors:', JSON.stringify(errs));
+  ok(errs.length === 0, 'no console or page errors');
+  console.log('\n' + pass + ' passed, ' + fail + ' failed');
+  await b.close(); process.exit(fail ? 1 : 0);
+})();
