@@ -286,6 +286,76 @@ const ok = (c, m) => { if (c) { pass++; console.log('PASS ' + m); } else { fail+
     await q.context().close();
   }
 
+  /* ============ A4: the expandable records really work as a user sees them (click/keyboard, visible only when opened) ============ */
+  {
+    const q = await open();
+    const base = await q.evaluate(() => JSON.parse(JSON.stringify(cleanCatalog(BUILTIN_CATALOG))));
+    const clone = o => JSON.parse(JSON.stringify(o));
+    const openDiff = async cat => { await q.evaluate(() => { document.getElementById('catImportBox').hidden = false; }); await q.fill('#catImportText', JSON.stringify(cat)); await q.click('#catImportGo'); };
+    const rowFor = prefix => q.locator('#catDiffList > li').filter({ has: q.locator('summary', { hasText: prefix }) }).first();
+    /* closed -> every value hidden; click the summary -> details.open and every value visible */
+    const expands = async (prefix, vals, viaKeyboard) => {
+      const li = rowFor(prefix), det = li.locator('details'), sum = li.locator('summary');
+      if (await li.count() === 0) return 'no row for ' + prefix;
+      const pre = v => li.locator('details pre').filter({ hasText: v }).first();
+      const closedBefore = !(await det.evaluate(d => d.open));
+      let hiddenBefore = true; for (const v of vals) if (await pre(v).isVisible()) hiddenBefore = false;
+      if (viaKeyboard) { await sum.focus(); await q.keyboard.press('Enter'); } else await sum.click();
+      const openAfter = await det.evaluate(d => d.open);
+      const missing = []; for (const v of vals) if (!(await pre(v).isVisible())) missing.push(v);
+      return closedBefore && hiddenBefore && openAfter && missing.length === 0 ? true : 'closedBefore=' + closedBefore + ' hiddenBefore=' + hiddenBefore + ' openAfter=' + openAfter + ' notVisible=' + missing.join('|');
+    };
+    const HOSTILE = '<img src=x onerror="window.__pwn4=1">';
+    const cmd = (l, extra) => Object.assign({ g: 'Zed Group', k: 'type', tier: 'limited', t: 'UI-PROMPT-' + l, l: l, w: 'UI-WHERE-' + l, d: 'UI-DESC-' + l, f: ['UI-FIELD-' + l], v: '2026-11-01', st: 'confirmed' }, extra || {});
+
+    // added command (mouse)
+    let c = clone(base); c.rev = 2; c.BOT_CMDS.ChatGPT.push(cmd('AddedCmd'));
+    await openDiff(c);
+    ok(await expands('+ ChatGPT: AddedCmd', ['UI-PROMPT-AddedCmd', 'limited', 'UI-DESC-AddedCmd', 'UI-WHERE-AddedCmd', 'UI-FIELD-AddedCmd', '2026-11-01', 'confirmed', 'Zed Group', 'type']) === true, 'A4: added command - the row has a details/summary; clicking it opens the record and shows every installable field');
+
+    // removed command (keyboard: Enter on the focused summary)
+    const gone = base.BOT_CMDS.ChatGPT[2]; c = clone(base); c.rev = 2; c.BOT_CMDS.ChatGPT.splice(2, 1);
+    await openDiff(c);
+    ok(await expands('- ChatGPT: ' + gone.l, [gone.t, gone.d, gone.w, gone.tier, gone.g].filter(Boolean), true) === true, 'A4: removed command - Enter on the summary opens the previous record, all values visible');
+
+    // added chatbot: card + notes + each command expandable on its own
+    const nb = clone(base.CHATBOTS[1]); Object.assign(nb, { name: 'UiBot', maker: 'UI-MAKER', url: 'https://ui.example/', blurb: 'UI-BLURB', brief: 'UI-BRIEF', best: 'UI-BEST', free: 'UI-FREE', limit: 44444 });
+    c = clone(base); c.rev = 2; c.CHATBOTS.push(nb); c.BOT_NOTES.UiBot = 'UI-NOTES'; c.BOT_CMDS.UiBot = [cmd('UiOne'), cmd('UiTwo', { tier: 'paid' })];
+    await openDiff(c);
+    const r1 = await expands('+ New chatbot: UiBot', ['UI-MAKER', 'https://ui.example/', 'UI-BLURB', 'UI-BRIEF', 'UI-BEST', 'UI-FREE', '44444', 'UI-NOTES']);
+    const r2 = await expands('+ UiBot: UiOne', ['UI-PROMPT-UiOne', 'UI-DESC-UiOne', 'UI-WHERE-UiOne', 'UI-FIELD-UiOne']);
+    const r3 = await expands('+ UiBot: UiTwo', ['UI-PROMPT-UiTwo', 'paid', 'UI-DESC-UiTwo']);
+    ok(r1 === true && r2 === true && r3 === true, 'A4: added chatbot - card fields and notes expand, and each added command expands on its own ' + [r1, r2, r3].filter(x => x !== true).join(' ; '));
+
+    // removed chatbot: card + notes + every command expandable
+    const last = base.CHATBOTS[base.CHATBOTS.length - 1], ln = last.name, lc = base.BOT_CMDS[ln];
+    c = clone(base); c.rev = 2; c.CHATBOTS.pop(); delete c.BOT_NOTES[ln]; delete c.BOT_CMDS[ln];
+    await openDiff(c);
+    const rc = await expands('- Removed chatbot: ' + ln, [last.maker, last.url, last.blurb, base.BOT_NOTES[ln]]);
+    const bad = []; for (const p of lc) { const r = await expands('- ' + ln + ': ' + p.l, [p.t, p.d].filter(Boolean)); if (r !== true) bad.push(p.l + ' -> ' + r); }
+    ok(rc === true && bad.length === 0, 'A4: removed chatbot - card, notes and all ' + lc.length + ' removed commands expand with their values ' + (rc === true ? '' : rc) + bad.join(' ; '));
+
+    // hostile markup: opened rows show it as text and nothing runs
+    c = clone(base); c.rev = 2; c.BOT_CMDS.ChatGPT.push(cmd('HostileUi', { d: HOSTILE, t: HOSTILE }));
+    await openDiff(c); const rh = await expands('+ ChatGPT: HostileUi', ['<img src=x onerror="window.__pwn4=1">']);
+    ok(rh === true && (await q.$$('#catDiff img')).length === 0 && (await q.evaluate(() => window.__pwn4)) === undefined, 'A4: hostile markup is visible as literal text when the record is opened, and no element or script is created ' + (rh === true ? '' : rh));
+
+    // large diff: gate holds in the live UI; hidden rows cannot be installed; after Show all the later rows are expandable too
+    const big = clone(base); big.rev = 3;
+    for (const n of Object.keys(big.BOT_CMDS)) for (let i = 0; i < 70; i++) big.BOT_CMDS[n].push(cmd('Gate' + n.replace(/\W/g, '') + i));
+    await openDiff(big);
+    const dis = await q.locator('#catInstallBtn').isDisabled();
+    await q.locator('#catInstallBtn').click({ force: true, timeout: 2000 }).catch(() => {});
+    const stored = await q.evaluate(() => localStorage.getItem('pb-catalog-v1'));
+    ok(dis && stored === null && (await q.$$('#catDiffList > li')).length === 500, 'A4: large diff - Install is disabled, a forced click stores nothing, and only 500 rows are shown');
+    await q.click('#catShowAllBtn');
+    const total = (await q.textContent('#catDiff')).match(/\((\d+) in total\)/);
+    const lastRow = q.locator('#catDiffList > li').filter({ has: q.locator('summary') }).last(); /* the final plain row is the revision line, which has no record */
+    await lastRow.locator('summary').click();
+    ok(total && (await q.$$('#catDiffList > li')).length === +total[1] && !(await q.locator('#catInstallBtn').isDisabled()) && await lastRow.locator('details').evaluate(d => d.open) && await lastRow.locator('details pre').first().isVisible(), 'A4: after "Show all" every row is present, the last row can be opened, and Install is enabled');
+    await q.context().close();
+  }
+
   /* =============================== B: status wording =============================== */
   const chipsInDom = async page => {
     let n = 0;
