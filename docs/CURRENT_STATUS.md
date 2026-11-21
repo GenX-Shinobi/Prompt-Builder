@@ -154,7 +154,7 @@ This section supersedes earlier branch-head snapshots above; older checkpoint en
 | ops/claude-agent-pilot | 61f045a96b5b0d0683e378bbca1c9b89f01e39c9 | Existing branch; not modified |
 
 - PR #1 remains open/unmerged. PR #3 is closed and merged into release/v5.4.0 at ad459df8c014fc01dce893ff5374e4e4d8e2280a.
-- GitHub reported push permission for the connected account. A dedicated documentation branch was created for this maintenance; no default or release branch is targeted.
+- GitHub reported push permission for the connected account. Dedicated branch docs/chimera-session-maintenance contains this documentation pass; PR #4 is open against docs/project-control-baseline. No default or release branch is targeted.
 - The latest documented corrective test results remain Claude-reported: 49 + 18 + 120 = 187 passed, 0 failed. They have not been independently reproduced in this session.
 - Owner browser acceptance remains six of six PASS, as recorded above. Do not infer owner installation testing.
 - The actual Claude local workspace was not inspected in this pass. Its current branch/worktree and any unpushed changes remain to be verified before assigning or resuming engineering work.
