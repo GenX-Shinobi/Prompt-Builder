@@ -2,7 +2,7 @@
 
 > Dated handoff snapshot. Re-check GitHub and local workspaces before acting; this file is not a live connection.
 
-**Last checked:** 2026-11-20 (management docs refreshed after owner Test 4 result)  
+**Last checked:** 2026-11-20 (owner acceptance completed; corrective PR #3 opened)  
 **Repository:** https://github.com/GenX-Shinobi/Prompt-Builder  
 **Default branch:** `main`  
 **Project docs branch:** `docs/project-control-baseline`  
@@ -74,20 +74,20 @@ Do not describe any of these figures as independently verified. A fresh Claude s
 
 ## Product-owner browser acceptance — completed 2026-11-20
 
-The owner completed the browser-only acceptance kit on a separate test copy.
+**Final owner result: all six tests PASS.** The earlier Test 4 failure was caused by the owner initially downloading the wrong `index.html` and entering that result in the wrong field. The owner corrected the record, downloaded the correct `index.html` from `fix/v5.4.0-test4-install-button-state`, repeated only Test 4 using the original Test 4 package, and then updated all six result fields.
 
-| Test | Result | Evidence / note |
+| Test | Final result | Evidence / note |
 |---|---|---|
-| 1. Add one command and remove another | **Pass** | Owner-tested |
-| 2. Add a whole chatbot | **Pass** | Owner-tested |
-| 3. Remove a whole chatbot (Mistral) | **Pass** | Owner-tested |
-| 4. Large change (631 buttons) | **Fail** | Preview/update succeeded, but disabled "Install and reload" was visually indistinguishable from enabled. Owner did not attempt installation. Functional gate remains unverified by owner. |
-| 5. Booby-trapped text | **Pass** | Owner-tested; content remained plain text |
-| 6. Broken catalogue | **Pass** | Owner-tested; refused |
+| 1. Add one command and remove another | **Pass** | Original owner pass retained |
+| 2. Add a whole chatbot | **Pass** | Original owner pass retained |
+| 3. Remove a whole chatbot (Mistral) | **Pass** | Original owner pass retained |
+| 4. Large change (631 buttons) | **Pass** | Repeated with the correct corrective-branch `index.html` and original Test 4 package |
+| 5. Booby-trapped text | **Pass** | Original owner pass retained; content remained plain text |
+| 6. Broken catalogue | **Pass** | Original owner pass retained; invalid catalogue refused |
 
-Optional narrow-window repeat of Test 1: **Pass**. Exact browser version, device model and viewport dimensions were not recorded.
+Optional narrow-window repeat of Test 1: **Pass**. Browser/device details were not recorded. The owner did not report performing the install action; do not claim owner verification of an actual installation. Claude's disposable-profile install test remains implementer-reported.
 
-Classification: Test 4 is a confirmed visual/usability failure. It is not evidence that the underlying install gate is broken. Preserve the five passed results; retest Test 4 only on a fresh copy after correction. Do not risk the existing acceptance package.
+The final owner acceptance record supersedes all earlier references in this document to Test 4 being failed.
 
 ## Owner acceptance kit (used; results recorded above)
 
@@ -99,21 +99,24 @@ Classification: Test 4 is a confirmed visual/usability failure. It is not eviden
 
 ## Current position and next action
 
-**v5.4.0 is not release-approved.** Owner acceptance is five of six formal tests passed, with Test 4 failed for ambiguous disabled-button styling. Installation was not attempted.
+**All six owner acceptance tests pass.** The focused Test 4 correction is committed as `0bdeb9622d2a0a5a1ad49d48711aa8c768cf7478` on `fix/v5.4.0-test4-install-button-state`.
 
-A focused corrective task is prepared in [docs/CLAUDE_TASK.md](CLAUDE_TASK.md), awaiting owner submission/authorization. It requires a separate branch from `release/v5.4.0`; implementation must not modify `main`, `release/v5.4.0` or `docs/project-control-baseline`.
+**PR #3 is open** from that branch into `release/v5.4.0`: https://github.com/GenX-Shinobi/Prompt-Builder/pull/3. It contains one commit and two files. GitHub's create-PR response reports `mergeable=false`; the reason must be investigated before recommending a merge. The PR has not been merged.
 
-**Single next action:** owner submits the prepared Claude assignment when ready. After Claude returns evidence, ChatGPT independently reviews it and asks the owner to retest Test 4 only on a fresh copy.
+**v5.4.0 is not release-approved.** The release branch has not received the corrective commit yet. No change has been made to `main`, and no release/deployment/tag has been created.
+
+**Single next action:** inspect why GitHub reports PR #3 as not mergeable and report the cause. The owner must separately approve any merge into `release/v5.4.0`.
 
 ## Remaining release gates
 
-1. ~~Interactive added/removed record details and three-suite execution~~ — **done, Claude-reported only** (178 passed; not independently reproduced).
-2. ~~Owner browser acceptance~~ — **completed**: Tests 1, 2, 3, 5 and 6 passed; Test 4 failed for visual ambiguity; optional narrow-window check passed.
-3. **Correct Test 4** on a separate branch; assignment prepared, not yet authorized/submitted.
-4. ChatGPT reviews corrective code and evidence; owner retests Test 4 only on a fresh copy.
+1. ~~Interactive added/removed record details and three-suite execution~~ — Claude-reported at `023171d`: 178 passed, 0 failed; not independently reproduced.
+2. ~~Owner browser acceptance~~ — **all six tests PASS**, including Test 4 repeated with the correct corrective-branch file and original package.
+3. ~~Implement focused Test 4 correction~~ — commit `0bdeb962` on the dedicated corrective branch; Claude reports 49 + 18 + 120 = **187** automated checks passed, 0 failed, in both worktree and fresh clone. These are implementer-reported.
+4. ~~Create reviewable integration proposal~~ — PR #3 open, targeting `release/v5.4.0`; currently reports `mergeable=false`, cause to be investigated. Not merged.
 5. Independently reproduce automated suites where feasible.
-6. README: prepared on docs branch; apply at PR #1 merge only after approved release code reaches `main`.
-7. Obtain explicit owner release approval.
+6. Resolve PR #3 mergeability and obtain explicit owner approval before merging into `release/v5.4.0`.
+7. README: prepared on docs branch; apply at PR #1 merge only after approved release code reaches `main`.
+8. Obtain separate explicit owner release approval.
 
 No v5.5.0 implementation before v5.4.0 has passed these gates. Release restrictions are listed in [PROJECT_CONTROL.md](../PROJECT_CONTROL.md).
 
@@ -133,3 +136,16 @@ Live GitHub was checked before this maintenance:
 - PR #1 remains open, draft and unmerged.
 
 The owner has not yet submitted the Test 4 Claude assignment. No corrective implementation branch or workspace changes are claimed. The Claude task explicitly forbids modifying the docs branch.
+
+
+## Documentation checkpoint — owner acceptance and PR #3
+
+Live GitHub verified 2026-11-20:
+- `main`: `b247aec8a1ee279b71f6aedd8fbaf4d908c22d5f` (unchanged)
+- `release/v5.4.0`: `023171dc60af78d43081a447d41009f153d82127` (unchanged; corrective fix not yet merged)
+- `fix/v5.4.0-test4-install-button-state`: `0bdeb9622d2a0a5a1ad49d48711aa8c768cf7478`
+- `docs/project-control-baseline`: management-doc updates committed separately
+- PR #3: open, head corrective branch, base `release/v5.4.0`, one commit, two files, not merged. GitHub create response reports `mergeable=false`; investigate before any merge.
+- PR #1 remains open/unmerged.
+
+Owner confirmed all six browser acceptance tests PASS after correcting the Test 4 file selection and repeating only Test 4. ChatGPT created PR #3 with owner authorization. No merge, release, deployment, tag, or change to `main` was performed.
