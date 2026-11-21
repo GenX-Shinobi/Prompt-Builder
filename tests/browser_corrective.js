@@ -454,6 +454,71 @@ const ok = (c, m) => { if (c) { pass++; console.log('PASS ' + m); } else { fail+
     await q.context().close();
   }
 
+  /* ============ A6 (v5.4.0 Test 4): the locked "Install and reload" button must look and behave locked, in all 5 palettes x light/dark ============ */
+  {
+    const q = await open();
+    const big = await q.evaluate(() => { const c = JSON.parse(JSON.stringify(cleanCatalog(BUILTIN_CATALOG))); c.rev = CATALOG.rev + 1; for (const n of Object.keys(c.BOT_CMDS)) for (let i = 0; i < 70; i++) c.BOT_CMDS[n].push(Object.assign({}, c.BOT_CMDS[n][0], { l: 'Bulk ' + i, t: 'bulk' + i })); return c; });
+    await q.evaluate(() => { document.getElementById('catImportBox').hidden = false; }); await q.fill('#catImportText', JSON.stringify(big)); await q.click('#catImportGo');
+    const total = +((await q.textContent('#catDiff')).match(/\((\d+) in total\)/) || [0, 0])[1];
+    ok(total > 500, 'A6: (setup) the fresh test change list is over 500 items (' + total + ')');
+    await q.evaluate(() => { window.__marker = 'same-page'; });
+    const btn = q.locator('#catInstallBtn');
+    ok(await btn.isDisabled() && (await btn.getAttribute('aria-disabled')) === 'true' && (await btn.getAttribute('aria-describedby')) === 'catShownCount' && /turned off until you show all/.test(await q.textContent('#catShownCount')), 'A6: before Show all - Install is really disabled, announced as disabled, and linked to the on-screen reason');
+    await btn.click({ force: true }).catch(() => {}); await q.waitForTimeout(150);
+    await q.evaluate(() => document.getElementById('catInstallBtn').dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', bubbles: true })));
+    await q.evaluate(() => document.getElementById('catInstallBtn').dispatchEvent(new KeyboardEvent('keydown', { key: ' ', bubbles: true })));
+    await q.evaluate(() => { document.getElementById('catInstallBtn').click(); installCatalog(); });
+    await q.waitForTimeout(250);
+    const locked = await q.evaluate(() => ({ stored: localStorage.getItem('pb-catalog-v1'), marker: window.__marker, focusable: (() => { document.getElementById('catInstallBtn').focus(); return document.activeElement === document.getElementById('catInstallBtn'); })() }));
+    ok(locked.stored === null && locked.marker === 'same-page' && !locked.focusable, 'A6: before Show all - pointer click, Enter, Space, element.click() and installCatalog() all do nothing (nothing stored, no reload); the button cannot take keyboard focus');
+    const lum = c => { const [r, g, b] = c.match(/[\d.]+/g).slice(0, 3).map(Number).map(v => { v /= 255; return v <= .03928 ? v / 12.92 : Math.pow((v + .055) / 1.055, 2.4); }); return .2126 * r + .7152 * g + .0722 * b; };
+    const cr = (a, b) => { const x = lum(a), y = lum(b); return (Math.max(x, y) + .05) / (Math.min(x, y) + .05); };
+    const combos = []; for (const t of ['light', 'dark']) for (const pal of ['default', 'ocean', 'forest', 'sunset', 'graphite']) combos.push([t, pal]);
+    const setLook = async (t, pal) => { await q.evaluate(([t, pal]) => { document.documentElement.setAttribute('data-theme', t); applyPalette(pal); }, [t, pal]); await q.waitForTimeout(450); };
+    const look = () => q.evaluate(() => {
+      const e = document.getElementById('catInstallBtn'), s = getComputedStyle(e); let panel = 'rgb(255, 255, 255)';
+      for (let n = e.parentElement; n; n = n.parentElement) { const c = getComputedStyle(n).backgroundColor; if (!/rgba\(0, 0, 0, 0\)|transparent/.test(c)) { panel = c; break; } }
+      const r = e.getBoundingClientRect();
+      return { bg: s.backgroundColor, color: s.color, bs: s.borderTopStyle, cursor: s.cursor, filter: s.filter, w: r.width, h: r.height, panel };
+    });
+    const dis = {};
+    for (const [t, pal] of combos) { await setLook(t, pal); const k = t + '/' + pal; dis[k] = await look(); await q.hover('#catInstallBtn', { force: true }).catch(() => {}); dis[k].hoverFilter = (await look()).filter; await q.mouse.move(0, 0); }
+    await q.click('#catShowAllBtn'); await q.waitForTimeout(200);
+    const en = {}; for (const [t, pal] of combos) { await setLook(t, pal); en[t + '/' + pal] = await look(); }
+    const bad = [];
+    for (const [t, pal] of combos) {
+      const k = t + '/' + pal, d = dis[k], e = en[k];
+      const cues = [d.bs !== e.bs, d.cursor !== e.cursor, d.bg !== e.bg, d.color !== e.color].filter(Boolean).length;
+      if (d.bs === e.bs || d.cursor !== 'not-allowed' || cues < 3) bad.push(k + ' (not distinct enough)');
+      if (cr(d.color, d.panel) < 4.5) bad.push(k + ' (locked label contrast ' + cr(d.color, d.panel).toFixed(2) + ' < 4.5)');
+      if (d.bg !== 'rgba(0, 0, 0, 0)' && cr(d.bg, e.bg) < 1.5) bad.push(k + ' (fill too close to enabled)');
+      if (d.hoverFilter !== 'none') bad.push(k + ' (reacts to hover while locked)');
+      if (Math.abs(d.w - e.w) > 1 || Math.abs(d.h - e.h) > 1) bad.push(k + ' (size jumps when it unlocks)');
+      if (e.cursor !== 'pointer') bad.push(k + ' (enabled cursor ' + e.cursor + ')');
+    }
+    ok(bad.length === 0, 'A6: locked vs enabled button is clearly different in all 10 palette x mode combinations (border style + cursor + fill/text, label contrast >= 4.5, no hover reaction, no size jump) ' + bad.join('; '));
+    const after = await q.evaluate(() => { const e = document.getElementById('catInstallBtn'); return { disabled: e.disabled, aria: e.getAttribute('aria-disabled'), showAll: !!document.getElementById('catShowAllBtn') }; });
+    ok(!after.disabled && after.aria === null && !after.showAll, 'A6: after Show all - Install is enabled and no longer announced as disabled');
+    await q.evaluate(() => { document.getElementById('catCancelBtn').focus(); }); await q.keyboard.press('Shift+Tab'); /* real keyboard move, so :focus-visible applies */
+    const ring = await q.evaluate(() => { const e = document.getElementById('catInstallBtn'); return { focused: document.activeElement === e, w: getComputedStyle(e).outlineWidth, st: getComputedStyle(e).outlineStyle }; });
+    ok(ring.focused && ring.st !== 'none' && parseFloat(ring.w) >= 2, 'A6: enabled Install is keyboard-focusable and keeps its visible focus outline (' + ring.st + ' ' + ring.w + ')');
+    await setLook('light', 'default');
+    const cons = await q.evaluate(() => getComputedStyle(document.querySelector('aside.console')).backgroundColor);
+    ok(lum(cons) < 0.1, 'A6: the compiled-prompt console is still dark in light mode (' + cons + ')');
+    await q.evaluate(() => { document.getElementById('catInstallBtn').focus(); });
+    await Promise.all([q.waitForNavigation({ waitUntil: 'load' }).catch(() => {}), q.keyboard.press('Enter')]);
+    await q.waitForTimeout(500);
+    const inst = await q.evaluate(() => ({ stored: !!localStorage.getItem('pb-catalog-v1'), marker: window.__marker || null, rev: CATALOG.rev, cmds: Object.values(CATALOG.BOT_CMDS).reduce((a, x) => a + x.length, 0) }));
+    ok(inst.stored && inst.marker === null && inst.rev === big.rev && inst.cmds === Object.values(big.BOT_CMDS).reduce((a, x) => a + x.length, 0), 'A6: after Show all, Enter on Install installs the 631-change catalog and reloads (disposable browser profile only): rev ' + inst.rev + ', ' + inst.cmds + ' commands');
+    await q.context().close();
+    const r = await open();
+    const small = await r.evaluate(() => { const c = JSON.parse(JSON.stringify(cleanCatalog(BUILTIN_CATALOG))); c.rev = CATALOG.rev + 1; c.BOT_CMDS.ChatGPT.push(Object.assign({}, c.BOT_CMDS.ChatGPT[0], { l: 'One more', t: 'onemore' })); return c; });
+    await r.evaluate(() => { document.getElementById('catImportBox').hidden = false; }); await r.fill('#catImportText', JSON.stringify(small)); await r.click('#catImportGo');
+    const sm = await r.evaluate(() => { const e = document.getElementById('catInstallBtn'), s = getComputedStyle(e); return { d: e.disabled, a: e.getAttribute('aria-disabled'), bs: s.borderTopStyle, c: s.cursor }; });
+    ok(!sm.d && sm.a === null && sm.bs === 'none' && sm.c === 'pointer', 'A6: a small change list leaves Install enabled and styled as enabled');
+    await r.context().close();
+  }
+
   /* =============================== B: status wording =============================== */
   const chipsInDom = async page => {
     let n = 0;
