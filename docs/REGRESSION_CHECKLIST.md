@@ -69,18 +69,18 @@ Run the relevant checks before accepting a change or release. Mark each item **P
 - [ ] Invalid, older or malformed catalogues are rejected without replacing the last known-good catalogue.
 - [ ] Embedded catalogue and standalone `catalog.json` are identical for the release snapshot.
 
-### v5.4.0 owner real-browser verification (not yet done by the owner)
+### v5.4.0 owner real-browser verification (completed; Test 4 requires correction)
 
 Automated checks for these exist and are Claude-reported only; they do not replace an owner check in a real browser. Use the browser-only kit in `docs/acceptance/v5.4.0/` (kit test numbers in brackets). Mark each **Pass / Fail / Not run** with the browser and device.
 
 - [ ] [1] An added command and a removed command each appear in the preview as a line that opens and closes to show its complete record.
 - [ ] [2, 3] An added chatbot (card, notes and each command) and a removed chatbot are inspectable the same way.
 - [ ] [1] Keyboard: Tab reaches each expandable line; Enter or Space opens and closes it; focus stays visible.
-- [ ] [4] A very large change shows "Showing 500 of N", keeps Install disabled, and enables it only after "Show all".
+- [x] [4] A very large change shows "Showing 500 of N", keeps Install disabled, and enables it only after "Show all" — owner observed the large preview but failed the visual-state criterion; installation was not attempted. See Test 4 correction below.
 - [ ] [5] Booby-trapped text is shown as plain characters: nothing bold, no image, no pop-up.
 - [ ] [6] A broken catalogue is refused in plain English with no Install button.
 - [ ] [all] Cancel closes the preview and installs nothing; the built-in catalogue is unchanged.
-- [ ] Layout is readable on a narrow mobile screen and on desktop (optional narrow-window repeat of kit Test 1).
+- [x] Layout was readable in the optional narrow-window repeat of kit Test 1. Exact browser/device dimensions were not recorded.
 
 ## Dev Bay
 
@@ -117,3 +117,14 @@ Automated checks for these exist and are Claude-reported only; they do not repla
 **Not run:** owner real-browser/device acceptance; independent re-run of the suites; mobile and screen-reader checks  
 **Known limitations:** no CI; owner and independent runs outstanding; no version-log entry for the three post-merge commits; the reconciled `readme.md` exists only on the docs branch and conflicts with `main`'s until PR #1 is merged; live GitHub Pages build unverified  
 **Reviewer / owner decision:** pending
+
+
+### Test 4 corrective regression checks — pending
+
+- [ ] Confirm Install and reload is semantically and functionally disabled before the required review action; pointer, Enter, Space and programmatic activation cannot install.
+- [ ] Confirm the control becomes enabled only after the required Show all review action, and only then permits the intended installation flow.
+- [ ] Verify disabled/enabled states are unmistakably different in all five existing colour palettes and applicable light/dark modes, without redesigning unrelated page regions.
+- [ ] Check affected control text contrast, borders/state cues, pointer behavior, visible keyboard focus and accessible disabled state. Do not rely on colour alone.
+- [ ] Preserve existing design: themes affect selected regions; the compiled-prompt area intentionally remains dark in light mode. Do not expand theme coverage as part of this correction.
+- [ ] Re-run a fresh 631-change scenario and verify the gate before and after Show all; record whether installation was tested in an isolated disposable copy.
+- [ ] Do not overwrite or risk the owner's existing acceptance package. Owner retests Test 4 only on a fresh copy after the fix.
