@@ -13,7 +13,7 @@
 
 | Ref | Commit | Position |
 |---|---|---|
-| `main` | `b247aec8a1ee279b71f6aedd8fbaf4d908c22d5f` | Merge commit of PR #2 (contains `ce1ec19`). Unchanged. |
+| `main` | `d4ea76f1e3b896f8494529295e2e75d049cbfc93` | Two recovery commits briefly added then removed `docs/CLAUDE_TASK.md`; live compare shows no net file diff from prior head `b247aec`. |
 | `release/v5.4.0` | `ad459df8c014fc01dce893ff5374e4e4d8e2280a` | Test 4 correction merged via PR #3; still separate from `main`. |
 | `docs/project-control-baseline` | `64b6dd3e142a9326e22c697aab45775e125fca74` before this maintenance | Draft PR #1, open and unmerged; this maintenance adds documentation-only commits. |
 
@@ -35,7 +35,7 @@
 
 | Check | Result | Category |
 |---|---|---|
-| Heads | `main` `b247aec`; `release/v5.4.0` `ad459df`; docs branch updated separately | Verified |
+| Heads | `main` `d4ea76f`; `release/v5.4.0` `ad459df`; docs branch updated separately | Verified |
 | PR #1 / PR #2 | #1 open, draft, unmerged, no reviews (`mergeable=false`, README only); #2 merged earlier | Verified |
 | Release code vs evidence | `ad459df` includes corrective source commit `0bdeb962`; `catalog.json` unchanged since `2606885` | Verified |
 | Test logs | Baseline `023171d`: 178 passed; corrective branch `0bdeb962`: 49 + 18 + 120 = 187 passed, 0 failed | Claude-reported (implementer's own run) |
@@ -130,7 +130,7 @@ No v5.5.0 implementation before v5.4.0 has passed these gates. Release restricti
 ## Latest documentation checkpoint — 2026-11-20
 
 Live GitHub verified after PR #3 merge:
-- `main`: `b247aec8a1ee279b71f6aedd8fbaf4d908c22d5f` (unchanged)
+- `main`: `d4ea76f1e3b896f8494529295e2e75d049cbfc93` (two recovery commits; no net file diff from prior head `b247aec`)
 - `release/v5.4.0`: `ad459df8c014fc01dce893ff5374e4e4d8e2280a`
 - Corrective source commit: `0bdeb9622d2a0a5a1ad49d48711aa8c768cf7478`
 - PR #3: merged into `release/v5.4.0`; merge commit `ad459df8c014fc01dce893ff5374e4e4d8e2280a`.
@@ -139,4 +139,4 @@ Live GitHub verified after PR #3 merge:
 
 Owner acceptance: all six browser tests PASS after the owner corrected the Test 4 file selection and repeated only Test 4 with the original package. Claude's 187 automated passes on the corrective branch remain implementer-reported. No independent suite reproduction has been completed.
 
-PR #3 was merged into the release branch with owner authorization. No merge into `main`, formal release, deployment, or tag was performed.
+PR #3 was merged into the release branch with owner authorization. During documentation maintenance, `docs/CLAUDE_TASK.md` was accidentally added to `main` and then deleted; live compare shows no net file diff from the prior `main` head. No application source changes were made on `main`. No formal release, deployment, or tag was created.
