@@ -7,6 +7,12 @@ on:
     paths-ignore:
       - verification-result.txt
       - Preview.jpg
+  pull_request:
+    branches:
+      - release/v5.4.0
+    paths-ignore:
+      - verification-result.txt
+      - Preview.jpg
 
 permissions:
   contents: write
