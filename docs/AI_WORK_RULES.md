@@ -62,11 +62,19 @@ These rules apply to ChatGPT, Claude, Claude Code and any other AI-assisted cont
 - If the task file conflicts with a newer owner instruction or live repository state, stop and ask rather than guessing.
 - Do not treat task-file presence as approval to merge, publish, deploy, or modify `main`.
 
-## 8. Session continuity
+## 8. Documentation ownership and parallel work
+
+- ChatGPT owns the central management documents: `PROJECT_CONTROL.md`, `ROADMAP.md`, `docs/CURRENT_STATUS.md`, `docs/IDEA_INBOX.md`, and owner-facing resume/checkpoint wording. ChatGPT prepares or updates canonical Claude task briefs when the owner authorizes a bounded task.
+- Claude Code owns implementation details, source-adjacent documentation, version/change logs, test fixtures and raw automated test evidence produced by its assigned task. Claude updates central management documents only when explicitly assigned.
+- The owner approves product scope, implementation authorization, branch integration, merges and releases.
+- Parallel work is permitted only on separate branches and non-overlapping files. During the Test 4 correction, Claude works on a new corrective branch based on `release/v5.4.0`; ChatGPT's management maintenance stays on `docs/project-control-baseline`. Claude must not modify the docs branch.
+- A new session must inspect actual local workspace state before claiming Claude has started, completed or saved work.
+
+## 9. Session continuity
 
 Follow the **Session Continuity & Context Protection Protocol** in [PROJECT_CONTROL.md](../PROJECT_CONTROL.md): treat the repository as authoritative over recollection, checkpoint at task boundaries, label every claim (verified, Claude-reported, independently reviewed, owner-tested), prepare a short resume prompt before a session becomes unwieldy, name exactly one next action, and never claim background monitoring or updates that have not happened.
 
-## 9. Definition of done
+## 10. Definition of done
 
 A task is not complete merely because code was generated. It is complete when:
 - The change is saved on the intended branch.
