@@ -1,6 +1,6 @@
 # Claude Code Assignment — v5.4.0 Test 4 corrective fix
 
-> Status: prepared for owner submission; not yet authorized or started. This is the current canonical implementation brief. Do not infer authorization from the file's presence.
+> Status: **COMPLETED**. This brief is retained as the historical assignment and evidence contract. The corrective implementation is on `fix/v5.4.0-test4-install-button-state` at `0bdeb962`; PR #3 proposes it for `release/v5.4.0` and remains unmerged.
 
 ## Objective
 
@@ -20,7 +20,7 @@ The task is narrowly scoped to the button's actual disabled logic and its visual
 - Test 1 — add one command and remove another: PASS.
 - Test 2 — add a chatbot: PASS.
 - Test 3 — remove Mistral: PASS.
-- Test 4 — 631-change catalogue: FAIL because disabled Install and reload looked too much like enabled. Preview/update worked. Installation was not attempted; do not claim the install action passed or failed.
+- Test 4 — initial failure was caused by the ambiguous disabled Install and reload appearance. The owner later downloaded the correct corrective-branch index.html and repeated only Test 4 with the original package; final owner acceptance is PASS for all six tests. Owner did not report performing the installation action.
 - Test 5 — booby-trapped text remains inert: PASS.
 - Test 6 — broken catalogue refused: PASS.
 - Optional narrow-window repeat of Test 1: PASS.
@@ -58,3 +58,14 @@ Provide root cause; exact branch and base commit; resulting commit hash; exact f
 Do not claim the owner acceptance test passes. ChatGPT will review the evidence; the owner will retest Test 4 on a fresh copy.
 
 After reporting, stop and wait. No merge or release action is authorized.
+
+## Completion record — 2026-11-20
+
+- Corrective branch: `fix/v5.4.0-test4-install-button-state`.
+- Base: `release/v5.4.0` at `023171dc60af78d43081a447d41009f153d82127`.
+- Commit: `0bdeb9622d2a0a5a1ad49d48711aa8c768cf7478`.
+- Files changed: `index.html`, `tests/browser_corrective.js`.
+- Claude-reported automated results: 49 + 18 + 120 = 187 passed, 0 failed, in worktree and fresh clone.
+- Owner acceptance: all six tests PASS after the owner repeated Test 4 with the correct file and original package.
+- PR #3: https://github.com/GenX-Shinobi/Prompt-Builder/pull/3, targeting `release/v5.4.0`; open and not merged. GitHub reported `mergeable=false` at creation; investigate before merge.
+- No merge, release, deployment, tag or change to `main` was performed.
