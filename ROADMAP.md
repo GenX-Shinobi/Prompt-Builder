@@ -13,16 +13,16 @@ The free-first, chatbot-independent mission and project scope in [PROJECT_CONTRO
    - `node tests/browser_suite_2.js`
    - `node tests/browser_corrective.js`
 4. **Independently review** the final release-branch commit (`023171d`) and the test evidence. May run alongside step 5.
-5. **Next milestone — owner-led real-browser acceptance** with the browser-only kit in `docs/acceptance/v5.4.0/` (six tests: added/removed commands and chatbots, a 500+ item change, inert hostile text, a refused broken catalogue; keyboard and expand/collapse included). The owner does not edit JSON or use a terminal.
+5. **Owner real-browser acceptance completed:** Tests 1, 2, 3, 5 and 6 passed; Test 4 failed because the disabled Install and reload button was visually ambiguous after a 631-change preview. Installation was not attempted. Optional narrow-window repeat passed.
 6. ~~Reconcile the READMEs~~ — **prepared on the docs branch (not merged).** Apply at PR #1 merge by keeping the PR's `readme.md`; merge PR #1 only after the release code is in `main`. The owner decides when.
 7. Obtain explicit owner release approval. The owner decides how the release branch reaches `main`.
 
-**Claude brief:** [docs/CLAUDE_TASK.md](docs/CLAUDE_TASK.md) (executed; no open implementation task)  
-**Claude Code shorthand:** `/pb-v54`
+**Current Claude brief:** [docs/CLAUDE_TASK.md](docs/CLAUDE_TASK.md) — focused Test 4 correction, prepared and awaiting owner submission/authorization.  
+**Claude Code shorthand:** `/pb-v54`.
 
-## NEXT — resume v5.5 planning only after v5.4.0 release
+## NEXT — roadmap reassessment only after v5.4.0 release
 
-Reassess the next milestone from user evidence and the idea inbox. Candidate direction is a Guided Path for first-time users that turns plain-language goals into prompts using the existing compiler. This is not active implementation scope yet.
+After v5.4.0 passes its release gates and the owner approves release, reassess the next milestone from user evidence and the idea inbox. Candidate directions include a Guided Path and a separate visual/accessibility/multilingual finishing phase. Neither is active implementation scope.
 
 ## LATER — evidence-led improvements
 
@@ -55,3 +55,8 @@ Reassess the next milestone from user evidence and the idea inbox. Candidate dir
 - Standalone HTML remains complete and dependency-free.
 - Known limitations disclosed.
 - Owner explicitly approves release.
+
+
+## Future finishing round-up — proposal only
+
+After v5.4.0 is back on course, accepted and released, consider a separate owner-approved finishing phase to improve visual consistency, extend the existing colour palettes across more of the page, and add multilingual support with accessibility as a design requirement. Preserve deliberate visual choices—including the compiled-prompt area's dark treatment in light mode—unless usability evidence supports changing them. Consider translation architecture, longer strings, non-Latin scripts and right-to-left layouts. This is a future proposal, not current work and not part of the Test 4 correction.
