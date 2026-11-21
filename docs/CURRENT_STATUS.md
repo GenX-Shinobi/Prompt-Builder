@@ -17,7 +17,7 @@
 | `release/v5.4.0` | `ad459df8c014fc01dce893ff5374e4e4d8e2280a` | Test 4 correction merged via PR #3; still separate from `main`. |
 | `docs/project-control-baseline` | `64b6dd3e142a9326e22c697aab45775e125fca74` before this maintenance | Draft PR #1, open and unmerged; this maintenance adds documentation-only commits. |
 
-- **Why the release branch diverges:** PR #2 was merged at `ce1ec19`. Four more commits were then pushed to the release branch: `419b51f`, `5c41741`, `52bcdea`, `023171d`. `main` holds only the merge commit `b247aec` that the release branch lacks. No merge, rebase or cherry-pick has been done.
+- **Why the release branch diverges:** PR #2 was merged at `ce1ec19`. Four more commits were then pushed to the release branch: `419b51f`, `5c41741`, `52bcdea`, `023171d`. `main` holds merge commit `b247aec`; the release branch intentionally remains separate and diverged. No merge into `main`, rebase or cherry-pick has been done.
 - PR #2 is closed and merged. **That merge is not release approval.**
 - PR #1 (https://github.com/GenX-Shinobi/Prompt-Builder/pull/1) is open/draft, unmerged, no reviews. Do not merge without explicit owner approval.
 - No GitHub Actions or CI results exist for any commit.
@@ -35,14 +35,14 @@
 
 | Check | Result | Category |
 |---|---|---|
-| Heads | `main` `b247aec`; `release/v5.4.0` `023171d`; docs `7e6c65e` before this checkpoint; all matched live GitHub | Verified |
+| Heads | `main` `b247aec`; `release/v5.4.0` `ad459df`; docs branch updated separately | Verified |
 | PR #1 / PR #2 | #1 open, draft, unmerged, no reviews (`mergeable=false`, README only); #2 merged earlier | Verified |
-| Release code vs evidence | `023171d` is identical to the commit the logs were run on; `catalog.json` unchanged since `2606885` | Verified |
-| Test logs | Committed logs show exit 0 and 49 / 18 / 111 passed, 0 failed (178 total) | Claude-reported (implementer's own run) |
+| Release code vs evidence | `ad459df` includes corrective source commit `0bdeb962`; `catalog.json` unchanged since `2606885` | Verified |
+| Test logs | Baseline `023171d`: 178 passed; corrective branch `0bdeb962`: 49 + 18 + 120 = 187 passed, 0 failed | Claude-reported (implementer's own run) |
 | Kit | Six tests, six catalogues, built from release `catalog.json` (rev 1, 9 bots, 81 commands); self-check re-run after a pause: 36 passed, 0 failed | Claude-reported |
 | Suites re-run in this task | No (code unchanged). Only the kit self-check was repeated. | n/a |
 | Independent reproduction | None | Outstanding |
-| Owner acceptance | Not done | Outstanding |
+| Owner acceptance | All six tests PASS; Test 4 repeated with correct corrective-branch file and original package | Owner-verified |
 
 ## v5.4.0 source and catalogue
 
@@ -127,25 +127,16 @@ No v5.5.0 implementation before v5.4.0 has passed these gates. Release restricti
 - 2026-11-20 — Release head advanced to `023171d` (test-only A5 coverage). Fresh-clone run of all three suites: 178 passed, raw logs saved. Owner acceptance kit built and self-verified. No production code, `main` or PR changes.
 
 
-## Documentation checkpoint — Test 4 correction prepared
+## Latest documentation checkpoint — 2026-11-20
 
-Live GitHub was checked before this maintenance:
-- `main`: `b247aec8a1ee279b71f6aedd8fbaf4d908c22d5f`
-- `release/v5.4.0`: `ad459df8c014fc01dce893ff5374e4e4d8e2280a`
-- `docs/project-control-baseline`: `64b6dd3e142a9326e22c697aab45775e125fca74` before this docs-only maintenance
-- PR #1 remains open, draft and unmerged.
-
-The corrective implementation is merged into `release/v5.4.0`. No claim is made about the current local Claude workspace. The Claude task explicitly forbids modifying the docs branch.
-
-
-## Documentation checkpoint — owner acceptance and PR #3
-
-Live GitHub verified 2026-11-20:
+Live GitHub verified after PR #3 merge:
 - `main`: `b247aec8a1ee279b71f6aedd8fbaf4d908c22d5f` (unchanged)
-- `release/v5.4.0`: `ad459df8c014fc01dce893ff5374e4e8d8e2280a` (corrective PR #3 merged)
-- `fix/v5.4.0-test4-install-button-state`: `0bdeb9622d2a0a5a1ad49d48711aa8c768cf7478`
-- `docs/project-control-baseline`: management-doc updates committed separately
-- PR #3: merged into `release/v5.4.0`; merge commit `ad459df8c014fc01dce893ff5374e4e8d8e2280a`.
+- `release/v5.4.0`: `ad459df8c014fc01dce893ff5374e4e4d8e2280a`
+- Corrective source commit: `0bdeb9622d2a0a5a1ad49d48711aa8c768cf7478`
+- PR #3: merged into `release/v5.4.0`; merge commit `ad459df8c014fc01dce893ff5374e4e4d8e2280a`.
 - PR #1 remains open/unmerged.
+- `docs/project-control-baseline` contains the management-document updates; these documents remain outside `main` and `release/v5.4.0`.
 
-Owner confirmed all six browser acceptance tests PASS after correcting the Test 4 file selection and repeating only Test 4. ChatGPT created PR #3 with owner authorization. PR #3 was merged into `release/v5.4.0` with owner authorization. No merge into `main`, release, deployment, or tag was performed.
+Owner acceptance: all six browser tests PASS after the owner corrected the Test 4 file selection and repeated only Test 4 with the original package. Claude's 187 automated passes on the corrective branch remain implementer-reported. No independent suite reproduction has been completed.
+
+PR #3 was merged into the release branch with owner authorization. No merge into `main`, formal release, deployment, or tag was performed.
