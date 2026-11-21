@@ -1,0 +1,17 @@
+suite_1_exit=0
+suite_2_exit=0
+corrective_exit=0
+
+Release source commit: ad459df8c014fc01dce893ff5374e4e4d8e2280a
+Verification branch commit: ef48b38f779c7c0bd9a79ae0fbf64390d1aa89b2
+v22.23.5
+10.9.9
+Version 1.63.0
+/home/runner/.cache/ms-playwright/chromium-1243/chrome-linux64/chrome
+
+### artifacts/browser_suite_1.log
+49 passed, 0 failed
+### artifacts/browser_suite_2.log
+18 passed, 0 failed
+### artifacts/browser_corrective.log
+120 passed, 0 failed
