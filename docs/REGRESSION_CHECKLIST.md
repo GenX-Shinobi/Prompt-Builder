@@ -132,7 +132,7 @@ Claude reports the following verification in `fix/v5.4.0-test4-install-button-st
 - [x] Fresh 631-change scenario verified before and after Show all; installation tested only in a disposable browser profile.
 - [x] Owner repeated Test 4 using the correct corrective-branch index.html and original package; all six owner acceptance tests now PASS.
 
-These corrective technical checks are **Claude-reported** except the owner's six-test acceptance result, which is **owner-verified**. The corrective commit is proposed to the release branch in PR #3 and is not yet merged.
+These corrective technical checks are **Claude-reported** except the owner's six-test acceptance result, which is **owner-verified**. The corrective commit was merged into `release/v5.4.0` through PR #3 (merge commit `ad459df8`). `main` remains unchanged.
 
 **Integration status:** PR #3 is open from `fix/v5.4.0-test4-install-button-state` into `release/v5.4.0`. GitHub's create-PR response reports `mergeable=false`; investigate before any merge. No release approval is implied.
 
@@ -149,4 +149,4 @@ Claude reports the following verification in `fix/v5.4.0-test4-install-button-st
 
 These technical checks are **Claude-reported** except the six-test acceptance result, which is **owner-verified**. The corrective commit is proposed to the release branch in PR #3 and is not yet merged.
 
-**Integration status:** PR #3 is open from `fix/v5.4.0-test4-install-button-state` into `release/v5.4.0`. A fresh GitHub REST read reports the PR as mergeable/clean. No merge has been performed.
+**Integration status:** PR #3 is merged into `release/v5.4.0`; merge commit `ad459df8c014fc01dce893ff5374e4e4d8e2280a`. `main` remains unchanged. Formal release approval is still pending.
