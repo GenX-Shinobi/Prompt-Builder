@@ -4,9 +4,12 @@ on:
   push:
     branches:
       - verify/v5.4.0-independent-playwright
+    paths-ignore:
+      - verification-result.txt
+      - Preview.jpg
 
 permissions:
-  contents: read
+  contents: write
 
 jobs:
   verify:
@@ -28,7 +31,6 @@ jobs:
         run: npx playwright install --with-deps chromium
 
       - name: Run all three documented suites
-        id: suites
         shell: bash
         run: |
           mkdir -p artifacts
@@ -78,6 +80,56 @@ jobs:
             await browser.close();
           })().catch(err => { console.error(err); process.exit(1); });
           NODE
+
+      - name: Preserve evidence and refresh documentation preview after all suites pass
+        if: always()
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        shell: bash
+        run: |
+          mkdir -p artifacts
+          if [ -f artifacts/exit-codes.txt ]; then
+            cp artifacts/exit-codes.txt verification-result.txt
+          else
+            printf 'Suite exit codes unavailable; inspect workflow logs.\n' > verification-result.txt
+          fi
+          {
+            echo
+            echo "Release source commit: ad459df8c014fc01dce893ff5374e4e4d8e2280a"
+            echo "Verification branch commit: ${GITHUB_SHA}"
+            cat artifacts/environment.txt 2>/dev/null || true
+            echo
+            for f in artifacts/browser_suite_1.log artifacts/browser_suite_2.log artifacts/browser_corrective.log; do
+              echo "### $f"
+              grep -E '[0-9]+ passed, [0-9]+ failed|Error:|FAIL ' "$f" 2>/dev/null | tail -20 || true
+            done
+          } >> verification-result.txt
+
+          if [ -f artifacts/Preview.jpg ]; then
+            cp artifacts/Preview.jpg Preview.jpg
+            git add Preview.jpg
+          fi
+          git add verification-result.txt
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -m "test: record independent v5.4.0 verification evidence" || true
+          git push origin HEAD:refs/heads/verify/v5.4.0-independent-playwright
+
+          if grep -q 'suite_1_exit=0' artifacts/exit-codes.txt 2>/dev/null &&
+             grep -q 'suite_2_exit=0' artifacts/exit-codes.txt 2>/dev/null &&
+             grep -q 'corrective_exit=0' artifacts/exit-codes.txt 2>/dev/null &&
+             [ -f artifacts/Preview.jpg ]; then
+            git clone --quiet --branch docs/chimera-session-maintenance \
+              "https://x-access-token:${GH_TOKEN}@github.com/GenX-Shinobi/Prompt-Builder.git" \
+              "$RUNNER_TEMP/docs-preview"
+            cp artifacts/Preview.jpg "$RUNNER_TEMP/docs-preview/Preview.jpg"
+            cd "$RUNNER_TEMP/docs-preview"
+            git config user.name "github-actions[bot]"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git add Preview.jpg
+            git commit -m "docs: refresh v5.4.0 README preview"
+            git push origin HEAD:refs/heads/docs/chimera-session-maintenance
+          fi
 
       - name: Upload test logs and screenshot
         if: always()
