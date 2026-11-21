@@ -2,7 +2,7 @@
 
 # Claude Code Assignment — v5.4.0 Test 4 corrective fix
 
-> Status: **COMPLETED**. This brief is retained as the historical assignment and evidence contract. The corrective implementation is on `fix/v5.4.0-test4-install-button-state` at `0bdeb962`; PR #3 proposes it for `release/v5.4.0` and remains unmerged.
+> Status: **COMPLETED**. This brief is retained as the historical assignment and evidence contract. The corrective implementation is on `fix/v5.4.0-test4-install-button-state` at `0bdeb962`; PR #3 was merged into `release/v5.4.0` at `ad459df8c014fc01dce893ff5374e4e4d8e2280a`.
 
 ## Objective
 
