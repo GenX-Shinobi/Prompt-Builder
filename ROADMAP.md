@@ -61,3 +61,8 @@ After v5.4.0 passes its release gates and the owner approves release, reassess t
 ## Future finishing round-up — proposal only
 
 After v5.4.0 is back on course, accepted and released, consider a separate owner-approved finishing phase to improve visual consistency, extend the existing colour palettes across more of the page, and add multilingual support with accessibility as a design requirement. Preserve deliberate visual choices—including the compiled-prompt area's dark treatment in light mode—unless usability evidence supports changing them. Consider translation architecture, longer strings, non-Latin scripts and right-to-left layouts. This is a future proposal, not current work and not part of the Test 4 correction.
+## Separate initiative boundary — CHIMERA
+
+CHIMERA (https://github.com/GenX-Shinobi/CHIMERA) is a separate open-source workforce-framework project. Prompt Builder may be considered as its first adopter only after v5.4.0 has passed its own release gates, received explicit owner release approval, and the owner authorizes a separate integration milestone.
+
+This is a future relationship note, **not** an active roadmap item or permission to start v5.5.0. Prompt Builder retains its own mission, roadmap, architecture, release gates and authority. Do not combine project files, statutes or memory.
