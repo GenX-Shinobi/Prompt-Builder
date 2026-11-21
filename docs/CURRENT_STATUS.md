@@ -1,5 +1,26 @@
 # Current Status
 
+## POST-RELEASE VERIFIED STATUS — 2026-11-21 (supersedes earlier status sections)
+
+| Item | Verified result |
+|---|---|
+| v5.4.0 GitHub Release | **Published**, stable, not draft: https://github.com/GenX-Shinobi/Prompt-Builder/releases/tag/v5.4.0 |
+| v5.4.0 tag | `97531983b26b7e00be78a8200284d7897a97b864` |
+| main | `97531983b26b7e00be78a8200284d7897a97b864` at verification |
+| Application blob | `index.html` = `856fb513eb242d8bf704d96a829f924217b3bc95` (unchanged) |
+| Documentation | PR #4 and PR #1 merged; README and authentic `Preview.jpg` on main |
+| CI / owner acceptance | 187 Chromium/Playwright checks passed; six owner desktop acceptance tests passed |
+| Explicitly accepted limitations | No real mobile/touch, Firefox/Safari, screen reader, or manual contrast test |
+| Cosmetic issues | Header overlap ≤600px, unstyled chatbot note; no separate in-file log entry for final button correction |
+| Release notes polish | Online-app URL has nested/double-bracket Markdown; can correct in a separately authorized docs task |
+| Additional release attachments | None; GitHub provides automatic source archives |
+| New implementation | None authorized; CHIMERA and v5.5.0 paused pending next-session planning |
+
+This is a post-release documentation checkpoint, not a new application release. Older pending release-gate and PR-status text below is historical and superseded. Any closeout documentation branch requires a separate owner-approved merge.
+
+---
+
+
 > Dated handoff snapshot. Re-check GitHub and local workspaces before acting; this file is not a live connection.
 
 **Last checked:** 2026-11-21 ~16:50 UTC (after PR #6 merged the v5.4.0 code into `main`)  
