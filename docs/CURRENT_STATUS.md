@@ -140,3 +140,26 @@ Live GitHub verified after PR #3 merge:
 Owner acceptance: all six browser tests PASS after the owner corrected the Test 4 file selection and repeated only Test 4 with the original package. Claude's 187 automated passes on the corrective branch remain implementer-reported. No independent suite reproduction has been completed.
 
 PR #3 was merged into the release branch with owner authorization. During documentation maintenance, `docs/CLAUDE_TASK.md` was accidentally added to `main` and then deleted; live compare shows no net file diff from the prior `main` head. No application source changes were made on `main`. No formal release, deployment, or tag was created.
+## Latest maintenance checkpoint — 2026-11-21
+
+This section supersedes earlier branch-head snapshots above; older checkpoint entries remain as history.
+
+**Live repository observations at start of this documentation pass:**
+
+| Ref | Commit | Status |
+|---|---|---|
+| main | d4ea76f1e3b896f8494529295e2e75d049cbfc93 | Default branch; no changes made in this pass |
+| release/v5.4.0 | ad459df8c014fc01dce893ff5374e4e4d8e2280a | PR #3 correction integrated; release still not approved |
+| docs/project-control-baseline | c114217903d72099c11f301eea22d2b9747b1b6c | Existing documentation baseline and open PR #1 |
+| ops/claude-agent-pilot | 61f045a96b5b0d0683e378bbca1c9b89f01e39c9 | Existing branch; not modified |
+
+- PR #1 remains open/unmerged. PR #3 is closed and merged into release/v5.4.0 at ad459df8c014fc01dce893ff5374e4e4d8e2280a.
+- GitHub reported push permission for the connected account. A dedicated documentation branch was created for this maintenance; no default or release branch is targeted.
+- The latest documented corrective test results remain Claude-reported: 49 + 18 + 120 = 187 passed, 0 failed. They have not been independently reproduced in this session.
+- Owner browser acceptance remains six of six PASS, as recorded above. Do not infer owner installation testing.
+- The actual Claude local workspace was not inspected in this pass. Its current branch/worktree and any unpushed changes remain to be verified before assigning or resuming engineering work.
+- CHIMERA is a separate initiative; see CHIMERA_RELATIONSHIP.md. Its existence does not alter Prompt Builder release gates.
+
+**Current release status:** v5.4.0 remains unapproved. Independent reproduction and remaining cross-browser/mobile/accessibility/offline checks remain outstanding as recorded in the release checklist and roadmap.
+
+**Single next action:** verify the actual Claude workspace and arrange an independent run of the three documented Playwright suites against the current release branch. Do not merge, publish, deploy, tag or release.
