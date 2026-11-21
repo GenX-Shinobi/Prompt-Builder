@@ -83,3 +83,10 @@ A task is not complete merely because code was generated. It is complete when:
 - Documentation and project status match the actual result.
 - A reviewable handoff or pull request is available.
 - The checkpoint in `docs/CURRENT_STATUS.md` matches the actual commits, test evidence and next action.
+## 9. Separate repositories and cross-project boundaries
+
+- CHIMERA (https://github.com/GenX-Shinobi/CHIMERA) is a separate project, not a Prompt Builder feature or subdirectory.
+- Keep repositories, roadmaps, statutes, memory, task queues and release processes separate.
+- Do not copy project-specific instructions, private context, credentials or permissions between projects.
+- CHIMERA may be evaluated as a future Prompt Builder adopter only after v5.4.0 is formally released and the owner explicitly authorizes a separate integration milestone.
+- CHIMERA planning does not authorize Prompt Builder code changes, merging, publishing, release work or v5.5.0 implementation.

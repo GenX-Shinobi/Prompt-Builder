@@ -5,18 +5,26 @@
 **Repository:** https://github.com/GenX-Shinobi/Prompt-Builder  
 **Application:** AI Prompt Builder Hub  
 **Roles (do not blur them):**
-- **Owner** — product owner; final product, merge and release approval.
+- **Owner** — product owner; approves scope, implementation authorization, product direction, merges and releases.
 - **ChatGPT** — project manager and independent reviewer; owns central management documentation, roadmap/status continuity, owner-facing decisions and review of Claude's evidence.
 - **Claude Code** — implementation engineer; owns implementation, code-adjacent documentation and technical test evidence for assigned work.
-- **Owner** — product owner; approves scope, implementation authorization, merges and releases.
 
-**Last checked:** 2026-11-20 (repository state at the checkpoint below; re-verify before acting)
+**Last checked:** 2026-11-21, after PR #6 (see "Current verified state — 2026-11-21" below; re-verify before acting)
 
-**Where these documents live:** on the branch `docs/project-control-baseline` (draft PR #1) until the owner approves merging it. They are **not** on `main` or `release/v5.4.0`. Read them with `git fetch origin` then `git show origin/docs/project-control-baseline:<path>`, or check that branch out in a separate worktree. Do not copy them onto other branches.
+**Where these documents live:** the original project-control baseline is on `docs/project-control-baseline` (open draft PR #1 → `main`). The 2026-11-21 maintenance and closeout updates are on `docs/chimera-session-maintenance` (open PR #4: https://github.com/GenX-Shinobi/Prompt-Builder/pull/4 → the baseline branch). These documents are **not** on `main` or `release/v5.4.0`. Read the PR #4 branch for the newest version; do not copy management documents onto application/release branches.
 
 ## Resume phrase
 
-> **Resume AI Prompt Builder Hub — v5.4.0 release closeout.** Read the project-control documents from `docs/project-control-baseline`; verify live GitHub and the actual Claude workspace before acting. Owner acceptance: all six browser acceptance tests PASS, including Test 4 repeated with the correct corrective-branch `index.html` and original test package. Corrective PR #3 has been merged into `release/v5.4.0` at `ad459df8c014fc01dce893ff5374e4e4d8e2280a`. `main` remains unchanged. Do not merge, publish, deploy, tag, modify `main`, merge PR #1, or start v5.5.0 without the owner's separate approval. State one next action.
+> **Resume AI Prompt Builder Hub — v5.4.0 documentation and release closeout.** Read the project-control documents from `docs/chimera-session-maintenance` (PR #4); verify live GitHub before acting. The v5.4.0 code is on `main` (`fc30269`, PR #6) and the live site serves it; GitHub Actions passed 187 of 187 checks on that code; Owner acceptance is six of six PASS. v5.4.0 is not formally released (no tag or GitHub Release). PR #4 and PR #1 are open. Do not merge, publish, deploy, tag, release, modify `main`, or start v5.5.0/CHIMERA without the Owner's separate approval. State one next action.
+
+## Current verified state — 2026-11-21, after PR #6 (supersedes the 2026-11-20 section where they differ)
+
+- **`main`:** `fc30269615eff28b31a3772e3b40d5ade2c80aa8`, merge of PR #6 ("Integrate verified v5.4.0 corrective release into main"), Owner-approved code integration only. Changed `index.html` and `tests/browser_corrective.js` only; `index.html` is byte-identical to `release/v5.4.0` at `ad459df`. (Verified)
+- **Independent verification:** GitHub Actions, four runs on `verify/v5.4.0-independent-playwright` with byte-identical app and test files: 49 + 18 + 120 = 187 passed, 0 failed, in every run. PR #6 cites runs 44922456009 and 44922527496. (CI; the earlier "no CI / independently reproduced: none" statements below are superseded.)
+- **Live site:** GitHub Pages redeployed `main@fc30269` automatically; the public app now runs v5.4.0. No v5.4.0 tag or GitHub Release exists. (Verified)
+- **Preview image:** PR #4's `Preview.jpg` is a validated genuine first-open capture of v5.4.0 by GitHub Actions. (Verified)
+- **Documentation PRs:** PR #4 fast-forwards cleanly onto the baseline. PR #1 → `main` has one conflict, `readme.md`; the resolution plan is in [docs/SESSION_HANDOFF.md](docs/SESSION_HANDOFF.md). (Verified by simulation; nothing merged)
+- Full detail, gate table and pending decisions: [docs/CURRENT_STATUS.md](docs/CURRENT_STATUS.md), top section.
 
 ## Mission and product principles
 
@@ -28,7 +36,7 @@ Build a free-first, chatbot-independent prompt builder that helps nontechnical p
 - Keep the scope centred on prompt building and lightweight context transfer, not a full repository/context-management platform.
 - Owner has final say on product direction, merges and releases.
 
-## Verified project state at 2026-11-20
+## Verified project state at 2026-11-20 (historical; superseded where it conflicts with the 2026-11-21 section above)
 
 Each item below was checked against live GitHub and the Claude workspace on 2026-11-20 unless marked otherwise.
 
@@ -82,26 +90,31 @@ An **owner acceptance kit** remains available at [acceptance-kit.html](https://g
 3. ~~Owner real-browser acceptance~~ — **all six tests PASS**. Test 4 was repeated using the correct corrective-branch `index.html` and original Test 4 package. The corrected owner record supersedes earlier failure entries.
 4. ~~Implement and integrate focused Test 4 correction~~ — commit `0bdeb9622d2a0a5a1ad49d48711aa8c768cf7478` on the corrective branch; merged into `release/v5.4.0` through PR #3 as `ad459df8`.
 5. ~~Create reviewable integration proposal~~ — PR #3 ([fix: clarify disabled install state for large catalogue reviews](https://github.com/GenX-Shinobi/Prompt-Builder/pull/3)) was merged into `release/v5.4.0` with merge commit `ad459df8c014fc01dce893ff5374e4e4d8e2280a` on 2026-11-20. GitHub confirms the release branch now contains corrective commit `0bdeb962`. `main` remains unchanged.
-6. ChatGPT independent reproduction of the automated suites remains outstanding. Claude's automated results must remain labelled implementer-reported.
-7. Owner explicitly approves v5.4.0 release only after all release gates pass.
+6. ~~Independent reproduction of the automated suites~~ — met via GitHub Actions (187 of 187, four runs on byte-identical code); Owner relied on it for PR #6. ChatGPT to confirm the label. Claude's own runs stay labelled Claude-reported.
+7. ~~Integrate the release code into `main`~~ — PR #6 merged at `fc30269` on 2026-11-21 (Owner-approved, code only).
+8. Land documentation: PR #4 → baseline, then PR #1 → `main` with the `readme.md` resolution (Owner approval for each).
+9. Remaining checks: real-device mobile/touch, screen reader, Firefox/Safari, manual contrast; decide on a version-log entry.
+10. Owner explicitly approves v5.4.0 release; then tag and GitHub Release.
 
-README reconciliation remains prepared on the docs branch and unmerged. Keep the PR's `readme.md` in full when PR #1 is eventually merged, and only after approved release code is on `main`.
+README reconciliation is prepared on the docs branches and unmerged. The release code is now on `main`, so the earlier order dependency is satisfied. Keep the PR's `readme.md` in full when resolving PR #1.
 
 ### Active task
 
-PR #3 is closed/merged. The active work is release-readiness closeout; independent reproduction of the automated suites and remaining desktop/mobile/offline checks are outstanding.
+Documentation closeout after PR #6. Claude Code updated the status, handoff and README on PR #4 (documentation only) and prepared the PR #1 conflict-resolution plan. Nothing was merged.
 
-**Single next action:** arrange an independent run of the three documented Playwright suites against the merged release branch. Do not publish, deploy, tag, merge into `main`, or release without separate owner approval.
+**Single next action:** ChatGPT reviews the 2026-11-21 checkpoint and puts the live-site status, the PR #4 merge and the PR #1 resolution/merge to the Owner as one plain-English decision. Do not publish, tag, release or merge without that approval.
 
 ### Decisions requiring owner approval
 
-1. How and when the reviewed release branch reaches `main`. The branches have diverged; do not merge/rebase automatically.
-2. When to merge PR #1, preserving its reconciled `readme.md` and only after approved release code is on `main`.
-3. Formal v5.4.0 release approval.
+1. ~~How and when the reviewed release branch reaches `main`~~ — done via PR #6.
+2. Whether the automatic GitHub Pages update from PR #6 (live site now on v5.4.0) is accepted under the publication gate.
+3. Merge PR #4, then resolve and merge PR #1 (plan in [docs/SESSION_HANDOFF.md](docs/SESSION_HANDOFF.md)).
+4. Formal v5.4.0 release approval, tag and GitHub Release.
+5. Branch housekeeping (verify, preview-capture, fix and evidence branches).
 
 ### Release restrictions (apply to every session)
 
-- Do not modify `main`. Do not merge PR #1 without explicit owner approval. PR #3 is already merged.
+- Do not modify `main` further without explicit owner approval (PR #6 was the approved exception). Do not merge PR #1 or PR #4 without explicit owner approval.
 - Do not publish, deploy, tag or release.
 - Do not start v5.5.0.
 - Do not change production code in documentation-only tasks.
@@ -158,3 +171,32 @@ Clearly separate source inspection, automated execution, independent review and 
 - The owner retains authority over product direction, implementation authorization, branch integration, merges and releases.
 - Parallel work is allowed on separate branches and non-overlapping files. During Test 4 correction, Claude uses a new corrective branch from `release/v5.4.0`; management maintenance remains on `docs/project-control-baseline`. Claude must not modify the docs branch.
 - The Test 4 corrective implementation branch and PR #3 have been verified on GitHub. Do not claim a fresh local Claude workspace inspection unless it is actually performed.
+## Separate initiative boundary — CHIMERA (recorded 2026-11-21)
+
+CHIMERA is a separate public repository and independent project: https://github.com/GenX-Shinobi/CHIMERA
+
+Its mission is to develop a reusable, open-source, free-to-use, platform-independent framework for building, governing and coordinating AI workforces. AI Prompt Builder Hub may become its first adopter only after Prompt Builder v5.4.0 is formally released and the owner separately authorizes a bounded integration milestone.
+
+**Separation rules**
+- Keep the repositories, roadmaps, statutes, memory, task queues and release processes separate.
+- CHIMERA employees, permissions and memory do not automatically transfer into Prompt Builder.
+- Prompt Builder project requirements and release authority do not automatically transfer into CHIMERA.
+- Any future integration must be assessed against Prompt Builder's own free-first mission, standalone architecture, scope and project-specific rules.
+- CHIMERA planning is not an active Prompt Builder implementation task and does not change v5.4.0 release gates or authorize v5.5.0.
+
+## Maintenance checkpoint — 2026-11-21
+
+Live GitHub access was rechecked. Repository permissions reported by GitHub search include push access for the connected account.
+
+- main: d4ea76f1e3b896f8494529295e2e75d049cbfc93
+- release/v5.4.0: ad459df8c014fc01dce893ff5374e4e4d8e2280a
+- docs/project-control-baseline: c114217903d72099c11f301eea22d2b9747b1b6c at start of this maintenance pass.
+- ops/claude-agent-pilot: 61f045a96b5b0d0683e378bbca1c9b89f01e39c9
+- PR #1 remains open and unmerged; PR #3 is closed/merged into release/v5.4.0.
+- Documentation maintenance is being prepared on a separate branch, docs/chimera-session-maintenance, based on the project-control branch.
+
+These are repository observations only. The actual Claude local workspace was not inspected in this pass. The release is not approved. Do not merge, tag, publish, deploy, modify main, merge PR #1, or begin v5.5.0 without the owner's separate authorization.
+
+## Added continuity documents
+- [Session handoff](docs/SESSION_HANDOFF.md) — compact startup checklist and current next action.
+- [CHIMERA relationship boundary](docs/CHIMERA_RELATIONSHIP.md) — keeps the separate framework initiative from expanding Prompt Builder scope.

@@ -109,6 +109,20 @@ Browser/device details were not recorded. The owner did not report performing th
 
 ## Release record
 
+### Update — 2026-11-21, after PR #6
+
+**Version:** 5.4.0 (code on `main`, live site updated automatically; not formally released, no tag or GitHub Release)  
+**Code:** `main` at `fc30269615eff28b31a3772e3b40d5ade2c80aa8` (PR #6 merge); `index.html` byte-identical to `release/v5.4.0` at `ad459df`  
+**Independent automated run:** GitHub Actions, workflow `v5.4.0-independent-verification.yml`, runs 44922456009, 44922499783, 44922527496, 44922534308: suite 1 = 49, suite 2 = 18, corrective = 120 (187 passed, 0 failed) in every run; ubuntu-latest, Node v22.23.5, Playwright 1.63.0, Chromium `chromium-1243`. Two runs are marked failed only because a later evidence-push step failed; the test step passed.  
+**Claude-reported extra probes:** offline, downloaded-file, widths 320–1920 px and basic accessibility pass in headless Chromium (evidence branch `evidence/v5.4.0-ad459df-verification`)  
+**Not run:** real phones/tablets and touch, screen readers, Firefox, Safari, manual colour-contrast audit, owner installation action  
+**Known limitations:** pre-existing header-control overlap at ≤600 px; unstyled chatbot note text under the cards; no version-log entry for the post-merge corrective commits; reconciled README not yet on `main`  
+**Owner browser acceptance:** six of six PASS. **Formal release decision:** pending.
+
+The 2026-11-20 record below is kept as history; its "no CI" and "independent re-run not done" lines are superseded.
+
+### Record — 2026-11-20
+
 **Version:** 5.4.0 (not released)  
 **Release branch / commit:** `release/v5.4.0` at `ad459df8c014fc01dce893ff5374e4e4d8e2280a` (Test 4 corrective PR #3 merged)  
 **Corrective branch / commit:** `fix/v5.4.0-test4-install-button-state` at `0bdeb9622d2a0a5a1ad49d48711aa8c768cf7478`  

@@ -43,6 +43,10 @@ Add ideas in plain language. Do not require the owner to prioritise, categorise 
 - **Teacher/tester feedback:** invite a teacher or other first-time user to try the app; record observed friction rather than assuming demand.
 - **Free-tier tool comparison:** evaluate how the same task performs across available free chatbot tiers without allowing premium subscriptions to redefine the baseline.
 
+### Explore — separate ecosystem initiative
+
+- **CHIMERA workforce framework:** a separate public, open-source, free-to-use, platform-independent project intended to provide reusable AI workforce governance, coordination and memory. Prompt Builder may become its first adopter only after v5.4.0 is formally released and the owner separately approves an integration milestone. This is a relationship to monitor, not current Prompt Builder implementation scope.
+
 ### Parked
 
 - Full folder/repository-scale context packer.
