@@ -15,7 +15,7 @@
 |---|---|---|
 | `main` | `b247aec8a1ee279b71f6aedd8fbaf4d908c22d5f` | Merge commit of PR #2 (contains `ce1ec19`). Unchanged. |
 | `release/v5.4.0` | `023171dc60af78d43081a447d41009f153d82127` | 4 ahead / 1 behind `main`; local and remote heads matched; clean tree; everything pushed. |
-| `docs/project-control-baseline` | `7e6c65e` (before this checkpoint's commit; see `git log`) | Draft PR #1, open and unmerged; head advances with docs commits only. |
+| `docs/project-control-baseline` | `64b6dd3e142a9326e22c697aab45775e125fca74` before this maintenance | Draft PR #1, open and unmerged; this maintenance adds documentation-only commits. |
 
 - **Why the release branch diverges:** PR #2 was merged at `ce1ec19`. Four more commits were then pushed to the release branch: `419b51f`, `5c41741`, `52bcdea`, `023171d`. `main` holds only the merge commit `b247aec` that the release branch lacks. No merge, rebase or cherry-pick has been done.
 - PR #2 is closed and merged. **That merge is not release approval.**
@@ -72,9 +72,22 @@
 
 Do not describe any of these figures as independently verified. A fresh Claude session or a fresh clone is still the implementer.
 
-## Product-owner browser check completed (limited preview only)
+## Product-owner browser acceptance — completed 2026-11-20
 
-The owner opened the release-branch `index.html` locally with a separate copy of `catalog.json`, appended `[TEST ONLY]` to the ChatGPT card summary, saw the before/after wording preview, and clicked Cancel. Nothing was installed. This confirms only a simple wording-change preview. It does **not** cover added/removed records, expansion/collapse, keyboard interaction or the large-diff safeguards.
+The owner completed the browser-only acceptance kit on a separate test copy.
+
+| Test | Result | Evidence / note |
+|---|---|---|
+| 1. Add one command and remove another | **Pass** | Owner-tested |
+| 2. Add a whole chatbot | **Pass** | Owner-tested |
+| 3. Remove a whole chatbot (Mistral) | **Pass** | Owner-tested |
+| 4. Large change (631 buttons) | **Fail** | Preview/update succeeded, but disabled "Install and reload" was visually indistinguishable from enabled. Owner did not attempt installation. Functional gate remains unverified by owner. |
+| 5. Booby-trapped text | **Pass** | Owner-tested; content remained plain text |
+| 6. Broken catalogue | **Pass** | Owner-tested; refused |
+
+Optional narrow-window repeat of Test 1: **Pass**. Exact browser version, device model and viewport dimensions were not recorded.
+
+Classification: Test 4 is a confirmed visual/usability failure. It is not evidence that the underlying install gate is broken. Preserve the five passed results; retest Test 4 only on a fresh copy after correction. Do not risk the existing acceptance package.
 
 ## Owner acceptance kit (ready, not yet used)
 
@@ -86,17 +99,21 @@ The owner opened the release-branch `index.html` locally with a separate copy of
 
 ## Current position and next action
 
-**Do not release v5.4.0 yet.** There is no open Claude implementation task.
+**v5.4.0 is not release-approved.** Owner acceptance is five of six formal tests passed, with Test 4 failed for ambiguous disabled-button styling. Installation was not attempted.
 
-**Single next action:** the owner runs the acceptance kit in a real browser (about 15 minutes) and pastes the "Copy my results" summary back to ChatGPT. ChatGPT's independent review of `release/v5.4.0` at `023171d` can run alongside and does not block it.
+A focused corrective task is prepared in [docs/CLAUDE_TASK.md](CLAUDE_TASK.md), awaiting owner submission/authorization. It requires a separate branch from `release/v5.4.0`; implementation must not modify `main`, `release/v5.4.0` or `docs/project-control-baseline`.
+
+**Single next action:** owner submits the prepared Claude assignment when ready. After Claude returns evidence, ChatGPT independently reviews it and asks the owner to retest Test 4 only on a fresh copy.
 
 ## Remaining release gates
 
-1. ~~Interactive added/removed record details and three-suite execution~~ — **done, Claude-reported only.**
-2. Independent review of `023171d` and its evidence (ideally with the suites re-run and output recorded by someone other than the implementer).
-3. Owner real-browser acceptance with the kit above, on desktop and mobile where practical.
-4. README: **prepared on the docs branch**; apply at PR #1 merge (keep the PR's file) and only after the release code is in `main`. Awaiting owner or ChatGPT review.
-5. Obtain explicit owner release approval.
+1. ~~Interactive added/removed record details and three-suite execution~~ — **done, Claude-reported only** (178 passed; not independently reproduced).
+2. ~~Owner browser acceptance~~ — **completed**: Tests 1, 2, 3, 5 and 6 passed; Test 4 failed for visual ambiguity; optional narrow-window check passed.
+3. **Correct Test 4** on a separate branch; assignment prepared, not yet authorized/submitted.
+4. ChatGPT reviews corrective code and evidence; owner retests Test 4 only on a fresh copy.
+5. Independently reproduce automated suites where feasible.
+6. README: prepared on docs branch; apply at PR #1 merge only after approved release code reaches `main`.
+7. Obtain explicit owner release approval.
 
 No v5.5.0 implementation before v5.4.0 has passed these gates. Release restrictions are listed in [PROJECT_CONTROL.md](../PROJECT_CONTROL.md).
 
@@ -105,3 +122,14 @@ No v5.5.0 implementation before v5.4.0 has passed these gates. Release restricti
 - 2026-11-20 — Documentation reconciled to release head `52bcdea`; test record split into reported versus independently reproduced; continuity protocol added to `PROJECT_CONTROL.md`. Documentation-only.
 - 2026-11-20 — README reconciled on the docs branch (not merged); release-readiness audit recorded; owner decisions listed in `PROJECT_CONTROL.md`. Documentation only.
 - 2026-11-20 — Release head advanced to `023171d` (test-only A5 coverage). Fresh-clone run of all three suites: 178 passed, raw logs saved. Owner acceptance kit built and self-verified. No production code, `main` or PR changes.
+
+
+## Documentation checkpoint — Test 4 correction prepared
+
+Live GitHub was checked before this maintenance:
+- `main`: `b247aec8a1ee279b71f6aedd8fbaf4d908c22d5f`
+- `release/v5.4.0`: `023171dc60af78d43081a447d41009f153d82127`
+- `docs/project-control-baseline`: `64b6dd3e142a9326e22c697aab45775e125fca74` before this docs-only maintenance
+- PR #1 remains open, draft and unmerged.
+
+The owner has not yet submitted the Test 4 Claude assignment. No corrective implementation branch or workspace changes are claimed. The Claude task explicitly forbids modifying the docs branch.
