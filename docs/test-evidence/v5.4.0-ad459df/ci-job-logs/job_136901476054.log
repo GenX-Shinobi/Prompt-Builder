@@ -1,0 +1,711 @@
+﻿2026-11-21T16:04:28.7327843Z Current runner version: '2.338.2'
+2026-11-21T16:04:28.7350303Z ##[group]Runner Image Provisioner
+2026-11-21T16:04:28.7351041Z Hosted Compute Agent
+2026-11-21T16:04:28.7351624Z Version: 20261111.635
+2026-11-21T16:04:28.7352186Z Commit: b8a594ea514ff44cadb5342986c68b1eac6e22ed
+2026-11-21T16:04:28.7353080Z Build Date: 2026-11-11T01:49:01Z
+2026-11-21T16:04:28.7353712Z Worker ID: {c135cea5-f3db-401f-bba8-f26b72a130fe}
+2026-11-21T16:04:28.7354308Z Region: westus3
+2026-11-21T16:04:28.7354831Z Cloud: Azure
+2026-11-21T16:04:28.7355298Z ##[endgroup]
+2026-11-21T16:04:28.7356467Z ##[group]Operating System
+2026-11-21T16:04:28.7357060Z Ubuntu
+2026-11-21T16:04:28.7357554Z 26.04.1
+2026-11-21T16:04:28.7358035Z LTS
+2026-11-21T16:04:28.7358518Z ##[endgroup]
+2026-11-21T16:04:28.7358980Z ##[group]Runner Image
+2026-11-21T16:04:28.7359544Z Image: ubuntu-26.04
+2026-11-21T16:04:28.7360034Z Version: 20261116.202.1
+2026-11-21T16:04:28.7361116Z Included Software: https://github.com/actions/runner-images/blob/ubuntu26/20261116.202/images/ubuntu/Ubuntu2604-Readme.md
+2026-11-21T16:04:28.7362384Z Image Release: https://github.com/actions/runner-images/releases/tag/ubuntu26%2F20261116.202
+2026-11-21T16:04:28.7363400Z ##[endgroup]
+2026-11-21T16:04:28.7364371Z ##[group]GITHUB_TOKEN Permissions
+2026-11-21T16:04:28.7366179Z Contents: write
+2026-11-21T16:04:28.7366726Z Metadata: read
+2026-11-21T16:04:28.7367263Z ##[endgroup]
+2026-11-21T16:04:28.7369105Z Secret source: Actions
+2026-11-21T16:04:28.7369987Z Cache mode: write
+2026-11-21T16:04:28.7370925Z Prepare workflow directory
+2026-11-21T16:04:28.7646378Z Prepare all required actions
+2026-11-21T16:04:28.7701972Z Getting action download info
+2026-11-21T16:04:29.0660751Z Download action repository 'actions/checkout@v4' (SHA:11d5960a326750d5838078e36cf38b85af677262)
+2026-11-21T16:04:29.1801176Z Download action repository 'actions/setup-node@v4' (SHA:49933ea5288caeca8642d1e84afbd3f7d6820020)
+2026-11-21T16:04:29.2987191Z Download action repository 'actions/upload-artifact@v4' (SHA:ea165f8d65b6e75b540449e92b4886f43607fa02)
+2026-11-21T16:04:29.5243132Z Complete job name: verify
+2026-11-21T16:04:29.5971793Z ##[group]Run actions/checkout@v4
+2026-11-21T16:04:29.5972447Z with:
+2026-11-21T16:04:29.5972980Z   repository: GenX-Shinobi/Prompt-Builder
+2026-11-21T16:04:29.5976313Z   token: ***
+2026-11-21T16:04:29.5976712Z   ssh-strict: true
+2026-11-21T16:04:29.5977075Z   ssh-user: git
+2026-11-21T16:04:29.5977434Z   persist-credentials: true
+2026-11-21T16:04:29.5977830Z   clean: true
+2026-11-21T16:04:29.5978192Z   sparse-checkout-cone-mode: true
+2026-11-21T16:04:29.5978612Z   fetch-depth: 1
+2026-11-21T16:04:29.5978962Z   fetch-tags: false
+2026-11-21T16:04:29.5979318Z   show-progress: true
+2026-11-21T16:04:29.5979696Z   lfs: false
+2026-11-21T16:04:29.5980023Z   submodules: false
+2026-11-21T16:04:29.5980389Z   set-safe-directory: true
+2026-11-21T16:04:29.5980812Z   allow-unsafe-pr-checkout: false
+2026-11-21T16:04:29.5981422Z ##[endgroup]
+2026-11-21T16:04:30.0046049Z Syncing repository: GenX-Shinobi/Prompt-Builder
+2026-11-21T16:04:30.0047710Z ##[group]Getting Git version info
+2026-11-21T16:04:30.0048428Z Working directory is '/home/runner/work/Prompt-Builder/Prompt-Builder'
+2026-11-21T16:04:30.0049518Z [command]/usr/bin/git version
+2026-11-21T16:04:30.0063341Z git version 2.56.1
+2026-11-21T16:04:30.0079704Z ##[endgroup]
+2026-11-21T16:04:30.0091810Z Temporarily overriding HOME='/home/runner/work/_temp/80ee7397-da29-4c9d-b5c9-26f6edde5c04' before making global git config changes
+2026-11-21T16:04:30.0093555Z Adding repository directory to the temporary git global config as a safe directory
+2026-11-21T16:04:30.0096229Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/Prompt-Builder/Prompt-Builder
+2026-11-21T16:04:30.0164892Z Deleting the contents of '/home/runner/work/Prompt-Builder/Prompt-Builder'
+2026-11-21T16:04:30.0171906Z ##[group]Initializing the repository
+2026-11-21T16:04:30.0173062Z [command]/usr/bin/git init /home/runner/work/Prompt-Builder/Prompt-Builder
+2026-11-21T16:04:30.0309211Z hint: Using 'master' as the name for the initial branch. This default branch name
+2026-11-21T16:04:30.0311223Z hint: will change to "main" in Git 3.0. To configure the initial branch name
+2026-11-21T16:04:30.0312386Z hint: to use in all of your new repositories, which will suppress this warning,
+2026-11-21T16:04:30.0313406Z hint: call:
+2026-11-21T16:04:30.0314092Z hint:
+2026-11-21T16:04:30.0314878Z hint: 	git config --global init.defaultBranch <name>
+2026-11-21T16:04:30.0315620Z hint:
+2026-11-21T16:04:30.0316429Z hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+2026-11-21T16:04:30.0317651Z hint: 'development'. The just-created branch can be renamed via this command:
+2026-11-21T16:04:30.0318485Z hint:
+2026-11-21T16:04:30.0319067Z hint: 	git branch -m <name>
+2026-11-21T16:04:30.0319734Z hint:
+2026-11-21T16:04:30.0320573Z hint: Disable this message with "git config set advice.defaultBranchName false"
+2026-11-21T16:04:30.0326320Z Initialized empty Git repository in /home/runner/work/Prompt-Builder/Prompt-Builder/.git/
+2026-11-21T16:04:30.0338697Z [command]/usr/bin/git remote add origin https://github.com/GenX-Shinobi/Prompt-Builder
+2026-11-21T16:04:30.0399541Z ##[endgroup]
+2026-11-21T16:04:30.0400520Z ##[group]Disabling automatic garbage collection
+2026-11-21T16:04:30.0403573Z [command]/usr/bin/git config --local gc.auto 0
+2026-11-21T16:04:30.0498259Z ##[endgroup]
+2026-11-21T16:04:30.0498973Z ##[group]Setting up auth
+2026-11-21T16:04:30.0505545Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-11-21T16:04:30.0540045Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-11-21T16:04:30.1187292Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-11-21T16:04:30.1219388Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-11-21T16:04:30.1466465Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-11-21T16:04:30.1498376Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-11-21T16:04:30.1762300Z [command]/usr/bin/git config --local http.https://github.com/.extraheader AUTHORIZATION: basic ***
+2026-11-21T16:04:30.1853777Z ##[endgroup]
+2026-11-21T16:04:30.1854803Z ##[group]Fetching the repository
+2026-11-21T16:04:30.1861909Z [command]/usr/bin/git -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --depth=1 origin +d780326c0b8a311cb4bd0f3224f00e2de05d2416:refs/remotes/pull/5/merge
+2026-11-21T16:04:31.0314914Z From https://github.com/GenX-Shinobi/Prompt-Builder
+2026-11-21T16:04:31.0316884Z  * [new ref]         d780326c0b8a311cb4bd0f3224f00e2de05d2416 -> pull/5/merge
+2026-11-21T16:04:31.0323146Z ##[endgroup]
+2026-11-21T16:04:31.0324370Z ##[group]Determining the checkout info
+2026-11-21T16:04:31.0325707Z ##[endgroup]
+2026-11-21T16:04:31.0326617Z [command]/usr/bin/git sparse-checkout disable
+2026-11-21T16:04:31.0379055Z [command]/usr/bin/git config --local --unset-all extensions.worktreeConfig
+2026-11-21T16:04:31.0409069Z ##[group]Checking out the ref
+2026-11-21T16:04:31.0482922Z [command]/usr/bin/git checkout --progress --force refs/remotes/pull/5/merge
+2026-11-21T16:04:31.0680795Z Note: switching to 'refs/remotes/pull/5/merge'.
+2026-11-21T16:04:31.0681811Z 
+2026-11-21T16:04:31.0682808Z You are in 'detached HEAD' state. You can look around, make experimental
+2026-11-21T16:04:31.0684336Z changes and commit them, and you can discard any commits you make in this
+2026-11-21T16:04:31.0685725Z state without impacting any branches by switching back to a branch.
+2026-11-21T16:04:31.0686503Z 
+2026-11-21T16:04:31.0687090Z If you want to create a new branch to retain commits you create, you may
+2026-11-21T16:04:31.0688878Z do so (now or later) by using -c with the switch command. Example:
+2026-11-21T16:04:31.0689892Z 
+2026-11-21T16:04:31.0690392Z   git switch -c <new-branch-name>
+2026-11-21T16:04:31.0691095Z 
+2026-11-21T16:04:31.0691667Z Or undo this operation with:
+2026-11-21T16:04:31.0692432Z 
+2026-11-21T16:04:31.0693095Z   git switch -
+2026-11-21T16:04:31.0693612Z 
+2026-11-21T16:04:31.0694530Z Turn off this advice by setting config variable advice.detachedHead to false
+2026-11-21T16:04:31.0695600Z 
+2026-11-21T16:04:31.0696874Z HEAD is now at d780326 Merge ef48b38f779c7c0bd9a79ae0fbf64390d1aa89b2 into ad459df8c014fc01dce893ff5374e4e4d8e2280a
+2026-11-21T16:04:31.0701243Z ##[endgroup]
+2026-11-21T16:04:31.0734591Z [command]/usr/bin/git log -1 --format=%H
+2026-11-21T16:04:31.0756888Z d780326c0b8a311cb4bd0f3224f00e2de05d2416
+2026-11-21T16:04:31.1093773Z ##[group]Run actions/setup-node@v4
+2026-11-21T16:04:31.1094771Z with:
+2026-11-21T16:04:31.1095486Z   node-version: 22.23.5
+2026-11-21T16:04:31.1096342Z   always-auth: false
+2026-11-21T16:04:31.1097173Z   check-latest: false
+2026-11-21T16:04:31.1105740Z   token: ***
+2026-11-21T16:04:31.1106487Z ##[endgroup]
+2026-11-21T16:04:31.2316449Z Found in cache @ /opt/hostedtoolcache/node/22.23.5/x64
+2026-11-21T16:04:31.2347451Z (node:2185) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+2026-11-21T16:04:31.2350585Z (Use `node --trace-deprecation ...` to show where the warning was created)
+2026-11-21T16:04:31.2353869Z ##[group]Environment details
+2026-11-21T16:04:31.6234115Z node: v22.23.5
+2026-11-21T16:04:31.6234585Z npm: 10.9.9
+2026-11-21T16:04:31.6234888Z yarn: 1.22.22
+2026-11-21T16:04:31.6235624Z ##[endgroup]
+2026-11-21T16:04:31.6366075Z ##[group]Run npm install --no-save playwright@1.63.0
+2026-11-21T16:04:31.6366549Z npm install --no-save playwright@1.63.0
+2026-11-21T16:04:31.6405301Z shell: /usr/bin/bash -e {0}
+2026-11-21T16:04:31.6405587Z ##[endgroup]
+2026-11-21T16:04:33.6192576Z 
+2026-11-21T16:04:33.6207466Z added 2 packages in 2s
+2026-11-21T16:04:33.6720020Z ##[group]Run npx playwright install --with-deps chromium
+2026-11-21T16:04:33.6720458Z npx playwright install --with-deps chromium
+2026-11-21T16:04:33.6752416Z shell: /usr/bin/bash -e {0}
+2026-11-21T16:04:33.6752807Z ##[endgroup]
+2026-11-21T16:04:34.3309627Z Installing dependencies...
+2026-11-21T16:04:34.3379114Z Switching to root user to install dependencies...
+2026-11-21T16:04:34.4135946Z Get:1 file:/etc/apt/apt-mirrors.txt Mirrorlist [144 B]
+2026-11-21T16:04:34.4414203Z Get:6 https://packages.microsoft.com/ubuntu/26.04/prod resolute InRelease [3964 B]
+2026-11-21T16:04:34.4518287Z Hit:2 http://azure.archive.ubuntu.com/ubuntu resolute InRelease
+2026-11-21T16:04:34.4536066Z Get:3 http://azure.archive.ubuntu.com/ubuntu resolute-updates InRelease [137 kB]
+2026-11-21T16:04:34.4569338Z Get:4 http://azure.archive.ubuntu.com/ubuntu resolute-backports InRelease [137 kB]
+2026-11-21T16:04:34.4589251Z Get:5 http://azure.archive.ubuntu.com/ubuntu resolute-security InRelease [137 kB]
+2026-11-21T16:04:34.4691194Z Get:7 https://packages.microsoft.com/ubuntu/26.04/prod resolute/main amd64 Packages [178 kB]
+2026-11-21T16:04:34.4967117Z Get:8 https://packages.microsoft.com/ubuntu/26.04/prod resolute/main arm64 Packages [163 kB]
+2026-11-21T16:04:34.4998731Z Get:9 http://azure.archive.ubuntu.com/ubuntu resolute-updates/main amd64v3 Packages [901 kB]
+2026-11-21T16:04:34.5045288Z Get:10 http://azure.archive.ubuntu.com/ubuntu resolute-updates/main Translation-en [200 kB]
+2026-11-21T16:04:34.5062862Z Get:11 http://azure.archive.ubuntu.com/ubuntu resolute-updates/universe amd64v3 Packages [394 kB]
+2026-11-21T16:04:34.5101052Z Get:12 http://azure.archive.ubuntu.com/ubuntu resolute-updates/universe Translation-en [124 kB]
+2026-11-21T16:04:34.5118499Z Get:13 http://azure.archive.ubuntu.com/ubuntu resolute-updates/restricted amd64v3 Packages [629 kB]
+2026-11-21T16:04:34.5143245Z Get:14 http://azure.archive.ubuntu.com/ubuntu resolute-updates/restricted Translation-en [130 kB]
+2026-11-21T16:04:34.5329610Z Get:15 http://azure.archive.ubuntu.com/ubuntu resolute-security/main amd64v3 Packages [722 kB]
+2026-11-21T16:04:34.5361185Z Get:16 http://azure.archive.ubuntu.com/ubuntu resolute-security/main Translation-en [158 kB]
+2026-11-21T16:04:34.5368342Z Get:17 http://azure.archive.ubuntu.com/ubuntu resolute-security/universe amd64v3 Packages [222 kB]
+2026-11-21T16:04:34.5391598Z Get:18 http://azure.archive.ubuntu.com/ubuntu resolute-security/universe Translation-en [72.7 kB]
+2026-11-21T16:04:37.5979407Z Fetched 4308 kB in 0s (13.1 MB/s)
+2026-11-21T16:04:38.2103720Z Reading package lists...
+2026-11-21T16:04:38.2334109Z Reading package lists...
+2026-11-21T16:04:38.4085584Z Building dependency tree...
+2026-11-21T16:04:38.4091450Z Reading state information...
+2026-11-21T16:04:38.4458382Z libasound2t64 is already the newest version (1.2.15.3-1ubuntu1.1).
+2026-11-21T16:04:38.4458967Z libasound2t64 set to manually installed.
+2026-11-21T16:04:38.4459571Z libatk-bridge2.0-0t64 is already the newest version (2.60.4-0ubuntu0.1).
+2026-11-21T16:04:38.4460289Z libatk-bridge2.0-0t64 set to manually installed.
+2026-11-21T16:04:38.4461009Z libatk1.0-0t64 is already the newest version (2.60.4-0ubuntu0.1).
+2026-11-21T16:04:38.4461576Z libatk1.0-0t64 set to manually installed.
+2026-11-21T16:04:38.4462140Z libatspi2.0-0t64 is already the newest version (2.60.4-0ubuntu0.1).
+2026-11-21T16:04:38.4462814Z libatspi2.0-0t64 set to manually installed.
+2026-11-21T16:04:38.4463320Z libcairo2 is already the newest version (1.18.4-3).
+2026-11-21T16:04:38.4463781Z libcairo2 set to manually installed.
+2026-11-21T16:04:38.4464314Z libcups2t64 is already the newest version (2.4.16-1ubuntu1.3).
+2026-11-21T16:04:38.4464844Z libcups2t64 set to manually installed.
+2026-11-21T16:04:38.4465340Z libdbus-1-3 is already the newest version (1.16.2-2ubuntu4).
+2026-11-21T16:04:38.4465849Z libdbus-1-3 set to manually installed.
+2026-11-21T16:04:38.4466312Z libdrm2 is already the newest version (2.4.131-1).
+2026-11-21T16:04:38.4467324Z libdrm2 set to manually installed.
+2026-11-21T16:04:38.4467815Z libgbm1 is already the newest version (26.0.8-1ubuntu0.3).
+2026-11-21T16:04:38.4468284Z libgbm1 set to manually installed.
+2026-11-21T16:04:38.4468784Z libglib2.0-0t64 is already the newest version (2.88.0-1ubuntu0.1).
+2026-11-21T16:04:38.4469295Z libglib2.0-0t64 set to manually installed.
+2026-11-21T16:04:38.4469811Z libnspr4 is already the newest version (2:4.38.2-1ubuntu1).
+2026-11-21T16:04:38.4470289Z libnspr4 set to manually installed.
+2026-11-21T16:04:38.4470772Z libnss3 is already the newest version (2:3.120-1ubuntu2.2).
+2026-11-21T16:04:38.4471237Z libnss3 set to manually installed.
+2026-11-21T16:04:38.4471700Z libpango-1.0-0 is already the newest version (1.57.0-1).
+2026-11-21T16:04:38.4472173Z libpango-1.0-0 set to manually installed.
+2026-11-21T16:04:38.4472869Z libx11-6 is already the newest version (2:1.8.13-1ubuntu0.1).
+2026-11-21T16:04:38.4473348Z libx11-6 set to manually installed.
+2026-11-21T16:04:38.4473817Z libxcb1 is already the newest version (1.17.0-2ubuntu1).
+2026-11-21T16:04:38.4474273Z libxcb1 set to manually installed.
+2026-11-21T16:04:38.4474773Z libxcomposite1 is already the newest version (1:0.4.6-1build1).
+2026-11-21T16:04:38.4475284Z libxcomposite1 set to manually installed.
+2026-11-21T16:04:38.4475760Z libxdamage1 is already the newest version (1:1.1.7-1).
+2026-11-21T16:04:38.4476211Z libxdamage1 set to manually installed.
+2026-11-21T16:04:38.4476696Z libxext6 is already the newest version (2:1.3.4-1build3).
+2026-11-21T16:04:38.4477154Z libxext6 set to manually installed.
+2026-11-21T16:04:38.4477636Z libxfixes3 is already the newest version (1:6.0.0-2build2).
+2026-11-21T16:04:38.4478158Z libxfixes3 set to manually installed.
+2026-11-21T16:04:38.4478624Z libxkbcommon0 is already the newest version (1.13.1-1).
+2026-11-21T16:04:38.4479122Z libxkbcommon0 set to manually installed.
+2026-11-21T16:04:38.4479630Z libxrandr2 is already the newest version (2:1.5.4-1build1).
+2026-11-21T16:04:38.4480104Z libxrandr2 set to manually installed.
+2026-11-21T16:04:38.4480780Z xvfb is already the newest version (2:21.1.22-1ubuntu1.3).
+2026-11-21T16:04:38.4481380Z fonts-noto-color-emoji is already the newest version (2.051-1build1).
+2026-11-21T16:04:38.4482003Z libfontconfig1 is already the newest version (2.17.1-3ubuntu1).
+2026-11-21T16:04:38.4482512Z libfontconfig1 set to manually installed.
+2026-11-21T16:04:38.4483446Z libfreetype6 is already the newest version (2.14.2+dfsg-1ubuntu0.2).
+2026-11-21T16:04:38.4483909Z libfreetype6 set to manually installed.
+2026-11-21T16:04:38.4484384Z fonts-liberation is already the newest version (1:2.1.5-3build1).
+2026-11-21T16:04:38.4484850Z fonts-liberation set to manually installed.
+2026-11-21T16:04:38.5036958Z Solving dependencies...
+2026-11-21T16:04:38.5830565Z The following additional packages will be installed:
+2026-11-21T16:04:38.5831117Z   xfonts-encodings xfonts-utils
+2026-11-21T16:04:38.5835421Z Recommended packages:
+2026-11-21T16:04:38.5835782Z   fonts-ipafont-mincho fonts-tlwg-loma
+2026-11-21T16:04:38.6017027Z The following NEW packages will be installed:
+2026-11-21T16:04:38.6017706Z   fonts-freefont-ttf fonts-ipafont-gothic fonts-tlwg-loma-otf fonts-unifont
+2026-11-21T16:04:38.6023379Z   fonts-wqy-zenhei xfonts-cyrillic xfonts-encodings xfonts-scalable
+2026-11-21T16:04:38.6024049Z   xfonts-utils
+2026-11-21T16:04:38.6214418Z 0 upgraded, 9 newly installed, 0 to remove and 50 not upgraded.
+2026-11-21T16:04:38.6214985Z Need to get 21.9 MB of archives.
+2026-11-21T16:04:38.6215521Z After this operation, 80.2 MB of additional disk space will be used.
+2026-11-21T16:04:38.6216126Z Get:1 file:/etc/apt/apt-mirrors.txt Mirrorlist [144 B]
+2026-11-21T16:04:38.6872035Z Get:2 http://azure.archive.ubuntu.com/ubuntu resolute/universe amd64v3 fonts-ipafont-gothic all 00303-23ubuntu1 [3703 kB]
+2026-11-21T16:04:38.7836555Z Get:3 http://azure.archive.ubuntu.com/ubuntu resolute/main amd64v3 fonts-freefont-ttf all 20211204+svn4273-4build1 [5656 kB]
+2026-11-21T16:04:39.0593606Z Get:4 http://azure.archive.ubuntu.com/ubuntu resolute/universe amd64v3 fonts-tlwg-loma-otf all 1:0.7.3-1build1 [106 kB]
+2026-11-21T16:04:39.1091075Z Get:5 http://azure.archive.ubuntu.com/ubuntu resolute/universe amd64v3 fonts-unifont all 1:16.0.04-1build1 [3169 kB]
+2026-11-21T16:04:39.2096684Z Get:6 http://azure.archive.ubuntu.com/ubuntu resolute/universe amd64v3 fonts-wqy-zenhei all 0.9.45-8build1 [7863 kB]
+2026-11-21T16:04:39.4392227Z Get:7 http://azure.archive.ubuntu.com/ubuntu resolute/main amd64v3 xfonts-encodings all 1:1.0.5-0ubuntu3 [576 kB]
+2026-11-21T16:04:39.4895308Z Get:8 http://azure.archive.ubuntu.com/ubuntu resolute/main amd64v3 xfonts-utils amd64 1:7.7+7build1 [97.3 kB]
+2026-11-21T16:04:39.5993155Z Get:9 http://azure.archive.ubuntu.com/ubuntu resolute/universe amd64v3 xfonts-cyrillic all 1:1.0.5+nmu1build1 [384 kB]
+2026-11-21T16:04:39.6779440Z Get:10 http://azure.archive.ubuntu.com/ubuntu resolute/universe amd64v3 xfonts-scalable all 1:1.0.3-1.3build1 [304 kB]
+2026-11-21T16:04:40.0845961Z Fetched 21.9 MB in 1s (20.4 MB/s)
+2026-11-21T16:04:40.1046627Z Selecting previously unselected package fonts-ipafont-gothic.
+2026-11-21T16:04:40.1262941Z (Reading database ... 
+2026-11-21T16:04:40.1263318Z (Reading database ... 5%
+2026-11-21T16:04:40.1263544Z (Reading database ... 10%
+2026-11-21T16:04:40.1263763Z (Reading database ... 15%
+2026-11-21T16:04:40.1263963Z (Reading database ... 20%
+2026-11-21T16:04:40.1264559Z (Reading database ... 25%
+2026-11-21T16:04:40.1264941Z (Reading database ... 30%
+2026-11-21T16:04:40.1265253Z (Reading database ... 35%
+2026-11-21T16:04:40.1265508Z (Reading database ... 40%
+2026-11-21T16:04:40.1265773Z (Reading database ... 45%
+2026-11-21T16:04:40.1266031Z (Reading database ... 50%
+2026-11-21T16:04:40.1511281Z (Reading database ... 55%
+2026-11-21T16:04:40.1865986Z (Reading database ... 60%
+2026-11-21T16:04:40.2138310Z (Reading database ... 65%
+2026-11-21T16:04:40.2644599Z (Reading database ... 70%
+2026-11-21T16:04:40.3088782Z (Reading database ... 75%
+2026-11-21T16:04:40.4613695Z (Reading database ... 80%
+2026-11-21T16:04:40.6715969Z (Reading database ... 85%
+2026-11-21T16:04:40.8603532Z (Reading database ... 90%
+2026-11-21T16:04:41.0863088Z (Reading database ... 95%
+2026-11-21T16:04:41.0863521Z (Reading database ... 100%
+2026-11-21T16:04:41.0864058Z (Reading database ... 214296 files and directories currently installed.)
+2026-11-21T16:04:41.0907163Z Preparing to unpack .../0-fonts-ipafont-gothic_00303-23ubuntu1_all.deb ...
+2026-11-21T16:04:41.0993036Z Unpacking fonts-ipafont-gothic (00303-23ubuntu1) ...
+2026-11-21T16:04:41.2083588Z Selecting previously unselected package fonts-freefont-ttf.
+2026-11-21T16:04:41.2208200Z Preparing to unpack .../1-fonts-freefont-ttf_20211204+svn4273-4build1_all.deb ...
+2026-11-21T16:04:41.2215891Z Unpacking fonts-freefont-ttf (20211204+svn4273-4build1) ...
+2026-11-21T16:04:41.3181667Z Selecting previously unselected package fonts-tlwg-loma-otf.
+2026-11-21T16:04:41.3306559Z Preparing to unpack .../2-fonts-tlwg-loma-otf_1%3a0.7.3-1build1_all.deb ...
+2026-11-21T16:04:41.3314633Z Unpacking fonts-tlwg-loma-otf (1:0.7.3-1build1) ...
+2026-11-21T16:04:41.3521092Z Selecting previously unselected package fonts-unifont.
+2026-11-21T16:04:41.3645460Z Preparing to unpack .../3-fonts-unifont_1%3a16.0.04-1build1_all.deb ...
+2026-11-21T16:04:41.3652471Z Unpacking fonts-unifont (1:16.0.04-1build1) ...
+2026-11-21T16:04:41.5820972Z Selecting previously unselected package fonts-wqy-zenhei.
+2026-11-21T16:04:41.5944380Z Preparing to unpack .../4-fonts-wqy-zenhei_0.9.45-8build1_all.deb ...
+2026-11-21T16:04:41.6077418Z Unpacking fonts-wqy-zenhei (0.9.45-8build1) ...
+2026-11-21T16:04:41.7614050Z Selecting previously unselected package xfonts-encodings.
+2026-11-21T16:04:41.7738352Z Preparing to unpack .../5-xfonts-encodings_1%3a1.0.5-0ubuntu3_all.deb ...
+2026-11-21T16:04:41.7744975Z Unpacking xfonts-encodings (1:1.0.5-0ubuntu3) ...
+2026-11-21T16:04:41.8000506Z Selecting previously unselected package xfonts-utils.
+2026-11-21T16:04:41.8126161Z Preparing to unpack .../6-xfonts-utils_1%3a7.7+7build1_amd64v3.deb ...
+2026-11-21T16:04:41.8132235Z Unpacking xfonts-utils (1:7.7+7build1) ...
+2026-11-21T16:04:41.8437314Z Selecting previously unselected package xfonts-cyrillic.
+2026-11-21T16:04:41.8562959Z Preparing to unpack .../7-xfonts-cyrillic_1%3a1.0.5+nmu1build1_all.deb ...
+2026-11-21T16:04:41.8578534Z Unpacking xfonts-cyrillic (1:1.0.5+nmu1build1) ...
+2026-11-21T16:04:41.8860190Z Selecting previously unselected package xfonts-scalable.
+2026-11-21T16:04:41.8987878Z Preparing to unpack .../8-xfonts-scalable_1%3a1.0.3-1.3build1_all.deb ...
+2026-11-21T16:04:41.8995834Z Unpacking xfonts-scalable (1:1.0.3-1.3build1) ...
+2026-11-21T16:04:41.9406901Z Setting up fonts-wqy-zenhei (0.9.45-8build1) ...
+2026-11-21T16:04:41.9553542Z Setting up fonts-freefont-ttf (20211204+svn4273-4build1) ...
+2026-11-21T16:04:41.9569936Z Setting up fonts-tlwg-loma-otf (1:0.7.3-1build1) ...
+2026-11-21T16:04:41.9586524Z Setting up xfonts-encodings (1:1.0.5-0ubuntu3) ...
+2026-11-21T16:04:41.9602830Z Setting up fonts-ipafont-gothic (00303-23ubuntu1) ...
+2026-11-21T16:04:41.9658599Z update-alternatives: using /usr/share/fonts/opentype/ipafont-gothic/ipag.ttf to provide /usr/share/fonts/truetype/fonts-japanese-gothic.ttf (fonts-japanese-gothic.ttf) in auto mode
+2026-11-21T16:04:41.9673811Z Setting up fonts-unifont (1:16.0.04-1build1) ...
+2026-11-21T16:04:41.9691457Z Setting up xfonts-utils (1:7.7+7build1) ...
+2026-11-21T16:04:41.9744255Z Setting up xfonts-cyrillic (1:1.0.5+nmu1build1) ...
+2026-11-21T16:04:42.0192945Z Setting up xfonts-scalable (1:1.0.3-1.3build1) ...
+2026-11-21T16:04:42.0660929Z Processing triggers for man-db (2.13.1-1build1) ...
+2026-11-21T16:04:42.0685326Z Not building database; man-db/auto-update is not 'true'.
+2026-11-21T16:04:42.0699886Z Processing triggers for fontconfig (2.17.1-3ubuntu1) ...
+2026-11-21T16:04:42.6857454Z 
+2026-11-21T16:04:42.6858150Z Running kernel seems to be up-to-date.
+2026-11-21T16:04:42.6858467Z 
+2026-11-21T16:04:42.6858604Z Restarting services...
+2026-11-21T16:04:42.6947274Z 
+2026-11-21T16:04:42.6947915Z Service restarts being deferred:
+2026-11-21T16:04:42.6951110Z  systemctl restart hosted-compute-agent.service
+2026-11-21T16:04:42.6951417Z 
+2026-11-21T16:04:42.6952202Z No containers need to be restarted.
+2026-11-21T16:04:42.6973116Z 
+2026-11-21T16:04:42.6995976Z No user sessions are running outdated binaries.
+2026-11-21T16:04:42.6996250Z 
+2026-11-21T16:04:42.6996615Z No VM guests are running outdated hypervisor (qemu) binaries on this host.
+2026-11-21T16:04:43.6757442Z Downloading Chrome for Testing 153.0.8010.12 (playwright chromium v1243) from https://cdn.playwright.dev/builds/cft/153.0.8010.12/linux64/chrome-linux64.zip
+2026-11-21T16:04:44.0335893Z |                                                                                |   0% of 186.8 MiB
+2026-11-21T16:04:44.1600494Z |■■■■■■■■                                                                        |  10% of 186.8 MiB
+2026-11-21T16:04:44.2330470Z |■■■■■■■■■■■■■■■■                                                                |  20% of 186.8 MiB
+2026-11-21T16:04:44.2875022Z |■■■■■■■■■■■■■■■■■■■■■■■■                                                        |  30% of 186.8 MiB
+2026-11-21T16:04:44.3329600Z |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■                                                |  40% of 186.8 MiB
+2026-11-21T16:04:44.3826299Z |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■                                        |  50% of 186.8 MiB
+2026-11-21T16:04:44.4302537Z |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■                                |  60% of 186.8 MiB
+2026-11-21T16:04:44.4850234Z |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■                        |  70% of 186.8 MiB
+2026-11-21T16:04:44.5545458Z |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■                |  80% of 186.8 MiB
+2026-11-21T16:04:44.6036377Z |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■        |  90% of 186.8 MiB
+2026-11-21T16:04:44.6499624Z |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■| 100% of 186.8 MiB
+2026-11-21T16:04:46.5703605Z Chrome for Testing 153.0.8010.12 (playwright chromium v1243) downloaded to /home/runner/.cache/ms-playwright/chromium-1243
+2026-11-21T16:04:46.5706884Z Downloading FFmpeg (playwright ffmpeg v1011) from https://cdn.playwright.dev/dbazure/download/playwright/builds/ffmpeg/1011/ffmpeg-linux.zip
+2026-11-21T16:04:46.9054213Z |                                                                                |   0% of 2.3 MiB
+2026-11-21T16:04:46.9078153Z |■■■■■■■■                                                                        |  10% of 2.3 MiB
+2026-11-21T16:04:46.9133096Z |■■■■■■■■■■■■■■■■                                                                |  20% of 2.3 MiB
+2026-11-21T16:04:46.9154097Z |■■■■■■■■■■■■■■■■■■■■■■■■                                                        |  30% of 2.3 MiB
+2026-11-21T16:04:46.9164096Z |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■                                                |  40% of 2.3 MiB
+2026-11-21T16:04:46.9180682Z |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■                                        |  50% of 2.3 MiB
+2026-11-21T16:04:46.9209022Z |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■                                |  60% of 2.3 MiB
+2026-11-21T16:04:46.9224206Z |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■                        |  70% of 2.3 MiB
+2026-11-21T16:04:46.9235543Z |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■                |  80% of 2.3 MiB
+2026-11-21T16:04:46.9248605Z |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■        |  90% of 2.3 MiB
+2026-11-21T16:04:46.9263505Z |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■| 100% of 2.3 MiB
+2026-11-21T16:04:46.9794415Z FFmpeg (playwright ffmpeg v1011) downloaded to /home/runner/.cache/ms-playwright/ffmpeg-1011
+2026-11-21T16:04:46.9798594Z Downloading Chrome Headless Shell 153.0.8010.12 (playwright chromium-headless-shell v1243) from https://cdn.playwright.dev/builds/cft/153.0.8010.12/linux64/chrome-headless-shell-linux64.zip
+2026-11-21T16:04:47.3415056Z |                                                                                |   0% of 114.3 MiB
+2026-11-21T16:04:47.4334637Z |■■■■■■■■                                                                        |  10% of 114.3 MiB
+2026-11-21T16:04:47.4863786Z |■■■■■■■■■■■■■■■■                                                                |  20% of 114.3 MiB
+2026-11-21T16:04:47.5314373Z |■■■■■■■■■■■■■■■■■■■■■■■■                                                        |  30% of 114.3 MiB
+2026-11-21T16:04:47.5771804Z |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■                                                |  40% of 114.3 MiB
+2026-11-21T16:04:47.6124939Z |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■                                        |  50% of 114.3 MiB
+2026-11-21T16:04:47.6477529Z |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■                                |  60% of 114.3 MiB
+2026-11-21T16:04:47.6805625Z |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■                        |  70% of 114.3 MiB
+2026-11-21T16:04:47.7185827Z |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■                |  80% of 114.3 MiB
+2026-11-21T16:04:47.7507745Z |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■        |  90% of 114.3 MiB
+2026-11-21T16:04:47.7810682Z |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■| 100% of 114.3 MiB
+2026-11-21T16:04:49.1864703Z Chrome Headless Shell 153.0.8010.12 (playwright chromium-headless-shell v1243) downloaded to /home/runner/.cache/ms-playwright/chromium_headless_shell-1243
+2026-11-21T16:04:49.2164958Z ##[group]Run mkdir -p artifacts
+2026-11-21T16:04:49.2165372Z mkdir -p artifacts
+2026-11-21T16:04:49.2165740Z node --version > artifacts/environment.txt
+2026-11-21T16:04:49.2166201Z npm --version >> artifacts/environment.txt
+2026-11-21T16:04:49.2166697Z npx playwright --version >> artifacts/environment.txt
+2026-11-21T16:04:49.2167471Z node -e "console.log(require('playwright').chromium.executablePath())" >> artifacts/environment.txt
+2026-11-21T16:04:49.2168471Z 
+2026-11-21T16:04:49.2194770Z set +e
+2026-11-21T16:04:49.2195212Z node tests/browser_suite_1.js > artifacts/browser_suite_1.log 2>&1
+2026-11-21T16:04:49.2195706Z s1=$?
+2026-11-21T16:04:49.2196102Z node tests/browser_suite_2.js > artifacts/browser_suite_2.log 2>&1
+2026-11-21T16:04:49.2196573Z s2=$?
+2026-11-21T16:04:49.2197059Z node tests/browser_corrective.js > artifacts/browser_corrective.log 2>&1
+2026-11-21T16:04:49.2197583Z s3=$?
+2026-11-21T16:04:49.2197834Z set -e
+2026-11-21T16:04:49.2198076Z 
+2026-11-21T16:04:49.2198646Z printf 'suite_1_exit=%s\nsuite_2_exit=%s\ncorrective_exit=%s\n' "$s1" "$s2" "$s3" | tee artifacts/exit-codes.txt
+2026-11-21T16:04:49.2199329Z cat artifacts/browser_suite_1.log
+2026-11-21T16:04:49.2199701Z cat artifacts/browser_suite_2.log
+2026-11-21T16:04:49.2200111Z cat artifacts/browser_corrective.log
+2026-11-21T16:04:49.2200562Z if [ "$s1" -ne 0 ] || [ "$s2" -ne 0 ] || [ "$s3" -ne 0 ]; then
+2026-11-21T16:04:49.2200971Z   exit 1
+2026-11-21T16:04:49.2201217Z fi
+2026-11-21T16:04:49.2242250Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+2026-11-21T16:04:49.2242830Z ##[endgroup]
+2026-11-21T16:06:06.5193554Z suite_1_exit=0
+2026-11-21T16:06:06.5193811Z suite_2_exit=0
+2026-11-21T16:06:06.5194023Z corrective_exit=0
+2026-11-21T16:06:06.5218962Z PASS baseline: 9 bots, 2 tabs, 81 commands [9,2,81]
+2026-11-21T16:06:06.5219435Z PASS built-in catalog rev 1
+2026-11-21T16:06:06.5219823Z PASS layout still has 4 sections
+2026-11-21T16:06:06.5222523Z PASS catalog status shown: Active catalog: rev 1, updated 2026-11-20 (built-in copy). 86 of 90 entries (chatbot notes and commands) are not confirmed or are due for a re-check. Only 6 of them show a grey chip. Chips appear on chatbot notes, and on commands that are unverified, in conflict between sources, or not checked for 60 days. Commands taken only from a research document ("doc only") stay chip-free until they are 60 days old, so no chip does not mean an entry is confirmed.
+2026-11-21T16:06:06.5225473Z PASS ChatGPT: note date, 11 items, 0 chips, suggest buttons match
+2026-11-21T16:06:06.5225871Z PASS Gemini: note date, 14 items, 0 chips, suggest buttons match
+2026-11-21T16:06:06.5226244Z PASS Claude: note date, 9 items, 0 chips, suggest buttons match
+2026-11-21T16:06:06.5226841Z PASS Perplexity: note date, 10 items, 1 chips, suggest buttons match
+2026-11-21T16:06:06.5227350Z PASS Grok: note date, 9 items, 0 chips, suggest buttons match
+2026-11-21T16:06:06.5227768Z PASS Microsoft Copilot: note date, 8 items, 0 chips, suggest buttons match
+2026-11-21T16:06:06.5228249Z PASS DeepSeek: note date, 6 items, 0 chips, suggest buttons match
+2026-11-21T16:06:06.5228852Z PASS Meta AI: note date, 6 items, 0 chips, suggest buttons match
+2026-11-21T16:06:06.5229218Z PASS Mistral: note date, 8 items, 0 chips, suggest buttons match
+2026-11-21T16:06:06.5229512Z PASS built-in catalog validates
+2026-11-21T16:06:06.5230086Z PASS bad catalogs rejected {"valid":0,"http":1,"tier":1,"note":1,"rev":1,"st":1,"extraDropped":true,"arr":1,"nul":1}
+2026-11-21T16:06:06.5230748Z PASS cleanCatalog drops unknown fields
+2026-11-21T16:06:06.5231035Z PASS clean source has no typed text or presets
+2026-11-21T16:06:06.5231327Z PASS clean source embeds valid catalog JSON
+2026-11-21T16:06:06.5231720Z PASS clean source structure + version 5.4.0 + start panel open
+2026-11-21T16:06:06.5232535Z PASS import shows diff (fence + trailing words handled)
+2026-11-21T16:06:06.5233006Z PASS invalid JSON refused
+2026-11-21T16:06:06.5233333Z PASS invalid catalog (http url) refused, no install button
+2026-11-21T16:06:06.5234165Z PASS installed catalog active after reload {"rev":2,"src":"saved","lim":12345,"n":12,"presets":1,"cs":2,"builtin":1}
+2026-11-21T16:06:06.5234600Z PASS presets survive catalog install
+2026-11-21T16:06:06.5235063Z PASS clean source embeds the NEWEST (installed) catalog
+2026-11-21T16:06:06.5235708Z PASS package catalog only: copied, opened Perplexity, split into 7 parts
+2026-11-21T16:06:06.5236139Z PASS part 2 copy button works
+2026-11-21T16:06:06.5236391Z PASS download catalog.json valid, rev 2
+2026-11-21T16:06:06.5236662Z PASS Use built-in catalog restores rev 1
+2026-11-21T16:06:06.5236941Z PASS invalid/older saved catalog ignored at load
+2026-11-21T16:06:06.5237417Z PASS corrupt saved catalog ignored at load
+2026-11-21T16:06:06.5237874Z PASS check for newer: falls back to GitHub copy and shows diff
+2026-11-21T16:06:06.5238190Z PASS cancel hides diff, nothing installed
+2026-11-21T16:06:06.5238455Z PASS offline check shows friendly message
+2026-11-21T16:06:06.5238712Z PASS identical catalog reports up to date
+2026-11-21T16:06:06.5239131Z PASS command suggest note copied
+2026-11-21T16:06:06.5239502Z PASS bot-level suggest note copied
+2026-11-21T16:06:06.5239752Z PASS export presets file
+2026-11-21T16:06:06.5240167Z PASS import: capped at 50, junk skipped, unknown fields dropped {"n":50,"evil":false,"flag":false}
+2026-11-21T16:06:06.5240604Z PASS import merges by name (replace)
+2026-11-21T16:06:06.5240960Z PASS bad preset file refused
+2026-11-21T16:06:06.5241322Z PASS start panel closes and remembers
+2026-11-21T16:06:06.5241585Z PASS start panel stays closed after reload
+2026-11-21T16:06:06.5241830Z PASS start panel reopens
+2026-11-21T16:06:06.5242132Z PASS Dev Bay package carries catalog block + new freshness wording
+2026-11-21T16:06:06.5242526Z PASS Dev Bay buttons intact
+2026-11-21T16:06:06.5243062Z PASS auto-split still works on Perplexity budget
+2026-11-21T16:06:06.5243447Z PASS no horizontal overflow at 390px
+2026-11-21T16:06:06.5243592Z 
+2026-11-21T16:06:06.5243678Z console/page errors: []
+2026-11-21T16:06:06.5243911Z PASS no console or page errors
+2026-11-21T16:06:06.5244040Z 
+2026-11-21T16:06:06.5244137Z 49 passed, 0 failed
+2026-11-21T16:06:06.5244488Z PASS NO network requests on page load (0)
+2026-11-21T16:06:06.5245030Z PASS attachments: text inlined, image listed in compiled prompt
+2026-11-21T16:06:06.5245452Z PASS saving the same preset name twice keeps one (duplicate handling)
+2026-11-21T16:06:06.5245990Z PASS Copy & launch opens the bare chatbot URL only: https://chatgpt.com|_blank
+2026-11-21T16:06:06.5246738Z PASS Download clean .html: complete, v5.4.0, no typed text/attachment/preset data
+2026-11-21T16:06:06.5247390Z PASS STILL zero network requests after typing, attaching, presets, launch, Dev Bay, downloads (0)
+2026-11-21T16:06:06.5248567Z PASS Manual check makes exactly one GET to the GitHub raw URL (no body): ["GET https://raw.githubusercontent.com/GenX-Shinobi/Prompt-Builder/main/catalog.json"]
+2026-11-21T16:06:06.5249571Z PASS validated + diff shown but NOTHING stored before Install is clicked
+2026-11-21T16:06:06.5249931Z PASS installed rev 2 after explicit click
+2026-11-21T16:06:06.5250473Z PASS four invalid imports left the installed catalog untouched
+2026-11-21T16:06:06.5250952Z PASS presets retained after catalog install
+2026-11-21T16:06:06.5251495Z PASS theme, palette, pin and reorder persist across reload {"t":"dark","pal":"ocean","order":"devbay,modules,presets,core"}
+2026-11-21T16:06:06.5252165Z PASS Reset layout restores default order
+2026-11-21T16:06:06.5253006Z PASS Unicode splitting: {"n":10,"lone":false,"missing":0,"maxLen":2777}
+2026-11-21T16:06:06.5253388Z PASS works offline: loads, 9 bots, prompt compiles
+2026-11-21T16:06:06.5253837Z PASS offline catalog check shows friendly message
+2026-11-21T16:06:06.5254756Z PASS a11y roles present, no unlabeled buttons {"tablist":true,"radiogroup":true,"dialog":true,"unlabeledButtons":0,"unlabeledInputs":2}
+2026-11-21T16:06:06.5255130Z 
+2026-11-21T16:06:06.5256146Z requests seen overall: ["GET https://raw.githubusercontent.com/GenX-Shinobi/Prompt-Builder/main/catalog.json","GET https://raw.githubusercontent.com/GenX-Shinobi/Prompt-Builder/main/catalog.json"]
+2026-11-21T16:06:06.5256787Z errors: []
+2026-11-21T16:06:06.5257206Z PASS no console/page errors
+2026-11-21T16:06:06.5257406Z 
+2026-11-21T16:06:06.5257531Z 18 passed, 0 failed
+2026-11-21T16:06:06.5267973Z PASS A: identical catalogs produce no diff lines
+2026-11-21T16:06:06.5268683Z PASS A: chatbot maker change detected -> ~ ChatGPT card: maker OpenAI -> Other Corp
+2026-11-21T16:06:06.5269487Z PASS A: chatbot colour change detected -> ~ ChatGPT card: colour #10a37f -> #000000
+2026-11-21T16:06:06.5270682Z PASS A: command placeholder (f) change detected -> ~ ChatGPT: @app or plugin: fill-in boxes ["App or plugin name (e.g. Google Drive)"] -> ["A different placeholder"]
+2026-11-21T16:06:06.5271475Z PASS A: placeholder added detected
+2026-11-21T16:06:06.5271853Z PASS A: placeholder removed detected
+2026-11-21T16:06:06.5272238Z PASS A: TIERS label change detected -> ~ Free-tier badge "free": label Free -> Gratis
+2026-11-21T16:06:06.5273390Z PASS A: TIERS description change detected -> ~ Free-tier badge "paid": help Not available on free plans (or only a taste of it). Skip it on a free... -> Costs money, skip it.
+2026-11-21T16:06:06.5274476Z PASS A: url change detected as a content change -> ~ Gemini card: link https://gemini.google.com -> https://example.com
+2026-11-21T16:06:06.5275485Z PASS A: limit change detected as a content change -> ~ Gemini card: paste limit 60000 -> 31000
+2026-11-21T16:06:06.5276320Z PASS A: notes change detected as a content change -> ~ Grok: notes Grok has no slash commands. Switches sit under the message box on grok... ->
+2026-11-21T16:06:06.5277445Z PASS A: cmdText change detected as a content change -> ~ Claude: Research: text added to the prompt Use Research: investigate this across the web
+2026-11-21T16:06:06.5278077Z PASS A: cmdKind change detected as a content change -> ~ Claude: Research: kind ui -> ask
+2026-11-21T16:06:06.5278763Z PASS A: cmdTier change detected as a content change -> ~ Claude: Research: free-tier badge paid -> free
+2026-11-21T16:06:06.5279672Z PASS A: cmdWhere change detected as a content change -> ~ Claude: Research: where to find it + menu > Research (paid plans; web search must be on)
+2026-11-21T16:06:06.5280638Z PASS A: cmdDesc change detected as a content change -> ~ Claude: Research: description Claude runs many searches and reads many sources, includin
+2026-11-21T16:06:06.5281477Z PASS A: cmdAdd change detected as a content change -> + Claude: brand new (New group)
+2026-11-21T16:06:06.5282016Z PASS A: cmdRemove change detected as a content change -> - Claude: Search past chats (Ask in words)
+2026-11-21T16:06:06.5283204Z PASS A: cmdGroup change detected as a content change -> + Claude: Research (Chat menu (+ button, or type /) moved) | - Claude: Research (Chat menu
+2026-11-21T16:06:06.5283828Z PASS A: cmdOrder change detected as a content change -> ~ Claude: command order changed
+2026-11-21T16:06:06.5284843Z PASS A: botOrder change detected as a content change -> ~ Chatbot order changed (changes the card order) | ~ Default (first) chatbot: ChatGPT -> M
+2026-11-21T16:06:06.5285649Z PASS A: botAdd change detected as a content change -> + New chatbot: Newbot (0 commands, each listed as its own line below)
+2026-11-21T16:06:06.5286674Z PASS A: botRemove change detected as a content change -> - Removed chatbot: Mistral (8 commands, each listed as its own line below) | - Mistral: We
+2026-11-21T16:06:06.5287173Z PASS A: command order change reported
+2026-11-21T16:06:06.5287668Z PASS A: default chatbot change reported when order changes
+2026-11-21T16:06:06.5288172Z PASS A: revision-only change is reported (not "up to date")
+2026-11-21T16:06:06.5288495Z PASS A: updated-date-only change reported
+2026-11-21T16:06:06.5288991Z PASS A: check date / status changes reported as meta updates
+2026-11-21T16:06:06.5289534Z PASS A: duplicate label+group entries handled (2 lines)
+2026-11-21T16:06:06.5290090Z PASS A: schema-driven: all 29 accepted fields are covered by the diff (missed: [])
+2026-11-21T16:06:06.5290519Z PASS A: every accepted field is also validated (unvalidated: [])
+2026-11-21T16:06:06.5291471Z PASS A: canary: a new installable field is installed AND automatically appears in the diff -> ~ ChatGPT: /Deepresearch: zzzNew none -> hello
+2026-11-21T16:06:06.5292198Z PASS A: canary: the coverage test would flag a new field that is not validated
+2026-11-21T16:06:06.5292976Z PASS A: fields outside CATALOG_FIELDS are dropped by cleanCatalog (not installable)
+2026-11-21T16:06:06.5293675Z PASS A (UI): maker change is shown in the review with an Install button
+2026-11-21T16:06:06.5294099Z PASS A (UI): color change is shown in the review with an Install button
+2026-11-21T16:06:06.5294485Z PASS A (UI): f change is shown in the review with an Install button
+2026-11-21T16:06:06.5295025Z PASS A (UI): tierLabel change is shown in the review with an Install button
+2026-11-21T16:06:06.5295649Z PASS A (UI): tierHelp change is shown in the review with an Install button
+2026-11-21T16:06:06.5296229Z PASS A (UI): revOnly change is shown in the review with an Install button
+2026-11-21T16:06:06.5296789Z PASS A (UI): an identical catalog says up to date and offers no install
+2026-11-21T16:06:06.5297359Z PASS A (UI): unknown fields are not shown (they are not installable)
+2026-11-21T16:06:06.5298458Z PASS A: installed data is exactly the normalized data that was reviewed {"sameAsReviewed":true,"diffEmpty":0,"noEvil":true,"maker":"Installed Co","tier":"Installed help text.","active":"saved"}
+2026-11-21T16:06:06.5299321Z PASS A2: all 18 bot/command fields and the chatbot notes show before -> after text (missing: ; vague: )
+2026-11-21T16:06:06.5300094Z PASS A2: a long changed value shows a short before -> after preview (188 chars)
+2026-11-21T16:06:06.5300514Z PASS A2: opening the line shows the complete old and new values
+2026-11-21T16:06:06.5300907Z PASS A2: markup inside catalog values is shown as text and never runs
+2026-11-21T16:06:06.5301591Z PASS A2: a short list states it shows all changes and Install is available
+2026-11-21T16:06:06.5302083Z PASS A2: over the cap it says "Showing 500 of 631" and never claims all are listed
+2026-11-21T16:06:06.5302544Z PASS A2: the aggregate count covers the whole diff (631), not only the visible part
+2026-11-21T16:06:06.5303274Z PASS A2: Install is disabled while changes are hidden
+2026-11-21T16:06:06.5303841Z PASS A2: installCatalog() refuses to store anything while the review is incomplete
+2026-11-21T16:06:06.5304304Z PASS A2: "Show all" displays every one of the 631 changes and then enables Install
+2026-11-21T16:06:06.5304695Z PASS A2: after Cancel and re-import the gate is closed again
+2026-11-21T16:06:06.5305498Z PASS A3: an added command shows prompt text, tier, fill-in boxes, location, description, check date and status
+2026-11-21T16:06:06.5306024Z PASS A3: a removed command shows its complete previous values (@study)
+2026-11-21T16:06:06.5306371Z PASS A3: (setup) the test chatbot catalog is valid
+2026-11-21T16:06:06.5307022Z PASS A3: a new chatbot shows its card fields and notes (4 reviewable items = card + 3 commands)
+2026-11-21T16:06:06.5307634Z PASS A3: every command of a new chatbot is listed with its own values
+2026-11-21T16:06:06.5308167Z PASS A3: the aggregate count equals the listed items (4 content + 1 revision line), with nothing counted twice
+2026-11-21T16:06:06.5308826Z PASS A3: a removed chatbot shows its card, notes and all 8 commands with their values
+2026-11-21T16:06:06.5309529Z PASS A3: markup in added commands, chatbot cards and notes is shown as text and never runs
+2026-11-21T16:06:06.5309983Z PASS A3: markup in REMOVED content is shown as text and never runs
+2026-11-21T16:06:06.5310394Z PASS A3: a large REMOVAL (631 changes) shows 500 and keeps Install disabled
+2026-11-21T16:06:06.5311170Z PASS A3: after "Show all", every removed record is listed and Install is enabled
+2026-11-21T16:06:06.5311634Z PASS A3: (setup) the large new-chatbot catalog is valid
+2026-11-21T16:06:06.5312229Z PASS A3: large ADDITION of 3 chatbots counts every card and command (573, plus the revision line = 574) and keeps Install disabled until shown
+2026-11-21T16:06:06.5313493Z PASS A4: added command - the row has a details/summary; clicking it opens the record and shows every installable field
+2026-11-21T16:06:06.5314195Z PASS A4: removed command - Enter on the summary opens the previous record, all values visible
+2026-11-21T16:06:06.5315058Z PASS A4: added chatbot - card fields and notes expand, and each added command expands on its own 
+2026-11-21T16:06:06.5315599Z PASS A4: removed chatbot - card, notes and all 8 removed commands expand with their values 
+2026-11-21T16:06:06.5316374Z PASS A4: hostile markup is visible as literal text when the record is opened, and no element or script is created 
+2026-11-21T16:06:06.5317124Z PASS A4: large diff - Install is disabled, a forced click stores nothing, and only 500 rows are shown
+2026-11-21T16:06:06.5317743Z PASS A4: after "Show all" every row is present, the last row can be opened, and Install is enabled
+2026-11-21T16:06:06.5318695Z PASS A5: added command - all 10 schema fields (g,k,tier,t,l,w,d,f,v,st) are shown with exact values; collapsed first; mouse, Enter and Space toggle it 
+2026-11-21T16:06:06.5319470Z PASS A5: removed command (with fill-in boxes: @app or plugin) - all schema fields shown with their previous values 
+2026-11-21T16:06:06.5320181Z PASS A5: (setup) added-chatbot catalog is valid
+2026-11-21T16:06:06.5320706Z PASS A5: added chatbot - all 11 card fields (name,maker,url,color,limit,blurb,brief,best,free,v,st) plus notes are shown 
+2026-11-21T16:06:06.5321299Z PASS A5: every command of the added chatbot (3, one without fill-in boxes) shows all 10 fields 
+2026-11-21T16:06:06.5321903Z PASS A5: removed chatbot (Mistral) - all card fields and notes shown with previous values 
+2026-11-21T16:06:06.5322599Z PASS A5: all 8 commands of the removed chatbot show every schema field 
+2026-11-21T16:06:06.5323656Z PASS A5: keyboard - Tab goes from "Validate" to the first record, then record to record; Shift+Tab goes back (- Removed chatbot: Mistral (8 commands, -> - Mistral: Web search (Message box toggl)
+2026-11-21T16:06:06.5324748Z PASS A5: hostile markup in an opened added record is shown as exact literal text; no image or script is created and nothing runs
+2026-11-21T16:06:06.5325703Z PASS A5: gate - with 631 changes, forced click, Enter, Space and a direct call all fail to install while only 500 are shown
+2026-11-21T16:06:06.5326386Z PASS A5: gate - after "Show all" all 631 changes are listed and Install then works (rev 4 saved)
+2026-11-21T16:06:06.5326829Z PASS A6: (setup) the fresh test change list is over 500 items (631)
+2026-11-21T16:06:06.5327679Z PASS A6: before Show all - Install is really disabled, announced as disabled, and linked to the on-screen reason
+2026-11-21T16:06:06.5328502Z PASS A6: before Show all - pointer click, Enter, Space, element.click() and installCatalog() all do nothing (nothing stored, no reload); the button cannot take keyboard focus
+2026-11-21T16:06:06.5329832Z PASS A6: locked vs enabled button is clearly different in all 10 palette x mode combinations (border style + cursor + fill/text, label contrast >= 4.5, no hover reaction, no size jump) 
+2026-11-21T16:06:06.5330709Z PASS A6: after Show all - Install is enabled and no longer announced as disabled
+2026-11-21T16:06:06.5331352Z PASS A6: enabled Install is keyboard-focusable and keeps its visible focus outline (solid 3px)
+2026-11-21T16:06:06.5331865Z PASS A6: the compiled-prompt console is still dark in light mode (rgb(20, 18, 42))
+2026-11-21T16:06:06.5332964Z PASS A6: after Show all, Enter on Install installs the 631-change catalog and reloads (disposable browser profile only): rev 2, 711 commands
+2026-11-21T16:06:06.5333552Z PASS A6: a small change list leaves Install enabled and styled as enabled
+2026-11-21T16:06:06.5334335Z PASS B (fresh): the counted total/needing re-check match an independent count {"need":86,"total":90}
+2026-11-21T16:06:06.5335056Z PASS B (fresh): chips shown (6) is fewer than entries needing re-check (86), and the text says so
+2026-11-21T16:06:06.5335607Z PASS B (fresh): chip count in the sentence (6) equals real grey chips on screen across all chatbots (6)
+2026-11-21T16:06:06.5336521Z PASS B (fresh): wording does not claim every counted entry has a chip and explains suppressed doc chips
+2026-11-21T16:06:06.5337104Z PASS B (fresh): doc-only commands show no chip in the command list
+2026-11-21T16:06:06.5337572Z PASS B: Start here wording is accurate (no chip is not a guarantee)
+2026-11-21T16:06:06.5338221Z PASS B: no remaining "grey chips mark them" wording anywhere on the page
+2026-11-21T16:06:06.5338705Z PASS B (stale): all 90 entries need a re-check and show a chip; sentence matches the screen (90)
+2026-11-21T16:06:06.5339615Z PASS B (stale): doc-only commands now show a "Doc only · old" chip
+2026-11-21T16:06:06.5340026Z PASS B (stale): wording remains accurate
+2026-11-21T16:06:06.5340434Z PASS C: the old "do not reply until I say all parts sent" instruction is gone from the source
+2026-11-21T16:06:06.5341079Z PASS C: splitting keeps every paragraph and every part within the budget (4 parts, longest 2677)
+2026-11-21T16:06:06.5341801Z PASS C: part 1 instruction = acknowledge only, do not start until FINAL PART
+2026-11-21T16:06:06.5342223Z PASS C: middle parts use the same protocol with their own number
+2026-11-21T16:06:06.5342800Z PASS C: final part clearly tells the chatbot to answer now, not acknowledge
+2026-11-21T16:06:06.5343437Z PASS C: paste-this-first states the real number of parts (4 vs 4)
+2026-11-21T16:06:06.5344057Z PASS C: paste-this-first uses the same acknowledge-only / FINAL PART protocol
+2026-11-21T16:06:06.5344774Z PASS C: paste-this-first has no contradictory instruction and keeps the attach-file route
+2026-11-21T16:06:06.5345608Z PASS C: the first prompt and the split parts use the same labels ([PART k OF n], Received part, FINAL PART)
+2026-11-21T16:06:06.5346362Z PASS C: single-message package gets a matching one-message instruction
+2026-11-21T16:06:06.5346815Z PASS C: Dev Bay on-screen instructions describe the same protocol
+2026-11-21T16:06:06.5347192Z PASS C: main prompt split instructions describe the same protocol
+2026-11-21T16:06:06.5347717Z PASS C: catalog package split instructions describe the same protocol
+2026-11-21T16:06:06.5348372Z PASS C: no contradictory wording anywhere on screen after using all three split flows
+2026-11-21T16:06:06.5348787Z PASS no network requests in any scenario (0)
+2026-11-21T16:06:06.5349015Z errors: []
+2026-11-21T16:06:06.5349260Z PASS no console or page errors
+2026-11-21T16:06:06.5349463Z 
+2026-11-21T16:06:06.5349580Z 120 passed, 0 failed
+2026-11-21T16:06:06.5384659Z ##[group]Run mkdir -p artifacts
+2026-11-21T16:06:06.5384946Z mkdir -p artifacts
+2026-11-21T16:06:06.5385152Z node <<'NODE'
+2026-11-21T16:06:06.5385380Z const { chromium } = require('playwright');
+2026-11-21T16:06:06.5385654Z const path = require('path');
+2026-11-21T16:06:06.5385866Z (async () => {
+2026-11-21T16:06:06.5386083Z   const browser = await chromium.launch();
+2026-11-21T16:06:06.5386342Z   const page = await browser.newPage({
+2026-11-21T16:06:06.5386601Z     viewport: { width: 1440, height: 1000 },
+2026-11-21T16:06:06.5386931Z     deviceScaleFactor: 1
+2026-11-21T16:06:06.5387235Z   });
+2026-11-21T16:06:06.5387656Z   await page.goto('file://' + path.resolve('index.html'), { waitUntil: 'load' });
+2026-11-21T16:06:06.5388040Z   await page.waitForTimeout(1000);
+2026-11-21T16:06:06.5388277Z   await page.screenshot({
+2026-11-21T16:06:06.5388539Z     path: 'artifacts/Preview.jpg',
+2026-11-21T16:06:06.5388764Z     type: 'jpeg',
+2026-11-21T16:06:06.5388952Z     quality: 92,
+2026-11-21T16:06:06.5389138Z     fullPage: true
+2026-11-21T16:06:06.5389322Z   });
+2026-11-21T16:06:06.5389495Z   await browser.close();
+2026-11-21T16:06:06.5389766Z })().catch(err => { console.error(err); process.exit(1); });
+2026-11-21T16:06:06.5390034Z NODE
+2026-11-21T16:06:06.5420847Z shell: /usr/bin/bash -e {0}
+2026-11-21T16:06:06.5421073Z ##[endgroup]
+2026-11-21T16:06:08.2652279Z ##[group]Run mkdir -p artifacts
+2026-11-21T16:06:08.2653492Z mkdir -p artifacts
+2026-11-21T16:06:08.2653726Z if [ -f artifacts/exit-codes.txt ]; then
+2026-11-21T16:06:08.2654038Z   cp artifacts/exit-codes.txt verification-result.txt
+2026-11-21T16:06:08.2654321Z else
+2026-11-21T16:06:08.2654636Z   printf 'Suite exit codes unavailable; inspect workflow logs.\n' > verification-result.txt
+2026-11-21T16:06:08.2655003Z fi
+2026-11-21T16:06:08.2655163Z {
+2026-11-21T16:06:08.2655320Z   echo
+2026-11-21T16:06:08.2655586Z   echo "Release source commit: ad459df8c014fc01dce893ff5374e4e4d8e2280a"
+2026-11-21T16:06:08.2655940Z   echo "Verification branch commit: ${GITHUB_SHA}"
+2026-11-21T16:06:08.2656237Z   cat artifacts/environment.txt 2>/dev/null || true
+2026-11-21T16:06:08.2656484Z   echo
+2026-11-21T16:06:08.2656866Z   for f in artifacts/browser_suite_1.log artifacts/browser_suite_2.log artifacts/browser_corrective.log; do
+2026-11-21T16:06:08.2657265Z     echo "### $f"
+2026-11-21T16:06:08.2657593Z     grep -E '[0-9]+ passed, [0-9]+ failed|Error:|FAIL ' "$f" 2>/dev/null | tail -20 || true
+2026-11-21T16:06:08.2657920Z   done
+2026-11-21T16:06:08.2658102Z } >> verification-result.txt
+2026-11-21T16:06:08.2658314Z 
+2026-11-21T16:06:08.2658500Z if [ -f artifacts/Preview.jpg ]; then
+2026-11-21T16:06:08.2658768Z   cp artifacts/Preview.jpg Preview.jpg
+2026-11-21T16:06:08.2659013Z   git add Preview.jpg
+2026-11-21T16:06:08.2659208Z fi
+2026-11-21T16:06:08.2659389Z git add verification-result.txt
+2026-11-21T16:06:08.2659645Z git config user.name "github-actions[bot]"
+2026-11-21T16:06:08.2660004Z git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+2026-11-21T16:06:08.2660434Z git commit -m "test: record independent v5.4.0 verification evidence" || true
+2026-11-21T16:06:08.2660848Z git push origin HEAD:refs/heads/verify/v5.4.0-independent-playwright
+2026-11-21T16:06:08.2661156Z 
+2026-11-21T16:06:08.2661501Z if grep -q 'suite_1_exit=0' artifacts/exit-codes.txt 2>/dev/null &&
+2026-11-21T16:06:08.2662017Z    grep -q 'suite_2_exit=0' artifacts/exit-codes.txt 2>/dev/null &&
+2026-11-21T16:06:08.2662543Z    grep -q 'corrective_exit=0' artifacts/exit-codes.txt 2>/dev/null &&
+2026-11-21T16:06:08.2663176Z    [ -f artifacts/Preview.jpg ]; then
+2026-11-21T16:06:08.2663621Z   git clone --quiet --branch docs/chimera-session-maintenance \
+2026-11-21T16:06:08.2664105Z     "https://x-access-token:${GH_TOKEN}@github.com/GenX-Shinobi/Prompt-Builder.git" \
+2026-11-21T16:06:08.2664458Z     "$RUNNER_TEMP/docs-preview"
+2026-11-21T16:06:08.2664757Z   cp artifacts/Preview.jpg "$RUNNER_TEMP/docs-preview/Preview.jpg"
+2026-11-21T16:06:08.2665070Z   cd "$RUNNER_TEMP/docs-preview"
+2026-11-21T16:06:08.2665322Z   git config user.name "github-actions[bot]"
+2026-11-21T16:06:08.2665669Z   git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+2026-11-21T16:06:08.2666003Z   git add Preview.jpg
+2026-11-21T16:06:08.2666242Z   git commit -m "docs: refresh v5.4.0 README preview"
+2026-11-21T16:06:08.2666576Z   git push origin HEAD:refs/heads/docs/chimera-session-maintenance
+2026-11-21T16:06:08.2666856Z fi
+2026-11-21T16:06:08.2695509Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+2026-11-21T16:06:08.2695793Z env:
+2026-11-21T16:06:08.2698084Z   GH_TOKEN: ***
+2026-11-21T16:06:08.2698272Z ##[endgroup]
+2026-11-21T16:06:08.3451984Z [detached HEAD 93cc60d] test: record independent v5.4.0 verification evidence
+2026-11-21T16:06:08.3452631Z  2 files changed, 17 insertions(+)
+2026-11-21T16:06:08.3453176Z  create mode 100644 verification-result.txt
+2026-11-21T16:06:08.9167092Z To https://github.com/GenX-Shinobi/Prompt-Builder
+2026-11-21T16:06:08.9168179Z  ! [rejected]        HEAD -> verify/v5.4.0-independent-playwright (fetch first)
+2026-11-21T16:06:08.9169248Z error: failed to push some refs to 'https://github.com/GenX-Shinobi/Prompt-Builder'
+2026-11-21T16:06:08.9182044Z hint: Updates were rejected because the remote contains work that you do not
+2026-11-21T16:06:08.9183154Z hint: have locally. This is usually caused by another repository pushing to
+2026-11-21T16:06:08.9183911Z hint: the same ref. If you want to integrate the remote changes, use
+2026-11-21T16:06:08.9184458Z hint: 'git pull' before pushing again.
+2026-11-21T16:06:08.9185078Z hint: See the 'Note about fast-forwards' in 'git push --help' for details.
+2026-11-21T16:06:08.9201099Z ##[error]Process completed with exit code 1.
+2026-11-21T16:06:08.9284300Z ##[group]Run actions/upload-artifact@v4
+2026-11-21T16:06:08.9284538Z with:
+2026-11-21T16:06:08.9284720Z   name: v5.4.0-independent-verification
+2026-11-21T16:06:08.9284938Z   path: artifacts/
+2026-11-21T16:06:08.9285132Z   if-no-files-found: warn
+2026-11-21T16:06:08.9285319Z   retention-days: 14
+2026-11-21T16:06:08.9285496Z   compression-level: 6
+2026-11-21T16:06:08.9285682Z   overwrite: false
+2026-11-21T16:06:08.9285866Z   include-hidden-files: false
+2026-11-21T16:06:08.9286073Z ##[endgroup]
+2026-11-21T16:06:09.0687426Z (node:3133) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+2026-11-21T16:06:09.0688054Z (Use `node --trace-deprecation ...` to show where the warning was created)
+2026-11-21T16:06:09.0749438Z With the provided path, there will be 6 files uploaded
+2026-11-21T16:06:09.0753443Z Artifact name is valid!
+2026-11-21T16:06:09.0754158Z Root directory input is valid!
+2026-11-21T16:06:09.4311530Z Beginning upload of artifact content to blob storage
+2026-11-21T16:06:09.4807382Z (node:3133) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+2026-11-21T16:06:09.9086886Z Uploaded bytes 772582
+2026-11-21T16:06:09.9638395Z Finished uploading artifact content to blob storage!
+2026-11-21T16:06:09.9639356Z SHA256 digest of uploaded artifact zip is 9f2684bd052b8866fe0687c53bc2d42600b56f65cd2fc90e0eefd124695f1def
+2026-11-21T16:06:09.9640211Z Finalizing artifact upload
+2026-11-21T16:06:10.3357783Z Artifact v5.4.0-independent-verification.zip successfully finalized. Artifact ID 14714391484
+2026-11-21T16:06:10.3358783Z Artifact v5.4.0-independent-verification has been successfully uploaded! Final size is 772582 bytes. Artifact ID is 14714391484
+2026-11-21T16:06:10.3363285Z Artifact download URL: https://github.com/GenX-Shinobi/Prompt-Builder/actions/runs/44922534308/artifacts/14714391484
+2026-11-21T16:06:10.3558999Z Post job cleanup.
+2026-11-21T16:06:10.4247736Z [command]/usr/bin/git version
+2026-11-21T16:06:10.4287076Z git version 2.56.1
+2026-11-21T16:06:10.4319993Z Temporarily overriding HOME='/home/runner/work/_temp/4697f297-a02a-4a93-b5f1-ae955367cdc2' before making global git config changes
+2026-11-21T16:06:10.4320856Z Adding repository directory to the temporary git global config as a safe directory
+2026-11-21T16:06:10.4324816Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/Prompt-Builder/Prompt-Builder
+2026-11-21T16:06:10.4359296Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-11-21T16:06:10.4390025Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-11-21T16:06:10.4663275Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-11-21T16:06:10.4685918Z http.https://github.com/.extraheader
+2026-11-21T16:06:10.4707964Z [command]/usr/bin/git config --local --unset-all http.https://github.com/.extraheader
+2026-11-21T16:06:10.4751352Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-11-21T16:06:10.5010315Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-11-21T16:06:10.5040576Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-11-21T16:06:10.5407485Z Cleaning up orphan processes
+2026-11-21T16:06:10.5694151Z ##[warning]Node.js 20 is deprecated. The following actions target Node.js 20 but are being forced to run on Node.js 24: actions/checkout@v4, actions/setup-node@v4, actions/upload-artifact@v4. For more information see: https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/

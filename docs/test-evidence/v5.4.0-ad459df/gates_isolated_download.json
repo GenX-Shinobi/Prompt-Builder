@@ -1,0 +1,120 @@
+{
+ "file": "file:///tmp/dl-isolated/prompt_builder_v5_4_0.html",
+ "responsive": [
+  {
+   "width": 320,
+   "scrollWidth": 320,
+   "hOverflow": false,
+   "offenders": [],
+   "headerOverlap": [
+    "DefaultOceanForestSunsetGraphite x Prompt Forge · Cheat Shee",
+    "DefaultOceanForestSunsetGraphite x AI Prompt Builder Hub",
+    "↺ Layout x Prompt Forge · Cheat Shee",
+    "↺ Layout x AI Prompt Builder Hub",
+    "◐ Theme x Prompt Forge · Cheat Shee",
+    "◐ Theme x AI Prompt Builder Hub"
+   ],
+   "targetsUnder24px": 39,
+   "errors": []
+  },
+  {
+   "width": 375,
+   "scrollWidth": 375,
+   "hOverflow": false,
+   "offenders": [],
+   "headerOverlap": [
+    "DefaultOceanForestSunsetGraphite x Prompt Forge · Cheat Shee",
+    "↺ Layout x Prompt Forge · Cheat Shee",
+    "◐ Theme x Prompt Forge · Cheat Shee"
+   ],
+   "targetsUnder24px": 39,
+   "errors": []
+  },
+  {
+   "width": 414,
+   "scrollWidth": 414,
+   "hOverflow": false,
+   "offenders": [],
+   "headerOverlap": [
+    "DefaultOceanForestSunsetGraphite x Prompt Forge · Cheat Shee",
+    "↺ Layout x Prompt Forge · Cheat Shee",
+    "◐ Theme x Prompt Forge · Cheat Shee"
+   ],
+   "targetsUnder24px": 39,
+   "errors": []
+  },
+  {
+   "width": 768,
+   "scrollWidth": 768,
+   "hOverflow": false,
+   "offenders": [],
+   "headerOverlap": [
+    "DefaultOceanForestSunsetGraphite x Prompt Forge · Cheat Shee",
+    "↺ Layout x Prompt Forge · Cheat Shee",
+    "◐ Theme x Prompt Forge · Cheat Shee"
+   ],
+   "targetsUnder24px": 39,
+   "errors": []
+  },
+  {
+   "width": 1024,
+   "scrollWidth": 1024,
+   "hOverflow": false,
+   "offenders": [],
+   "headerOverlap": [
+    "DefaultOceanForestSunsetGraphite x Prompt Forge · Cheat Shee",
+    "↺ Layout x Prompt Forge · Cheat Shee",
+    "◐ Theme x Prompt Forge · Cheat Shee"
+   ],
+   "targetsUnder24px": 39,
+   "errors": []
+  },
+  {
+   "width": 1440,
+   "scrollWidth": 1440,
+   "hOverflow": false,
+   "offenders": [],
+   "headerOverlap": [
+    "DefaultOceanForestSunsetGraphite x Prompt Forge · Cheat Shee",
+    "↺ Layout x Prompt Forge · Cheat Shee",
+    "◐ Theme x Prompt Forge · Cheat Shee"
+   ],
+   "targetsUnder24px": 39,
+   "errors": []
+  },
+  {
+   "width": 1920,
+   "scrollWidth": 1920,
+   "hOverflow": false,
+   "offenders": [],
+   "headerOverlap": [
+    "DefaultOceanForestSunsetGraphite x Prompt Forge · Cheat Shee",
+    "↺ Layout x Prompt Forge · Cheat Shee",
+    "◐ Theme x Prompt Forge · Cheat Shee"
+   ],
+   "targetsUnder24px": 39,
+   "errors": []
+  }
+ ],
+ "offline": {
+  "blockedRequests": [],
+  "compiledContainsInput": true,
+  "botControls": 9,
+  "errors": [],
+  "externalLoads": []
+ },
+ "a11y": {
+  "lang": "en",
+  "title": "AI Prompt Builder & Code Migrator",
+  "controls": 67,
+  "unnamed": [],
+  "imgsNoAlt": 0,
+  "tablists": 1,
+  "radiogroups": 1,
+  "ariaSelected": 2,
+  "h1": 1,
+  "landmarks": "main:1 header:1 footer:0 nav:0",
+  "tabStops": 40,
+  "tabStopsWithoutIndicator": []
+ }
+}

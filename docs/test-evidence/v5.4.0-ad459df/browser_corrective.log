@@ -1,0 +1,123 @@
+PASS A: identical catalogs produce no diff lines
+PASS A: chatbot maker change detected -> ~ ChatGPT card: maker OpenAI -> Other Corp
+PASS A: chatbot colour change detected -> ~ ChatGPT card: colour #10a37f -> #000000
+PASS A: command placeholder (f) change detected -> ~ ChatGPT: @app or plugin: fill-in boxes ["App or plugin name (e.g. Google Drive)"] -> ["A different placeholder"]
+PASS A: placeholder added detected
+PASS A: placeholder removed detected
+PASS A: TIERS label change detected -> ~ Free-tier badge "free": label Free -> Gratis
+PASS A: TIERS description change detected -> ~ Free-tier badge "paid": help Not available on free plans (or only a taste of it). Skip it on a free... -> Costs money, skip it.
+PASS A: url change detected as a content change -> ~ Gemini card: link https://gemini.google.com -> https://example.com
+PASS A: limit change detected as a content change -> ~ Gemini card: paste limit 60000 -> 31000
+PASS A: notes change detected as a content change -> ~ Grok: notes Grok has no slash commands. Switches sit under the message box on grok... ->
+PASS A: cmdText change detected as a content change -> ~ Claude: Research: text added to the prompt Use Research: investigate this across the web
+PASS A: cmdKind change detected as a content change -> ~ Claude: Research: kind ui -> ask
+PASS A: cmdTier change detected as a content change -> ~ Claude: Research: free-tier badge paid -> free
+PASS A: cmdWhere change detected as a content change -> ~ Claude: Research: where to find it + menu > Research (paid plans; web search must be on)
+PASS A: cmdDesc change detected as a content change -> ~ Claude: Research: description Claude runs many searches and reads many sources, includin
+PASS A: cmdAdd change detected as a content change -> + Claude: brand new (New group)
+PASS A: cmdRemove change detected as a content change -> - Claude: Search past chats (Ask in words)
+PASS A: cmdGroup change detected as a content change -> + Claude: Research (Chat menu (+ button, or type /) moved) | - Claude: Research (Chat menu
+PASS A: cmdOrder change detected as a content change -> ~ Claude: command order changed
+PASS A: botOrder change detected as a content change -> ~ Chatbot order changed (changes the card order) | ~ Default (first) chatbot: ChatGPT -> M
+PASS A: botAdd change detected as a content change -> + New chatbot: Newbot (0 commands, each listed as its own line below)
+PASS A: botRemove change detected as a content change -> - Removed chatbot: Mistral (8 commands, each listed as its own line below) | - Mistral: We
+PASS A: command order change reported
+PASS A: default chatbot change reported when order changes
+PASS A: revision-only change is reported (not "up to date")
+PASS A: updated-date-only change reported
+PASS A: check date / status changes reported as meta updates
+PASS A: duplicate label+group entries handled (2 lines)
+PASS A: schema-driven: all 29 accepted fields are covered by the diff (missed: [])
+PASS A: every accepted field is also validated (unvalidated: [])
+PASS A: canary: a new installable field is installed AND automatically appears in the diff -> ~ ChatGPT: /Deepresearch: zzzNew none -> hello
+PASS A: canary: the coverage test would flag a new field that is not validated
+PASS A: fields outside CATALOG_FIELDS are dropped by cleanCatalog (not installable)
+PASS A (UI): maker change is shown in the review with an Install button
+PASS A (UI): color change is shown in the review with an Install button
+PASS A (UI): f change is shown in the review with an Install button
+PASS A (UI): tierLabel change is shown in the review with an Install button
+PASS A (UI): tierHelp change is shown in the review with an Install button
+PASS A (UI): revOnly change is shown in the review with an Install button
+PASS A (UI): an identical catalog says up to date and offers no install
+PASS A (UI): unknown fields are not shown (they are not installable)
+PASS A: installed data is exactly the normalized data that was reviewed {"sameAsReviewed":true,"diffEmpty":0,"noEvil":true,"maker":"Installed Co","tier":"Installed help text.","active":"saved"}
+PASS A2: all 18 bot/command fields and the chatbot notes show before -> after text (missing: ; vague: )
+PASS A2: a long changed value shows a short before -> after preview (188 chars)
+PASS A2: opening the line shows the complete old and new values
+PASS A2: markup inside catalog values is shown as text and never runs
+PASS A2: a short list states it shows all changes and Install is available
+PASS A2: over the cap it says "Showing 500 of 631" and never claims all are listed
+PASS A2: the aggregate count covers the whole diff (631), not only the visible part
+PASS A2: Install is disabled while changes are hidden
+PASS A2: installCatalog() refuses to store anything while the review is incomplete
+PASS A2: "Show all" displays every one of the 631 changes and then enables Install
+PASS A2: after Cancel and re-import the gate is closed again
+PASS A3: an added command shows prompt text, tier, fill-in boxes, location, description, check date and status
+PASS A3: a removed command shows its complete previous values (@study)
+PASS A3: (setup) the test chatbot catalog is valid
+PASS A3: a new chatbot shows its card fields and notes (4 reviewable items = card + 3 commands)
+PASS A3: every command of a new chatbot is listed with its own values
+PASS A3: the aggregate count equals the listed items (4 content + 1 revision line), with nothing counted twice
+PASS A3: a removed chatbot shows its card, notes and all 8 commands with their values
+PASS A3: markup in added commands, chatbot cards and notes is shown as text and never runs
+PASS A3: markup in REMOVED content is shown as text and never runs
+PASS A3: a large REMOVAL (631 changes) shows 500 and keeps Install disabled
+PASS A3: after "Show all", every removed record is listed and Install is enabled
+PASS A3: (setup) the large new-chatbot catalog is valid
+PASS A3: large ADDITION of 3 chatbots counts every card and command (573, plus the revision line = 574) and keeps Install disabled until shown
+PASS A4: added command - the row has a details/summary; clicking it opens the record and shows every installable field
+PASS A4: removed command - Enter on the summary opens the previous record, all values visible
+PASS A4: added chatbot - card fields and notes expand, and each added command expands on its own 
+PASS A4: removed chatbot - card, notes and all 8 removed commands expand with their values 
+PASS A4: hostile markup is visible as literal text when the record is opened, and no element or script is created 
+PASS A4: large diff - Install is disabled, a forced click stores nothing, and only 500 rows are shown
+PASS A4: after "Show all" every row is present, the last row can be opened, and Install is enabled
+PASS A5: added command - all 10 schema fields (g,k,tier,t,l,w,d,f,v,st) are shown with exact values; collapsed first; mouse, Enter and Space toggle it 
+PASS A5: removed command (with fill-in boxes: @app or plugin) - all schema fields shown with their previous values 
+PASS A5: (setup) added-chatbot catalog is valid
+PASS A5: added chatbot - all 11 card fields (name,maker,url,color,limit,blurb,brief,best,free,v,st) plus notes are shown 
+PASS A5: every command of the added chatbot (3, one without fill-in boxes) shows all 10 fields 
+PASS A5: removed chatbot (Mistral) - all card fields and notes shown with previous values 
+PASS A5: all 8 commands of the removed chatbot show every schema field 
+PASS A5: keyboard - Tab goes from "Validate" to the first record, then record to record; Shift+Tab goes back (- Removed chatbot: Mistral (8 commands, -> - Mistral: Web search (Message box toggl)
+PASS A5: hostile markup in an opened added record is shown as exact literal text; no image or script is created and nothing runs
+PASS A5: gate - with 631 changes, forced click, Enter, Space and a direct call all fail to install while only 500 are shown
+PASS A5: gate - after "Show all" all 631 changes are listed and Install then works (rev 4 saved)
+PASS A6: (setup) the fresh test change list is over 500 items (631)
+PASS A6: before Show all - Install is really disabled, announced as disabled, and linked to the on-screen reason
+PASS A6: before Show all - pointer click, Enter, Space, element.click() and installCatalog() all do nothing (nothing stored, no reload); the button cannot take keyboard focus
+PASS A6: locked vs enabled button is clearly different in all 10 palette x mode combinations (border style + cursor + fill/text, label contrast >= 4.5, no hover reaction, no size jump) 
+PASS A6: after Show all - Install is enabled and no longer announced as disabled
+PASS A6: enabled Install is keyboard-focusable and keeps its visible focus outline (solid 3px)
+PASS A6: the compiled-prompt console is still dark in light mode (rgb(20, 18, 42))
+PASS A6: after Show all, Enter on Install installs the 631-change catalog and reloads (disposable browser profile only): rev 2, 711 commands
+PASS A6: a small change list leaves Install enabled and styled as enabled
+PASS B (fresh): the counted total/needing re-check match an independent count {"need":86,"total":90}
+PASS B (fresh): chips shown (6) is fewer than entries needing re-check (86), and the text says so
+PASS B (fresh): chip count in the sentence (6) equals real grey chips on screen across all chatbots (6)
+PASS B (fresh): wording does not claim every counted entry has a chip and explains suppressed doc chips
+PASS B (fresh): doc-only commands show no chip in the command list
+PASS B: Start here wording is accurate (no chip is not a guarantee)
+PASS B: no remaining "grey chips mark them" wording anywhere on the page
+PASS B (stale): all 90 entries need a re-check and show a chip; sentence matches the screen (90)
+PASS B (stale): doc-only commands now show a "Doc only · old" chip
+PASS B (stale): wording remains accurate
+PASS C: the old "do not reply until I say all parts sent" instruction is gone from the source
+PASS C: splitting keeps every paragraph and every part within the budget (4 parts, longest 2677)
+PASS C: part 1 instruction = acknowledge only, do not start until FINAL PART
+PASS C: middle parts use the same protocol with their own number
+PASS C: final part clearly tells the chatbot to answer now, not acknowledge
+PASS C: paste-this-first states the real number of parts (4 vs 4)
+PASS C: paste-this-first uses the same acknowledge-only / FINAL PART protocol
+PASS C: paste-this-first has no contradictory instruction and keeps the attach-file route
+PASS C: the first prompt and the split parts use the same labels ([PART k OF n], Received part, FINAL PART)
+PASS C: single-message package gets a matching one-message instruction
+PASS C: Dev Bay on-screen instructions describe the same protocol
+PASS C: main prompt split instructions describe the same protocol
+PASS C: catalog package split instructions describe the same protocol
+PASS C: no contradictory wording anywhere on screen after using all three split flows
+PASS no network requests in any scenario (0)
+errors: []
+PASS no console or page errors
+
+120 passed, 0 failed

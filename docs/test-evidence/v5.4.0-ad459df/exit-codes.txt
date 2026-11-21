@@ -1,0 +1,3 @@
+browser_suite_1 exit=0 secs=15 49 passed, 0 failed
+browser_suite_2 exit=0 secs=15 18 passed, 0 failed
+browser_corrective exit=0 secs=53 120 passed, 0 failed
