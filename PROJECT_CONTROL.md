@@ -81,7 +81,7 @@ An **owner acceptance kit** remains available at [acceptance-kit.html](https://g
 2. ~~Prepare owner acceptance kit~~ — completed on the docs branch.
 3. ~~Owner real-browser acceptance~~ — **all six tests PASS**. Test 4 was repeated using the correct corrective-branch `index.html` and original Test 4 package. The corrected owner record supersedes earlier failure entries.
 4. ~~Implement focused Test 4 correction~~ — commit `0bdeb9622d2a0a5a1ad49d48711aa8c768cf7478` on `fix/v5.4.0-test4-install-button-state`; one commit ahead of `release/v5.4.0`.
-5. ~~Create reviewable integration proposal~~ — PR #3 is open: [fix: clarify disabled install state for large catalogue reviews](https://github.com/GenX-Shinobi/Prompt-Builder/pull/3), targeting `release/v5.4.0`. It is not merged. GitHub's PR response currently reports `mergeable=false`; investigate this before any merge recommendation.
+5. ~~Create reviewable integration proposal~~ — PR #3 is open: [fix: clarify disabled install state for large catalogue reviews](https://github.com/GenX-Shinobi/Prompt-Builder/pull/3), targeting `release/v5.4.0`. It is not merged. A fresh GitHub REST read reports `mergeable=true`, `mergeable_state=clean`, and `rebaseable=true`. The earlier `mergeable=false` in the connector's creation response was stale/inconsistent; no conflict is currently indicated.
 6. ChatGPT independent reproduction of the automated suites remains outstanding. Claude's automated results must remain labelled implementer-reported.
 7. Owner explicitly approves the PR merge into `release/v5.4.0`; this is a separate decision from release approval.
 8. Owner explicitly approves v5.4.0 release only after all release gates pass.
@@ -92,7 +92,7 @@ README reconciliation remains prepared on the docs branch and unmerged. Keep the
 
 PR #3 is the active integration review. First determine why GitHub reports it as not mergeable despite the corrective branch being exactly one commit ahead of the current release head. Do not merge it until the cause is understood and the owner explicitly approves.
 
-**Single next action:** inspect PR #3's mergeability/conflict status and report the exact cause in plain English. No merge, publish, deployment, tag, or release is authorized.
+**Single next action:** ask the owner for explicit approval to merge PR #3 into `release/v5.4.0`. No merge, publish, deployment, tag, or release is authorized until separately approved.
 
 ### Decisions requiring owner approval
 
@@ -159,4 +159,4 @@ Clearly separate source inspection, automated execution, independent review and 
 - Claude Code owns implementation details, source-adjacent documentation, version/change logs, raw test evidence and technical reports for assigned work. Claude updates central management documents only when explicitly assigned.
 - The owner retains authority over product direction, implementation authorization, branch integration, merges and releases.
 - Parallel work is allowed on separate branches and non-overlapping files. During Test 4 correction, Claude uses a new corrective branch from `release/v5.4.0`; management maintenance remains on `docs/project-control-baseline`. Claude must not modify the docs branch.
-- Do not claim the actual Claude workspace has been inspected unless it was. The Test 4 prompt has not yet been submitted, so no corrective workspace/branch is claimed.
+- The Test 4 corrective implementation branch and PR #3 have been verified on GitHub. Do not claim a fresh local Claude workspace inspection unless it is actually performed.
