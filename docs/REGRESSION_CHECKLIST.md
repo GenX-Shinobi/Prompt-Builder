@@ -73,12 +73,12 @@ Run the relevant checks before accepting a change or release. Mark each item **P
 
 Automated checks for these exist and are Claude-reported only; they do not replace an owner check in a real browser. Use the browser-only kit in `docs/acceptance/v5.4.0/` (kit test numbers in brackets). Mark each **Pass / Fail / Not run** with the browser and device.
 
-- [ ] [1] An added command and a removed command each appear in the preview as a line that opens and closes to show its complete record.
-- [ ] [2, 3] An added chatbot (card, notes and each command) and a removed chatbot are inspectable the same way.
+- [x] [1] An added command and a removed command each appear in the preview as a line that opens and closes to show its complete record.
+- [x] [2, 3] An added chatbot (card, notes and each command) and a removed chatbot are inspectable the same way.
 - [ ] [1] Keyboard: Tab reaches each expandable line; Enter or Space opens and closes it; focus stays visible.
-- [x] [4] A very large change shows "Showing 500 of N", keeps Install disabled, and enables it only after "Show all" — owner observed the large preview but failed the visual-state criterion; installation was not attempted. See Test 4 correction below.
-- [ ] [5] Booby-trapped text is shown as plain characters: nothing bold, no image, no pop-up.
-- [ ] [6] A broken catalogue is refused in plain English with no Install button.
+- [ ] [4] **FAIL —** the large-change preview appeared, but disabled Install and reload was visually indistinguishable from enabled. The owner did not attempt installation. See Test 4 correction below.
+- [x] [5] Booby-trapped text is shown as plain characters: nothing bold, no image, no pop-up.
+- [x] [6] A broken catalogue is refused in plain English with no Install button.
 - [ ] [all] Cancel closes the preview and installs nothing; the built-in catalogue is unchanged.
 - [x] Layout was readable in the optional narrow-window repeat of kit Test 1. Exact browser/device dimensions were not recorded.
 
