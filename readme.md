@@ -1,97 +1,120 @@
-# AI Prompt Builder & Code Migrator
+# AI Prompt Builder Hub
 
-A zero-dependency, single-file web application designed by a non-coder to help everyday users—especially fellow non-coders—get the most out of free AI chatbots, while staying open source and directly editable by those same AI chatbots.
+*Also known as AI Prompt Builder & Code Migrator.*
 
-You don't need a coding background, developer tools, local servers, or an expensive paid subscription to use it. Open it in your browser, shape rough ideas into clear prompts, copy them into your favorite chatbot, and keep moving.
+A free-first, chatbot-independent prompt builder for everyday people, designed by a non-coder for fellow non-coders. Turn an unclear question, idea or task into a useful prompt, choose an AI chatbot that fits, prepare relevant context and hand it over, without coding skills, developer tools or a paid AI subscription.
 
-## Try It
+The application is one standalone HTML file with no build step, no external libraries and no server. It is open source, and it is designed so that the same AI chatbots it helps you use can also edit it.
 
-- **Live in Browser (GitHub Pages):** [Open AI Prompt Builder](https://genx-shinobi.github.io/Prompt-Builder/)
-- **View or Download Current File (`v5.4.0`):** [index.html](index.html)
+## Try it
 
-![AI Prompt Builder Preview](Preview.jpg)
+- **[Open the live app](https://genx-shinobi.github.io/Prompt-Builder/)** (GitHub Pages)
+- **[View or download index.html](index.html)** and double-click it to run it offline
+- **[Browse older versions](archive/)**
+- **[Browse project documents](docs/)**
 
-## Core Mission
+Which version do you have? The current build is **v5.4.0**. It is the version on the `main` branch and in the live app. It passed the project's automated browser tests on GitHub Actions (187 checks) and the owner's six browser acceptance tests. It is **not yet formally released**: there is no v5.4.0 tag or GitHub Release yet, and some release checks (real phones and tablets, screen readers, Firefox and Safari) are still outstanding. The version is recorded in the comment block at the top of `index.html` (`currentVersion`).
 
-- **Built for Non-Coders & Everyday Tinkers:** Plain-English prompt building and step-by-step workflows made for people who aren't software engineers—whether you're writing, researching, planning, or building simple web tools with AI help.
-- **Free-Tier First:** Built around free chatbot plans (with free accounts where required for uploads, history, or connectors). Every bot command includes a high-contrast free-tier availability badge (`Free`, `Free w/ account`, `Limited quota`, `Paid plan`), conservative paste budgets, and automatic multi-part prompt splitting when a prompt exceeds a bot's safe paste limit.
-- **Self-Contained & AI-Editable:** The entire application lives in a single `.html` file (`index.html`) with zero build steps, external libraries, or backend servers. Its built-in Dev Bay packages your change request alongside a clean snapshot of the app's source code, version-log rules, and a command freshness check so any AI chatbot can generate the next version, and can refresh the chatbot catalog the same way.
-- **Honest About Freshness:** Free plans change constantly, so every chatbot card and command carries a last-checked date and a status (confirmed, doc-only, conflicting or unverified). Grey chips mark commands that are unverified or in conflict between sources, and anything not checked for 60 days. Each chatbot's note shows when it was last checked and whether it comes only from a research document. No chip does not mean confirmed: commands taken only from a research document stay chip-free until they are 60 days old.
+![AI Prompt Builder Hub v5.4.0 as it first opens on a desktop browser](Preview.jpg)
 
-## Versions & Older Releases
+*v5.4.0 as it first opens on a desktop browser (default light theme, nothing saved yet), shown as a full-page capture.*
 
-- **Current Version (`v5.4.0`):** Maintained in [index.html](index.html) and served on the live page above. The chatbot data is also published as [catalog.json](catalog.json).
-- **Older Versions:** Earlier builds (`v5.1` through `v5.3.1`, and earlier prototypes) are stored in the [archive/](archive/) folder, with versioned snapshots available under [Releases](https://github.com/GenX-Shinobi/Prompt-Builder/releases).
+## Core principles
 
-## Documentation
+- **Free-use first:** designed around free chatbot plans, with account requirements, limited quotas and paid-only features clearly labelled. Paid plans are optional, never a prerequisite.
+- **Chatbot-independent:** supports choice rather than lock-in.
+- **Accessible:** plain language and workflows that make sense to non-coders.
+- **Portable:** standalone HTML, no external libraries, no build process, works offline.
+- **Honest:** chatbot features, model access and quotas change. Paste budgets are conservative estimates, not official provider limits, and uncertain information is marked rather than presented as fact.
+- **Open and AI-editable:** the built-in Dev Bay packages a change request and a clean copy of the app for any chatbot to revise.
 
-- **Guides & Reference PDFs:** Browse project documentation, release notes, and revision guides in the [docs/](docs/) folder.
-- **Contribution & Dev Bay Rules:** See [contributing.md](contributing.md) for a step-by-step guide to correcting or refreshing the catalog, or changing the app, with any chatbot, plus the single-file design rules.
+## What the app does today (v5.4.0)
 
-## Supported Chatbots (Free-Tier Baseline — 9 Engines)
+- **Nine chatbot choices:** ChatGPT, Gemini, Claude, Perplexity, Grok, Microsoft Copilot, DeepSeek, Meta AI and Mistral. Each card has task-fit guidance, a free-plan note and a conservative paste budget.
+- **Bot Commands:** typed commands, switches and modes that differ per chatbot. Each carries a free-tier badge (`Free`, `Free w/ account`, `Limited quota`, `Paid plan`), and you can hide paid-plan-only commands.
+- **Prompt Craft:** prompt-shaping tools that work with any chatbot: the brief, output shape, thinking and checking, accuracy, research, writing, persona and tone, and tech.
+- **Core prompt and attachments:** drag, browse or paste files and screenshots. Small text files (up to 1 MB) can be inlined; images and larger files are staged locally with upload reminders.
+- **Automatic multi-part splitting** when a prompt exceeds the selected chatbot's paste budget. Each part is acknowledged ("Received part N") and the chatbot starts work only after the final part.
+- **Presets** saved in your browser, with export and import to back them up or share them.
+- **Dev Bay:** prepares an AI-assisted change to the app itself and can download a clean `.html` copy. It also has the chatbot catalog tools below.
+- **Freshness labels:** every chatbot card and command carries a last-checked date and a status (confirmed, doc-only, conflicting or unverified). Grey chips mark commands that are unverified or in conflict, and anything not checked for 60 days. No chip does not mean confirmed: commands taken only from a research document stay chip-free until they are 60 days old.
+- **Chatbot catalog tools:** the chatbot data is also published as [catalog.json](catalog.json). You can ask any chatbot to refresh it, review exactly what would change, and install it (see below).
+- **Light and dark themes, colour palettes and section pin/reorder controls.**
 
-Each chatbot card displays task-fit guidance, free-tier availability notes, and conservative character paste budgets:
+Feature availability and chatbot quotas change by account, region and date. The table shows the catalog as shipped (revision 1); treat the budgets as estimates and check each card's free-plan note and last-checked date.
 
-- **ChatGPT (OpenAI):** Everyday all-rounder (`≈ 24,000` chars) with web/research modes, study/app helpers, Canvas, data analysis, and image tools where available.
-- **Gemini (Google):** Google Workspace `@` Connected Apps (`≈ 60,000` chars), Tools menu (Deep Research, Canvas, Guided Learning, image/music), and built-in Maps/Flights/Hotels/YouTube queries.
-- **Claude (Anthropic):** Long documents (`≈ 60,000` chars), careful writing, Artifacts, styles, connectors (`Free w/ account`), and code/file creation.
-- **Perplexity (Perplexity AI):** Citation-backed web, academic, finance, and attached-file research (`≈ 8,000` chars).
-- **Grok (xAI):** Conversational assistant (`≈ 24,000` chars) with search/DeepSearch, reasoning modes, image tools, and live X (Twitter) search.
-- **Microsoft Copilot:** Everyday assistant (`≈ 8,000` chars) with task-fit guidance and free-tier command filtering.
-- **DeepSeek:** Long-context drafting and coding (`≈ 30,000` chars) tuned for free-tier usage.
-- **Meta AI:** Quick conversational tasks (`≈ 8,000` chars) with free-tier command filtering.
-- **Mistral (Le Chat / Vibe):** Fast, structured drafting and coding (`≈ 24,000` chars) with free-tier command filtering.
+| Chatbot | Best for (from the catalog) | Paste budget (characters) |
+|---|---|---|
+| ChatGPT | All-rounder for writing, coding and ideas | about 24,000 |
+| Gemini | Google apps and multimodal work | about 60,000 |
+| Claude | Long documents, careful writing and code | about 60,000 |
+| Perplexity | Web research with cited sources | about 8,000 |
+| Grok | Current topics, tied to X | about 24,000 |
+| Microsoft Copilot | Windows and Edge users; a free fallback bot | about 8,000 |
+| DeepSeek | Free reasoning, coding and maths help | about 30,000 |
+| Meta AI | Quick everyday prompts in WhatsApp and Instagram | about 8,000 |
+| Mistral | Le Chat / Vibe: a solid non-US alternative | about 24,000 |
 
-## Quickstart
+## Quick start
 
-### Run Locally
+1. Open the [live app](https://genx-shinobi.github.io/Prompt-Builder/) or download [index.html](index.html) and double-click it.
+2. **Step 0:** choose your chatbot. This sets its paste budget and filters the commands to what it supports.
+3. **Step 1:** pick options in **Bot Commands** and **Prompt Craft**, and fill in any `[bracketed]` boxes that appear.
+4. **Step 2:** enter your task and any context or attachments.
+5. Optionally save the setup in **Saved presets**.
+6. Review the compiled prompt and size estimate, then click **Copy & launch** to copy it (or Part 1 of a split) and open your chosen chatbot in a new tab.
+7. Review the answer and refine your prompt as needed.
 
-1. Download [index.html](index.html) (or grab an older build from [archive/](archive/)).
-2. Double-click the file to open it in any modern web browser. No installation, server, or internet connection is required to build prompts.
+The local file builds prompts without a server, installation or internet connection. Opening a chatbot's website, and checking for a newer catalog, naturally need a connection.
 
-### Build & Launch a Prompt
+## Improve the app with AI (Dev Bay)
 
-- **Step 0 — Choose your AI chatbot:** Pick from the 9 supported chatbots to set its free-plan paste budget, view task-fit notes, and filter commands to what that bot supports.
-- **Step 1 — System commands & cheat-sheet modifiers:** Mix and match commands from two tabs: **Bot Commands** (typed commands, switches and modes that differ per chatbot) and **Prompt Craft** (prompt-shaping tools that work with any chatbot: the brief, output shape, thinking and checking, accuracy, research, writing, persona and tone, and tech). Fill in any inline `[bracketed]` fields that appear, and use **Hide paid-plan-only commands** at the bottom of the card to filter out paid-tier items.
-- **Step 2 — Core prompt & attachments:** Enter your query or source text. Drag, browse, or paste (`Ctrl/Cmd+V`) files or screenshots—small text files (`≤1 MB`) can be inlined into the prompt, while images and larger files are staged locally with upload/copy reminders. Adjust the truncation and continuity toggles as needed.
-- **Step 3 — Saved presets (optional):** Save frequently used setups to your browser's `localStorage` (`pb-presets-v1`). Presets never leave your device and are never included in code-migration exports. Use **Export presets** and **Import presets** (`pb-presets.json`) to back them up or share them.
-- **Copy & launch:** Click **Copy & launch** in the right-hand console to copy the compiled prompt (or Part 1 of an auto-split sequence) and open your chosen chatbot in a new tab.
+1. In **Dev Bay**, click **Initialize code modification sequence**.
+2. Choose the target chatbot, describe the change you want and why, then click **Generate package**.
+3. Use **Copy package & launch** (long packages are split to fit the chatbot's budget) or **Download clean .html** to attach the file. **Include change request in .html** embeds your request, and **Copy "paste this first" prompt** gives the one-line instruction to send with it.
+4. Paste or attach it in the chatbot. The package asks the chatbot to check that commands and features are current before returning the complete updated `.html`.
+5. Save the returned file and **test it in your browser** before sharing. AI-generated changes are not automatically verified.
 
-### Update the App Using an AI Chatbot (Dev Bay)
+Before changing anything, read [contributing.md](contributing.md) and [docs/AI_WORK_RULES.md](docs/AI_WORK_RULES.md).
 
-1. Scroll to the **DEV BAY** section and click **Initialize code modification sequence**.
-2. Choose the target AI engine, describe the change you want, and state why it is needed.
-3. Click **Generate package**, then use **Copy package & launch** (which auto-splits packages that exceed the target engine's paste budget) or **Download clean .html** to attach the clean source file directly. Tick **Include change request in .html** to embed your request in the file, and use **Copy "paste this first" prompt** for the instruction to send with it.
-4. Paste the copied package (or attach the downloaded `.html` file) into the AI chatbot—the package includes a mandatory freshness check so the AI verifies current commands/features before emitting the complete updated `.html` file.
-5. Save the returned `.html` file and verify it in your browser before publishing.
+## Refresh the chatbot catalog
 
-### Refresh the Chatbot Catalog
-
-1. In the Dev Bay, use **Package catalog only** to send the current catalog to any chatbot with a refresh request, or **Check for newer catalog** to look for the latest published `catalog.json`.
-2. Paste the chatbot's reply into **Import catalog**. The app validates it and lists every difference that installing would make (wording, links, colours, fill-in boxes, free-tier badge labels, order, and check dates).
-3. Click **Install and reload** only if the changes look right. **Use built-in catalog** undoes it.
+1. In **Dev Bay > Chatbot catalog**, click **Package catalog only** to send the current catalog and a refresh request to any chatbot, or click **Check for newer catalog** to look for the latest published `catalog.json`.
+2. Paste the reply into **Import catalog** and click **Validate & preview changes**. The app checks the catalog and lists every change installing would make. Changed wording shows before and after, and anything added or removed (commands or whole chatbots) opens to show its complete record. Over 500 changes, **Install and reload** stays off until you have chosen to show them all.
+3. Click **Install and reload** only if the changes look right, or **Cancel** to install nothing. **Use built-in catalog** undoes an install.
 
 Nothing is fetched unless you click **Check for newer catalog**.
 
-## AI Assistance Note
+## Privacy and local storage
 
-This project's code and revisions were created and iterated with AI assistance and reviewed through testing. Because users can also edit the single-file HTML directly with AI chatbots, edge cases may vary—please test changes and report issues if you spot bugs. See [contributing.md](contributing.md) for revision and Dev Bay guidelines.
+- **Client-side:** your prompts, attached files and presets stay in your browser. They only leave it when you choose to paste or upload them into a chatbot or other service. Check each provider's own privacy terms before sharing sensitive information.
+- **Network:** the app itself makes one kind of network request, the catalog check you start by clicking **Check for newer catalog** (a plain read of `catalog.json` from GitHub; nothing you typed is sent). It never checks on page load. **Copy & launch** opens the chatbot's own website in a new tab with no prompt text in the address. Loading the page and building prompts were tested with the network switched off.
+- **Browser storage keys:** `pb-theme` (theme), `pb-palette` (colour palette), `pb-layout-v1` (pinned and reordered sections), `pb-presets-v1` (your presets), `pb-catalog-v1` (a catalog you installed, optional) and `pb-start-closed` (whether you closed the Start here panel).
 
-## Privacy & Local Storage
+## Project management and roadmap
 
-- **100% Client-Side:** Your prompts, attached files, and saved presets never leave your browser until you explicitly paste or upload them into a chatbot tab.
+Ideas are captured and prioritised without turning every idea into immediate scope. **Anything in the roadmap or idea inbox is a future idea, not a feature of the current app.**
 
-**Browser Storage Keys:**
-- `pb-theme` — Light/dark theme preference.
-- `pb-palette` — Colour palette.
-- `pb-layout-v1` — Pinned and reordered sections.
-- `pb-presets-v1` — User-saved prompt presets.
-- `pb-catalog-v1` — A chatbot catalog you installed from the Dev Bay (optional).
-- `pb-start-closed` — Whether you closed the Start here panel.
+- [PROJECT_CONTROL.md](PROJECT_CONTROL.md): central project memory, decisions, active work and session-resume instructions.
+- [ROADMAP.md](ROADMAP.md): now, next and later direction, and release gates.
+- [docs/IDEA_INBOX.md](docs/IDEA_INBOX.md): idea capture and triage.
+- [docs/CURRENT_STATUS.md](docs/CURRENT_STATUS.md): dated technical baseline and handoff.
+- [docs/REGRESSION_CHECKLIST.md](docs/REGRESSION_CHECKLIST.md): repeatable pre-release checks.
+- [docs/](docs/): guides and reference PDFs.
 
-The app itself makes only one kind of network request: the catalog check you start by clicking **Check for newer catalog** (a plain read of `catalog.json` from GitHub; nothing you typed is sent). It never checks on page load. **Copy & launch** opens the chatbot's own website in a new tab with no prompt text in the address; what you paste there is then governed by that chatbot's own privacy terms. The app was tested loading and building prompts with the network switched off.
+## Older versions
 
-## Creator & Gameplay
+Earlier builds (v5.1 through v5.3.1, and earlier prototypes) are stored in [archive/](archive/). A v5.2.0 release is published under [Releases](https://github.com/GenX-Shinobi/Prompt-Builder/releases).
+
+## Contributing and testing
+
+Contributions and AI-assisted revisions are welcome. Preserve the free-use-first philosophy, the standalone architecture, existing functionality and accessibility. See [contributing.md](contributing.md) for the rules, the Dev Bay workflow and the commands for the automated browser tests in `tests/` (which need Node and Playwright; the app itself needs neither). Those tests do not replace opening the file in a real browser.
+
+## AI assistance note
+
+This project's code and revisions were created and iterated with AI assistance and reviewed through testing. Edge cases may vary, so please test changes and report issues if you spot bugs.
+
+## Creator
 
 Made by a regular person sharing practical tools for non-coders and tinkering with AI workflows. Outside of building tools like this, I also publish gameplay streams on [Twitch](https://www.twitch.tv/genx_shinobi).
 

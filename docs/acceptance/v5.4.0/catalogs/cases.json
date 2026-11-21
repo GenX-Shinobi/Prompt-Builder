@@ -1,0 +1,32 @@
+[
+ {
+  "id": "1",
+  "file": "01-add-and-remove-a-command.json",
+  "total": 3
+ },
+ {
+  "id": "2",
+  "file": "02-add-a-chatbot.json",
+  "total": 4
+ },
+ {
+  "id": "3",
+  "file": "03-remove-a-chatbot.json",
+  "total": 10
+ },
+ {
+  "id": "4",
+  "file": "04-large-change.json",
+  "total": 631
+ },
+ {
+  "id": "5",
+  "file": "05-hostile-markup.json",
+  "total": 2
+ },
+ {
+  "id": "6",
+  "file": "06-broken-catalog-is-refused.json",
+  "total": 0
+ }
+]

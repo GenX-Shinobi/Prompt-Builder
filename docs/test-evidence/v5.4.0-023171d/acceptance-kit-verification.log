@@ -1,0 +1,39 @@
+$ node docs/acceptance/v5.4.0/verify_kit.js <release index.html>   (acts like the owner using the kit; run against the fresh clone at 023171d)
+PASS app under test is the release build: v5.4.0, catalog rev 1, 9 chatbots
+PASS Test 1: summary says 3 in total
+PASS Test 1: added line, removed line and revision line are all present
+PASS Test 1: added line opens
+PASS Test 1: opened added record shows group, kind, badge, text, description, location, fill-in box, date, status
+PASS Test 1: removed line opens
+PASS Test 1: removed record shows its old values (9 non-empty)
+PASS Test 1: Tab reaches a line; Enter opens/closes; Space opens/closes
+PASS Test 1: nothing was installed
+PASS Test 1: Cancel closes the preview and installs nothing
+PASS Test 2: summary says 4 in total
+PASS Test 2: new-chatbot line and both command lines are present
+PASS Test 2: chatbot details, notes and the second command's paid badge are shown
+PASS Test 2: nothing was installed
+PASS Test 2: Cancel closes the preview and installs nothing
+PASS Test 3: summary says 10 in total
+PASS Test 3: removed-chatbot line plus 8 command lines
+PASS Test 3: removed chatbot record shows card details and notes (12 non-empty values)
+PASS Test 3: nothing was installed
+PASS Test 3: Cancel closes the preview and installs nothing
+PASS Test 4: summary says 631 in total
+PASS Test 4: "Showing 500 of 631", Show-all button present, Install greyed out
+PASS Test 4: pressing the greyed-out button (click and Enter) installs nothing
+PASS Test 4: after Show all, it says all 631 are shown and Install becomes usable
+PASS Test 4: nothing was installed
+PASS Test 4: Cancel closes the preview and installs nothing
+PASS Test 5: summary says 2 in total
+PASS Test 5: the label shows the angle brackets literally
+PASS Test 5: booby-trapped text appears exactly as plain characters; no image, no script, no pop-up
+PASS Test 5: nothing inside the text itself was turned into bold or any other element
+PASS Test 5: nothing was installed
+PASS Test 5: Cancel closes the preview and installs nothing
+PASS Test 6: broken catalogue is refused in plain English, with no Install button
+PASS kit: results summary reflects Pass/Fail/Not tried and notes
+PASS kit: no sideways scrolling at phone width (390px)
+PASS no page errors, no network requests, no pop-ups ({"errs":[],"reqs":[],"dialogs":[]})
+36 passed, 0 failed
+exit code: 0
