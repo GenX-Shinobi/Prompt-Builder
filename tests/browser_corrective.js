@@ -154,6 +154,371 @@ const ok = (c, m) => { if (c) { pass++; console.log('PASS ' + m); } else { fail+
   await p.evaluate(() => localStorage.removeItem('pb-catalog-v1'));
   await p.context().close();
 
+  /* ============ A2: every changed value is inspectable; long lists cannot be installed unseen ============ */
+  {
+    const q = await open();
+    // (1) schema-driven: EVERY field in CATALOG_FIELDS shows its old and new text, never just "changed"
+    const R = await q.evaluate(() => {
+      const base = cleanCatalog(BUILTIN_CATALOG), out = { missing: [], vague: [], tried: 0 };
+      const val = (k, tag) => k === 'f' ? ['f-' + tag] : k === 'limit' ? (tag === 'OLD' ? 11111 : 22222) : tag + '-' + k;
+      for (const [scope, keys] of [['bot', CATALOG_FIELDS.bot], ['cmd', CATALOG_FIELDS.cmd]]) {
+        keys.filter(k => k !== 'name' && k !== 'g' && k !== 'l').forEach(k => {
+          const a = JSON.parse(JSON.stringify(base)), b = JSON.parse(JSON.stringify(base));
+          if (scope === 'bot') { a.CHATBOTS[0][k] = val(k, 'OLD'); b.CHATBOTS[0][k] = val(k, 'NEW'); }
+          else { const n = a.CHATBOTS[0].name; a.BOT_CMDS[n][0][k] = val(k, 'OLD'); b.BOT_CMDS[n][0][k] = val(k, 'NEW'); }
+          const d = diffCatalogs(a, b); out.tried++;
+          const s = k === 'f' ? 'f-OLD' : String(val(k, 'OLD')), t = k === 'f' ? 'f-NEW' : String(val(k, 'NEW'));
+          const line = d.lines.find(l => l.indexOf(s) >= 0 && l.indexOf(t) >= 0);
+          if (!line) out.missing.push(scope + '.' + k);
+          if (d.lines.some(l => / changed$/.test(l))) out.vague.push(scope + '.' + k);
+        });
+      }
+      const a = JSON.parse(JSON.stringify(base)), b = JSON.parse(JSON.stringify(base)), n = a.CHATBOTS[0].name;
+      a.BOT_NOTES[n] = 'OLD-NOTE'; b.BOT_NOTES[n] = 'NEW-NOTE';
+      const dn = diffCatalogs(a, b).lines.join('|');
+      out.notes = /OLD-NOTE/.test(dn) && /NEW-NOTE/.test(dn);
+      return out;
+    });
+    ok(R.tried >= 12 && R.missing.length === 0 && R.vague.length === 0 && R.notes, 'A2: all ' + R.tried + ' bot/command fields and the chatbot notes show before -> after text (missing: ' + R.missing.join(',') + '; vague: ' + R.vague.join(',') + ')');
+
+    // (2) long values: truncated preview + full before/after on demand; markup in values stays inert text
+    const evil = '<img src=x onerror="window.__pwn=1">';
+    const base = await q.evaluate(() => JSON.parse(JSON.stringify(cleanCatalog(BUILTIN_CATALOG))));
+    const c = JSON.parse(JSON.stringify(base)); const oldD = base.BOT_CMDS.ChatGPT[0].d;
+    c.rev = 2; const longNew = evil + ' ' + 'LONGTEXT '.repeat(80) + 'THE-END-MARKER';
+    c.BOT_CMDS.ChatGPT[0].d = longNew;
+    const openDiff = async cat => { await q.evaluate(() => { document.getElementById('catImportBox').hidden = false; }); await q.fill('#catImportText', JSON.stringify(cat)); await q.click('#catImportGo'); };
+    await openDiff(c);
+    const row = q.locator('#catDiff li details').first();
+    const summary = await row.locator('summary').textContent();
+    ok(/description /.test(summary) && summary.length < 260 && !/THE-END-MARKER/.test(summary) && /\.\.\./.test(summary), 'A2: a long changed value shows a short before -> after preview (' + summary.length + ' chars)');
+    await row.locator('summary').click();
+    const fullTxt = await row.textContent();
+    ok(fullTxt.indexOf('THE-END-MARKER') >= 0 && fullTxt.indexOf(oldD) >= 0 && /Before \(full\)/.test(fullTxt) && /After \(full\)/.test(fullTxt), 'A2: opening the line shows the complete old and new values');
+    ok((await q.$$('#catDiff img')).length === 0 && (await q.evaluate(() => window.__pwn)) === undefined && fullTxt.indexOf(evil) >= 0, 'A2: markup inside catalog values is shown as text and never runs');
+    ok(/Showing all \d+ changes/.test(await q.textContent('#catShownCount')) && !(await q.locator('#catInstallBtn').isDisabled()), 'A2: a short list states it shows all changes and Install is available');
+
+    // (3) cap: >500 changes -> total vs shown stated, Install disabled until every change is displayed
+    const big = JSON.parse(JSON.stringify(base)); big.rev = 3;
+    for (const n of Object.keys(big.BOT_CMDS)) for (let i = 0; i < 70; i++) big.BOT_CMDS[n].push(Object.assign({}, big.BOT_CMDS[n][0], { l: 'Bulk item ' + i, t: 'bulk ' + i })); /* per-chatbot limit is 200 commands */
+    const wantTotal = await q.evaluate(c2 => diffCatalogs(cleanCatalog(CATALOG), cleanCatalog(c2)).lines.length, big);
+    await openDiff(big);
+    const head = await q.textContent('#catDiff');
+    ok(wantTotal > 500 && (await q.$$('#catDiffList > li')).length === 500 && new RegExp('Showing 500 of ' + wantTotal + ' changes').test(head) && !/Every difference is listed/.test(head), 'A2: over the cap it says "Showing 500 of ' + wantTotal + '" and never claims all are listed');
+    ok(new RegExp('\\(' + wantTotal + ' in total\\)').test(head), 'A2: the aggregate count covers the whole diff (' + wantTotal + '), not only the visible part');
+    ok(await q.locator('#catInstallBtn').isDisabled(), 'A2: Install is disabled while changes are hidden');
+    await q.evaluate(() => installCatalog());
+    ok(await q.evaluate(() => localStorage.getItem('pb-catalog-v1') === null), 'A2: installCatalog() refuses to store anything while the review is incomplete');
+    await q.click('#catShowAllBtn');
+    ok((await q.$$('#catDiffList > li')).length === wantTotal && !(await q.locator('#catInstallBtn').isDisabled()) && (await q.$('#catShowAllBtn')) === null && new RegExp('Showing all ' + wantTotal + ' of ' + wantTotal).test(await q.textContent('#catShownCount')), 'A2: "Show all" displays every one of the ' + wantTotal + ' changes and then enables Install');
+    await q.click('#catCancelBtn');
+    await openDiff(big);
+    ok(await q.locator('#catInstallBtn').isDisabled(), 'A2: after Cancel and re-import the gate is closed again');
+    await q.context().close();
+  }
+
+  /* ============ A3: added/removed commands and chatbots show their complete records ============ */
+  {
+    const q = await open();
+    const base = await q.evaluate(() => JSON.parse(JSON.stringify(cleanCatalog(BUILTIN_CATALOG))));
+    const clone = o => JSON.parse(JSON.stringify(o));
+    const openDiff = async cat => { await q.evaluate(() => { document.getElementById('catImportBox').hidden = false; }); await q.fill('#catImportText', JSON.stringify(cat)); await q.click('#catImportGo'); };
+    /* content items only: the catalog-revision line is a separate, counted metadata change */
+    const liTexts = async () => (await q.$$eval('#catDiffList > li', els => els.map(e => e.textContent))).filter(t => !/Catalog revision:/.test(t));
+    const HOSTILE = '<img src=x onerror="window.__pwn3=1"><script>window.__pwn3=2</script>';
+    const cmd = (l, extra) => Object.assign({ g: 'Zed Group', k: 'type', tier: 'limited', t: 'DISTINCT-PROMPT-TEXT', l: l, w: 'DISTINCT-WHERE', d: 'DISTINCT-DESCRIPTION', f: ['DISTINCT-FIELD-A', 'DISTINCT-FIELD-B'], v: '2026-11-01', st: 'confirmed' }, extra || {});
+    const noExec = async () => (await q.$$('#catDiff img')).length === 0 && (await q.evaluate(() => window.__pwn3)) === undefined;
+
+    // (1) added command: every installable value is in the review
+    let c = clone(base); c.rev = 2; c.BOT_CMDS.ChatGPT.push(cmd('Brand New Cmd'));
+    await openDiff(c);
+    let items = await liTexts(), hit = items.find(t => /\+ ChatGPT: Brand New Cmd \(Zed Group\)/.test(t)) || '';
+    ok(items.length === 1 && ['DISTINCT-PROMPT-TEXT', 'limited', 'DISTINCT-DESCRIPTION', 'DISTINCT-WHERE', 'DISTINCT-FIELD-A', 'DISTINCT-FIELD-B', '2026-11-01', 'confirmed', 'Zed Group', 'Brand New Cmd'].every(v => hit.indexOf(v) >= 0), 'A3: an added command shows prompt text, tier, fill-in boxes, location, description, check date and status');
+
+    // (2) removed command: its previous record is inspectable
+    const gone = base.BOT_CMDS.ChatGPT[2]; c = clone(base); c.rev = 2; c.BOT_CMDS.ChatGPT.splice(2, 1);
+    await openDiff(c); items = await liTexts(); hit = items.find(t => t.indexOf('- ChatGPT: ' + gone.l) === 0) || '';
+    ok(items.length === 1 && hit.indexOf(gone.t) >= 0 && hit.indexOf(gone.d) >= 0 && hit.indexOf(gone.w) >= 0 && hit.indexOf(gone.tier) >= 0 && hit.indexOf(gone.g) >= 0, 'A3: a removed command shows its complete previous values (' + gone.l + ')');
+
+    // (3) added chatbot with notes and several commands
+    const nb = clone(base.CHATBOTS[1]); nb.name = 'Zork AI'; nb.maker = 'Zork Labs'; nb.url = 'https://zork.example/'; nb.blurb = 'ZORK-BLURB'; nb.brief = 'ZORK-BRIEF'; nb.best = 'ZORK-BEST'; nb.free = 'ZORK-FREE-NOTE'; nb.limit = 33333;
+    c = clone(base); c.rev = 2; c.CHATBOTS.push(nb); c.BOT_NOTES['Zork AI'] = 'ZORK-NOTES-TEXT'; c.BOT_CMDS['Zork AI'] = [cmd('Zork One'), cmd('Zork Two', { t: 'SECOND-PROMPT', tier: 'paid' }), cmd('Zork Three', { d: 'THIRD-DESC' })];
+    ok((await q.evaluate(c2 => validateCatalog(c2).length, c)) === 0, 'A3: (setup) the test chatbot catalog is valid');
+    await openDiff(c); items = await liTexts();
+    const card = items.find(t => /\+ New chatbot: Zork AI \(3 commands/.test(t)) || '';
+    ok(items.length === 4 && ['Zork Labs', 'https://zork.example/', 'ZORK-BLURB', 'ZORK-BRIEF', 'ZORK-BEST', 'ZORK-FREE-NOTE', '33333', 'ZORK-NOTES-TEXT'].every(v => card.indexOf(v) >= 0), 'A3: a new chatbot shows its card fields and notes (' + items.length + ' reviewable items = card + 3 commands)');
+    ok(['Zork One', 'Zork Two', 'Zork Three'].every(n => items.some(t => t.indexOf('+ Zork AI: ' + n) === 0 && t.indexOf('DISTINCT-PROMPT-TEXT') + t.indexOf('SECOND-PROMPT') > -2)) && items.find(t => /Zork Two/.test(t)).indexOf('SECOND-PROMPT') >= 0 && items.find(t => /Zork Two/.test(t)).indexOf('paid') >= 0 && items.find(t => /Zork Three/.test(t)).indexOf('THIRD-DESC') >= 0, 'A3: every command of a new chatbot is listed with its own values');
+    ok(new RegExp('\\(5 in total\\)').test(await q.textContent('#catDiff')) && (await q.$$('#catDiffList > li')).length === 5, 'A3: the aggregate count equals the listed items (4 content + 1 revision line), with nothing counted twice');
+
+    // (4) removed chatbot: card, notes and commands inspectable
+    const last = base.CHATBOTS[base.CHATBOTS.length - 1], lname = last.name, lcmds = base.BOT_CMDS[lname];
+    c = clone(base); c.rev = 2; c.CHATBOTS.pop(); delete c.BOT_NOTES[lname]; delete c.BOT_CMDS[lname];
+    await openDiff(c); items = await liTexts();
+    const rc = items.find(t => t.indexOf('- Removed chatbot: ' + lname) === 0) || '';
+    ok(items.length === 1 + lcmds.length && rc.indexOf(last.maker) >= 0 && rc.indexOf(last.url) >= 0 && rc.indexOf(last.blurb) >= 0 && rc.indexOf(base.BOT_NOTES[lname]) >= 0 && lcmds.every(p => items.some(t => t.indexOf('- ' + lname + ': ' + p.l) === 0 && t.indexOf(p.t) >= 0 && t.indexOf(p.d) >= 0)), 'A3: a removed chatbot shows its card, notes and all ' + lcmds.length + ' commands with their values');
+
+    // (5) hostile markup in ADDED content and in REMOVED content stays inert text
+    c = clone(base); c.rev = 2; c.BOT_CMDS.ChatGPT.push(cmd('Hostile Add', { d: HOSTILE, t: HOSTILE })); c.CHATBOTS.push(Object.assign(clone(nb), { name: 'Evil AI', blurb: HOSTILE })); c.BOT_NOTES['Evil AI'] = HOSTILE; c.BOT_CMDS['Evil AI'] = [cmd('Evil Cmd', { d: HOSTILE })];
+    await openDiff(c); items = await liTexts();
+    ok(items.some(t => t.indexOf(HOSTILE) >= 0) && await noExec(), 'A3: markup in added commands, chatbot cards and notes is shown as text and never runs');
+    const hostileCat = clone(base); hostileCat.rev = 2; hostileCat.BOT_CMDS.ChatGPT.push(cmd('Hostile Old', { d: HOSTILE, t: HOSTILE }));
+    await q.evaluate(h => localStorage.setItem('pb-catalog-v1', JSON.stringify(h)), hostileCat);
+    await q.reload(); await q.waitForTimeout(400);
+    c = clone(base); c.rev = 3; await openDiff(c); items = await liTexts();
+    ok(items.length === 1 && items[0].indexOf('- ChatGPT: Hostile Old') === 0 && items[0].indexOf(HOSTILE) >= 0 && await noExec(), 'A3: markup in REMOVED content is shown as text and never runs');
+
+    // (6) large removals and large additions still hit the 500-item gate
+    const bigCat = clone(base); bigCat.rev = 5;
+    for (const n of Object.keys(bigCat.BOT_CMDS)) for (let i = 0; i < 70; i++) bigCat.BOT_CMDS[n].push(cmd('Bulk ' + i, { t: 'bulk ' + i }));
+    await q.evaluate(h => localStorage.setItem('pb-catalog-v1', JSON.stringify(h)), bigCat);
+    await q.reload(); await q.waitForTimeout(400);
+    c = clone(base); c.rev = 6; await openDiff(c);
+    let total = (await q.textContent('#catDiff')).match(/\((\d+) in total\)/);
+    ok(total && +total[1] > 500 && /Showing 500 of \d+ changes/.test(await q.textContent('#catShownCount')) && await q.locator('#catInstallBtn').isDisabled() && (await q.$$('#catDiffList > li')).length === 500, 'A3: a large REMOVAL (' + (total && total[1]) + ' changes) shows 500 and keeps Install disabled');
+    await q.click('#catShowAllBtn');
+    ok((await q.$$('#catDiffList > li')).length === +total[1] && !(await q.locator('#catInstallBtn').isDisabled()), 'A3: after "Show all", every removed record is listed and Install is enabled');
+    await q.evaluate(() => localStorage.removeItem('pb-catalog-v1')); await q.reload(); await q.waitForTimeout(400);
+    c = clone(base); c.rev = 2;
+    for (let k = 0; k < 3; k++) { const x = Object.assign(clone(nb), { name: 'Bulk AI ' + k }); c.CHATBOTS.push(x); c.BOT_NOTES[x.name] = 'notes ' + k; c.BOT_CMDS[x.name] = Array.from({ length: 190 }, (_, i) => cmd('Item ' + i, { t: 'p' + i })); }
+    ok((await q.evaluate(c2 => validateCatalog(c2).length, c)) === 0, 'A3: (setup) the large new-chatbot catalog is valid');
+    await openDiff(c); total = (await q.textContent('#catDiff')).match(/\((\d+) in total\)/);
+    ok(total && +total[1] === 3 * 191 + 1 && /Showing 500 of 574 changes/.test(await q.textContent('#catShownCount')) && await q.locator('#catInstallBtn').isDisabled(), 'A3: large ADDITION of 3 chatbots counts every card and command (573, plus the revision line = 574) and keeps Install disabled until shown');
+    await q.context().close();
+  }
+
+  /* ============ A4: the expandable records really work as a user sees them (click/keyboard, visible only when opened) ============ */
+  {
+    const q = await open();
+    const base = await q.evaluate(() => JSON.parse(JSON.stringify(cleanCatalog(BUILTIN_CATALOG))));
+    const clone = o => JSON.parse(JSON.stringify(o));
+    const openDiff = async cat => { await q.evaluate(() => { document.getElementById('catImportBox').hidden = false; }); await q.fill('#catImportText', JSON.stringify(cat)); await q.click('#catImportGo'); };
+    const rowFor = prefix => q.locator('#catDiffList > li').filter({ has: q.locator('summary', { hasText: prefix }) }).first();
+    /* closed -> every value hidden; click the summary -> details.open and every value visible */
+    const expands = async (prefix, vals, viaKeyboard) => {
+      const li = rowFor(prefix), det = li.locator('details'), sum = li.locator('summary');
+      if (await li.count() === 0) return 'no row for ' + prefix;
+      const pre = v => li.locator('details pre').filter({ hasText: v }).first();
+      const closedBefore = !(await det.evaluate(d => d.open));
+      let hiddenBefore = true; for (const v of vals) if (await pre(v).isVisible()) hiddenBefore = false;
+      if (viaKeyboard) { await sum.focus(); await q.keyboard.press('Enter'); } else await sum.click();
+      const openAfter = await det.evaluate(d => d.open);
+      const missing = []; for (const v of vals) if (!(await pre(v).isVisible())) missing.push(v);
+      return closedBefore && hiddenBefore && openAfter && missing.length === 0 ? true : 'closedBefore=' + closedBefore + ' hiddenBefore=' + hiddenBefore + ' openAfter=' + openAfter + ' notVisible=' + missing.join('|');
+    };
+    const HOSTILE = '<img src=x onerror="window.__pwn4=1">';
+    const cmd = (l, extra) => Object.assign({ g: 'Zed Group', k: 'type', tier: 'limited', t: 'UI-PROMPT-' + l, l: l, w: 'UI-WHERE-' + l, d: 'UI-DESC-' + l, f: ['UI-FIELD-' + l], v: '2026-11-01', st: 'confirmed' }, extra || {});
+
+    // added command (mouse)
+    let c = clone(base); c.rev = 2; c.BOT_CMDS.ChatGPT.push(cmd('AddedCmd'));
+    await openDiff(c);
+    ok(await expands('+ ChatGPT: AddedCmd', ['UI-PROMPT-AddedCmd', 'limited', 'UI-DESC-AddedCmd', 'UI-WHERE-AddedCmd', 'UI-FIELD-AddedCmd', '2026-11-01', 'confirmed', 'Zed Group', 'type']) === true, 'A4: added command - the row has a details/summary; clicking it opens the record and shows every installable field');
+
+    // removed command (keyboard: Enter on the focused summary)
+    const gone = base.BOT_CMDS.ChatGPT[2]; c = clone(base); c.rev = 2; c.BOT_CMDS.ChatGPT.splice(2, 1);
+    await openDiff(c);
+    ok(await expands('- ChatGPT: ' + gone.l, [gone.t, gone.d, gone.w, gone.tier, gone.g].filter(Boolean), true) === true, 'A4: removed command - Enter on the summary opens the previous record, all values visible');
+
+    // added chatbot: card + notes + each command expandable on its own
+    const nb = clone(base.CHATBOTS[1]); Object.assign(nb, { name: 'UiBot', maker: 'UI-MAKER', url: 'https://ui.example/', blurb: 'UI-BLURB', brief: 'UI-BRIEF', best: 'UI-BEST', free: 'UI-FREE', limit: 44444 });
+    c = clone(base); c.rev = 2; c.CHATBOTS.push(nb); c.BOT_NOTES.UiBot = 'UI-NOTES'; c.BOT_CMDS.UiBot = [cmd('UiOne'), cmd('UiTwo', { tier: 'paid' })];
+    await openDiff(c);
+    const r1 = await expands('+ New chatbot: UiBot', ['UI-MAKER', 'https://ui.example/', 'UI-BLURB', 'UI-BRIEF', 'UI-BEST', 'UI-FREE', '44444', 'UI-NOTES']);
+    const r2 = await expands('+ UiBot: UiOne', ['UI-PROMPT-UiOne', 'UI-DESC-UiOne', 'UI-WHERE-UiOne', 'UI-FIELD-UiOne']);
+    const r3 = await expands('+ UiBot: UiTwo', ['UI-PROMPT-UiTwo', 'paid', 'UI-DESC-UiTwo']);
+    ok(r1 === true && r2 === true && r3 === true, 'A4: added chatbot - card fields and notes expand, and each added command expands on its own ' + [r1, r2, r3].filter(x => x !== true).join(' ; '));
+
+    // removed chatbot: card + notes + every command expandable
+    const last = base.CHATBOTS[base.CHATBOTS.length - 1], ln = last.name, lc = base.BOT_CMDS[ln];
+    c = clone(base); c.rev = 2; c.CHATBOTS.pop(); delete c.BOT_NOTES[ln]; delete c.BOT_CMDS[ln];
+    await openDiff(c);
+    const rc = await expands('- Removed chatbot: ' + ln, [last.maker, last.url, last.blurb, base.BOT_NOTES[ln]]);
+    const bad = []; for (const p of lc) { const r = await expands('- ' + ln + ': ' + p.l, [p.t, p.d].filter(Boolean)); if (r !== true) bad.push(p.l + ' -> ' + r); }
+    ok(rc === true && bad.length === 0, 'A4: removed chatbot - card, notes and all ' + lc.length + ' removed commands expand with their values ' + (rc === true ? '' : rc) + bad.join(' ; '));
+
+    // hostile markup: opened rows show it as text and nothing runs
+    c = clone(base); c.rev = 2; c.BOT_CMDS.ChatGPT.push(cmd('HostileUi', { d: HOSTILE, t: HOSTILE }));
+    await openDiff(c); const rh = await expands('+ ChatGPT: HostileUi', ['<img src=x onerror="window.__pwn4=1">']);
+    ok(rh === true && (await q.$$('#catDiff img')).length === 0 && (await q.evaluate(() => window.__pwn4)) === undefined, 'A4: hostile markup is visible as literal text when the record is opened, and no element or script is created ' + (rh === true ? '' : rh));
+
+    // large diff: gate holds in the live UI; hidden rows cannot be installed; after Show all the later rows are expandable too
+    const big = clone(base); big.rev = 3;
+    for (const n of Object.keys(big.BOT_CMDS)) for (let i = 0; i < 70; i++) big.BOT_CMDS[n].push(cmd('Gate' + n.replace(/\W/g, '') + i));
+    await openDiff(big);
+    const dis = await q.locator('#catInstallBtn').isDisabled();
+    await q.locator('#catInstallBtn').click({ force: true, timeout: 2000 }).catch(() => {});
+    const stored = await q.evaluate(() => localStorage.getItem('pb-catalog-v1'));
+    ok(dis && stored === null && (await q.$$('#catDiffList > li')).length === 500, 'A4: large diff - Install is disabled, a forced click stores nothing, and only 500 rows are shown');
+    await q.click('#catShowAllBtn');
+    const total = (await q.textContent('#catDiff')).match(/\((\d+) in total\)/);
+    const lastRow = q.locator('#catDiffList > li').filter({ has: q.locator('summary') }).last(); /* the final plain row is the revision line, which has no record */
+    await lastRow.locator('summary').click();
+    ok(total && (await q.$$('#catDiffList > li')).length === +total[1] && !(await q.locator('#catInstallBtn').isDisabled()) && await lastRow.locator('details').evaluate(d => d.open) && await lastRow.locator('details pre').first().isVisible(), 'A4: after "Show all" every row is present, the last row can be opened, and Install is enabled');
+    await q.context().close();
+  }
+
+  /* ============ A5: every schema field of every added/removed record, collapsed-by-default, mouse + keyboard (Tab, Enter, Space), gate ============ */
+  {
+    const q = await open();
+    const base = await q.evaluate(() => JSON.parse(JSON.stringify(cleanCatalog(BUILTIN_CATALOG))));
+    const FIELDS = await q.evaluate(() => ({ bot: CATALOG_FIELDS.bot.slice(), cmd: CATALOG_FIELDS.cmd.slice(), label: FIELD_LABEL }));
+    const clone = o => JSON.parse(JSON.stringify(o));
+    const strOf = x => x === undefined ? 'none' : (typeof x === 'string' ? x : JSON.stringify(x));
+    const openDiff = async cat => { await q.evaluate(() => { document.getElementById('catImportBox').hidden = false; }); await q.fill('#catImportText', JSON.stringify(cat)); await q.click('#catImportGo'); };
+    const rowFor = prefix => q.locator('#catDiffList > li').filter({ has: q.locator('summary', { hasText: prefix }) }).first();
+    /* the record shown for a row: [{label, value}] read from what is on screen */
+    const shown = async li => li.locator('details .fullval > div').evaluateAll(ds => ds.map(d => ({ label: d.querySelector('b').textContent.replace(/:$/, ''), value: d.querySelector('pre').textContent })));
+    /* checks one record: starts collapsed and hidden; Enter/Space/mouse open+close; then every schema field is visible with the exact value */
+    const checkRecord = async (prefix, obj, keys, extra) => {
+      const li = rowFor(prefix), det = li.locator('details'), sum = li.locator('summary'); const problems = [];
+      if (await li.count() === 0) return ['no row: ' + prefix];
+      const want = keys.map(k => ({ label: FIELDS.label[k] || k, value: strOf(obj[k]) })).concat(extra || []);
+      if (await det.evaluate(d => d.open)) problems.push('starts open');
+      if (await li.locator('details pre:visible').count() !== 0) problems.push('values visible while collapsed');
+      await sum.click(); if (!(await det.evaluate(d => d.open))) problems.push('mouse click did not open');
+      await sum.click(); if (await det.evaluate(d => d.open)) problems.push('second mouse click did not close');
+      await sum.focus(); await q.keyboard.press('Enter'); if (!(await det.evaluate(d => d.open))) problems.push('Enter did not open');
+      await q.keyboard.press('Enter'); if (await det.evaluate(d => d.open)) problems.push('Enter did not close');
+      await q.keyboard.press('Space'); if (!(await det.evaluate(d => d.open))) problems.push('Space did not open');
+      const rec = await shown(li), visible = await li.locator('details pre').evaluateAll(ps => ps.every(p => p.getClientRects().length > 0));
+      if (!visible) problems.push('not all values visible when open');
+      want.forEach(w => { if (!rec.some(r => r.label === w.label && r.value === w.value)) problems.push('missing ' + w.label + '=' + w.value.slice(0, 30)); });
+      await q.keyboard.press('Space'); if (await det.evaluate(d => d.open)) problems.push('Space did not close');
+      return problems;
+    };
+    const full = (l, extra) => Object.assign({ g: 'Acme Group', k: 'ask', tier: 'account', t: 'T-' + l, l: l, w: 'W-' + l, d: 'D-' + l, f: ['F1-' + l, 'F2-' + l], v: '2026-10-05', st: 'conflicting' }, extra || {});
+
+    // added command: EVERY field in CATALOG_FIELDS.cmd
+    let c = clone(base); c.rev = 2; const addC = full('AllFieldsAdded'); c.BOT_CMDS.Claude.push(addC);
+    await openDiff(c);
+    let pr = await checkRecord('+ Claude: AllFieldsAdded', addC, FIELDS.cmd);
+    ok(pr.length === 0 && FIELDS.cmd.length >= 10, 'A5: added command - all ' + FIELDS.cmd.length + ' schema fields (' + FIELDS.cmd.join(',') + ') are shown with exact values; collapsed first; mouse, Enter and Space toggle it ' + pr.join('; '));
+
+    // removed command: EVERY field, including one that has fill-in boxes
+    const withF = base.BOT_CMDS.ChatGPT.findIndex(p => p.f && p.f.length), goneC = base.BOT_CMDS.ChatGPT[withF];
+    c = clone(base); c.rev = 2; c.BOT_CMDS.ChatGPT.splice(withF, 1);
+    await openDiff(c);
+    pr = await checkRecord('- ChatGPT: ' + goneC.l, goneC, FIELDS.cmd);
+    ok(withF >= 0 && pr.length === 0, 'A5: removed command (with fill-in boxes: ' + goneC.l + ') - all schema fields shown with their previous values ' + pr.join('; '));
+
+    // added chatbot: every CATALOG_FIELDS.bot field + notes + every command with every field
+    const nb = clone(base.CHATBOTS[1]); Object.assign(nb, { name: 'Fieldy AI', maker: 'FIELDY-MAKER', url: 'https://fieldy.example/', color: '#abcdef', limit: 54321, blurb: 'FB', brief: 'FBR', best: 'FBEST', free: 'FFREE', v: '2026-10-06', st: 'doc' });
+    const nCmds = [full('FC1'), full('FC2', { f: undefined, tier: 'paid', k: 'ui' }), full('FC3', { st: 'unverified' })]; delete nCmds[1].f;
+    c = clone(base); c.rev = 2; c.CHATBOTS.push(nb); c.BOT_NOTES['Fieldy AI'] = 'FIELDY-NOTES'; c.BOT_CMDS['Fieldy AI'] = nCmds;
+    ok((await q.evaluate(x => validateCatalog(x).length, c)) === 0, 'A5: (setup) added-chatbot catalog is valid');
+    await openDiff(c);
+    pr = await checkRecord('+ New chatbot: Fieldy AI', nb, FIELDS.bot, [{ label: 'notes', value: 'FIELDY-NOTES' }]);
+    ok(pr.length === 0 && FIELDS.bot.length >= 11, 'A5: added chatbot - all ' + FIELDS.bot.length + ' card fields (' + FIELDS.bot.join(',') + ') plus notes are shown ' + pr.join('; '));
+    const badAdd = []; for (const p of nCmds) { const r = await checkRecord('+ Fieldy AI: ' + p.l, p, FIELDS.cmd); if (r.length) badAdd.push(p.l + ': ' + r.join(', ')); }
+    ok(badAdd.length === 0, 'A5: every command of the added chatbot (' + nCmds.length + ', one without fill-in boxes) shows all ' + FIELDS.cmd.length + ' fields ' + badAdd.join(' | '));
+
+    // removed chatbot: card + notes + every removed command, all fields
+    const last = base.CHATBOTS[base.CHATBOTS.length - 1], ln = last.name, lc = base.BOT_CMDS[ln];
+    c = clone(base); c.rev = 2; c.CHATBOTS.pop(); delete c.BOT_NOTES[ln]; delete c.BOT_CMDS[ln];
+    await openDiff(c);
+    pr = await checkRecord('- Removed chatbot: ' + ln, last, FIELDS.bot, [{ label: 'notes', value: strOf(base.BOT_NOTES[ln]) }]);
+    ok(pr.length === 0, 'A5: removed chatbot (' + ln + ') - all card fields and notes shown with previous values ' + pr.join('; '));
+    const badRem = []; for (const p of lc) { const r = await checkRecord('- ' + ln + ': ' + p.l, p, FIELDS.cmd); if (r.length) badRem.push(p.l + ': ' + r.join(', ')); }
+    ok(lc.length > 0 && badRem.length === 0, 'A5: all ' + lc.length + ' commands of the removed chatbot show every schema field ' + badRem.join(' | '));
+
+    // keyboard: Tab reaches the first record from the Validate button, then moves record to record, Shift+Tab goes back
+    await q.focus('#catImportGo'); await q.keyboard.press('Tab');
+    const t1 = await q.evaluate(() => { const a = document.activeElement; return { tag: a.tagName, inList: !!a.closest('#catDiffList'), text: a.textContent.slice(0, 40) }; });
+    await q.keyboard.press('Tab');
+    const t2 = await q.evaluate(() => { const a = document.activeElement; return { tag: a.tagName, inList: !!a.closest('#catDiffList'), text: a.textContent.slice(0, 40) }; });
+    await q.keyboard.press('Shift+Tab');
+    const t3 = await q.evaluate(() => document.activeElement.textContent.slice(0, 40));
+    ok(t1.tag === 'SUMMARY' && t1.inList && t2.tag === 'SUMMARY' && t2.text !== t1.text && t3 === t1.text, 'A5: keyboard - Tab goes from "Validate" to the first record, then record to record; Shift+Tab goes back (' + t1.text.trim() + ' -> ' + t2.text.trim() + ')');
+
+    // hostile markup in an expanded ADDED record: the record text equals the hostile string exactly; nothing is created or run
+    const HOST = '<img src=x onerror="window.__pwn5=1"><script>window.__pwn5=2<\/script><b>bold</b>';
+    c = clone(base); c.rev = 2; c.BOT_CMDS.ChatGPT.push(full('HostileFive', { t: HOST, d: HOST, w: HOST, l: 'HostileFive' }));
+    await openDiff(c); await rowFor('+ ChatGPT: HostileFive').locator('summary').click();
+    const hv = await shown(rowFor('+ ChatGPT: HostileFive'));
+    ok(hv.filter(r => r.value === HOST).length === 3 && (await q.$$('#catDiff img')).length === 0 && (await q.$$('#catDiff script')).length === 0 && (await q.evaluate(() => window.__pwn5)) === undefined, 'A5: hostile markup in an opened added record is shown as exact literal text; no image or script is created and nothing runs');
+
+    // gate in the live UI: forced clicks, keyboard activation and direct calls store nothing; "Show all" then a real install works
+    const big = clone(base); big.rev = 4;
+    for (const n of Object.keys(big.BOT_CMDS)) for (let i = 0; i < 70; i++) big.BOT_CMDS[n].push(full('G' + n.replace(/\W/g, '') + i));
+    await openDiff(big);
+    const tot = +(await q.textContent('#catDiff')).match(/\((\d+) in total\)/)[1];
+    await q.locator('#catInstallBtn').click({ force: true, timeout: 2000 }).catch(() => {});
+    await q.focus('#catInstallBtn').catch(() => {}); await q.keyboard.press('Enter'); await q.keyboard.press('Space');
+    await q.evaluate(() => installCatalog());
+    const early = await q.evaluate(() => ({ stored: localStorage.getItem('pb-catalog-v1'), rev: CATALOG.rev }));
+    ok(tot > 500 && early.stored === null && early.rev === 1 && /Showing 500 of/.test(await q.textContent('#catShownCount')), 'A5: gate - with ' + tot + ' changes, forced click, Enter, Space and a direct call all fail to install while only 500 are shown');
+    await q.click('#catShowAllBtn');
+    const rows = (await q.$$('#catDiffList > li')).length;
+    await Promise.all([q.waitForEvent('load'), q.click('#catInstallBtn')]); await q.waitForTimeout(400);
+    const after = await q.evaluate(() => ({ stored: !!localStorage.getItem('pb-catalog-v1'), rev: CATALOG.rev, src: CATALOG_SRC }));
+    ok(rows === tot && after.stored && after.rev === 4 && after.src === 'saved', 'A5: gate - after "Show all" all ' + rows + ' changes are listed and Install then works (rev 4 saved)');
+    await q.context().close();
+  }
+
+  /* ============ A6 (v5.4.0 Test 4): the locked "Install and reload" button must look and behave locked, in all 5 palettes x light/dark ============ */
+  {
+    const q = await open();
+    const big = await q.evaluate(() => { const c = JSON.parse(JSON.stringify(cleanCatalog(BUILTIN_CATALOG))); c.rev = CATALOG.rev + 1; for (const n of Object.keys(c.BOT_CMDS)) for (let i = 0; i < 70; i++) c.BOT_CMDS[n].push(Object.assign({}, c.BOT_CMDS[n][0], { l: 'Bulk ' + i, t: 'bulk' + i })); return c; });
+    await q.evaluate(() => { document.getElementById('catImportBox').hidden = false; }); await q.fill('#catImportText', JSON.stringify(big)); await q.click('#catImportGo');
+    const total = +((await q.textContent('#catDiff')).match(/\((\d+) in total\)/) || [0, 0])[1];
+    ok(total > 500, 'A6: (setup) the fresh test change list is over 500 items (' + total + ')');
+    await q.evaluate(() => { window.__marker = 'same-page'; });
+    const btn = q.locator('#catInstallBtn');
+    ok(await btn.isDisabled() && (await btn.getAttribute('aria-disabled')) === 'true' && (await btn.getAttribute('aria-describedby')) === 'catShownCount' && /turned off until you show all/.test(await q.textContent('#catShownCount')), 'A6: before Show all - Install is really disabled, announced as disabled, and linked to the on-screen reason');
+    await btn.click({ force: true }).catch(() => {}); await q.waitForTimeout(150);
+    await q.evaluate(() => document.getElementById('catInstallBtn').dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', bubbles: true })));
+    await q.evaluate(() => document.getElementById('catInstallBtn').dispatchEvent(new KeyboardEvent('keydown', { key: ' ', bubbles: true })));
+    await q.evaluate(() => { document.getElementById('catInstallBtn').click(); installCatalog(); });
+    await q.waitForTimeout(250);
+    const locked = await q.evaluate(() => ({ stored: localStorage.getItem('pb-catalog-v1'), marker: window.__marker, focusable: (() => { document.getElementById('catInstallBtn').focus(); return document.activeElement === document.getElementById('catInstallBtn'); })() }));
+    ok(locked.stored === null && locked.marker === 'same-page' && !locked.focusable, 'A6: before Show all - pointer click, Enter, Space, element.click() and installCatalog() all do nothing (nothing stored, no reload); the button cannot take keyboard focus');
+    const lum = c => { const [r, g, b] = c.match(/[\d.]+/g).slice(0, 3).map(Number).map(v => { v /= 255; return v <= .03928 ? v / 12.92 : Math.pow((v + .055) / 1.055, 2.4); }); return .2126 * r + .7152 * g + .0722 * b; };
+    const cr = (a, b) => { const x = lum(a), y = lum(b); return (Math.max(x, y) + .05) / (Math.min(x, y) + .05); };
+    const combos = []; for (const t of ['light', 'dark']) for (const pal of ['default', 'ocean', 'forest', 'sunset', 'graphite']) combos.push([t, pal]);
+    const setLook = async (t, pal) => { await q.evaluate(([t, pal]) => { document.documentElement.setAttribute('data-theme', t); applyPalette(pal); }, [t, pal]); await q.waitForTimeout(450); };
+    const look = () => q.evaluate(() => {
+      const e = document.getElementById('catInstallBtn'), s = getComputedStyle(e); let panel = 'rgb(255, 255, 255)';
+      for (let n = e.parentElement; n; n = n.parentElement) { const c = getComputedStyle(n).backgroundColor; if (!/rgba\(0, 0, 0, 0\)|transparent/.test(c)) { panel = c; break; } }
+      const r = e.getBoundingClientRect();
+      return { bg: s.backgroundColor, color: s.color, bs: s.borderTopStyle, cursor: s.cursor, filter: s.filter, w: r.width, h: r.height, panel };
+    });
+    const dis = {};
+    for (const [t, pal] of combos) { await setLook(t, pal); const k = t + '/' + pal; dis[k] = await look(); await q.hover('#catInstallBtn', { force: true }).catch(() => {}); dis[k].hoverFilter = (await look()).filter; await q.mouse.move(0, 0); }
+    await q.click('#catShowAllBtn'); await q.waitForTimeout(200);
+    const en = {}; for (const [t, pal] of combos) { await setLook(t, pal); en[t + '/' + pal] = await look(); }
+    const bad = [];
+    for (const [t, pal] of combos) {
+      const k = t + '/' + pal, d = dis[k], e = en[k];
+      const cues = [d.bs !== e.bs, d.cursor !== e.cursor, d.bg !== e.bg, d.color !== e.color].filter(Boolean).length;
+      if (d.bs === e.bs || d.cursor !== 'not-allowed' || cues < 3) bad.push(k + ' (not distinct enough)');
+      if (cr(d.color, d.panel) < 4.5) bad.push(k + ' (locked label contrast ' + cr(d.color, d.panel).toFixed(2) + ' < 4.5)');
+      if (d.bg !== 'rgba(0, 0, 0, 0)' && cr(d.bg, e.bg) < 1.5) bad.push(k + ' (fill too close to enabled)');
+      if (d.hoverFilter !== 'none') bad.push(k + ' (reacts to hover while locked)');
+      if (Math.abs(d.w - e.w) > 1 || Math.abs(d.h - e.h) > 1) bad.push(k + ' (size jumps when it unlocks)');
+      if (e.cursor !== 'pointer') bad.push(k + ' (enabled cursor ' + e.cursor + ')');
+    }
+    ok(bad.length === 0, 'A6: locked vs enabled button is clearly different in all 10 palette x mode combinations (border style + cursor + fill/text, label contrast >= 4.5, no hover reaction, no size jump) ' + bad.join('; '));
+    const after = await q.evaluate(() => { const e = document.getElementById('catInstallBtn'); return { disabled: e.disabled, aria: e.getAttribute('aria-disabled'), showAll: !!document.getElementById('catShowAllBtn') }; });
+    ok(!after.disabled && after.aria === null && !after.showAll, 'A6: after Show all - Install is enabled and no longer announced as disabled');
+    await q.evaluate(() => { document.getElementById('catCancelBtn').focus(); }); await q.keyboard.press('Shift+Tab'); /* real keyboard move, so :focus-visible applies */
+    const ring = await q.evaluate(() => { const e = document.getElementById('catInstallBtn'); return { focused: document.activeElement === e, w: getComputedStyle(e).outlineWidth, st: getComputedStyle(e).outlineStyle }; });
+    ok(ring.focused && ring.st !== 'none' && parseFloat(ring.w) >= 2, 'A6: enabled Install is keyboard-focusable and keeps its visible focus outline (' + ring.st + ' ' + ring.w + ')');
+    await setLook('light', 'default');
+    const cons = await q.evaluate(() => getComputedStyle(document.querySelector('aside.console')).backgroundColor);
+    ok(lum(cons) < 0.1, 'A6: the compiled-prompt console is still dark in light mode (' + cons + ')');
+    await q.evaluate(() => { document.getElementById('catInstallBtn').focus(); });
+    await Promise.all([q.waitForNavigation({ waitUntil: 'load' }).catch(() => {}), q.keyboard.press('Enter')]);
+    await q.waitForTimeout(500);
+    const inst = await q.evaluate(() => ({ stored: !!localStorage.getItem('pb-catalog-v1'), marker: window.__marker || null, rev: CATALOG.rev, cmds: Object.values(CATALOG.BOT_CMDS).reduce((a, x) => a + x.length, 0) }));
+    ok(inst.stored && inst.marker === null && inst.rev === big.rev && inst.cmds === Object.values(big.BOT_CMDS).reduce((a, x) => a + x.length, 0), 'A6: after Show all, Enter on Install installs the 631-change catalog and reloads (disposable browser profile only): rev ' + inst.rev + ', ' + inst.cmds + ' commands');
+    await q.context().close();
+    const r = await open();
+    const small = await r.evaluate(() => { const c = JSON.parse(JSON.stringify(cleanCatalog(BUILTIN_CATALOG))); c.rev = CATALOG.rev + 1; c.BOT_CMDS.ChatGPT.push(Object.assign({}, c.BOT_CMDS.ChatGPT[0], { l: 'One more', t: 'onemore' })); return c; });
+    await r.evaluate(() => { document.getElementById('catImportBox').hidden = false; }); await r.fill('#catImportText', JSON.stringify(small)); await r.click('#catImportGo');
+    const sm = await r.evaluate(() => { const e = document.getElementById('catInstallBtn'), s = getComputedStyle(e); return { d: e.disabled, a: e.getAttribute('aria-disabled'), bs: s.borderTopStyle, c: s.cursor }; });
+    ok(!sm.d && sm.a === null && sm.bs === 'none' && sm.c === 'pointer', 'A6: a small change list leaves Install enabled and styled as enabled');
+    await r.context().close();
+  }
+
   /* =============================== B: status wording =============================== */
   const chipsInDom = async page => {
     let n = 0;
