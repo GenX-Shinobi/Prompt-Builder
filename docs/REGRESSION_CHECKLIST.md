@@ -110,7 +110,7 @@ Browser/device details were not recorded. The owner did not report performing th
 ## Release record
 
 **Version:** 5.4.0 (not released)  
-**Release branch / commit:** `release/v5.4.0` at `023171dc60af78d43081a447d41009f153d82127` (corrective PR #3 not yet merged)  
+**Release branch / commit:** `release/v5.4.0` at `ad459df8c014fc01dce893ff5374e4e4d8e2280a` (Test 4 corrective PR #3 merged)  
 **Corrective branch / commit:** `fix/v5.4.0-test4-install-button-state` at `0bdeb9622d2a0a5a1ad49d48711aa8c768cf7478`  
 **Date:** 2026-11-20  
 **Browsers / devices:** automated headless Chromium 157.0.8103.78 only (fresh clone, Linux, Node v22.23.5, Playwright 1.63.0); owner browser/device not yet recorded  
@@ -134,7 +134,7 @@ Claude reports the following verification in `fix/v5.4.0-test4-install-button-st
 
 These corrective technical checks are **Claude-reported** except the owner's six-test acceptance result, which is **owner-verified**. The corrective commit was merged into `release/v5.4.0` through PR #3 (merge commit `ad459df8`). `main` remains unchanged.
 
-**Integration status:** PR #3 is open from `fix/v5.4.0-test4-install-button-state` into `release/v5.4.0`. GitHub's create-PR response reports `mergeable=false`; investigate before any merge. No release approval is implied.
+**Integration status:** PR #3 merged into `release/v5.4.0` at `ad459df8c014fc01dce893ff5374e4e4d8e2280a`. `main` remains unchanged. No release approval is implied.
 
 ### Test 4 corrective regression checks — completed on corrective branch
 
@@ -147,6 +147,6 @@ Claude reports the following verification in `fix/v5.4.0-test4-install-button-st
 - [x] Fresh 631-change scenario verified before and after Show all; installation tested only in a disposable browser profile.
 - [x] Owner repeated Test 4 using the correct corrective-branch index.html and original package; all six owner acceptance tests now PASS.
 
-These technical checks are **Claude-reported** except the six-test acceptance result, which is **owner-verified**. The corrective commit is proposed to the release branch in PR #3 and is not yet merged.
+These technical checks are **Claude-reported** except the six-test acceptance result, which is **owner-verified**. The corrective commit was merged into the release branch through PR #3 (merge commit `ad459df8`).
 
 **Integration status:** PR #3 is merged into `release/v5.4.0`; merge commit `ad459df8c014fc01dce893ff5374e4e4d8e2280a`. `main` remains unchanged. Formal release approval is still pending.
