@@ -67,5 +67,5 @@ After reporting, stop and wait. No merge or release action is authorized.
 - Files changed: `index.html`, `tests/browser_corrective.js`.
 - Claude-reported automated results: 49 + 18 + 120 = 187 passed, 0 failed, in worktree and fresh clone.
 - Owner acceptance: all six tests PASS after the owner repeated Test 4 with the correct file and original package.
-- PR #3: https://github.com/GenX-Shinobi/Prompt-Builder/pull/3, targeting `release/v5.4.0`; open and not merged. GitHub reported `mergeable=false` at creation; investigate before merge.
-- No merge, release, deployment, tag or change to `main` was performed.
+- PR #3: https://github.com/GenX-Shinobi/Prompt-Builder/pull/3, merged into `release/v5.4.0` with merge commit `ad459df8c014fc01dce893ff5374e4e4d8e2280a`.
+- PR #3 was merged into `release/v5.4.0` with owner authorization. No merge into `main`, release, deployment or tag was performed.
