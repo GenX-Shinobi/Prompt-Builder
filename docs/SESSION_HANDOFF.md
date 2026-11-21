@@ -20,28 +20,34 @@ Verify live GitHub and the actual Claude workspace before acting. Repository rec
 ## Current documentation workspace
 - Documentation PR #4 is open: https://github.com/GenX-Shinobi/Prompt-Builder/pull/4
 - PR #4 is documentation-only and targets `docs/project-control-baseline`, not `main` or `release/v5.4.0`.
-- The baseline documentation PR #1 remains open/unmerged unless live verification shows otherwise.
-- PR #3 was previously confirmed merged into `release/v5.4.0`; verify current branch state before relying on this.
-- Do not merge PR #1 or #4, or alter their base/head, without explicit Owner approval.
-- The actual Claude local workspace has not been inspected in this session.
+- The baseline documentation PR #1 remains open and unmerged.
+- PR #3 is merged into `release/v5.4.0`.
+- PR #1 and PR #4 must remain open; do not merge either without explicit Owner approval.
+- Live comparison confirms PR #4 is 16 commits ahead of its base and has no behind commits. Its changed-file list remains documentation-only.
+- The actual Claude local workspace has not been inspected in this session. Do not claim otherwise.
 
 ## Release position
-AI Prompt Builder Hub v5.4.0 is **not yet publicly released or release-approved**. Prior records say owner browser acceptance was six of six PASS and Claude reported 187 automated tests passing with zero failures; these are historical claims and must be checked against current evidence. Independent reproduction of the three documented Playwright suites and verification of the actual Claude workspace remain the next technical checks.
+AI Prompt Builder Hub v5.4.0 is **not yet publicly released or release-approved**. Historical records report owner browser acceptance of six of six scenarios and 187 Claude-reported automated passes, but the three Playwright suites have not been independently reproduced in this session. The actual Claude workspace and current test evidence must be verified before relying on those reports.
 
 Do not modify `main`, merge release branches, publish, deploy, tag, release, or begin v5.5.0 without separate explicit Owner authorization. Preserve all v5.4.0 release gates.
 
 ## Approved cross-project sequence
-
 1. Finish documentation maintenance and handoff cleanup.
 2. Complete v5.4.0 release closeout and independent verification.
 3. Obtain explicit Owner release approval and make v5.4.0 publicly available.
 4. Only after public availability, resume CHIMERA work.
-5. After CHIMERA resumes, consider using accumulated Prompt Builder future-release ideas as practical CHIMERA test material, under a separate bounded plan.
+5. After CHIMERA resumes, consider accumulated Prompt Builder future-release ideas as practical CHIMERA test material under a separate bounded plan.
 
-CHIMERA is a separate project and repository: https://github.com/GenX-Shinobi/CHIMERA. Its work is paused until v5.4.0 is publicly released. No project memory, employee permissions, statutes or release authority transfers between repositories.
+CHIMERA is a separate project and repository: https://github.com/GenX-Shinobi/CHIMERA. Its implementation, integration and testing remain paused until v5.4.0 is publicly released. No project memory, employee permissions, statutes or release authority transfers between repositories.
 
-## Presentation asset note
-The Owner noticed that the current project README/repository preview visual appears outdated. Investigate whether this refers to an image embedded in a README, a tracked preview asset (the docs branch contains a `Preview.jpg` asset), or GitHub's repository social-preview image. Do not replace it with an invented image. Identify the exact display surface and current source before proposing an update. This is documentation/presentation maintenance, not a v5.4.0 application-code change unless separately authorized.
+## README preview image — Prompt Builder
+The stale visual is in **Prompt Builder**, not CHIMERA. The current `readme.md` embeds `Preview.jpg` directly:
+```md
+![AI Prompt Builder Preview](Preview.jpg)
+```
+Live GitHub inspection confirms that `Preview.jpg` has the same blob SHA on `main` and `docs/chimera-session-maintenance` (`03cdbe8a14a4cadf7b215895e2b724c68154e71c`). The documentation PR has not refreshed it. This is the README image, not evidence of a separate GitHub social-preview setting.
 
-## Single next action
-Verify the actual Claude workspace and independently run the three documented Playwright suites against the current v5.4.0 release branch. Report the results in plain English, identify the single remaining release gate, and update this handoff with exact evidence. Do not merge or release.
+**Remaining asset task:** replace `Preview.jpg` with a genuine capture of the current v5.4.0 interface, then verify the README renders it. Do not substitute invented artwork or a mock screenshot. The current Claude/local browser workspace was not accessible for a fresh capture in this session, so this visual update remains explicitly outstanding. It is presentation maintenance, not permission to change application code or release scope.
+
+## Single next action on resume
+Resume AI Prompt Builder Hub v5.4.0 release closeout. First inspect the actual Claude workspace and current release-branch evidence; arrange independent reproduction of the three documented Playwright suites. Capture and refresh the README preview from the verified current build as part of the remaining presentation maintenance. Report the single remaining release gate in plain English. Do not merge, publish, deploy, tag or release without explicit Owner approval.
