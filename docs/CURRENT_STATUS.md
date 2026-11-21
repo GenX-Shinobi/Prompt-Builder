@@ -114,7 +114,7 @@ The final owner acceptance record supersedes all earlier references in this docu
 3. ~~Implement focused Test 4 correction~~ — commit `0bdeb962` on the dedicated corrective branch; Claude reports 49 + 18 + 120 = **187** automated checks passed, 0 failed, in both worktree and fresh clone. These are implementer-reported.
 4. ~~Create reviewable integration proposal~~ — PR #3 merged into `release/v5.4.0` at `ad459df8`; `main` unchanged.
 5. Independently reproduce automated suites where feasible.
-6. Resolve PR #3 mergeability and obtain explicit owner approval before merging into `release/v5.4.0`.
+6. ~~Resolve PR #3 mergeability and obtain explicit owner approval before merging into `release/v5.4.0`~~ — completed; PR #3 was merged into `release/v5.4.0` at `ad459df8c014fc01dce893ff5374e4e4d8e2280a` with Owner authorization.
 7. README: prepared on docs branch; apply at PR #1 merge only after approved release code reaches `main`.
 8. Obtain separate explicit owner release approval.
 
@@ -163,3 +163,17 @@ This section supersedes earlier branch-head snapshots above; older checkpoint en
 **Current release status:** v5.4.0 remains unapproved. Independent reproduction and remaining cross-browser/mobile/accessibility/offline checks remain outstanding as recorded in the release checklist and roadmap.
 
 **Single next action:** verify the actual Claude workspace and arrange an independent run of the three documented Playwright suites against the current release branch. Do not merge, publish, deploy, tag or release.
+
+
+## Latest maintenance checkpoint — 2026-11-21 (session closeout)
+
+- Prompt Builder documentation PR #4 is open and targets `docs/project-control-baseline`; it remains documentation-only. Live compare: 16 commits ahead, 0 behind at the start of this closeout; after the handoff update, verify its current head before acting.
+- PR #1 remains open/unmerged. PR #3 remains merged into `release/v5.4.0`. Neither documentation PR is authorized to merge.
+- The actual Claude local workspace was not accessible or inspected in this session. Do not claim its branch, working-tree or unpushed state is known.
+- The three documented Playwright suites were not independently run in this session. Container network access could not resolve GitHub, and the local Claude workspace was unavailable. Historical 187-pass results remain Claude-reported, not independently reproduced.
+- README visual: `readme.md` embeds `Preview.jpg`. GitHub confirms the image blob is unchanged between `main` and the maintenance branch (SHA `03cdbe8a14a4cadf7b215895e2b724c68154e71c`). The README preview is the stale asset; no separate social-preview setting has been verified. A genuine screenshot from the current v5.4.0 build is still required. Do not replace it with generated mock artwork.
+- Approved sequence: finish documentation/presentation maintenance; complete v5.4.0 closeout and explicit release approval; publish v5.4.0; only then resume CHIMERA and later consider accumulated Prompt Builder roadmap work as bounded CHIMERA test material.
+
+**Current release status:** v5.4.0 remains not publicly released and not release-approved. No application code, `main`, release branch, merge, tag, deployment or publication was changed in this maintenance pass.
+
+**Single next action:** resume Prompt Builder v5.4.0 closeout by verifying the actual Claude workspace and arranging independent execution of all three Playwright suites; capture the README preview from the verified current build. Do not merge or release.
