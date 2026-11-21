@@ -21,7 +21,7 @@ Verify live GitHub and the actual Claude workspace before acting. Repository rec
 - docs/project-control-baseline: c114217903d72099c11f301eea22d2b9747b1b6c
 - ops/claude-agent-pilot: 61f045a96b5b0d0683e378bbca1c9b89f01e39c9
 - PR #1 remains open and unmerged. PR #3 is merged into release/v5.4.0.
-- Documentation changes from this pass are isolated on docs/chimera-session-maintenance, based on docs/project-control-baseline.
+- Documentation changes from this pass are isolated on docs/chimera-session-maintenance, based on docs/project-control-baseline. PR #4 is open for review against that documentation branch: https://github.com/GenX-Shinobi/Prompt-Builder/pull/4.
 - The actual Claude local workspace was not inspected.
 
 ## Release position
