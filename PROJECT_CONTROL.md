@@ -158,3 +158,28 @@ Clearly separate source inspection, automated execution, independent review and 
 - The owner retains authority over product direction, implementation authorization, branch integration, merges and releases.
 - Parallel work is allowed on separate branches and non-overlapping files. During Test 4 correction, Claude uses a new corrective branch from `release/v5.4.0`; management maintenance remains on `docs/project-control-baseline`. Claude must not modify the docs branch.
 - The Test 4 corrective implementation branch and PR #3 have been verified on GitHub. Do not claim a fresh local Claude workspace inspection unless it is actually performed.
+## Separate initiative boundary — CHIMERA (recorded 2026-11-21)
+
+CHIMERA is a separate public repository and independent project: https://github.com/GenX-Shinobi/CHIMERA
+
+Its mission is to develop a reusable, open-source, free-to-use, platform-independent framework for building, governing and coordinating AI workforces. AI Prompt Builder Hub may become its first adopter only after Prompt Builder v5.4.0 is formally released and the owner separately authorizes a bounded integration milestone.
+
+**Separation rules**
+- Keep the repositories, roadmaps, statutes, memory, task queues and release processes separate.
+- CHIMERA employees, permissions and memory do not automatically transfer into Prompt Builder.
+- Prompt Builder project requirements and release authority do not automatically transfer into CHIMERA.
+- Any future integration must be assessed against Prompt Builder's own free-first mission, standalone architecture, scope and project-specific rules.
+- CHIMERA planning is not an active Prompt Builder implementation task and does not change v5.4.0 release gates or authorize v5.5.0.
+
+## Maintenance checkpoint — 2026-11-21
+
+Live GitHub access was rechecked. Repository permissions reported by GitHub search include push access for the connected account.
+
+- main: d4ea76f1e3b896f8494529295e2e75d049cbfc93
+- release/v5.4.0: ad459df8c014fc01dce893ff5374e4e4d8e2280a
+- docs/project-control-baseline: c114217903d72099c11f301eea22d2b9747b1b6c at start of this maintenance pass.
+- ops/claude-agent-pilot: 61f045a96b5b0d0683e378bbca1c9b89f01e39c9
+- PR #1 remains open and unmerged; PR #3 is closed/merged into release/v5.4.0.
+- Documentation maintenance is being prepared on a separate branch, docs/chimera-session-maintenance, based on the project-control branch.
+
+These are repository observations only. The actual Claude local workspace was not inspected in this pass. The release is not approved. Do not merge, tag, publish, deploy, modify main, merge PR #1, or begin v5.5.0 without the owner's separate authorization.
