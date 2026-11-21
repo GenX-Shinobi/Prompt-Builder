@@ -11,7 +11,7 @@
 
 **Last checked:** 2026-11-21 (see latest maintenance checkpoint below; re-verify before acting)
 
-**Where these documents live:** the original project-control baseline is on `docs/project-control-baseline` (open PR #1). The 2026-11-21 maintenance addenda are on `docs/chimera-session-maintenance` (open PR #4), based on that baseline. These documents are **not** on `main` or `release/v5.4.0`. Read the applicable branch explicitly; do not copy management documents onto application/release branches.
+**Where these documents live:** the original project-control baseline is on `docs/project-control-baseline` (open PR #1). The 2026-11-21 maintenance addenda are on `docs/chimera-session-maintenance` (open PR #4: https://github.com/GenX-Shinobi/Prompt-Builder/pull/4), based on that baseline. These documents are **not** on `main` or `release/v5.4.0`. Read the applicable branch explicitly; do not copy management documents onto application/release branches.
 
 ## Resume phrase
 
