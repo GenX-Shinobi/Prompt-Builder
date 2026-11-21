@@ -1,53 +1,61 @@
 # AI Prompt Builder Hub — Session Handoff
 
-**Checkpoint:** 2026-11-21  
+**Checkpoint:** 2026-11-21, after PR #6 (v5.4.0 code merged into `main`)  
+**Written by:** Claude Code (Engineering Lead), Owner-assigned documentation closeout  
 **Repository:** https://github.com/GenX-Shinobi/Prompt-Builder  
-**Authority:** Product Owner retains final approval for scope, merges and releases.
+**Authority:** Product Owner retains final approval for scope, merges and releases. ChatGPT reviews this handoff.
 
 ## Read first
-1. PROJECT_CONTROL.md
-2. ROADMAP.md
-3. docs/CURRENT_STATUS.md
+1. docs/CURRENT_STATUS.md — top section "Current position — 2026-11-21, after PR #6"
+2. PROJECT_CONTROL.md
+3. ROADMAP.md
 4. docs/AI_WORK_RULES.md
 5. docs/REGRESSION_CHECKLIST.md
-6. docs/CLAUDE_TASK.md
-7. docs/IDEA_INBOX.md
-8. docs/CHIMERA_RELATIONSHIP.md
-9. This handoff
+6. docs/IDEA_INBOX.md
+7. docs/CHIMERA_RELATIONSHIP.md
+8. This handoff
 
-Verify live GitHub and the actual Claude workspace before acting. Repository records are the source of truth; this handoff is a dated snapshot.
+Verify live GitHub before acting. Repository records are the source of truth; this handoff is a dated snapshot.
 
-## Current documentation workspace
-- Documentation PR #4 is open: https://github.com/GenX-Shinobi/Prompt-Builder/pull/4
-- PR #4 is documentation-only and targets `docs/project-control-baseline`, not `main` or `release/v5.4.0`.
-- The baseline documentation PR #1 remains open and unmerged.
-- PR #3 is merged into `release/v5.4.0`.
-- PR #1 and PR #4 must remain open; do not merge either without explicit Owner approval.
-- Live comparison at this checkpoint: PR #4 is 19 commits ahead of `docs/project-control-baseline`, 0 behind; current head before this handoff refresh was `dc6ef9448b22f892da32c77a855c5efb3bc28315`. Its eight changed files are documentation-only.
-- The actual Claude local workspace has not been inspected in this session. Do not claim otherwise.
+## Where things stand
+- **Code:** `main` is `fc30269`, the merge of PR #6. Its `index.html` is byte-identical to the verified `release/v5.4.0` code (`ad459df`). `release/v5.4.0` is kept.
+- **Testing:** GitHub Actions ran all three Playwright suites on the same code four times: 187 passed, 0 failed every time. The Owner relied on this for PR #6. Owner browser acceptance: six of six PASS.
+- **Live site:** GitHub Pages republished automatically from `main`, so the public live app now runs v5.4.0. No tag or GitHub Release exists for v5.4.0.
+- **Documentation:** PR #4 (→ `docs/project-control-baseline`) and PR #1 (→ `main`, draft) are open and unmerged. `main` still has the older README text and the old preview image.
+- **Preview image:** the `Preview.jpg` on PR #4 is a genuine GitHub Actions capture of v5.4.0 on first open (validated; details in CURRENT_STATUS). The README references it with descriptive alt text and a caption.
 
 ## Release position
-AI Prompt Builder Hub v5.4.0 is **not yet publicly released or release-approved**. Historical records report owner browser acceptance of six of six scenarios and 187 Claude-reported automated passes, but the three Playwright suites have not been independently reproduced in this session. The actual Claude workspace and current test evidence must be verified before relying on those reports.
+v5.4.0 is **not formally released or release-approved**. Outstanding gates: real-device mobile/touch, screen reader, Firefox/Safari and manual contrast checks; README/status accurate on `main` (needs PR #4 then PR #1); a decision on a version-log entry for the post-merge commits; explicit Owner release approval, then tag and GitHub Release.
 
-Do not modify `main`, merge release branches, publish, deploy, tag, release, or begin v5.5.0 without separate explicit Owner authorization. Preserve all v5.4.0 release gates.
+Do not merge PR #4 or PR #1, modify `main`, publish, deploy, tag, release, or begin v5.5.0 or CHIMERA work without separate explicit Owner authorization.
 
-## Approved cross-project sequence
+## Safe conflict-resolution plan (prepared, not executed)
+Simulated with `git merge-tree` on 2026-11-21; nothing was merged.
+
+1. **PR #4 → `docs/project-control-baseline`.** Fast-forward, no conflicts. Requires Owner approval. Merge with GitHub's normal merge button.
+2. **Bring `main` into PR #1's branch.** On `docs/project-control-baseline`, merge `origin/main` (a normal merge, **not** a rebase, so no force-push is needed). Only `readme.md` conflicts. Resolve it by keeping the documentation branch's `readme.md` in full (the PR #4 version, which describes v5.4.0 and the current preview).
+3. **Check the result before pushing.** `index.html`, `catalog.json`, `tests/*` and `contributing.md` must match `main` exactly (the simulation confirms they do); `Preview.jpg` must be blob `f59e5837…`; no conflict markers anywhere. Optionally re-run the three suites on that tree; the application files are unchanged, so they should give the same 187.
+4. **Push** `docs/project-control-baseline` normally. PR #1 should then show as mergeable with no conflicts. Mark it "Ready for review" (it is a draft).
+5. **Owner merges PR #1 into `main`.** Note: Pages will then republish, so `PROJECT_CONTROL.md`, `ROADMAP.md`, `docs/`, the acceptance kit and `.claude/commands/pb-v54.md` will also be reachable on the live site. They are already public in the repository; this only affects the website.
+6. Retire the redundant branches (`docs/v5.4.0-preview-capture`, `verify/v5.4.0-independent-playwright`, `fix/v5.4.0-test4-install-button-state`) after the Owner agrees. Retire the verify branch first: its workflow has write access and can push a new `Preview.jpg` to the PR #4 branch if anything is pushed to it.
+
+Steps 2–4 change only documentation branches, but each still needs the Owner's go-ahead because they lead directly into the PR #1 merge.
+
+## Notes for ChatGPT's review
+- Confirm the CI runs as the "independent reproduction" label (Owner already relied on them).
+- Record whether the automatic Pages update from PR #6 is acceptable under the publication gate.
+- PR #5's closing note is inaccurate (the CI runs did execute and pass); correct it on GitHub if wanted.
+- Raw evidence lives on `evidence/v5.4.0-ad459df-verification` (`2d22048`), not on PR #4. Decide whether to keep it as a reference branch or merge it.
+- Pre-existing cosmetic items, not blockers: the chatbot note under the cards is unstyled (larger text, visible in the preview image); header controls overlap the eyebrow text at ≤600 px. Candidates for IDEA_INBOX.
+
+## Approved cross-project sequence (unchanged)
 1. Finish documentation maintenance and handoff cleanup.
 2. Complete v5.4.0 release closeout and independent verification.
-3. Obtain explicit Owner release approval and make v5.4.0 publicly available.
-4. Only after public availability, resume CHIMERA work.
+3. Obtain explicit Owner release approval and make v5.4.0 formally released.
+4. Only after that, resume CHIMERA work.
 5. After CHIMERA resumes, consider accumulated Prompt Builder future-release ideas as practical CHIMERA test material under a separate bounded plan.
 
-CHIMERA is a separate project and repository: https://github.com/GenX-Shinobi/CHIMERA. Its implementation, integration and testing remain paused until v5.4.0 is publicly released. No project memory, employee permissions, statutes or release authority transfers between repositories.
-
-## README preview image — Prompt Builder
-The stale visual is in **Prompt Builder**, not CHIMERA. The current `readme.md` embeds `Preview.jpg` directly:
-```md
-![AI Prompt Builder Preview](Preview.jpg)
-```
-Live GitHub inspection confirms that `Preview.jpg` has the same blob SHA on `main` and `docs/chimera-session-maintenance` (`03cdbe8a14a4cadf7b215895e2b724c68154e71c`). The documentation PR has not refreshed it. This is the README image, not evidence of a separate GitHub social-preview setting.
-
-**Remaining asset task:** replace `Preview.jpg` with a genuine capture of the current v5.4.0 interface, then verify the README renders it. Do not substitute invented artwork or a mock screenshot. The current Claude/local browser workspace was not accessible for a fresh capture in this session, so this visual update remains explicitly outstanding. It is presentation maintenance, not permission to change application code or release scope.
+CHIMERA is a separate project and repository: https://github.com/GenX-Shinobi/CHIMERA. No project memory, employee permissions, statutes or release authority transfer between repositories.
 
 ## Single next action on resume
-Resume AI Prompt Builder Hub v5.4.0 release closeout. First inspect the actual Claude workspace and current release-branch evidence; arrange independent reproduction of the three documented Playwright suites. Capture and refresh the README preview from the verified current build as part of the remaining presentation maintenance. Report the single remaining release gate in plain English. Do not merge, publish, deploy, tag or release without explicit Owner approval.
+ChatGPT reviews the 2026-11-21 checkpoint and asks the Owner for one plain-English approval covering: the live-site status, merging PR #4, and resolving and merging PR #1 by the plan above. Do nothing else until that answer is recorded.

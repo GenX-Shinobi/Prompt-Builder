@@ -2,14 +2,90 @@
 
 > Dated handoff snapshot. Re-check GitHub and local workspaces before acting; this file is not a live connection.
 
-**Last checked:** 2026-11-20 (corrective PR #3 merged into release branch)  
+**Last checked:** 2026-11-21 ~16:50 UTC (after PR #6 merged the v5.4.0 code into `main`)  
 **Repository:** https://github.com/GenX-Shinobi/Prompt-Builder  
-**Default branch:** `main`  
-**Project docs branch:** `docs/project-control-baseline`  
-**Release branch:** `release/v5.4.0`  
+**Default branch:** `main` (now contains the v5.4.0 code)  
+**Project docs branches:** `docs/project-control-baseline` (PR #1) and `docs/chimera-session-maintenance` (PR #4)  
+**Release branch:** `release/v5.4.0` (kept; not deleted)  
 **Product owner:** repository owner
 
-## Verified GitHub state (checked 2026-11-20)
+## Current position — 2026-11-21, after PR #6 (supersedes everything below where they differ)
+
+Labels: **Verified** = checked against live GitHub/Git in this pass by Claude Code. **CI** = GitHub Actions run, not authored by Claude. **Claude-reported** = Claude's own run. **Owner** = Owner decision or test.
+
+### Repository state (Verified)
+
+| Ref / item | Value | Note |
+|---|---|---|
+| `main` | `fc30269615eff28b31a3772e3b40d5ade2c80aa8` | Merge commit of PR #6 (2026-11-21 16:31:54 UTC), parents `d4ea76f` + `ad459df`. Changed only `index.html` and `tests/browser_corrective.js`. |
+| `index.html` on `main` | blob `856fb513…` | Byte-identical to `release/v5.4.0` at `ad459df` and to the CI-tested copy. Declares `currentVersion: "5.4.0"`. |
+| `release/v5.4.0` | `ad459df8c014fc01dce893ff5374e4e4d8e2280a` | Unchanged; branch retained as PR #6 requested. |
+| PR #6 | Merged | "Integrate verified v5.4.0 corrective release into main". Owner-approved code integration only; its description keeps documentation merges, publication, deployment, tags and GitHub Release separately gated. |
+| PR #1 | Open, **draft**, unmerged | `docs/project-control-baseline` at `c114217` → `main`. |
+| PR #4 | Open, unmerged | `docs/chimera-session-maintenance` → `docs/project-control-baseline`. Head was `c501c2e` before this pass; see `git log` for the new head. |
+| PR #5 | Closed, not merged | Temporary verification PR. Its closing note ("GitHub did not expose a workflow run") is inaccurate: the runs below exist and passed. |
+| Tags / GitHub Releases | `v5.2.0` only | No v5.4.0 tag or GitHub Release exists. |
+| GitHub Pages | Deployed from `main@fc30269` | The automatic "pages build and deployment" workflow succeeded at 16:31:56 UTC. The live page shows v5.4.0-only features (Start here panel, Dev Bay chatbot catalog). Pages settings cannot be read through Claude's connection. |
+
+**Important consequence (Verified):** because GitHub Pages publishes `main` automatically, merging PR #6 made v5.4.0 the version the public live app serves. No one ran a separate deployment; it happened as a side effect of the approved code merge. The formal release steps (tag, GitHub Release, release announcement) have **not** happened. ChatGPT and the Owner should record whether this is acceptable or whether the "publish/deploy" gate needs restating.
+
+### Test evidence (current)
+
+| Evidence | Result | Label |
+|---|---|---|
+| GitHub Actions workflow `v5.4.0-independent-verification.yml`, branch `verify/v5.4.0-independent-playwright`, runs [44922456009](https://github.com/GenX-Shinobi/Prompt-Builder/actions/runs/44922456009), [44922499783](https://github.com/GenX-Shinobi/Prompt-Builder/actions/runs/44922499783), [44922527496](https://github.com/GenX-Shinobi/Prompt-Builder/actions/runs/44922527496), [44922534308](https://github.com/GenX-Shinobi/Prompt-Builder/actions/runs/44922534308) | All three suites passed in every run: 49 + 18 + 120 = **187 passed, 0 failed**, exit 0. Two runs show "failure" only because the later evidence-saving step lost a push race; the test step passed in all four (Verified from job step results). | **CI** — accepted by the Owner as the independent verification cited in PR #6 (runs 44922456009 and 44922527496). ChatGPT to confirm the label in its review. |
+| What CI tested | `index.html`, `tests/browser_suite_1.js`, `tests/browser_suite_2.js`, `tests/browser_corrective.js` on the verify branch are byte-identical to `ad459df` and to `main@fc30269` (Verified by blob comparison). | Verified |
+| Environment | ubuntu-latest, Node v22.23.5, npm 10.9.9, Playwright 1.63.0, Chromium `chromium-1243` | CI |
+| Claude fresh-checkout run of `ad459df` | 187 passed, 0 failed | Claude-reported |
+| Automated responsive / offline / downloaded-file / basic accessibility probes | Pass in headless Chromium; pre-existing header overlap at ≤600 px | Claude-reported |
+| Owner browser acceptance | Six of six PASS (2026-11-20) | Owner |
+| Raw logs and probe output | Branch `evidence/v5.4.0-ad459df-verification` at `2d22048`, folder `docs/test-evidence/v5.4.0-ad459df/`. No PR; not part of PR #4. | Verified location |
+
+No CI run has been made on the `main` merge commit itself; the only workflow on `main` is the Pages deployment. Because the tested files are byte-identical, this is a record-keeping note, not a gap in coverage.
+
+### README preview image (resolved on PR #4)
+
+- `Preview.jpg` on PR #4 (blob `f59e5837…`, 1440 × 3982, JPEG) was produced by GitHub Actions run 44922527496: Playwright opened `index.html` (blob `856fb513…`, the v5.4.0 code now on `main`) in a fresh browser with no saved data, 1440 × 1000 viewport, waited one second and took a full-page capture. The bot then committed it to PR #4 as `c501c2e`.
+- Claude Code re-checked it in this pass: inspected every section of the image, and made a fresh capture of `main`'s `index.html` the same way. Both show the same first-open screen in the same order: header with Default/Layout/Theme, Start here panel open, nine chatbot cards with ChatGPT selected, Bot Commands for ChatGPT, empty core prompt, Saved presets, Dev Bay with the chatbot catalog section. No console errors, no network requests, no dialogs. The only difference is page height (3982 vs 4099 px) from font fallback between machines.
+- **Conclusion (Verified):** the PR #4 image is a genuine, unstaged capture of v5.4.0 in its default first-open state on a desktop browser. It does not show mobile layout or dark theme.
+- The README already embeds `Preview.jpg`; its alt text and caption now describe it. `main` still shows the old image (blob `03cdbe8…`, uploaded 2026-11-19) until PR #4 and then PR #1 are merged.
+- `docs/v5.4.0-preview-capture` (`90c4887`) holds a second genuine capture made by Claude. PR #6 did not include it, so the PR #4 route has been taken. That branch is now redundant; retire it with Owner approval so the two images cannot conflict later.
+
+### Mergeability (simulated with `git merge-tree`; nothing merged)
+
+| Merge | Position | Result |
+|---|---|---|
+| PR #4 → `docs/project-control-baseline` | 22 ahead, 0 behind after this pass | **Clean fast-forward.** Documentation files and `Preview.jpg` only. |
+| PR #1 → `main` (today) | 53 ahead, 12 behind; common ancestor `09d6060` | **One conflict: `readme.md`.** Every application file in the merged result stays exactly as on `main` (`index.html`, `catalog.json`, `tests/*`, `contributing.md`). |
+| PR #1 → `main` after PR #4 lands | same | Same single `readme.md` conflict; `Preview.jpg` comes in cleanly as the new image. |
+
+GitHub's own mergeability flags for PR #1 and PR #4 read "unknown" at check time (GitHub had not recomputed them); the simulation above is the reliable result. The conflict-resolution plan is in `SESSION_HANDOFF.md`.
+
+### Remaining release gates (current)
+
+| Gate (ROADMAP) | Status |
+|---|---|
+| Automated output recorded | **Met** — CI logs and Claude logs saved |
+| Independent reproduction | **Met via CI**; Owner relied on it for PR #6. ChatGPT to confirm the label |
+| Offline / downloaded file | **Met (automated, headless Chromium)** — Claude-reported |
+| Desktop and mobile browser acceptance | **Partly met** — Owner desktop acceptance done; automated widths 320–1920 px pass; real phones/tablets, touch, Firefox and Safari not done |
+| Accessibility | Basic automated checks pass; screen reader and manual contrast audit not done |
+| README and status accurate on `main` | **Not met yet** — corrected README is on PR #4/PR #1, not on `main` |
+| Version history consistent | Open — no version-log entry for the post-merge corrective commits (version unchanged at 5.4.0); ChatGPT/Owner to decide whether one is needed |
+| Known limitations disclosed | Partly — README now lists outstanding checks; pre-existing cosmetic items are in the evidence README |
+| Owner explicit release approval | **Pending** |
+
+### Pending Owner decisions
+
+1. Accept that the live site already serves v5.4.0 (side effect of PR #6), or restate the publication gate.
+2. Approve merging PR #4 into `docs/project-control-baseline`.
+3. Approve resolving PR #1's `readme.md` conflict (keep the PR's version), marking PR #1 ready for review, and merging it into `main`.
+4. Formal v5.4.0 release approval, then the tag and GitHub Release.
+5. Branch housekeeping: retire `verify/v5.4.0-independent-playwright` (its workflow can push to the PR #4 branch), `docs/v5.4.0-preview-capture`, `fix/v5.4.0-test4-install-button-state`; decide whether `evidence/v5.4.0-ad459df-verification` should be merged or kept as a reference branch.
+
+**Single next action:** ChatGPT reviews this checkpoint and puts decisions 1–3 to the Owner as one plain-English approval. No merge, tag, release or v5.5.0/CHIMERA work until then.
+
+## Historical: verified GitHub state (checked 2026-11-20) — superseded by the section above
 
 | Ref | Commit | Position |
 |---|---|---|
@@ -107,7 +183,7 @@ The final owner acceptance record supersedes all earlier references in this docu
 
 **Single next action:** complete the remaining v5.4.0 release-readiness checks, beginning with independent reproduction of the automated suites. No publication or release is authorized.
 
-## Remaining release gates
+## Remaining release gates (as of 2026-11-20 — superseded by the 2026-11-21 gate table at the top)
 
 1. ~~Interactive added/removed record details and three-suite execution~~ — Claude-reported at `023171d`: 178 passed, 0 failed; not independently reproduced.
 2. ~~Owner browser acceptance~~ — **all six tests PASS**, including Test 4 repeated with the correct corrective-branch file and original package.
@@ -125,6 +201,7 @@ No v5.5.0 implementation before v5.4.0 has passed these gates. Release restricti
 - 2026-11-20 — Documentation reconciled to release head `52bcdea`; test record split into reported versus independently reproduced; continuity protocol added to `PROJECT_CONTROL.md`. Documentation-only.
 - 2026-11-20 — README reconciled on the docs branch (not merged); release-readiness audit recorded; owner decisions listed in `PROJECT_CONTROL.md`. Documentation only.
 - 2026-11-20 — Release head advanced to `023171d` (test-only A5 coverage). Fresh-clone run of all three suites: 178 passed, raw logs saved. Owner acceptance kit built and self-verified. No production code, `main` or PR changes.
+- 2026-11-21 — PR #6 merged v5.4.0 code into `main` (`fc30269`); Pages redeployed automatically. Claude Code (documentation closeout, Owner-assigned) recorded CI verification, validated the PR #4 preview image, updated README status text and simulated PR #4/PR #1 merges. Documentation-only commit on PR #4; nothing merged, tagged or released. See the top section.
 
 
 ## Latest documentation checkpoint — 2026-11-20

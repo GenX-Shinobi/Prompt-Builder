@@ -12,13 +12,15 @@ The free-first, chatbot-independent mission and project scope in [PROJECT_CONTRO
    - `node tests/browser_suite_1.js`
    - `node tests/browser_suite_2.js`
    - `node tests/browser_corrective.js`
-4. **Independently review** the final release-branch commit (`023171d`) and the test evidence. May run alongside step 5.
+   - **Update 2026-11-21:** independently reproduced by GitHub Actions on the final code (`ad459df`, now on `main`): 49 + 18 + 120 = 187 passed, 0 failed, four runs.
+4. ~~**Independently review** the final release-branch commit and the test evidence~~ — CI verification relied on by the Owner for PR #6; ChatGPT to confirm the label.
 5. ~~Owner real-browser acceptance~~ — **all six tests PASS**. The owner corrected the initial Test 4 file-selection/reporting error, downloaded the correct corrective-branch index.html, repeated only Test 4 with the original package, and updated all six fields.
 6. ~~Reconcile the READMEs~~ — **prepared on the docs branch (not merged).** Apply at PR #1 merge by keeping the PR's `readme.md`; merge PR #1 only after the release code is in `main`. The owner decides when.
 7. ~~Merge the accepted Test 4 correction into `release/v5.4.0`~~ — complete via PR #3, merge commit `ad459df8`.
-8. Complete remaining release-readiness gates, then obtain separate explicit owner release approval. The owner decides how the release branch reaches `main`.
+8. ~~Bring the release code into `main`~~ — PR #6 merged at `fc30269` on 2026-11-21 (Owner-approved, code only). GitHub Pages updated automatically, so the live app now runs v5.4.0; no tag or GitHub Release yet.
+9. Land the documentation (PR #4 → baseline, then PR #1 → `main`, keeping the PR's `readme.md`), complete the remaining checks (real-device mobile, screen reader, Firefox/Safari, manual contrast, version-log decision), then obtain separate explicit owner release approval.
 
-**Corrective implementation:** complete on `fix/v5.4.0-test4-install-button-state` at `0bdeb962`; PR #3 merged into `release/v5.4.0` at `ad459df8c014fc01dce893ff5374e4e4d8e2280a` with owner authorization. `main` remains unchanged.  
+**Corrective implementation:** complete on `fix/v5.4.0-test4-install-button-state` at `0bdeb962`; PR #3 merged into `release/v5.4.0` at `ad459df8c014fc01dce893ff5374e4e4d8e2280a` with owner authorization; PR #6 merged the release branch into `main` at `fc30269`.  
 **Claude Code shorthand:** `/pb-v54`.
 
 ## NEXT — roadmap reassessment only after v5.4.0 release
