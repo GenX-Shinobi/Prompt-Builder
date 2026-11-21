@@ -190,6 +190,8 @@ button:focus-visible { outline: 3px solid var(--accent-soft); outline-offset: 2p
 .btn-ghost:hover { opacity: 1; }
 .btn-ai { background: var(--accent); color: #fff; }
 .btn-ai:hover { filter: brightness(1.1); }
+/* Locked state (e.g. Install until a large change list is fully shown): clearly unlike the enabled button without relying on colour alone: no fill, dashed border, muted text, not-allowed cursor, no hover/press effect. Padding is reduced by the border width so the button keeps its size. */
+.btn-ai:disabled, .btn-ai[aria-disabled="true"], .btn-ai:disabled:hover, .btn-ai:disabled:active { background: transparent; color: var(--muted); border: 2px dashed var(--muted); padding: 8px 14px; box-shadow: none; filter: none; transform: none; cursor: not-allowed; }
 .btn-secondary { background: var(--card-2); color: var(--ink); border: 1.5px solid var(--line); }
 .btn-mod-trigger { background: linear-gradient(120deg, var(--accent-2), #e0348a); color: #fff; box-shadow: 0 10px 22px -10px #e0348a; }
 .btn-mod-trigger:hover { filter: brightness(1.08); }
@@ -2042,7 +2044,7 @@ function showCatalogDiff(rawCat, label) {
         '<span id="catShownCount" role="status">' + (total > CAP ? 'Showing ' + CAP + ' of ' + total + ' changes. Install is turned off until you show all of them.' : 'Showing all ' + total + ' changes. Click a line to open its full values: the complete record for anything added or removed, or Before / After for shortened values.') + '</span>' +
         '<ul id="catDiffList">' + d.items.slice(0, CAP).map(li).join('') + '</ul>' +
         '<div class="row">' + (total > CAP ? '<button type="button" class="btn-secondary" id="catShowAllBtn">Show all ' + total + ' changes</button>' : '') +
-        '<button type="button" class="btn-ai" id="catInstallBtn"' + (total > CAP ? ' disabled aria-disabled="true"' : '') + '>Install and reload</button><button type="button" class="btn-secondary" id="catCancelBtn">Cancel</button></div>' +
+        '<button type="button" class="btn-ai" id="catInstallBtn" aria-describedby="catShownCount"' + (total > CAP ? ' disabled aria-disabled="true"' : '') + '>Install and reload</button><button type="button" class="btn-secondary" id="catCancelBtn">Cancel</button></div>' +
         '<div style="margin-top:6px;font-size:12px;color:var(--muted)">Reloading clears anything typed on the page. Saved presets are kept.</div>';
     document.getElementById('catInstallBtn').addEventListener('click', installCatalog);
     const all = document.getElementById('catShowAllBtn');
