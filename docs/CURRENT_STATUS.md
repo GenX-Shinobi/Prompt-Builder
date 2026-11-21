@@ -2,7 +2,7 @@
 
 > Dated handoff snapshot. Re-check GitHub and local workspaces before acting; this file is not a live connection.
 
-**Last checked:** 2026-11-20 (owner acceptance completed; corrective PR #3 opened)  
+**Last checked:** 2026-11-20 (corrective PR #3 merged into release branch)  
 **Repository:** https://github.com/GenX-Shinobi/Prompt-Builder  
 **Default branch:** `main`  
 **Project docs branch:** `docs/project-control-baseline`  
@@ -101,18 +101,18 @@ The final owner acceptance record supersedes all earlier references in this docu
 
 **All six owner acceptance tests pass.** The focused Test 4 correction is committed as `0bdeb9622d2a0a5a1ad49d48711aa8c768cf7478` on `fix/v5.4.0-test4-install-button-state`.
 
-**PR #3 is open** from that branch into `release/v5.4.0`: https://github.com/GenX-Shinobi/Prompt-Builder/pull/3. It contains one commit and two files. A fresh GitHub REST read reports `mergeable=true`, `mergeable_state=clean`, and `rebaseable=true`. The initial connector creation response was inconsistent/stale; no conflict is currently indicated. The PR has not been merged.
+**PR #3 is merged** from `fix/v5.4.0-test4-install-button-state` into `release/v5.4.0`: https://github.com/GenX-Shinobi/Prompt-Builder/pull/3. GitHub created merge commit `ad459df8c014fc01dce893ff5374e4e4d8e2280a`; the release branch now includes corrective commit `0bdeb962`. `main` remains unchanged.
 
-**v5.4.0 is not release-approved.** The release branch has not received the corrective commit yet. No change has been made to `main`, and no release/deployment/tag has been created.
+**v5.4.0 is not release-approved.** The corrective commit is now integrated into `release/v5.4.0`. No change has been made to `main`, and no release/deployment/tag has been created.
 
-**Single next action:** obtain the owner's explicit approval before merging PR #3 into `release/v5.4.0`.
+**Single next action:** complete the remaining v5.4.0 release-readiness checks, beginning with independent reproduction of the automated suites. No publication or release is authorized.
 
 ## Remaining release gates
 
 1. ~~Interactive added/removed record details and three-suite execution~~ — Claude-reported at `023171d`: 178 passed, 0 failed; not independently reproduced.
 2. ~~Owner browser acceptance~~ — **all six tests PASS**, including Test 4 repeated with the correct corrective-branch file and original package.
 3. ~~Implement focused Test 4 correction~~ — commit `0bdeb962` on the dedicated corrective branch; Claude reports 49 + 18 + 120 = **187** automated checks passed, 0 failed, in both worktree and fresh clone. These are implementer-reported.
-4. ~~Create reviewable integration proposal~~ — PR #3 open, targeting `release/v5.4.0`; fresh GitHub read says mergeable and clean. Not merged.
+4. ~~Create reviewable integration proposal~~ — PR #3 merged into `release/v5.4.0` at `ad459df8`; `main` unchanged.
 5. Independently reproduce automated suites where feasible.
 6. Resolve PR #3 mergeability and obtain explicit owner approval before merging into `release/v5.4.0`.
 7. README: prepared on docs branch; apply at PR #1 merge only after approved release code reaches `main`.
@@ -148,4 +148,4 @@ Live GitHub verified 2026-11-20:
 - PR #3: open, head corrective branch, base `release/v5.4.0`, one commit, two files, not merged. GitHub create response reports `mergeable=false`; investigate before any merge.
 - PR #1 remains open/unmerged.
 
-Owner confirmed all six browser acceptance tests PASS after correcting the Test 4 file selection and repeating only Test 4. ChatGPT created PR #3 with owner authorization. No merge, release, deployment, tag, or change to `main` was performed.
+Owner confirmed all six browser acceptance tests PASS after correcting the Test 4 file selection and repeating only Test 4. ChatGPT created PR #3 with owner authorization. PR #3 was merged into `release/v5.4.0` with owner authorization. No merge into `main`, release, deployment, or tag was performed.
