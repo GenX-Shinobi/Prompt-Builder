@@ -1,5 +1,16 @@
 # AI Prompt Builder Hub — Roadmap
 
+## RELEASED — v5.4.0 (verified 2026-11-21)
+
+**Formal release complete:** https://github.com/GenX-Shinobi/Prompt-Builder/releases/tag/v5.4.0 . Stable `v5.4.0` tag and `main` at `97531983b26b7e00be78a8200284d7897a97b864` at verification. PR #4 and PR #1 merged. 187 automated Chromium/Playwright checks passed and owner acceptance passed 6/6. Owner approved publication with outstanding manual browser/device/accessibility checks disclosed. Historical “NOW — finish and accept v5.4.0” section below is complete and superseded, not an active release gate.
+
+**Parked follow-up candidates (not authorized implementation):** real-device/touch, Firefox/Safari, screen reader, manual contrast; ≤600px header overlap; chatbot-note styling; in-file corrective version-log entry; malformed release-note Markdown link; optional branch housekeeping and preservation of evidence. No unapproved code changes.
+
+**Next project sequence:** after documentation closeout, resume CHIMERA governance/roadmap and memory-architecture planning **in its separate repository**. Prompt Builder v5.5.0 ideas remain backlog for a later explicitly approved CHIMERA pilot. Maintain independent statutes, memory and project control.
+
+---
+
+
 The free-first, chatbot-independent mission and project scope in [PROJECT_CONTROL.md](PROJECT_CONTROL.md) govern this roadmap. Proposed work is not a commitment until approved by the owner.
 
 ## NOW — finish and accept v5.4.0
