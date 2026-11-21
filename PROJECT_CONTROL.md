@@ -16,7 +16,7 @@
 
 ## Resume phrase
 
-> **Resume AI Prompt Builder Hub — v5.4.0 Test 4 corrective review.** Read `PROJECT_CONTROL.md`, `docs/CURRENT_STATUS.md`, `ROADMAP.md`, `docs/AI_WORK_RULES.md`, `docs/REGRESSION_CHECKLIST.md` and `docs/CLAUDE_TASK.md` from `docs/project-control-baseline`. Verify live GitHub and the actual Claude workspace before acting. Owner acceptance: Tests 1, 2, 3, 5 and 6 passed; Test 4 failed because the disabled Install and reload button was visually indistinguishable from its enabled state. The 631-change preview worked; installation was not attempted. A focused corrective assignment is prepared in `docs/CLAUDE_TASK.md` and awaits owner submission/authorization. Do not modify `main`, `release/v5.4.0` or the docs branch from the implementation task; do not merge, publish, deploy, tag or start v5.5.0. Preserve the existing visual design, including the intentionally dark compiled-prompt area. State the single next action.
+> **Resume AI Prompt Builder Hub — v5.4.0 release closeout.** Read the project-control documents from `docs/project-control-baseline`; verify live GitHub and the actual Claude workspace before acting. Owner acceptance: all six browser acceptance tests PASS, including Test 4 repeated with the correct corrective-branch `index.html` and original test package. Corrective PR #3 is open from `fix/v5.4.0-test4-install-button-state` into `release/v5.4.0`; it is not merged. Review PR status and any mergeability/conflict signal before recommending the next step. Do not merge, publish, deploy, tag, modify `main`, merge PR #1, or start v5.5.0 without the owner's separate approval. State one next action.
 
 ## Mission and product principles
 
@@ -58,54 +58,52 @@ Each item below was checked against live GitHub and the Claude workspace on 2026
 
 Claude-reported results must never be described as independently verified. A fresh Claude session or a fresh clone is still Claude. The 178 figure becomes "independently reproduced" only when someone other than the implementer runs the commands and records the output.
 
-### Owner verification — real-browser acceptance (2026-11-20)
+### Owner verification — real-browser acceptance (completed 2026-11-20)
 
-The owner completed the browser-only acceptance kit using a separate test copy.
+The owner completed all six acceptance tests. The first Test 4 attempt used the wrong `index.html` and its result was entered in the wrong field; the owner corrected the record, downloaded the correct `index.html` from the corrective branch, and repeated Test 4 only using the original Test 4 package. The owner then updated the acceptance record for all six tests.
 
-| Test | Owner result | Notes |
+| Test | Final owner result | Notes |
 |---|---|---|
-| 1. Add/remove command | **Pass** | |
-| 2. Add a chatbot | **Pass** | |
-| 3. Remove a chatbot (Mistral) | **Pass** | |
-| 4. Large catalogue change (631 buttons) | **Fail** | Preview/update worked, but the disabled "Install and reload" button looked too much like its enabled state. Installation was not attempted; functional gate remains unverified by owner. |
-| 5. Booby-trapped text | **Pass** | Content remained inert. |
-| 6. Broken catalogue | **Pass** | Invalid catalogue was refused. |
+| 1. Add/remove command | **Pass** | Original accepted result retained |
+| 2. Add a chatbot | **Pass** | Original accepted result retained |
+| 3. Remove a chatbot (Mistral) | **Pass** | Original accepted result retained |
+| 4. Large catalogue change (631 changes) | **Pass** | Repeated with the correct corrective-branch `index.html` and original Test 4 package |
+| 5. Booby-trapped text | **Pass** | Original accepted result retained |
+| 6. Broken catalogue | **Pass** | Original accepted result retained |
 
-Optional narrow-window repeat of Test 1: **Pass**. Exact browser version, device and viewport dimensions were not recorded.
-
-This is a confirmed usability failure, not evidence of a functional installation-gate failure. Preserve the five passed results. Retest Test 4 only on a fresh copy after correction; do not risk the existing acceptance package.
+The owner did not report running the installation action. Do not claim owner verification of an actual install. The separate disposable-profile installation test remains Claude-reported. Browser/device details were not recorded.
 
 An **owner acceptance kit** remains available at [acceptance-kit.html](https://github.com/GenX-Shinobi/Prompt-Builder/blob/docs/project-control-baseline/docs/acceptance/v5.4.0/acceptance-kit.html).
 
 ## Strict v5.4.0 release sequence
 
-1. ~~Complete catalogue-diff reviewability and automated coverage~~ — **done, Claude-reported** at `023171d`; 178 automated checks passed in Claude's fresh clone. Not independently reproduced.
-2. ~~Prepare owner acceptance kit~~ — **done** on the docs branch.
-3. **Owner real-browser acceptance:** Tests 1, 2, 3, 5 and 6 passed; Test 4 failed because the disabled Install and reload button was visually ambiguous after a 631-change preview. Installation was not attempted. Optional narrow-window check passed.
-4. **Current corrective task:** focused Test 4 fix on a separate branch from `release/v5.4.0`; canonical brief in `docs/CLAUDE_TASK.md`. It awaits owner submission/authorization. ChatGPT reviews the resulting technical evidence. Owner retests Test 4 only on a fresh copy.
-5. ChatGPT independently reviews the corrective branch, tests and evidence. Independent reproduction of the documented suites remains outstanding.
-6. Owner explicitly approves release only after all gates pass.
-7. Only after v5.4.0 release approval may the owner authorize the next roadmap milestone.
+1. ~~Complete catalogue-diff reviewability and automated coverage~~ — implemented on `release/v5.4.0` through `023171d`; Claude-reported test evidence is recorded separately.
+2. ~~Prepare owner acceptance kit~~ — completed on the docs branch.
+3. ~~Owner real-browser acceptance~~ — **all six tests PASS**. Test 4 was repeated using the correct corrective-branch `index.html` and original Test 4 package. The corrected owner record supersedes earlier failure entries.
+4. ~~Implement focused Test 4 correction~~ — commit `0bdeb9622d2a0a5a1ad49d48711aa8c768cf7478` on `fix/v5.4.0-test4-install-button-state`; one commit ahead of `release/v5.4.0`.
+5. ~~Create reviewable integration proposal~~ — PR #3 is open: [fix: clarify disabled install state for large catalogue reviews](https://github.com/GenX-Shinobi/Prompt-Builder/pull/3), targeting `release/v5.4.0`. It is not merged. GitHub's PR response currently reports `mergeable=false`; investigate this before any merge recommendation.
+6. ChatGPT independent reproduction of the automated suites remains outstanding. Claude's automated results must remain labelled implementer-reported.
+7. Owner explicitly approves the PR merge into `release/v5.4.0`; this is a separate decision from release approval.
+8. Owner explicitly approves v5.4.0 release only after all release gates pass.
 
 README reconciliation remains prepared on the docs branch and unmerged. Keep the PR's `readme.md` in full when PR #1 is eventually merged, and only after approved release code is on `main`.
 
 ### Active task
 
-A focused Test 4 corrective brief is prepared in [docs/CLAUDE_TASK.md](docs/CLAUDE_TASK.md). The owner has not yet submitted/authorized it. Claude must create a separate corrective branch from `release/v5.4.0`, and must not modify `main`, `release/v5.4.0` or `docs/project-control-baseline`.
+PR #3 is the active integration review. First determine why GitHub reports it as not mergeable despite the corrective branch being exactly one commit ahead of the current release head. Do not merge it until the cause is understood and the owner explicitly approves.
 
-**Single next action:** owner reviews this prepared handoff and submits the already-prepared Claude assignment when ready. No implementation is authorized until the owner does so.
+**Single next action:** inspect PR #3's mergeability/conflict status and report the exact cause in plain English. No merge, publish, deployment, tag, or release is authorized.
 
 ### Decisions requiring owner approval
 
-Claude does not decide these.
-
-1. **How and when the reviewed release branch reaches `main`.** Note that `main` already contains an earlier v5.4.0 build (`ce1ec19`, from merged PR #2) **without** the later review fixes (`419b51f` to `023171d`). GitHub Pages could not be checked from Claude's environment (API blocked, page not fetchable). If Pages serves `main`, the live page is probably already running that earlier build. Please check the live page and decide.
-2. **When to merge PR #1**, and confirming the README resolution above.
-3. **Release approval.** Not given; v5.4.0 is not released.
+1. Merge PR #3 into `release/v5.4.0`.
+2. How and when the reviewed release branch reaches `main`. The branches have diverged; do not merge/rebase automatically.
+3. When to merge PR #1, preserving its reconciled `readme.md` and only after approved release code is on `main`.
+4. Formal v5.4.0 release approval.
 
 ### Release restrictions (apply to every session)
 
-- Do not modify `main`. Do not merge PR #1 or any other PR. Do not create a PR without owner approval.
+- Do not modify `main`. Do not merge PR #1 or PR #3 without explicit owner approval.
 - Do not publish, deploy, tag or release.
 - Do not start v5.5.0.
 - Do not change production code in documentation-only tasks.
