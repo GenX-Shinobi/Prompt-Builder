@@ -183,3 +183,7 @@ Live GitHub access was rechecked. Repository permissions reported by GitHub sear
 - Documentation maintenance is being prepared on a separate branch, docs/chimera-session-maintenance, based on the project-control branch.
 
 These are repository observations only. The actual Claude local workspace was not inspected in this pass. The release is not approved. Do not merge, tag, publish, deploy, modify main, merge PR #1, or begin v5.5.0 without the owner's separate authorization.
+
+## Added continuity documents
+- [Session handoff](docs/SESSION_HANDOFF.md) — compact startup checklist and current next action.
+- [CHIMERA relationship boundary](docs/CHIMERA_RELATIONSHIP.md) — keeps the separate framework initiative from expanding Prompt Builder scope.
