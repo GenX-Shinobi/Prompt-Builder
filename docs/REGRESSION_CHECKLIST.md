@@ -136,12 +136,17 @@ These corrective technical checks are **Claude-reported** except the owner's six
 
 **Integration status:** PR #3 is open from `fix/v5.4.0-test4-install-button-state` into `release/v5.4.0`. GitHub's create-PR response reports `mergeable=false`; investigate before any merge. No release approval is implied.
 
-### Test 4 corrective regression checks — pending
+### Test 4 corrective regression checks — completed on corrective branch
 
-- [ ] Confirm Install and reload is semantically and functionally disabled before the required review action; pointer, Enter, Space and programmatic activation cannot install.
-- [ ] Confirm the control becomes enabled only after the required Show all review action, and only then permits the intended installation flow.
-- [ ] Verify disabled/enabled states are unmistakably different in all five existing colour palettes and applicable light/dark modes, without redesigning unrelated page regions.
-- [ ] Check affected control text contrast, borders/state cues, pointer behavior, visible keyboard focus and accessible disabled state. Do not rely on colour alone.
-- [ ] Preserve existing design: themes affect selected regions; the compiled-prompt area intentionally remains dark in light mode. Do not expand theme coverage as part of this correction.
-- [ ] Re-run a fresh 631-change scenario and verify the gate before and after Show all; record whether installation was tested in an isolated disposable copy.
-- [ ] Do not overwrite or risk the owner's existing acceptance package. Owner retests Test 4 only on a fresh copy after the fix.
+Claude reports the following verification in `fix/v5.4.0-test4-install-button-state` (commit `0bdeb962`):
+- [x] Install and reload is semantically and functionally disabled before the required review action; pointer, Enter, Space and programmatic activation are blocked.
+- [x] The control becomes enabled only after Show all; the isolated disposable-profile workflow then permits installation.
+- [x] Disabled/enabled states are visibly distinct across five palettes and light/dark modes.
+- [x] Affected control text contrast, borders/state cues, pointer behavior and accessible disabled state were checked.
+- [x] Existing visual design, including the intentionally dark compiled-prompt area, was preserved.
+- [x] Fresh 631-change scenario verified before and after Show all; installation tested only in a disposable browser profile.
+- [x] Owner repeated Test 4 using the correct corrective-branch index.html and original package; all six owner acceptance tests now PASS.
+
+These technical checks are **Claude-reported** except the six-test acceptance result, which is **owner-verified**. The corrective commit is proposed to the release branch in PR #3 and is not yet merged.
+
+**Integration status:** PR #3 is open from `fix/v5.4.0-test4-install-button-state` into `release/v5.4.0`. A fresh GitHub REST read reports the PR as mergeable/clean. No merge has been performed.
