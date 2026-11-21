@@ -81,7 +81,7 @@ An **owner acceptance kit** remains available at [acceptance-kit.html](https://g
 2. ~~Prepare owner acceptance kit~~ — completed on the docs branch.
 3. ~~Owner real-browser acceptance~~ — **all six tests PASS**. Test 4 was repeated using the correct corrective-branch `index.html` and original Test 4 package. The corrected owner record supersedes earlier failure entries.
 4. ~~Implement focused Test 4 correction~~ — commit `0bdeb9622d2a0a5a1ad49d48711aa8c768cf7478` on `fix/v5.4.0-test4-install-button-state`; one commit ahead of `release/v5.4.0`.
-5. ~~Create reviewable integration proposal~~ — PR #3 is open: [fix: clarify disabled install state for large catalogue reviews](https://github.com/GenX-Shinobi/Prompt-Builder/pull/3), targeting `release/v5.4.0`. It is not merged. A fresh GitHub REST read reports `mergeable=true`, `mergeable_state=clean`, and `rebaseable=true`. The earlier `mergeable=false` in the connector's creation response was stale/inconsistent; no conflict is currently indicated.
+5. ~~Create reviewable integration proposal~~ — PR #3 ([fix: clarify disabled install state for large catalogue reviews](https://github.com/GenX-Shinobi/Prompt-Builder/pull/3)) was merged into `release/v5.4.0` with merge commit `ad459df8c014fc01dce893ff5374e4e4d8e2280a` on 2026-11-20. GitHub confirms the release branch now contains corrective commit `0bdeb962`. `main` remains unchanged.
 6. ChatGPT independent reproduction of the automated suites remains outstanding. Claude's automated results must remain labelled implementer-reported.
 7. Owner explicitly approves the PR merge into `release/v5.4.0`; this is a separate decision from release approval.
 8. Owner explicitly approves v5.4.0 release only after all release gates pass.
@@ -92,7 +92,7 @@ README reconciliation remains prepared on the docs branch and unmerged. Keep the
 
 PR #3 is the active integration review. First determine why GitHub reports it as not mergeable despite the corrective branch being exactly one commit ahead of the current release head. Do not merge it until the cause is understood and the owner explicitly approves.
 
-**Single next action:** ask the owner for explicit approval to merge PR #3 into `release/v5.4.0`. No merge, publish, deployment, tag, or release is authorized until separately approved.
+**Single next action:** prepare the v5.4.0 release-readiness closeout, including independent automated-suite reproduction and the remaining desktop/mobile/offline checks. Do not publish, deploy, tag, merge into `main`, or release without separate owner approval.
 
 ### Decisions requiring owner approval
 
@@ -103,7 +103,7 @@ PR #3 is the active integration review. First determine why GitHub reports it as
 
 ### Release restrictions (apply to every session)
 
-- Do not modify `main`. Do not merge PR #1 or PR #3 without explicit owner approval.
+- Do not modify `main`. Do not merge PR #1 without explicit owner approval. PR #3 is already merged.
 - Do not publish, deploy, tag or release.
 - Do not start v5.5.0.
 - Do not change production code in documentation-only tasks.
