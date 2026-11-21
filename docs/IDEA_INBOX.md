@@ -36,6 +36,9 @@ Add ideas in plain language. Do not require the owner to prioritise, categorise 
 
 ### Explore
 
+- **Visual, accessibility and multilingual finishing round-up:** after v5.4.0 is accepted/released and the roadmap reaches an appropriate point, consider extending existing colour palettes across more of the page, improving visual consistency and accessibility, and adding multilingual interface support. Preserve deliberate contrast choices such as the compiled-prompt area remaining dark in light mode unless usability evidence supports a change. Explore longer translated strings, non-Latin scripts and right-to-left layouts. Future proposal only; not current implementation scope.
+
+
 - **Real-world problem solving beyond work and coding:** support practical questions, learning, hobbies and gameplay roadblocks. The owner's use of the builder to solve problems while playing Grounded 2 on PlayStation 5 is an example of the broad audience and task range.
 - **Teacher/tester feedback:** invite a teacher or other first-time user to try the app; record observed friction rather than assuming demand.
 - **Free-tier tool comparison:** evaluate how the same task performs across available free chatbot tiers without allowing premium subscriptions to redefine the baseline.
