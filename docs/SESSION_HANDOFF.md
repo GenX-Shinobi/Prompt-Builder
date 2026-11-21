@@ -23,7 +23,7 @@ Verify live GitHub and the actual Claude workspace before acting. Repository rec
 - The baseline documentation PR #1 remains open and unmerged.
 - PR #3 is merged into `release/v5.4.0`.
 - PR #1 and PR #4 must remain open; do not merge either without explicit Owner approval.
-- Live comparison confirms PR #4 is 16 commits ahead of its base and has no behind commits. Its changed-file list remains documentation-only.
+- Live comparison at this checkpoint: PR #4 is 19 commits ahead of `docs/project-control-baseline`, 0 behind; current head before this handoff refresh was `dc6ef9448b22f892da32c77a855c5efb3bc28315`. Its eight changed files are documentation-only.
 - The actual Claude local workspace has not been inspected in this session. Do not claim otherwise.
 
 ## Release position
