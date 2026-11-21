@@ -5,14 +5,13 @@
 **Repository:** https://github.com/GenX-Shinobi/Prompt-Builder  
 **Application:** AI Prompt Builder Hub  
 **Roles (do not blur them):**
-- **Owner** — product owner; final product, merge and release approval.
+- **Owner** — product owner; approves scope, implementation authorization, product direction, merges and releases.
 - **ChatGPT** — project manager and independent reviewer; owns central management documentation, roadmap/status continuity, owner-facing decisions and review of Claude's evidence.
 - **Claude Code** — implementation engineer; owns implementation, code-adjacent documentation and technical test evidence for assigned work.
-- **Owner** — product owner; approves scope, implementation authorization, merges and releases.
 
-**Last checked:** 2026-11-20 (repository state at the checkpoint below; re-verify before acting)
+**Last checked:** 2026-11-21 (see latest maintenance checkpoint below; re-verify before acting)
 
-**Where these documents live:** on the branch `docs/project-control-baseline` (draft PR #1) until the owner approves merging it. They are **not** on `main` or `release/v5.4.0`. Read them with `git fetch origin` then `git show origin/docs/project-control-baseline:<path>`, or check that branch out in a separate worktree. Do not copy them onto other branches.
+**Where these documents live:** the original project-control baseline is on `docs/project-control-baseline` (open PR #1). The 2026-11-21 maintenance addenda are on `docs/chimera-session-maintenance` (open PR #4), based on that baseline. These documents are **not** on `main` or `release/v5.4.0`. Read the applicable branch explicitly; do not copy management documents onto application/release branches.
 
 ## Resume phrase
 
