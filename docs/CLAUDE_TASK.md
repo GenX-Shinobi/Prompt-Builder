@@ -55,7 +55,7 @@ Do not ask the owner to repeat the five passed tests.
 
 Provide root cause; exact branch and base commit; resulting commit hash; exact files changed; automated test commands and full results; evidence that disabled logic is real and all activation paths are blocked before review; five-palette and light/dark verification; confirmation the intentionally dark compiled-prompt area was preserved; 631-change workflow results before/after Show all and whether disposable installation was actually tested; remaining limitations and tests not run; and one recommended next action.
 
-Do not claim the owner acceptance test passes. ChatGPT will review the evidence; the owner will retest Test 4 on a fresh copy.
+Historical instruction superseded by completion: the owner repeated Test 4 with the correct corrective-branch file and original package, then confirmed all six acceptance tests PASS.
 
 After reporting, stop and wait. No merge or release action is authorized.
 
