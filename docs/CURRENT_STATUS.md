@@ -14,7 +14,7 @@
 | Ref | Commit | Position |
 |---|---|---|
 | `main` | `b247aec8a1ee279b71f6aedd8fbaf4d908c22d5f` | Merge commit of PR #2 (contains `ce1ec19`). Unchanged. |
-| `release/v5.4.0` | `023171dc60af78d43081a447d41009f153d82127` | 4 ahead / 1 behind `main`; local and remote heads matched; clean tree; everything pushed. |
+| `release/v5.4.0` | `ad459df8c014fc01dce893ff5374e4e4d8e2280a` | Test 4 correction merged via PR #3; still separate from `main`. |
 | `docs/project-control-baseline` | `64b6dd3e142a9326e22c697aab45775e125fca74` before this maintenance | Draft PR #1, open and unmerged; this maintenance adds documentation-only commits. |
 
 - **Why the release branch diverges:** PR #2 was merged at `ce1ec19`. Four more commits were then pushed to the release branch: `419b51f`, `5c41741`, `52bcdea`, `023171d`. `main` holds only the merge commit `b247aec` that the release branch lacks. No merge, rebase or cherry-pick has been done.
@@ -131,21 +131,21 @@ No v5.5.0 implementation before v5.4.0 has passed these gates. Release restricti
 
 Live GitHub was checked before this maintenance:
 - `main`: `b247aec8a1ee279b71f6aedd8fbaf4d908c22d5f`
-- `release/v5.4.0`: `023171dc60af78d43081a447d41009f153d82127`
+- `release/v5.4.0`: `ad459df8c014fc01dce893ff5374e4e4d8e2280a`
 - `docs/project-control-baseline`: `64b6dd3e142a9326e22c697aab45775e125fca74` before this docs-only maintenance
 - PR #1 remains open, draft and unmerged.
 
-The corrective implementation branch and PR #3 are verified on GitHub. No claim is made about the current local Claude workspace. The Claude task explicitly forbids modifying the docs branch.
+The corrective implementation is merged into `release/v5.4.0`. No claim is made about the current local Claude workspace. The Claude task explicitly forbids modifying the docs branch.
 
 
 ## Documentation checkpoint — owner acceptance and PR #3
 
 Live GitHub verified 2026-11-20:
 - `main`: `b247aec8a1ee279b71f6aedd8fbaf4d908c22d5f` (unchanged)
-- `release/v5.4.0`: `023171dc60af78d43081a447d41009f153d82127` (unchanged; corrective fix not yet merged)
+- `release/v5.4.0`: `ad459df8c014fc01dce893ff5374e4e8d8e2280a` (corrective PR #3 merged)
 - `fix/v5.4.0-test4-install-button-state`: `0bdeb9622d2a0a5a1ad49d48711aa8c768cf7478`
 - `docs/project-control-baseline`: management-doc updates committed separately
-- PR #3: open, head corrective branch, base `release/v5.4.0`, one commit, two files, not merged. GitHub create response reports `mergeable=false`; investigate before any merge.
+- PR #3: merged into `release/v5.4.0`; merge commit `ad459df8c014fc01dce893ff5374e4e8d8e2280a`.
 - PR #1 remains open/unmerged.
 
 Owner confirmed all six browser acceptance tests PASS after correcting the Test 4 file selection and repeating only Test 4. ChatGPT created PR #3 with owner authorization. PR #3 was merged into `release/v5.4.0` with owner authorization. No merge into `main`, release, deployment, or tag was performed.
