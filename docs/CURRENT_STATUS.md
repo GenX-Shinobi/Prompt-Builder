@@ -101,18 +101,18 @@ The final owner acceptance record supersedes all earlier references in this docu
 
 **All six owner acceptance tests pass.** The focused Test 4 correction is committed as `0bdeb9622d2a0a5a1ad49d48711aa8c768cf7478` on `fix/v5.4.0-test4-install-button-state`.
 
-**PR #3 is open** from that branch into `release/v5.4.0`: https://github.com/GenX-Shinobi/Prompt-Builder/pull/3. It contains one commit and two files. GitHub's create-PR response reports `mergeable=false`; the reason must be investigated before recommending a merge. The PR has not been merged.
+**PR #3 is open** from that branch into `release/v5.4.0`: https://github.com/GenX-Shinobi/Prompt-Builder/pull/3. It contains one commit and two files. A fresh GitHub REST read reports `mergeable=true`, `mergeable_state=clean`, and `rebaseable=true`. The initial connector creation response was inconsistent/stale; no conflict is currently indicated. The PR has not been merged.
 
 **v5.4.0 is not release-approved.** The release branch has not received the corrective commit yet. No change has been made to `main`, and no release/deployment/tag has been created.
 
-**Single next action:** inspect why GitHub reports PR #3 as not mergeable and report the cause. The owner must separately approve any merge into `release/v5.4.0`.
+**Single next action:** obtain the owner's explicit approval before merging PR #3 into `release/v5.4.0`.
 
 ## Remaining release gates
 
 1. ~~Interactive added/removed record details and three-suite execution~~ — Claude-reported at `023171d`: 178 passed, 0 failed; not independently reproduced.
 2. ~~Owner browser acceptance~~ — **all six tests PASS**, including Test 4 repeated with the correct corrective-branch file and original package.
 3. ~~Implement focused Test 4 correction~~ — commit `0bdeb962` on the dedicated corrective branch; Claude reports 49 + 18 + 120 = **187** automated checks passed, 0 failed, in both worktree and fresh clone. These are implementer-reported.
-4. ~~Create reviewable integration proposal~~ — PR #3 open, targeting `release/v5.4.0`; currently reports `mergeable=false`, cause to be investigated. Not merged.
+4. ~~Create reviewable integration proposal~~ — PR #3 open, targeting `release/v5.4.0`; fresh GitHub read says mergeable and clean. Not merged.
 5. Independently reproduce automated suites where feasible.
 6. Resolve PR #3 mergeability and obtain explicit owner approval before merging into `release/v5.4.0`.
 7. README: prepared on docs branch; apply at PR #1 merge only after approved release code reaches `main`.
@@ -135,7 +135,7 @@ Live GitHub was checked before this maintenance:
 - `docs/project-control-baseline`: `64b6dd3e142a9326e22c697aab45775e125fca74` before this docs-only maintenance
 - PR #1 remains open, draft and unmerged.
 
-The owner has not yet submitted the Test 4 Claude assignment. No corrective implementation branch or workspace changes are claimed. The Claude task explicitly forbids modifying the docs branch.
+The corrective implementation branch and PR #3 are verified on GitHub. No claim is made about the current local Claude workspace. The Claude task explicitly forbids modifying the docs branch.
 
 
 ## Documentation checkpoint — owner acceptance and PR #3
