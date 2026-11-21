@@ -6,8 +6,9 @@
 **Application:** AI Prompt Builder Hub  
 **Roles (do not blur them):**
 - **Owner** — product owner; final product, merge and release approval.
-- **ChatGPT** — project manager and independent reviewer; maintains continuity.
-- **Claude Code** — implementation engineer; implements bounded tasks and runs automated tests.
+- **ChatGPT** — project manager and independent reviewer; owns central management documentation, roadmap/status continuity, owner-facing decisions and review of Claude's evidence.
+- **Claude Code** — implementation engineer; owns implementation, code-adjacent documentation and technical test evidence for assigned work.
+- **Owner** — product owner; approves scope, implementation authorization, merges and releases.
 
 **Last checked:** 2026-11-20 (repository state at the checkpoint below; re-verify before acting)
 
@@ -15,7 +16,7 @@
 
 ## Resume phrase
 
-> **Resume AI Prompt Builder Hub — v5.4.0 acceptance.** Read `PROJECT_CONTROL.md`, `docs/CURRENT_STATUS.md`, `ROADMAP.md`, `docs/AI_WORK_RULES.md`, `docs/REGRESSION_CHECKLIST.md` and `docs/CLAUDE_TASK.md` from branch `docs/project-control-baseline`. Check live GitHub and the actual workspace before acting; the repository, not chat memory, is authoritative. The v5.4.0 work is complete on `release/v5.4.0` (head `023171d` at the last checkpoint) with Claude-reported test results only, and a browser-only owner acceptance kit is ready on the docs branch. Do not modify `main`, merge PR #1 or PR #2, publish, or start v5.5.0. State the single next action.
+> **Resume AI Prompt Builder Hub — v5.4.0 Test 4 corrective review.** Read `PROJECT_CONTROL.md`, `docs/CURRENT_STATUS.md`, `ROADMAP.md`, `docs/AI_WORK_RULES.md`, `docs/REGRESSION_CHECKLIST.md` and `docs/CLAUDE_TASK.md` from `docs/project-control-baseline`. Verify live GitHub and the actual Claude workspace before acting. Owner acceptance: Tests 1, 2, 3, 5 and 6 passed; Test 4 failed because the disabled Install and reload button was visually indistinguishable from its enabled state. The 631-change preview worked; installation was not attempted. A focused corrective assignment is prepared in `docs/CLAUDE_TASK.md` and awaits owner submission/authorization. Do not modify `main`, `release/v5.4.0` or the docs branch from the implementation task; do not merge, publish, deploy, tag or start v5.5.0. Preserve the existing visual design, including the intentionally dark compiled-prompt area. State the single next action.
 
 ## Mission and product principles
 
@@ -57,26 +58,42 @@ Each item below was checked against live GitHub and the Claude workspace on 2026
 
 Claude-reported results must never be described as independently verified. A fresh Claude session or a fresh clone is still Claude. The 178 figure becomes "independently reproduced" only when someone other than the implementer runs the commands and records the output.
 
-### Owner verification so far
+### Owner verification — real-browser acceptance (2026-11-20)
 
-The owner previewed one changed ChatGPT card summary in a separate copy and cancelled; nothing was installed. That confirms only the simple wording-change preview. **No claim is made that the owner has tested added/removed records, expansion/collapse, keyboard interaction or the large-diff safeguards.**
+The owner completed the browser-only acceptance kit using a separate test copy.
 
-An **owner acceptance kit** is ready ([acceptance-kit.html](https://github.com/GenX-Shinobi/Prompt-Builder/blob/docs/project-control-baseline/docs/acceptance/v5.4.0/acceptance-kit.html), source in `docs/acceptance/v5.4.0/`). It uses ordinary browser actions only: the owner downloads the real release `index.html`, presses a Copy button in the kit, pastes into the app's Import box, compares the preview with a short list of what to expect, and presses Cancel. It has six tests (add/remove commands, add a chatbot, remove a chatbot, a 631-change catalogue, booby-trapped text, a broken catalogue) and needs no terminal, JSON editing or developer tools. The catalogue import is paste-only (there is no file picker), which is why the kit uses Copy buttons.
+| Test | Owner result | Notes |
+|---|---|---|
+| 1. Add/remove command | **Pass** | |
+| 2. Add a chatbot | **Pass** | |
+| 3. Remove a chatbot (Mistral) | **Pass** | |
+| 4. Large catalogue change (631 buttons) | **Fail** | Preview/update worked, but the disabled "Install and reload" button looked too much like its enabled state. Installation was not attempted; functional gate remains unverified by owner. |
+| 5. Booby-trapped text | **Pass** | Content remained inert. |
+| 6. Broken catalogue | **Pass** | Invalid catalogue was refused. |
+
+Optional narrow-window repeat of Test 1: **Pass**. Exact browser version, device and viewport dimensions were not recorded.
+
+This is a confirmed usability failure, not evidence of a functional installation-gate failure. Preserve the five passed results. Retest Test 4 only on a fresh copy after correction; do not risk the existing acceptance package.
+
+An **owner acceptance kit** remains available at [acceptance-kit.html](https://github.com/GenX-Shinobi/Prompt-Builder/blob/docs/project-control-baseline/docs/acceptance/v5.4.0/acceptance-kit.html).
 
 ## Strict v5.4.0 release sequence
 
-1. ~~Implement complete catalogue-diff review and expandable added/removed records; run all three suites.~~ **Done — Claude-reported only** (commits `419b51f`, `5c41741`, `52bcdea`).
-2. ChatGPT independently reviews the final release-branch code and test evidence (and, ideally, someone other than the implementer re-runs the three suites and records the output). This may run alongside step 3 and does not block it.
-3. **Next milestone — owner-led real-browser verification** using the acceptance kit: added and removed catalogue records in the preview; expanding and collapsing each record; keyboard interaction (Tab, Enter/Space); the large-diff safeguards ("Showing 500 of N", Install disabled until "Show all"); inert booby-trapped text; refusal of a broken catalogue. Desktop, and mobile where practical. The kit's "Copy my results" button produces a short report to paste back.
-4. ~~Prepare README reconciliation~~ — **prepared on the docs branch, not merged.** Remaining: apply it when PR #1 merges (resolution above), and re-check it if acceptance changes any behaviour.
-5. Owner explicitly approves release.
-6. Only then resume v5.5.0 planning/implementation.
+1. ~~Complete catalogue-diff reviewability and automated coverage~~ — **done, Claude-reported** at `023171d`; 178 automated checks passed in Claude's fresh clone. Not independently reproduced.
+2. ~~Prepare owner acceptance kit~~ — **done** on the docs branch.
+3. **Owner real-browser acceptance:** Tests 1, 2, 3, 5 and 6 passed; Test 4 failed because the disabled Install and reload button was visually ambiguous after a 631-change preview. Installation was not attempted. Optional narrow-window check passed.
+4. **Current corrective task:** focused Test 4 fix on a separate branch from `release/v5.4.0`; canonical brief in `docs/CLAUDE_TASK.md`. It awaits owner submission/authorization. ChatGPT reviews the resulting technical evidence. Owner retests Test 4 only on a fresh copy.
+5. ChatGPT independently reviews the corrective branch, tests and evidence. Independent reproduction of the documented suites remains outstanding.
+6. Owner explicitly approves release only after all gates pass.
+7. Only after v5.4.0 release approval may the owner authorize the next roadmap milestone.
+
+README reconciliation remains prepared on the docs branch and unmerged. Keep the PR's `readme.md` in full when PR #1 is eventually merged, and only after approved release code is on `main`.
 
 ### Active task
 
-There is **no open Claude implementation task.** The verification brief [docs/CLAUDE_TASK.md](docs/CLAUDE_TASK.md) has been executed (Claude-reported; see above); `/pb-v54` (defined by `.claude/commands/pb-v54.md`) remains available and, if re-run, must verify and report rather than repeat completed work.
+A focused Test 4 corrective brief is prepared in [docs/CLAUDE_TASK.md](docs/CLAUDE_TASK.md). The owner has not yet submitted/authorized it. Claude must create a separate corrective branch from `release/v5.4.0`, and must not modify `main`, `release/v5.4.0` or `docs/project-control-baseline`.
 
-**Single next action:** the owner runs the browser-only acceptance kit (about 15 minutes) against the real release `index.html` and pastes the kit's results summary back to ChatGPT. The owner decides whether and how branches reach `main`.
+**Single next action:** owner reviews this prepared handoff and submits the already-prepared Claude assignment when ready. No implementation is authorized until the owner does so.
 
 ### Decisions requiring owner approval
 
@@ -136,3 +153,12 @@ Purpose: let a fresh ChatGPT or Claude session resume accurately from the reposi
 8. **Keep it small.** One status file, one control file. Capture new ideas in [IDEA_INBOX.md](docs/IDEA_INBOX.md); do not grow the active task or add documents without need.
 
 Clearly separate source inspection, automated execution, independent review and owner acceptance in every checkpoint.
+
+
+## Documentation ownership and parallel work
+
+- ChatGPT maintains central project-control records: `PROJECT_CONTROL.md`, `ROADMAP.md`, `docs/CURRENT_STATUS.md`, `docs/IDEA_INBOX.md`, and owner-facing continuity instructions. ChatGPT also prepares/maintains bounded Claude task briefs when the owner authorizes work.
+- Claude Code owns implementation details, source-adjacent documentation, version/change logs, raw test evidence and technical reports for assigned work. Claude updates central management documents only when explicitly assigned.
+- The owner retains authority over product direction, implementation authorization, branch integration, merges and releases.
+- Parallel work is allowed on separate branches and non-overlapping files. During Test 4 correction, Claude uses a new corrective branch from `release/v5.4.0`; management maintenance remains on `docs/project-control-baseline`. Claude must not modify the docs branch.
+- Do not claim the actual Claude workspace has been inspected unless it was. The Test 4 prompt has not yet been submitted, so no corrective workspace/branch is claimed.
