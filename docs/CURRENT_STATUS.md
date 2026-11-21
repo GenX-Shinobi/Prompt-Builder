@@ -2,7 +2,7 @@
 
 > Dated handoff snapshot. Re-check GitHub and local workspaces before acting; this file is not a live connection.
 
-**Last checked:** 2026-11-20  
+**Last checked:** 2026-11-20 (management docs refreshed after owner Test 4 result)  
 **Repository:** https://github.com/GenX-Shinobi/Prompt-Builder  
 **Default branch:** `main`  
 **Project docs branch:** `docs/project-control-baseline`  
@@ -89,7 +89,7 @@ Optional narrow-window repeat of Test 1: **Pass**. Exact browser version, device
 
 Classification: Test 4 is a confirmed visual/usability failure. It is not evidence that the underlying install gate is broken. Preserve the five passed results; retest Test 4 only on a fresh copy after correction. Do not risk the existing acceptance package.
 
-## Owner acceptance kit (ready, not yet used)
+## Owner acceptance kit (used; results recorded above)
 
 - **Open:** [acceptance-kit.html](https://github.com/GenX-Shinobi/Prompt-Builder/blob/docs/project-control-baseline/docs/acceptance/v5.4.0/acceptance-kit.html) — download it with "Download raw file", then double-click.
 - **How it works:** the app's catalogue import is paste-only, so the kit has a Copy button per test. The owner downloads the real release `index.html`, copies a test, pastes it into Dev Bay → Import catalog, compares the preview with the "You should see" list, and presses Cancel. Nothing is installed.
