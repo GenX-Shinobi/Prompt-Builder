@@ -1,0 +1,89 @@
+name: v5.4.0 independent Playwright verification
+
+on:
+  push:
+    branches:
+      - verify/v5.4.0-independent-playwright
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Check out isolated release snapshot
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22.23.5
+
+      - name: Install the documented Playwright version
+        run: npm install --no-save playwright@1.63.0
+
+      - name: Install headless Chromium
+        run: npx playwright install --with-deps chromium
+
+      - name: Run all three documented suites
+        id: suites
+        shell: bash
+        run: |
+          mkdir -p artifacts
+          node --version > artifacts/environment.txt
+          npm --version >> artifacts/environment.txt
+          npx playwright --version >> artifacts/environment.txt
+          node -e "console.log(require('playwright').chromium.executablePath())" >> artifacts/environment.txt
+
+          set +e
+          node tests/browser_suite_1.js > artifacts/browser_suite_1.log 2>&1
+          s1=$?
+          node tests/browser_suite_2.js > artifacts/browser_suite_2.log 2>&1
+          s2=$?
+          node tests/browser_corrective.js > artifacts/browser_corrective.log 2>&1
+          s3=$?
+          set -e
+
+          printf 'suite_1_exit=%s\nsuite_2_exit=%s\ncorrective_exit=%s\n' "$s1" "$s2" "$s3" | tee artifacts/exit-codes.txt
+          cat artifacts/browser_suite_1.log
+          cat artifacts/browser_suite_2.log
+          cat artifacts/browser_corrective.log
+          if [ "$s1" -ne 0 ] || [ "$s2" -ne 0 ] || [ "$s3" -ne 0 ]; then
+            exit 1
+          fi
+
+      - name: Capture genuine v5.4.0 interface screenshot
+        if: always()
+        run: |
+          mkdir -p artifacts
+          node <<'NODE'
+          const { chromium } = require('playwright');
+          const path = require('path');
+          (async () => {
+            const browser = await chromium.launch();
+            const page = await browser.newPage({
+              viewport: { width: 1440, height: 1000 },
+              deviceScaleFactor: 1
+            });
+            await page.goto('file://' + path.resolve('index.html'), { waitUntil: 'load' });
+            await page.waitForTimeout(1000);
+            await page.screenshot({
+              path: 'artifacts/Preview.jpg',
+              type: 'jpeg',
+              quality: 92,
+              fullPage: true
+            });
+            await browser.close();
+          })().catch(err => { console.error(err); process.exit(1); });
+          NODE
+
+      - name: Upload test logs and screenshot
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: v5.4.0-independent-verification
+          path: artifacts/
+          if-no-files-found: warn
+          retention-days: 14
