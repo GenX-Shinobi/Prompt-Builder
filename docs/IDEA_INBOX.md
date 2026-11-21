@@ -56,3 +56,6 @@ No structured teacher or external-user test results have been recorded yet. Add 
 ## Triage history
 
 - 2026-11-20 — Initial inbox created from existing project decisions and ideas. No new feature was marked as implemented by this file.
+### Explore — separate ecosystem initiative
+
+- **CHIMERA workforce framework:** a separate public, open-source, free-to-use, platform-independent project intended to provide reusable AI workforce governance, coordination and memory. Prompt Builder may become its first adopter only after v5.4.0 is formally released and the owner separately approves an integration milestone. This is a relationship to monitor, not current Prompt Builder implementation scope.
