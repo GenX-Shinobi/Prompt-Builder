@@ -40,7 +40,7 @@ Each item below was checked against live GitHub and the Claude workspace on 2026
 | `release/v5.4.0` | `ad459df8c014fc01dce893ff5374e4e4d8e2280a` | Includes Test 4 corrective commit via PR #3; still not merged into `main`. |
 | `docs/project-control-baseline` | `7e6c65e` before this checkpoint's commit (see `git log` for the head) | Draft PR #1, open and unmerged. Its head advances with documentation commits only. |
 
-- The release branch is "4 ahead, 1 behind" because PR #2 was merged at `ce1ec19` (its merge commit `b247aec` exists only on `main`), and four further commits were then pushed to the release branch: `419b51f` (diff before/after previews and install gate), `5c41741` (complete records for added/removed commands and chatbots), `52bcdea` (seven UI-interaction checks) and `023171d` (schema-wide field, keyboard and install-gate checks). The release branch now includes corrective PR #3 (`0bdeb962`, merged as `ad459df8`). The release branch and `main` remain separate; no merge into `main` has been made.
+- The release branch is now "6 ahead, 1 behind" because PR #2 was merged at `ce1ec19` (its merge commit `b247aec` exists only on `main`), and four further commits were then pushed to the release branch: `419b51f`, `5c41741`, `52bcdea` and `023171d`. The Test 4 corrective commit `0bdeb962` was then merged through PR #3 as `ad459df`. The release branch now includes corrective PR #3 (`0bdeb962`, merged as `ad459df8`). The release branch and `main` remain separate; no merge into `main` has been made.
 - `023171d` and `52bcdea` change only `tests/browser_corrective.js`; `5c41741` and `419b51f` change `index.html` and `tests/browser_corrective.js`. No production-code defect was found in the final two rounds. No catalogue or `catalog.json` change since PR #2: 9 chatbots, 81 commands, revision 1. v5.4.0 source declares version 5.4.0.
 - PR #1 (https://github.com/GenX-Shinobi/Prompt-Builder/pull/1) is open/draft, unmerged, with no reviews. PR #2 is merged. No CI or GitHub Actions results exist for any commit.
 - `readme.md` **reconciled on the docs branch** (not merged). **Cause of the conflict:** release/`main` and the docs branch both edited `readme.md` from the common ancestor `2774483` — `main`/release for v5.4.0 (`2606885`, `ce1ec19`), the docs branch for v5.3.1 (`5ff33b3`, which also said the default branch held v5.3.1). It is not a filename or letter-case problem: every branch uses `readme.md` (an old `README.md` was deleted on 2026-11-19). **Fix:** the docs-branch `readme.md` is now one accurate document: the docs branch's principles and project-management links, plus feature content checked against the v5.4.0 app and `catalog.json`; it says v5.4.0 is in acceptance testing and not yet formally released; it separates current features from roadmap ideas; it makes no new chatbot-quota claims (budgets are labelled estimates; only a v5.2.0 GitHub Release exists, and it says so). **Still conflicts with `main` when PR #1 merges**, because both sides changed the file. **Resolution (when the owner approves the merge):** keep the PR's `readme.md` in full. **Order dependency:** it describes `release/v5.4.0` at `ad459df` (for example the 500-item install gate), which `main` does not yet contain (`main`'s `index.html` is the earlier `ce1ec19`). Do not merge PR #1 before the release code is in `main`, or the README will overstate `main`.
@@ -80,26 +80,24 @@ An **owner acceptance kit** remains available at [acceptance-kit.html](https://g
 1. ~~Complete catalogue-diff reviewability and automated coverage~~ — implemented on `release/v5.4.0` through `023171d`; Claude-reported test evidence is recorded separately.
 2. ~~Prepare owner acceptance kit~~ — completed on the docs branch.
 3. ~~Owner real-browser acceptance~~ — **all six tests PASS**. Test 4 was repeated using the correct corrective-branch `index.html` and original Test 4 package. The corrected owner record supersedes earlier failure entries.
-4. ~~Implement focused Test 4 correction~~ — commit `0bdeb9622d2a0a5a1ad49d48711aa8c768cf7478` on `fix/v5.4.0-test4-install-button-state`; one commit ahead of `release/v5.4.0`.
+4. ~~Implement and integrate focused Test 4 correction~~ — commit `0bdeb9622d2a0a5a1ad49d48711aa8c768cf7478` on the corrective branch; merged into `release/v5.4.0` through PR #3 as `ad459df8`.
 5. ~~Create reviewable integration proposal~~ — PR #3 ([fix: clarify disabled install state for large catalogue reviews](https://github.com/GenX-Shinobi/Prompt-Builder/pull/3)) was merged into `release/v5.4.0` with merge commit `ad459df8c014fc01dce893ff5374e4e4d8e2280a` on 2026-11-20. GitHub confirms the release branch now contains corrective commit `0bdeb962`. `main` remains unchanged.
 6. ChatGPT independent reproduction of the automated suites remains outstanding. Claude's automated results must remain labelled implementer-reported.
-7. Owner explicitly approves the PR merge into `release/v5.4.0`; this is a separate decision from release approval.
-8. Owner explicitly approves v5.4.0 release only after all release gates pass.
+7. Owner explicitly approves v5.4.0 release only after all release gates pass.
 
 README reconciliation remains prepared on the docs branch and unmerged. Keep the PR's `readme.md` in full when PR #1 is eventually merged, and only after approved release code is on `main`.
 
 ### Active task
 
-PR #3 is the active integration review. First determine why GitHub reports it as not mergeable despite the corrective branch being exactly one commit ahead of the current release head. Do not merge it until the cause is understood and the owner explicitly approves.
+PR #3 is closed/merged. The active work is release-readiness closeout; independent reproduction of the automated suites and remaining desktop/mobile/offline checks are outstanding.
 
-**Single next action:** prepare the v5.4.0 release-readiness closeout, including independent automated-suite reproduction and the remaining desktop/mobile/offline checks. Do not publish, deploy, tag, merge into `main`, or release without separate owner approval.
+**Single next action:** arrange an independent run of the three documented Playwright suites against the merged release branch. Do not publish, deploy, tag, merge into `main`, or release without separate owner approval.
 
 ### Decisions requiring owner approval
 
-1. Merge PR #3 into `release/v5.4.0`.
-2. How and when the reviewed release branch reaches `main`. The branches have diverged; do not merge/rebase automatically.
-3. When to merge PR #1, preserving its reconciled `readme.md` and only after approved release code is on `main`.
-4. Formal v5.4.0 release approval.
+1. How and when the reviewed release branch reaches `main`. The branches have diverged; do not merge/rebase automatically.
+2. When to merge PR #1, preserving its reconciled `readme.md` and only after approved release code is on `main`.
+3. Formal v5.4.0 release approval.
 
 ### Release restrictions (apply to every session)
 
