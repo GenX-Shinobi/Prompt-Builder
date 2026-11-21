@@ -13,11 +13,12 @@ The free-first, chatbot-independent mission and project scope in [PROJECT_CONTRO
    - `node tests/browser_suite_2.js`
    - `node tests/browser_corrective.js`
 4. **Independently review** the final release-branch commit (`023171d`) and the test evidence. May run alongside step 5.
-5. **Owner real-browser acceptance completed:** Tests 1, 2, 3, 5 and 6 passed; Test 4 failed because the disabled Install and reload button was visually ambiguous after a 631-change preview. Installation was not attempted. Optional narrow-window repeat passed.
+5. ~~Owner real-browser acceptance~~ — **all six tests PASS**. The owner corrected the initial Test 4 file-selection/reporting error, downloaded the correct corrective-branch index.html, repeated only Test 4 with the original package, and updated all six fields.
 6. ~~Reconcile the READMEs~~ — **prepared on the docs branch (not merged).** Apply at PR #1 merge by keeping the PR's `readme.md`; merge PR #1 only after the release code is in `main`. The owner decides when.
-7. Obtain explicit owner release approval. The owner decides how the release branch reaches `main`.
+7. Resolve PR #3 mergeability, then obtain explicit owner approval before merging into `release/v5.4.0`.
+8. Obtain separate explicit owner release approval. The owner decides how the release branch reaches `main`.
 
-**Current Claude brief:** [docs/CLAUDE_TASK.md](docs/CLAUDE_TASK.md) — focused Test 4 correction, prepared and awaiting owner submission/authorization.  
+**Corrective implementation:** complete on `fix/v5.4.0-test4-install-button-state` at `0bdeb962`; PR #3 is open, targeting `release/v5.4.0`, and has not been merged. GitHub reports `mergeable=false`; cause to be investigated.  
 **Claude Code shorthand:** `/pb-v54`.
 
 ## NEXT — roadmap reassessment only after v5.4.0 release
