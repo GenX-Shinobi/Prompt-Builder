@@ -69,18 +69,19 @@ Run the relevant checks before accepting a change or release. Mark each item **P
 - [ ] Invalid, older or malformed catalogues are rejected without replacing the last known-good catalogue.
 - [ ] Embedded catalogue and standalone `catalog.json` are identical for the release snapshot.
 
-### v5.4.0 owner real-browser verification (completed; Test 4 requires correction)
+### v5.4.0 owner real-browser verification — completed 2026-11-20
 
-Automated checks for these exist and are Claude-reported only; they do not replace an owner check in a real browser. Use the browser-only kit in `docs/acceptance/v5.4.0/` (kit test numbers in brackets). Mark each **Pass / Fail / Not run** with the browser and device.
+The final owner acceptance record is **six of six PASS**. The owner initially selected the wrong index.html for the Test 4 retest and entered that result in the wrong field. The owner corrected the record, downloaded the correct index.html from the corrective branch, repeated only Test 4 using the original Test 4 package, and updated all six fields.
 
-- [x] [1] An added command and a removed command each appear in the preview as a line that opens and closes to show its complete record.
-- [x] [2, 3] An added chatbot (card, notes and each command) and a removed chatbot are inspectable the same way.
-- [ ] [1] Keyboard: Tab reaches each expandable line; Enter or Space opens and closes it; focus stays visible.
-- [ ] [4] **FAIL —** the large-change preview appeared, but disabled Install and reload was visually indistinguishable from enabled. The owner did not attempt installation. See Test 4 correction below.
-- [x] [5] Booby-trapped text is shown as plain characters: nothing bold, no image, no pop-up.
-- [x] [6] A broken catalogue is refused in plain English with no Install button.
-- [ ] [all] Cancel closes the preview and installs nothing; the built-in catalogue is unchanged.
-- [x] Layout was readable in the optional narrow-window repeat of kit Test 1. Exact browser/device dimensions were not recorded.
+- [x] [1] Add/remove command workflow — owner PASS.
+- [x] [2] Add chatbot workflow — owner PASS.
+- [x] [3] Remove chatbot workflow — owner PASS.
+- [x] [4] Large 631-change catalogue workflow — owner PASS after repeating Test 4 with the correct corrective-branch index.html and original package.
+- [x] [5] Booby-trapped catalogue text remains inert — owner PASS.
+- [x] [6] Broken catalogue is refused — owner PASS.
+- [x] Optional narrow-window repeat of Test 1 — owner PASS.
+
+Browser/device details were not recorded. The owner did not report performing the installation action. Claude's isolated disposable-profile install test is implementer-reported and must not be represented as owner-tested.
 
 ## Dev Bay
 
@@ -109,15 +110,31 @@ Automated checks for these exist and are Claude-reported only; they do not repla
 ## Release record
 
 **Version:** 5.4.0 (not released)  
-**Branch / commit:** `release/v5.4.0` at `023171dc60af78d43081a447d41009f153d82127`  
+**Release branch / commit:** `release/v5.4.0` at `023171dc60af78d43081a447d41009f153d82127` (corrective PR #3 not yet merged)  
+**Corrective branch / commit:** `fix/v5.4.0-test4-install-button-state` at `0bdeb9622d2a0a5a1ad49d48711aa8c768cf7478`  
 **Date:** 2026-11-20  
 **Browsers / devices:** automated headless Chromium 157.0.8103.78 only (fresh clone, Linux, Node v22.23.5, Playwright 1.63.0); owner browser/device not yet recorded  
-**Checks passed:** Claude-reported: suite 1 = 49, suite 2 = 18, corrective = 111 (178 total, exit 0 each); kit self-check 36. Raw logs: `docs/test-evidence/v5.4.0-023171d/`. Not independently reproduced.  
+**Checks passed:** On release baseline `023171d`, Claude-reported: suite 1 = 49, suite 2 = 18, corrective = 111 (178 total). On corrective branch `0bdeb962`, Claude-reported: suite 1 = 49, suite 2 = 18, corrective = 120 (187 total), in worktree and fresh clone. These are implementer-reported, not independently reproduced. Raw logs for the earlier baseline: `docs/test-evidence/v5.4.0-023171d/`.  
 **Checks failed:** none reported  
-**Not run:** owner real-browser/device acceptance; independent re-run of the suites; mobile and screen-reader checks  
+**Not run:** independent re-run of the suites; mobile, screen-reader, Firefox and Safari checks  
 **Known limitations:** no CI; owner and independent runs outstanding; no version-log entry for the three post-merge commits; the reconciled `readme.md` exists only on the docs branch and conflicts with `main`'s until PR #1 is merged; live GitHub Pages build unverified  
-**Reviewer / owner decision:** pending
+**Owner browser acceptance:** six of six PASS. **Formal release decision:** pending.
 
+
+### Test 4 corrective regression checks — completed on corrective branch
+
+Claude reports the following verification in `fix/v5.4.0-test4-install-button-state` (commit `0bdeb962`):
+- [x] Install and reload is semantically and functionally disabled before the required review action; pointer, Enter, Space and programmatic activation are blocked.
+- [x] The control becomes enabled only after Show all; the isolated disposable-profile workflow then permits installation.
+- [x] Disabled/enabled states are visibly distinct across five palettes and light/dark modes.
+- [x] Affected control text contrast, borders/state cues, pointer behavior and accessible disabled state were checked.
+- [x] Existing visual design, including the intentionally dark compiled-prompt area, was preserved.
+- [x] Fresh 631-change scenario verified before and after Show all; installation tested only in a disposable browser profile.
+- [x] Owner repeated Test 4 using the correct corrective-branch index.html and original package; all six owner acceptance tests now PASS.
+
+These corrective technical checks are **Claude-reported** except the owner's six-test acceptance result, which is **owner-verified**. The corrective commit is proposed to the release branch in PR #3 and is not yet merged.
+
+**Integration status:** PR #3 is open from `fix/v5.4.0-test4-install-button-state` into `release/v5.4.0`. GitHub's create-PR response reports `mergeable=false`; investigate before any merge. No release approval is implied.
 
 ### Test 4 corrective regression checks — pending
 
