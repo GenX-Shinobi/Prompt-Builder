@@ -56,9 +56,9 @@ These rules apply to ChatGPT, Claude, Claude Code and any other AI-assisted cont
 
 ## 7. Repository task briefs, PR handoffs and Claude Code shorthand
 
-**Status (2026-11-22):** v5.4.0 is formally released (GitHub Release `v5.4.0`, tag at `97531983`). There is currently **no active Claude implementation brief.**
+**Status (2026-11-22):** v5.4.0 is formally released (GitHub Release `v5.4.0`, tag at `97531983`). There is currently **no active Claude implementation brief.** Current state and the single next action are in `docs/CURRENT_STATUS.md` and `docs/SESSION_HANDOFF.md`; completed briefs and superseded records are indexed in `docs/ARCHIVE_INDEX.md`.
 
-- `docs/CLAUDE_TASK.md` (Test 4 corrective fix) and the `/pb-v54` slash command (`.claude/commands/pb-v54.md`) are **completed historical records**. Keep them as evidence; do not re-run their implementation steps. `/pb-v54` is not a current task and grants no authority.
+- `docs/CLAUDE_TASK.md` (Test 4 corrective fix) and the `/pb-v54` slash command (`.claude/commands/pb-v54.md`) are **completed historical records**. Keep them as evidence; do not re-run their implementation steps or follow their status notes, which predate the release. `/pb-v54` is not a current task and grants no authority.
 - Management documents now live on `main` (PR #1 merged). Documentation changes are proposed on a dedicated branch and pull request; do not duplicate management documents onto application or release branches.
 - A new bounded task may be issued either as an updated canonical task file or as a **PM handoff comment on a pull request** (see below). Either way it needs Owner authorization.
 
