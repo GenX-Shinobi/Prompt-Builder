@@ -15,7 +15,9 @@
 | Release notes polish | Online-app URL has nested/double-bracket Markdown; can correct in a separately authorized docs task |
 | Additional release attachments | None; GitHub provides automatic source archives |
 | README preview | Genuine v5.4.0 first-open capture on `main` (blob `f59e5837…`); not outdated (verified 2026-11-22) |
-| Administrative status (2026-11-22) | Pause ended; Owner resumed administrative closeout only. Read-only mobile-session audit by Claude Code re-verified the rows above against live GitHub. Closeout executed under PM handoff `PB-CLOSEOUT-01` on PR #7 (PR-comment handoff protocol, `docs/AI_WORK_RULES.md` §7) |
+| Administrative status (2026-11-22) | Pause ended; Owner resumed administrative closeout only. Read-only mobile-session audit by Claude Code (**Claude-reported**) re-checked live: release, tag, `main` SHA, Pages deployment, `Preview.jpg`, open PRs. Test rows (187 CI checks, six Owner tests) are carried forward with their original labels, not re-run. Closeout executed under PM handoffs `PB-CLOSEOUT-01` and `PB-CLOSEOUT-02` on PR #7 (PR-comment handoff protocol, `docs/AI_WORK_RULES.md` §7) |
+| Independent PM review | PM retrieved the PB-CLOSEOUT-01 report (comment 7073361214) and independently reviewed the actual diff at `beb4d7e`; scope accepted. PM did not repeat the audit observations |
+| Handoff experiment | PB-CLOSEOUT-01 round trip succeeded: PM assignment (comment 7073337997) → engineer commit `beb4d7e` + report (7073361214) → PM diff review. Human-triggered, not autonomous; shared-account attribution is not authenticated agent identity; comments transport tasks, never confer authority. Candidate CHIMERA lesson, not universal policy |
 | Open PRs | PR #7 only (draft, documentation-only); not merged, not marked ready |
 | Backlog (not scheduled) | ≤600px header overlap; chatbot-note styling; in-file version-log entry; release-note link fix; branch housekeeping (Owner decision; preserve evidence and agent configurations) |
 | New implementation | None authorized; no v5.5.0 or CHIMERA implementation without a bounded owner-approved plan |
