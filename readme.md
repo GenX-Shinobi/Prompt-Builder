@@ -98,7 +98,8 @@ Ideas are captured and prioritised without turning every idea into immediate sco
 - [PROJECT_CONTROL.md](PROJECT_CONTROL.md): central project memory, decisions, active work and session-resume instructions.
 - [ROADMAP.md](ROADMAP.md): now, next and later direction, and release gates.
 - [docs/IDEA_INBOX.md](docs/IDEA_INBOX.md): idea capture and triage.
-- [docs/CURRENT_STATUS.md](docs/CURRENT_STATUS.md): dated technical baseline and handoff.
+- [docs/CURRENT_STATUS.md](docs/CURRENT_STATUS.md): the single authoritative, dated snapshot of the current project state (release, repository, testing and open items).
+- [docs/ARCHIVE_INDEX.md](docs/ARCHIVE_INDEX.md): permanent links to superseded documentation, the decision trail, and where evidence is kept.
 - [docs/REGRESSION_CHECKLIST.md](docs/REGRESSION_CHECKLIST.md): repeatable pre-release checks.
 - [docs/](docs/): guides and reference PDFs.
 
