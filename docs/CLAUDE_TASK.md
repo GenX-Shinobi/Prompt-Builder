@@ -1,4 +1,4 @@
-> **Task status update — 2026-11-21:** The Test 4 corrective implementation described below is complete. The owner accepted all six browser scenarios, and PR #3 merged the correction into release/v5.4.0. This file is retained as the historical implementation brief and evidence record; do not re-run its implementation steps. The current release-readiness next action is in docs/SESSION_HANDOFF.md and docs/CURRENT_STATUS.md: verify the actual Claude workspace and arrange independent reproduction of the three Playwright suites. No merge into main, publication, deployment, tag, formal release or v5.5.0 work is authorized by this task file.
+> **COMPLETED — HISTORICAL RECORD ONLY.** This assignment is closed, and v5.4.0 has since been released. The brief and evidence below are kept as a historical record: they are not current instructions, and none of their steps should be run again. For the current project state, see [CURRENT_STATUS.md](CURRENT_STATUS.md); for the next action, see [SESSION_HANDOFF.md](SESSION_HANDOFF.md). This file authorizes no work.
 
 # Claude Code Assignment — v5.4.0 Test 4 corrective fix
 

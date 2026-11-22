@@ -13,7 +13,7 @@ The application is one standalone HTML file with no build step, no external libr
 - **[Browse older versions](archive/)**
 - **[Browse project documents](docs/)**
 
-Which version do you have? The current build is **v5.4.0**. It is the version on the `main` branch and in the live app. It passed the project's automated browser tests on GitHub Actions (187 checks) and the owner's six browser acceptance tests. It is **not yet formally released**: there is no v5.4.0 tag or GitHub Release yet, and some release checks (real phones and tablets, screen readers, Firefox and Safari) are still outstanding. The version is recorded in the comment block at the top of `index.html` (`currentVersion`).
+Which version do you have? The current build is **v5.4.0**. It is the version on the `main` branch and in the live app. It passed the project's automated browser tests on GitHub Actions (187 checks) and the owner's six browser acceptance tests. It is **formally released**: tag `v5.4.0` and the [v5.4.0 GitHub Release](https://github.com/GenX-Shinobi/Prompt-Builder/releases/tag/v5.4.0) are published. Some checks have still not been done: real phones and tablets, screen readers, Firefox and Safari. The version is recorded in the comment block at the top of `index.html` (`currentVersion`).
 
 ![AI Prompt Builder Hub v5.4.0 as it first opens on a desktop browser](Preview.jpg)
 
@@ -95,16 +95,17 @@ Nothing is fetched unless you click **Check for newer catalog**.
 
 Ideas are captured and prioritised without turning every idea into immediate scope. **Anything in the roadmap or idea inbox is a future idea, not a feature of the current app.**
 
-- [PROJECT_CONTROL.md](PROJECT_CONTROL.md): central project memory, decisions, active work and session-resume instructions.
+- [PROJECT_CONTROL.md](PROJECT_CONTROL.md): enduring governance: principles, roles, authority and operating boundaries. Current status is in [docs/CURRENT_STATUS.md](docs/CURRENT_STATUS.md) and resume instructions are in [docs/SESSION_HANDOFF.md](docs/SESSION_HANDOFF.md).
 - [ROADMAP.md](ROADMAP.md): now, next and later direction, and release gates.
 - [docs/IDEA_INBOX.md](docs/IDEA_INBOX.md): idea capture and triage.
-- [docs/CURRENT_STATUS.md](docs/CURRENT_STATUS.md): dated technical baseline and handoff.
+- [docs/CURRENT_STATUS.md](docs/CURRENT_STATUS.md): the single authoritative, dated snapshot of the current project state (release, repository, testing and open items).
+- [docs/ARCHIVE_INDEX.md](docs/ARCHIVE_INDEX.md): permanent links to superseded documentation, the decision trail, and where evidence is kept.
 - [docs/REGRESSION_CHECKLIST.md](docs/REGRESSION_CHECKLIST.md): repeatable pre-release checks.
 - [docs/](docs/): guides and reference PDFs.
 
 ## Older versions
 
-Earlier builds (v5.1 through v5.3.1, and earlier prototypes) are stored in [archive/](archive/). A v5.2.0 release is published under [Releases](https://github.com/GenX-Shinobi/Prompt-Builder/releases).
+Earlier builds (v5.1 through v5.3.1, and earlier prototypes) are stored in [archive/](archive/). v5.4.0 is the current published release, and v5.2.0 is an earlier, historical release; both are listed under [Releases](https://github.com/GenX-Shinobi/Prompt-Builder/releases).
 
 ## Contributing and testing
 
