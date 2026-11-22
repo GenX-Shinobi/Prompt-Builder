@@ -14,7 +14,11 @@
 | Cosmetic issues | Header overlap ≤600px, unstyled chatbot note; no separate in-file log entry for final button correction |
 | Release notes polish | Online-app URL has nested/double-bracket Markdown; can correct in a separately authorized docs task |
 | Additional release attachments | None; GitHub provides automatic source archives |
-| New implementation | None authorized; CHIMERA and v5.5.0 paused pending next-session planning |
+| README preview | Genuine v5.4.0 first-open capture on `main` (blob `f59e5837…`); not outdated (verified 2026-11-22) |
+| Administrative status (2026-11-22) | Pause ended; Owner resumed administrative closeout only. Read-only mobile-session audit by Claude Code re-verified the rows above against live GitHub. Closeout executed under PM handoff `PB-CLOSEOUT-01` on PR #7 (PR-comment handoff protocol, `docs/AI_WORK_RULES.md` §7) |
+| Open PRs | PR #7 only (draft, documentation-only); not merged, not marked ready |
+| Backlog (not scheduled) | ≤600px header overlap; chatbot-note styling; in-file version-log entry; release-note link fix; branch housekeeping (Owner decision; preserve evidence and agent configurations) |
+| New implementation | None authorized; no v5.5.0 or CHIMERA implementation without a bounded owner-approved plan |
 
 This is a post-release documentation checkpoint, not a new application release. Older pending release-gate and PR-status text below is historical and superseded. Any closeout documentation branch requires a separate owner-approved merge.
 
