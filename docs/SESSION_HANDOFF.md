@@ -2,7 +2,7 @@
 
 > Continuity only: how to resume, what to check, and the single next action. Current facts live in [CURRENT_STATUS.md](CURRENT_STATUS.md); rules in [../PROJECT_CONTROL.md](../PROJECT_CONTROL.md) and [AI_WORK_RULES.md](AI_WORK_RULES.md). Earlier handoffs are recoverable through [ARCHIVE_INDEX.md](ARCHIVE_INDEX.md) and are not instructions.
 
-**Checkpoint:** 2026-11-22, PB-CLOSEOUT-04 (documentation reconciliation on draft PR from `docs/v5.4.0-final-reconciliation`)
+**Checkpoint:** 2026-11-22, PB-CLOSEOUT-08 post-merge checkpoint. PR #8 (final documentation reconciliation, PB-CLOSEOUT-04 to 07) is merged into `main` at `2374a1771277c967bcad497e18512d0676d158e2`.
 
 ## Resume phrase
 
@@ -30,4 +30,6 @@ The four CI artifacts expire on **2026-12-05 ~16:05 UTC**. A permanent Owner-con
 
 ## Single next action
 
-ChatGPT independently reviews the PB-CLOSEOUT-04 draft PR (diff, evidence and scope) and presents one Owner decision: merge, revise or reject it.
+The Owner makes a permanent, Owner-controlled private backup of the evidence package before **2026-12-05 ~16:05 UTC** and confirms to the PM that it is done. No repository change is needed for this, and no private details belong in this repository.
+
+Not part of the next action: the deferred documentation maintenance (P1–P9, PR #8 comment 7075299144), archive tags, branch retirement and any development work. Each needs separate Owner authorization.
