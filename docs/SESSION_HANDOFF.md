@@ -1,5 +1,24 @@
 # AI Prompt Builder Hub — Session Handoff
 
+## NEW SESSION RESUME — post-release checkpoint (2026-11-21)
+
+**Resume phrase:** “Resume after the v5.4.0 release. Verify GitHub, review the documentation closeout, then resume CHIMERA governance planning in its separate repository. One owner decision at a time.”
+
+**Verified release:** https://github.com/GenX-Shinobi/Prompt-Builder/releases/tag/v5.4.0 — published, stable, not draft. Tag `v5.4.0` and `main` both at `97531983b26b7e00be78a8200284d7897a97b864` at checkpoint. GitHub Pages URL: https://genx-shinobi.github.io/Prompt-Builder/ . PR #4 and PR #1 merged; verified README preview on main. Code unchanged; 187 automated checks and six owner tests passed.
+
+**Accepted untested areas:** real phones/tablets/touch, Firefox/Safari, screen readers, manual contrast audit. **Known issues:** header overlap at ≤600px; unstyled chatbot note; final button correction absent as separate in-file version-log entry; malformed nested Markdown link in release notes. These are follow-up candidates, not retroactive release blockers.
+
+**Separation:** Prompt Builder v5.4.0 is finished and published. CHIMERA (https://github.com/GenX-Shinobi/CHIMERA) is a separate initiative; its foundational governance, four memory levels plus chronological integrity layer, traceable lessons, institutional learning/project isolation and bounded autonomy are already approved. Resume by checking CHIMERA's live repository and its actual documents, reconciling roadmap/governance proposals before any implementation. The Prompt Builder v5.5.0 backlog is a *future* possible pilot, not current scope.
+
+**Owner-facing next action:** Review the documentation-only closeout PR, if still open; do not merge without explicit approval. Then propose one bounded CHIMERA planning step. The pause has ended (2026-11-22); the Owner resumed administrative closeout only. No automated reminders unless separately requested.
+
+**2026-11-22 update:** A read-only mobile-session audit by Claude Code (Claude-reported) re-checked the release, tag, Pages deployment and the genuine v5.4.0 `Preview.jpg` on `main` (README preview not outdated); earlier test evidence was not re-run. Documentation closeout ran under PM handoffs `PB-CLOSEOUT-01` (commit `beb4d7e`; PM independently reviewed the diff) and `PB-CLOSEOUT-02` on PR #7, using the PR-comment handoff protocol in `docs/AI_WORK_RULES.md` §7: PR comments are task transport, not independent authority; one completion report per handoff; no merge; stop for PM review. The PB-CLOSEOUT-01 round trip was human-triggered, not autonomous; shared-account attribution is not authenticated agent identity. Candidate CHIMERA lesson, not universal policy. ≤600px header overlap remains backlog.
+
+**Historical sections below remain as dated evidence and are superseded where they describe pre-release state.**
+
+---
+
+
 **Checkpoint:** 2026-11-21, after PR #6 (v5.4.0 code merged into `main`)  
 **Written by:** Claude Code (Engineering Lead), Owner-assigned documentation closeout  
 **Repository:** https://github.com/GenX-Shinobi/Prompt-Builder  

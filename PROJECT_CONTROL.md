@@ -1,5 +1,22 @@
 # AI Prompt Builder Hub — Project Control
 
+## POST-RELEASE CHECKPOINT — 2026-11-21 (authoritative; supersedes historical pre-release status below)
+
+**v5.4.0 is formally released.** Owner approved release with disclosed manual-testing limitations. GitHub API independently confirmed a published, non-draft, non-prerelease release `v5.4.0` on 2026-11-21 at https://github.com/GenX-Shinobi/Prompt-Builder/releases/tag/v5.4.0 . The lightweight tag points to `97531983b26b7e00be78a8200284d7897a97b864`, identical to `main` at verification. The tested application blob `index.html` remains `856fb513eb242d8bf704d96a829f924217b3bc95`. PR #4 merged into the documentation baseline, then PR #1 merged into `main`; the README and genuine first-open `Preview.jpg` (blob `f59e58372626ba9530e53d7f6a23646d7e62b84f`) are now on `main`.
+
+**Testing and accepted exceptions:** GitHub Actions verified 187 Chromium/Playwright checks; owner passed six desktop acceptance tests. Real mobile/touch, Firefox/Safari, screen readers and manual contrast audit were not completed and were explicitly accepted as disclosed release limitations. Known cosmetic issues: header overlap at widths ≤600px; unstyled chatbot note. The in-file version log lacks a separate entry for the final disabled-button correction. The GitHub Release notes include a malformed double-bracket online-app link; this is documentation polish, not a code blocker. Do not silently mark any unperformed check as passed.
+
+**Authority:** No additional app code changes, v5.5.0 work, CHIMERA implementation, merges, branch deletion or new release authorized by this checkpoint. Documentation closeout is proposed on a separate branch/PR (PR #7), not merged without owner approval. Work schedules are private and do not belong in public repo documents.
+
+**Administrative resumption — 2026-11-22:** The Owner has ended the pause and resumed administrative closeout work only. A read-only mobile-session audit by Claude Code on 2026-11-22 (**Claude-reported**; Claude read live GitHub for these items only) observed: `main` and tag `v5.4.0` both at `97531983`; the GitHub Release is published, not draft or prerelease; GitHub Pages deployed from `97531983` successfully; `Preview.jpg` on `main` is the genuine v5.4.0 first-open capture (blob `f59e5837…`, 1440 × 3982), so the README preview is **not** outdated on `main`; PR #7 was the only open PR. Documentation closeout was then executed under bounded PM handoffs `PB-CLOSEOUT-01` (commit `beb4d7e`) and `PB-CLOSEOUT-02` on PR #7 using the PR-comment handoff protocol in [docs/AI_WORK_RULES.md](docs/AI_WORK_RULES.md) §7. **Independent PM review:** the PM retrieved the PB-CLOSEOUT-01 report and independently reviewed the actual diff at `beb4d7e` (scope accepted). The PM did not independently repeat the audit observations above, and no earlier test (187 CI checks, six Owner tests) was re-run; those keep their original labels. Untested areas stay untested.
+
+**Handoff experiment (PB-CLOSEOUT-01):** human-triggered, not autonomous; recorded in [docs/AI_WORK_RULES.md](docs/AI_WORK_RULES.md) §7. Shared GitHub account attribution is not authenticated agent identity, and PR comments transport tasks but never confer authority. Candidate lesson for CHIMERA, not approved universal policy.
+
+**Next session:** Read this checkpoint, [docs/SESSION_HANDOFF.md](docs/SESSION_HANDOFF.md), [docs/CURRENT_STATUS.md](docs/CURRENT_STATUS.md), [ROADMAP.md](ROADMAP.md), then verify live GitHub. Review/approve the documentation-only closeout PR #7 as a separate decision; branch housekeeping and the release-note link fix are separate owner decisions. After administrative closeout, resume **CHIMERA governance and memory/roadmap planning in its own repository** under its already approved foundations; no CHIMERA implementation or Prompt Builder v5.5.0 work without a bounded owner-approved plan.
+
+---
+
+
 > Central continuity and decision file. At the start of a new ChatGPT or coding-agent session, read this file and the linked project documents, then verify live GitHub and relevant local workspace state.
 
 **Repository:** https://github.com/GenX-Shinobi/Prompt-Builder  
