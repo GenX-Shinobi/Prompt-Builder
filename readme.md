@@ -95,7 +95,7 @@ Nothing is fetched unless you click **Check for newer catalog**.
 
 Ideas are captured and prioritised without turning every idea into immediate scope. **Anything in the roadmap or idea inbox is a future idea, not a feature of the current app.**
 
-- [PROJECT_CONTROL.md](PROJECT_CONTROL.md): central project memory, decisions, active work and session-resume instructions.
+- [PROJECT_CONTROL.md](PROJECT_CONTROL.md): enduring governance: principles, roles, authority and operating boundaries. Current status is in [docs/CURRENT_STATUS.md](docs/CURRENT_STATUS.md) and resume instructions are in [docs/SESSION_HANDOFF.md](docs/SESSION_HANDOFF.md).
 - [ROADMAP.md](ROADMAP.md): now, next and later direction, and release gates.
 - [docs/IDEA_INBOX.md](docs/IDEA_INBOX.md): idea capture and triage.
 - [docs/CURRENT_STATUS.md](docs/CURRENT_STATUS.md): the single authoritative, dated snapshot of the current project state (release, repository, testing and open items).
@@ -105,7 +105,7 @@ Ideas are captured and prioritised without turning every idea into immediate sco
 
 ## Older versions
 
-Earlier builds (v5.1 through v5.3.1, and earlier prototypes) are stored in [archive/](archive/). A v5.2.0 release is published under [Releases](https://github.com/GenX-Shinobi/Prompt-Builder/releases).
+Earlier builds (v5.1 through v5.3.1, and earlier prototypes) are stored in [archive/](archive/). v5.4.0 is the current published release, and v5.2.0 is an earlier, historical release; both are listed under [Releases](https://github.com/GenX-Shinobi/Prompt-Builder/releases).
 
 ## Contributing and testing
 
