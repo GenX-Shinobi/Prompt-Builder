@@ -13,7 +13,7 @@ The application is one standalone HTML file with no build step, no external libr
 - **[Browse older versions](archive/)**
 - **[Browse project documents](docs/)**
 
-Which version do you have? The current build is **v5.4.0**. It is the version on the `main` branch and in the live app. It passed the project's automated browser tests on GitHub Actions (187 checks) and the owner's six browser acceptance tests. It is **not yet formally released**: there is no v5.4.0 tag or GitHub Release yet, and some release checks (real phones and tablets, screen readers, Firefox and Safari) are still outstanding. The version is recorded in the comment block at the top of `index.html` (`currentVersion`).
+Which version do you have? The current build is **v5.4.0**. It is the version on the `main` branch and in the live app. It passed the project's automated browser tests on GitHub Actions (187 checks) and the owner's six browser acceptance tests. It is **formally released**: tag `v5.4.0` and the [v5.4.0 GitHub Release](https://github.com/GenX-Shinobi/Prompt-Builder/releases/tag/v5.4.0) are published. Some checks have still not been done: real phones and tablets, screen readers, Firefox and Safari. The version is recorded in the comment block at the top of `index.html` (`currentVersion`).
 
 ![AI Prompt Builder Hub v5.4.0 as it first opens on a desktop browser](Preview.jpg)
 
