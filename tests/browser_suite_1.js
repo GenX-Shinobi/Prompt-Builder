@@ -66,7 +66,7 @@ const ok = (c, m) => { if (c) { pass++; console.log('PASS ' + m); } else { fail+
   });
   ok(!cs.leakText && !cs.leakPreset, 'clean source has no typed text or presets');
   ok(cs.hasBlock && cs.parsedOk, 'clean source embeds valid catalog JSON');
-  ok(cs.doctype && cs.end && cs.ver === '5.5.0-test.1' && cs.details, 'clean source structure + version 5.5.0-test.1 + start panel open');
+  ok(cs.doctype && cs.end && cs.ver === '5.5.0-test.2' && cs.details, 'clean source structure + version 5.5.0-test.2 + start panel open');
 
   // 5 import flow
   const mod = await p.evaluate(() => {

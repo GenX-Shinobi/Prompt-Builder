@@ -134,7 +134,7 @@ const shown = (p, sel) => p.evaluate(s => { const e = document.querySelector(s);
   /* ---------- 10. Clean export never carries guided state ---------- */
   await p.fill('#guideTask', 'PRIVATE-GUIDED-MARKER'); await p.click('label.pill:has(input[name=\"guideFmt\"][value=\"draft\"])');
   const cs = await p.evaluate(() => getCleanSource());
-  ok(!/PRIVATE-GUIDED-MARKER/.test(cs) && !/class="wrap guided"/.test(cs) && /id="guideCard" hidden=""/.test(cs) && /currentVersion: "5\.5\.0-test\.1"/.test(cs), 'clean source: no guided text or mode, card hidden, version 5.5.0-test.1');
+  ok(!/PRIVATE-GUIDED-MARKER/.test(cs) && !/class="wrap guided"/.test(cs) && /id="guideCard" hidden=""/.test(cs) && /currentVersion: "5\.5\.0-test\.2"/.test(cs), 'clean source: no guided text or mode, card hidden, version 5.5.0-test.2');
   const cdoc = await p.evaluate(h => { const d = new DOMParser().parseFromString(h, 'text/html'); const pv = d.getElementById('promptPreview'); return { ce: pv.hasAttribute('contenteditable'), chk: [...d.querySelectorAll('input[name="guideFmt"]')].filter(r => r.hasAttribute('checked')).map(r => r.value).join('|') }; }, cs);
   ok(!cdoc.ce && cdoc.chk === '', 'clean source: preview read-only, only "No preference" pre-checked');
 

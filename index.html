@@ -192,6 +192,9 @@ select { appearance: none; cursor: pointer; padding-right: 36px;
 .wrap.guided main > section[data-sec="modules"], .wrap.guided main > section[data-sec="core"], .wrap.guided main > section[data-sec="presets"], .wrap.guided main > section[data-sec="devbay"], .wrap.guided #startHere { display: none; }
 .wrap.guided #activeCount { display: none; }
 .wrap.guided .preview-box:empty::before { content: "Describe your task and your prompt will appear here. You can edit it before you copy it."; }
+.launch-near { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-top: 10px; }
+.launch-near .btn-main { min-height: 44px; }
+.launch-near .btn-secondary { min-height: 44px; }
 .preview-box[contenteditable]:not([contenteditable="false"]) { cursor: text; }
 .preview-box[contenteditable]:not([contenteditable="false"]):focus { outline: 2px solid var(--accent); outline-offset: -2px; }
 
@@ -388,10 +391,17 @@ This block acts as an unalterable log. Every future AI Chatbot updating this fil
 increment the minor/major version string below, append a new historical array object, and preserve the template structure.
 
 [ACTIVE CONFIGURATION]
-- currentVersion: "5.5.0-test.1"
+- currentVersion: "5.5.0-test.2"
 
 [MIGRATION HISTORY MATRIX]
 [
+  {
+    "version": "5.5.0-test.2",
+    "bot": "Claude (Anthropic)",
+    "date": "2026-11-22",
+    "change": "DRAFT TEST BUILD (PB-550-01 placement follow-up, not a release). Copy & launch is now within easy reach of the field where the user finishes typing, in both modes. Standard builder: a Copy & launch button sits directly under the Core prompt box. Guided path: a Copy & launch button sits in step 3 (Review, edit and copy), right under the answer-format choices and beside Rebuild from my answers; the editable prompt keeps the console button directly beneath it. The console Copy & launch button (#launchBtn) is unchanged and stays where it was. All three buttons run the same launchBot() action, so copy, automatic splitting and launch behave exactly as before; each one follows the selected chatbot's name and colour, and hardReset() returns every one to its default label and style. Buttons are native <button> elements (Enter and Space work, touch target at least 44px tall); typing Enter in the multiline boxes still adds a new line and never launches. Desktop and narrow layouts both keep the button within the same card as the typing field. No new dependencies; nothing new is stored.",
+    "why": "Owner clarification on issue #11: keep the existing Copy & launch action within easy reach of the field where the user finishes typing, in both Standard builder and Guided path."
+  },
   {
     "version": "5.5.0-test.1",
     "bot": "Claude (Anthropic)",
@@ -577,7 +587,10 @@ paste the package into a chatbot, and save the complete .html file it returns.
                 </fieldset>
                 <div class="step" style="margin-top:18px"><div class="num">3</div><div><h2>Review, edit and copy</h2><small>Your prompt is in the Your prompt panel. Click into it to change anything, then press Copy &amp; launch.</small></div></div>
                 <div class="guide-status" id="guideStatus" role="status" aria-live="polite" data-render=""></div>
-                <button class="btn-secondary" id="guideRebuild" type="button" hidden="" onclick="rebuildGuided()">Rebuild from my answers</button>
+                <div class="launch-near">
+                    <button class="btn-main" id="guideLaunchBtn" type="button" data-launch="" data-tip="Copies the full prompt shown in Your prompt to your clipboard (split into parts if it is over the chatbot's limit) and opens the selected chatbot in a new tab. Paste it into the chat box." onclick="launchBot()">Copy &amp; launch</button>
+                    <button class="btn-secondary" id="guideRebuild" type="button" hidden="" onclick="rebuildGuided()">Rebuild from my answers</button>
+                </div>
             </div>
             <section class="card">
                 <div class="step"><div class="num">1</div><div><h2>System commands &amp; cheat-sheet modifiers</h2><small>Mix and match — the console updates live</small></div></div>
@@ -591,6 +604,7 @@ paste the package into a chatbot, and save the complete .html file it returns.
             <section class="card">
                 <div class="step"><div class="num">2</div><div><h2>Core prompt</h2><small>Your base query, topic or source text</small></div></div>
                 <textarea id="corePrompt" placeholder="Type your base query or topic here..."></textarea>
+                <div class="launch-near"><button class="btn-main" id="coreLaunchBtn" type="button" data-launch="" data-tip="Copies the full compiled prompt to your clipboard (split into parts if it is over the chatbot's limit) and opens the selected chatbot in a new tab. Paste it into the chat box." onclick="launchBot()">Copy &amp; launch</button></div>
                 <div class="drop" id="drop" tabindex="0" data-tip="Drag files or photos here, click to browse, or paste a screenshot with Ctrl/Cmd+V. Files never leave your device; text files can be pasted into the prompt, everything else is listed in the prompt and uploaded by you in the chatbot (many chatbots need a free account for uploads).">
                     <input type="file" id="fileInput" multiple="" hidden="">
                     <div class="drop-ic">📎</div>
@@ -681,7 +695,7 @@ paste the package into a chatbot, and save the complete .html file it returns.
             <pre id="promptPreview" class="preview-box"></pre>
             <div id="manualNote" data-render="" hidden=""></div>
             <div class="console-actions">
-                <button class="btn-main" id="launchBtn" type="button" data-tip="Copies the full compiled prompt to your clipboard (split into parts if it is over the chatbot's limit) and opens the selected chatbot in a new tab. Paste it into the chat box." onclick="launchBot()">Copy &amp; launch</button>
+                <button class="btn-main" id="launchBtn" type="button" data-launch="" data-tip="Copies the full compiled prompt to your clipboard (split into parts if it is over the chatbot's limit) and opens the selected chatbot in a new tab. Paste it into the chat box." onclick="launchBot()">Copy &amp; launch</button>
                 <button class="btn-ghost" type="button" data-tip="Clears the prompt text and every selected command." onclick="resetAll()">Reset all</button>
             </div>
             <div id="splitBox" data-render="" hidden=""></div>
@@ -1439,9 +1453,11 @@ function selectBot(name) {
     document.querySelectorAll('.botcard').forEach(b => { const on = b.dataset.bot === currentBot.name; b.classList.toggle('active', on); b.setAttribute('aria-checked', on); });
 
     // single launch button: label and colour follow the selected bot
-    const lb = document.getElementById('launchBtn');
-    lb.style.setProperty('--bc', currentBot.color);
-    lb.innerHTML = 'Copy &amp; launch in ' + esc(currentBot.name) + ' \u2197';
+    /* v5.5.0-test.2: every Copy & launch button (console, Core prompt, Guided step 3) runs launchBot() and follows the bot */
+    document.querySelectorAll('[data-launch]').forEach(lb => {
+        lb.style.setProperty('--bc', currentBot.color);
+        lb.innerHTML = 'Copy &amp; launch in ' + esc(currentBot.name) + ' \u2197';
+    });
 
     renderBotCmds();
     const r = applyFilters();
@@ -1671,7 +1687,7 @@ function hardReset(root) {
     const toastEl = $('#toast'); if (toastEl) { toastEl.removeAttribute('class'); toastEl.removeAttribute('style'); }
     ['splitBox', 'manualNote', 'modSplitBox'].forEach(id => { const e = $('#' + id); if (e) e.setAttribute('hidden', ''); });
     // buttons restored to default labels and styles
-    const lb = $('#launchBtn'); if (lb) { lb.textContent = 'Copy & launch'; lb.removeAttribute('style'); }
+    root.querySelectorAll('[data-launch]').forEach(lb => { lb.textContent = 'Copy & launch'; lb.removeAttribute('style'); });
     const ml = $('#modLaunchBtn'); if (ml) ml.textContent = 'Copy package & launch';
     // v5.4.0: catalog box, preset import, start panel
     ['catImportBox', 'catDiff', 'catSplitBox'].forEach(id => { const e = $('#' + id); if (e) e.setAttribute('hidden', ''); });

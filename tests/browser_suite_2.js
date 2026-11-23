@@ -35,7 +35,7 @@ const ok = (c, m) => { if (c) { pass++; console.log('PASS ' + m); } else { fail+
   await p.evaluate(() => compileModificationPayload());
   const [d1] = await Promise.all([p.waitForEvent('download'), p.click('#modDownloadBtn')]);
   const html = fs.readFileSync(await d1.path(), 'utf8');
-  ok(!/PRIVATE-MARKER|ATTACHED-TEXT|Secret|"name":"dup"/.test(html) && /currentVersion: "5\.5\.0-test\.1"/.test(html) && html.trim().endsWith('</html>'), 'Download clean .html: complete, v5.5.0-test.1, no typed text/attachment/preset data');
+  ok(!/PRIVATE-MARKER|ATTACHED-TEXT|Secret|"name":"dup"/.test(html) && /currentVersion: "5\.5\.0-test\.2"/.test(html) && html.trim().endsWith('</html>'), 'Download clean .html: complete, v5.5.0-test.2, no typed text/attachment/preset data');
   await p.click('#presetExportBtn');
   ok(reqs.length === 0, 'STILL zero network requests after typing, attaching, presets, launch, Dev Bay, downloads (' + reqs.length + ')');
 
