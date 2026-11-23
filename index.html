@@ -177,6 +177,26 @@ select { appearance: none; cursor: pointer; padding-right: 36px;
 }
 .preview-box:empty::before { content: "Your compiled prompt will materialise here\2026"; opacity: .4; }
 .console-actions { display: flex; flex-wrap: wrap; gap: 8px; padding: 14px 16px 16px; border-top: 1px solid var(--console-line); }
+/* ---------- v5.5.0 Guided Path ---------- */
+.modebar { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; margin-top: 22px; }
+.modebar-label { font-size: 13px; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: .08em; margin-right: 4px; }
+.modebtn { display: inline-flex; flex-direction: column; align-items: flex-start; gap: 2px; text-align: left; min-height: 44px; background: var(--card); color: var(--ink); border: 1.5px solid var(--line); box-shadow: var(--shadow); }
+.modebtn small { font-weight: 500; font-size: 12px; color: var(--muted); }
+.modebtn[aria-pressed="true"] { background: var(--accent); color: #fff; border-color: var(--accent); }
+.modebtn[aria-pressed="true"] small { color: #fff; opacity: .9; }
+.guide fieldset { border: 0; margin: 18px 0 0; padding: 0; min-width: 0; }
+.guide legend { padding: 0; }
+.guide .hint { color: var(--muted); font-size: 13px; margin: 6px 0 0; }
+.guide-status { margin-top: 10px; font-size: 13px; color: var(--muted); }
+.guide-status:empty { display: none; }
+.wrap.guided main > section[data-sec="modules"], .wrap.guided main > section[data-sec="core"], .wrap.guided main > section[data-sec="presets"], .wrap.guided main > section[data-sec="devbay"], .wrap.guided #startHere { display: none; }
+.wrap.guided #activeCount { display: none; }
+.wrap.guided .preview-box:empty::before { content: "Describe your task and your prompt will appear here. You can edit it before you copy it."; }
+.launch-near { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-top: 10px; }
+.launch-near .btn-main { min-height: 44px; }
+.launch-near .btn-secondary { min-height: 44px; }
+.preview-box[contenteditable]:not([contenteditable="false"]) { cursor: text; }
+.preview-box[contenteditable]:not([contenteditable="false"]):focus { outline: 2px solid var(--accent); outline-offset: -2px; }
 
 /* ---------- Buttons ---------- */
 button { font: inherit; cursor: pointer; border: none; border-radius: 12px; padding: 10px 16px; font-weight: 600; font-size: 14px; transition: transform .12s, background .2s, box-shadow .2s; }
@@ -323,6 +343,9 @@ button:focus-visible { outline: 3px solid var(--accent-soft); outline-offset: 2p
 .botopts { margin-top: 10px; }
 .splitbox { margin: 10px 0 0; padding: 12px; border-radius: 14px; border: 1.5px solid #e8b030; background: var(--card-2); font-size: 13px; line-height: 1.5; }
 .splitbox[hidden] { display: none; }
+#splitBox.splitbox { color: var(--ink); }
+#splitBox .parts button { min-height: 44px; }
+.console > #splitBox { margin: 0 16px 16px; }
 .splitbox .parts { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
 .splitbox .parts button { padding: 6px 12px; font-size: 12.5px; background: var(--accent); color: #fff; }
 
@@ -371,10 +394,38 @@ This block acts as an unalterable log. Every future AI Chatbot updating this fil
 increment the minor/major version string below, append a new historical array object, and preserve the template structure.
 
 [ACTIVE CONFIGURATION]
-- currentVersion: "5.4.0"
+- currentVersion: "5.5.0-test.4"
 
 [MIGRATION HISTORY MATRIX]
 [
+  {
+    "version": "5.5.0-test.4",
+    "bot": "Claude (Anthropic)",
+    "date": "2026-11-23",
+    "change": "DRAFT TEST BUILD (PB-550-01 short-viewport split fix, not a release). revealSplit() now measures Copy part 1 instead of the whole split panel. When Copy part 1 and the pressed Copy & launch both fit on screen, both stay visible (Part 1 kept clear of the toast where there is room); on screens too short for both, Copy part 1 takes priority. test.3 capped the scroll to keep the pressed button on screen, which left Copy part 1 below the bottom edge on short narrow screens (reproduced at 320 px wide and 300 px tall or less). splitAndCopy() now reveals after copying part 1, because the copy routine returns focus to the pressed button and that focus could scroll the page back. Splitting, parts, clipboard, keyboard order and the single moving split box are unchanged. No new dependencies; nothing new is stored.",
+    "why": "Owner-approved PB-550-01 follow-up on PR #12: Copy part 1 could be left off screen on short viewports."
+  },
+  {
+    "version": "5.5.0-test.3",
+    "bot": "Claude (Anthropic)",
+    "date": "2026-11-23",
+    "change": "DRAFT TEST BUILD (PB-550-01 launch and split placement follow-up, not a release). (1) Guided path: the Copy & launch button moved from step 3 to directly under the task box, so it is reachable from where the user types without scrolling past the optional answer-format choices (whether or not one is picked). Step 3 keeps Rebuild from my answers; the console Copy & launch stays directly under the editable prompt. (2) Split controls follow the launch: every Copy & launch now passes itself to launchBot(src). When a prompt is over the chatbot's budget, the one existing #splitBox (Copy part 1..N) is moved to sit directly after the button the user pressed (under the Core prompt, under the Guided task box, or in the console), scrolled into view if needed (leaving room above the toast, without scrolling the pressed button off the top), and is next in keyboard order after that button. It is a single element that moves, so no second or stale set can exist; hideSplit() hides it and returns it to its console home. Splitting, part order, clipboard copying and chatbot launch reuse the unchanged splitPrompt(), copyText(), copyPart() and window.open path. The split box now uses the shared .splitbox style so it reads clearly on light cards and in the dark console, and its Copy part buttons are at least 44px tall for touch. No new dependencies; nothing new is stored.",
+    "why": "Owner-approved PB-550-01 follow-up (issue #11): Copy & launch reachable from the Guided task box, and Copy part controls next to the launch button the user activated."
+  },
+  {
+    "version": "5.5.0-test.2",
+    "bot": "Claude (Anthropic)",
+    "date": "2026-11-22",
+    "change": "DRAFT TEST BUILD (PB-550-01 placement follow-up, not a release). Copy & launch is now within easy reach of the field where the user finishes typing, in both modes. Standard builder: a Copy & launch button sits directly under the Core prompt box. Guided path: a Copy & launch button sits in step 3 (Review, edit and copy), right under the answer-format choices and beside Rebuild from my answers; the editable prompt keeps the console button directly beneath it. The console Copy & launch button (#launchBtn) is unchanged and stays where it was. All three buttons run the same launchBot() action, so copy, automatic splitting and launch behave exactly as before; each one follows the selected chatbot's name and colour, and hardReset() returns every one to its default label and style. Buttons are native <button> elements (Enter and Space work, touch target at least 44px tall); typing Enter in the multiline boxes still adds a new line and never launches. Desktop and narrow layouts both keep the button within the same card as the typing field. No new dependencies; nothing new is stored.",
+    "why": "Owner clarification on issue #11: keep the existing Copy & launch action within easy reach of the field where the user finishes typing, in both Standard builder and Guided path."
+  },
+  {
+    "version": "5.5.0-test.1",
+    "bot": "Claude (Anthropic)",
+    "date": "2026-11-22",
+    "change": "DRAFT TEST BUILD (PB-550-01, not a release). Guided Path: a 'How do you want to build it?' switch (Guided path / Standard builder) above the build area. Standard builder stays the default and is unchanged; the page opens in the Guided path when the address ends in #guided. The Guided path asks the user to describe a task in their own words and optionally pick an answer format (No preference, Step-by-step, Comparison, A draft I can use, Short summary, Checklist), and hides the standard build sections, the Dev Bay and the Start here panel, and writes a short prompt into the same console preview, which becomes an editable plain-text box in this mode. Edits are kept and are never overwritten unless the user presses Rebuild from my answers. Copying uses the existing Copy & launch button, so the chosen chatbot, paste budget and automatic splitting still apply. Reset all also clears the guided answers. Size meters were moved into updateMeters() so both modes share them. hardReset() returns the guided controls to their defaults so clean exports never carry guided state. The Submit to AI placement change is NOT in this build: no control has that label and three controls could match, so placement awaits an owner decision (issue #11). No new dependencies; nothing new is stored.",
+    "why": "Owner-authorized PB-550-01 (issue #11): give first-time users a guided route from describing a real task to a prompt they can review, edit and copy, while keeping the standard builder, free access, chatbot independence, the standalone HTML and offline use."
+  },
   {
     "version": "5.4.0",
     "bot": "Claude (Anthropic)",
@@ -525,10 +576,37 @@ paste the package into a chatbot, and save the complete .html file it returns.
         <div id="botNote" data-render=""></div>
     </section>
 
+    <!-- v5.5.0 Guided Path: choose how to build. The standard builder stays the default. -->
+    <div class="modebar" role="group" aria-label="Choose how to build your prompt">
+        <span class="modebar-label">How do you want to build it?</span>
+        <button type="button" class="modebtn" id="modeGuided" aria-pressed="false" onclick="setMode('guided')">Guided path<small>Describe your task, get a prompt</small></button>
+        <button type="button" class="modebtn" id="modeStandard" aria-pressed="true" onclick="setMode('standard')">Standard builder<small>Pick commands yourself</small></button>
+    </div>
+
     <div class="layout">
 
         <!-- LEFT: build -->
         <main>
+            <div class="card guide" id="guideCard" hidden="">
+                <div class="step"><div class="num">1</div><div><h2><label for="guideTask">What do you need help with?</label></h2><small>Describe your task in your own words, as you would to a helpful friend</small></div></div>
+                <textarea id="guideTask" aria-describedby="guideTaskHint" placeholder="e.g. I need to write a polite email asking my landlord to fix the heating before the weekend."></textarea>
+                <div class="launch-near"><button class="btn-main" id="guideLaunchBtn" type="button" data-launch="" data-tip="Copies the full prompt shown in Your prompt to your clipboard (split into parts if it is over the chatbot's limit) and opens the selected chatbot in a new tab. Paste it into the chat box." onclick="launchBot(this)">Copy &amp; launch</button></div>
+                <p class="hint" id="guideTaskHint">Say what it is for and anything the AI should know. You do not need any special wording.</p>
+                <fieldset>
+                    <legend class="step"><span class="num">2</span><span><h2>How should the answer look?</h2><small>Optional. Leave it on "No preference" if you are not sure.</small></span></legend>
+                    <div class="pills" id="guideFormats">
+                        <label class="pill"><input type="radio" name="guideFmt" value="" checked=""><span>No preference</span></label>
+                        <label class="pill"><input type="radio" name="guideFmt" value="steps"><span>Step-by-step</span></label>
+                        <label class="pill"><input type="radio" name="guideFmt" value="compare"><span>Comparison</span></label>
+                        <label class="pill"><input type="radio" name="guideFmt" value="draft"><span>A draft I can use</span></label>
+                        <label class="pill"><input type="radio" name="guideFmt" value="summary"><span>Short summary</span></label>
+                        <label class="pill"><input type="radio" name="guideFmt" value="checklist"><span>Checklist</span></label>
+                    </div>
+                </fieldset>
+                <div class="step" style="margin-top:18px"><div class="num">3</div><div><h2>Review, edit and copy</h2><small>Your prompt is in the Your prompt panel. Click into it to change anything, then press Copy &amp; launch.</small></div></div>
+                <div class="guide-status" id="guideStatus" role="status" aria-live="polite" data-render=""></div>
+                <button class="btn-secondary" id="guideRebuild" type="button" hidden="" onclick="rebuildGuided()">Rebuild from my answers</button>
+            </div>
             <section class="card">
                 <div class="step"><div class="num">1</div><div><h2>System commands &amp; cheat-sheet modifiers</h2><small>Mix and match — the console updates live</small></div></div>
                 <div id="tabs" role="tablist" data-render=""></div>
@@ -541,6 +619,7 @@ paste the package into a chatbot, and save the complete .html file it returns.
             <section class="card">
                 <div class="step"><div class="num">2</div><div><h2>Core prompt</h2><small>Your base query, topic or source text</small></div></div>
                 <textarea id="corePrompt" placeholder="Type your base query or topic here..."></textarea>
+                <div class="launch-near"><button class="btn-main" id="coreLaunchBtn" type="button" data-launch="" data-tip="Copies the full compiled prompt to your clipboard (split into parts if it is over the chatbot's limit) and opens the selected chatbot in a new tab. Paste it into the chat box." onclick="launchBot(this)">Copy &amp; launch</button></div>
                 <div class="drop" id="drop" tabindex="0" data-tip="Drag files or photos here, click to browse, or paste a screenshot with Ctrl/Cmd+V. Files never leave your device; text files can be pasted into the prompt, everything else is listed in the prompt and uploaded by you in the chatbot (many chatbots need a free account for uploads).">
                     <input type="file" id="fileInput" multiple="" hidden="">
                     <div class="drop-ic">📎</div>
@@ -614,7 +693,7 @@ paste the package into a chatbot, and save the complete .html file it returns.
         <aside class="console" aria-label="Compiled prompt console">
             <div class="console-bar">
                 <span class="dot" style="background:#ff5f57"></span><span class="dot" style="background:#febc2e"></span><span class="dot" style="background:#28c840"></span>
-                <span class="title">COMPILED PROMPT</span>
+                <span class="title" id="consoleTitle">COMPILED PROMPT</span>
                 <span class="chips" id="activeCount" data-tip="How many system commands are currently selected.">0 active</span>
             </div>
             <div class="meter">
@@ -631,7 +710,7 @@ paste the package into a chatbot, and save the complete .html file it returns.
             <pre id="promptPreview" class="preview-box"></pre>
             <div id="manualNote" data-render="" hidden=""></div>
             <div class="console-actions">
-                <button class="btn-main" id="launchBtn" type="button" data-tip="Copies the full compiled prompt to your clipboard (split into parts if it is over the chatbot's limit) and opens the selected chatbot in a new tab. Paste it into the chat box." onclick="launchBot()">Copy &amp; launch</button>
+                <button class="btn-main" id="launchBtn" type="button" data-launch="" data-tip="Copies the full compiled prompt to your clipboard (split into parts if it is over the chatbot's limit) and opens the selected chatbot in a new tab. Paste it into the chat box." onclick="launchBot(this)">Copy &amp; launch</button>
                 <button class="btn-ghost" type="button" data-tip="Clears the prompt text and every selected command." onclick="resetAll()">Reset all</button>
             </div>
             <div id="splitBox" data-render="" hidden=""></div>
@@ -1211,6 +1290,7 @@ function switchTab(id) {
 
 /* --------------------------------------------------------- Prompt compiler */
 function updateStandardPrompt() {
+    if (guideMode) { updateGuidedPrompt(); return; }
     const prefixes = [], systemCommands = [], suffixes = [];
     const perModule = {};
     const uiReminders = [];
@@ -1281,7 +1361,20 @@ function updateStandardPrompt() {
 
     const outText = compiled.join("\n\n");
     promptPreviewEl.textContent = outText;
+    updateMeters(outText);
 
+    // badges
+    let total = 0;
+    MODULES.forEach(m => {
+        const n = perModule[m.id] || 0; total += n;
+        const b = document.getElementById('badge-' + m.id);
+        b.textContent = n; b.classList.toggle('on', n > 0);
+    });
+    document.getElementById('activeCount').textContent = total + ' active';
+}
+
+/* Size ring, counters and budget status for whatever text is in the console (standard or guided). */
+function updateMeters(outText) {
     // metrics
     const len = outText.length;
     charCountEl.textContent = "Total Built Prompt Length: " + len.toLocaleString() + " characters";
@@ -1304,15 +1397,6 @@ function updateStandardPrompt() {
         limitStatusEl.className = "";
     }
     hideSplit();
-
-    // badges
-    let total = 0;
-    MODULES.forEach(m => {
-        const n = perModule[m.id] || 0; total += n;
-        const b = document.getElementById('badge-' + m.id);
-        b.textContent = n; b.classList.toggle('on', n > 0);
-    });
-    document.getElementById('activeCount').textContent = total + ' active';
 }
 
 /* Clear every input control (used by Reset all and before loading a preset). Does not touch presets. */
@@ -1327,6 +1411,7 @@ function clearInputs() {
 }
 function resetAll() {
     clearInputs();
+    clearGuided();
     document.getElementById('presetName').value = '';
     updateStandardPrompt(); toast('Everything reset');
 }
@@ -1383,9 +1468,11 @@ function selectBot(name) {
     document.querySelectorAll('.botcard').forEach(b => { const on = b.dataset.bot === currentBot.name; b.classList.toggle('active', on); b.setAttribute('aria-checked', on); });
 
     // single launch button: label and colour follow the selected bot
-    const lb = document.getElementById('launchBtn');
-    lb.style.setProperty('--bc', currentBot.color);
-    lb.innerHTML = 'Copy &amp; launch in ' + esc(currentBot.name) + ' \u2197';
+    /* v5.5.0-test.2/3: every Copy & launch button (console, Core prompt, Guided task box) runs launchBot(this) and follows the bot */
+    document.querySelectorAll('[data-launch]').forEach(lb => {
+        lb.style.setProperty('--bc', currentBot.color);
+        lb.innerHTML = 'Copy &amp; launch in ' + esc(currentBot.name) + ' \u2197';
+    });
 
     renderBotCmds();
     const r = applyFilters();
@@ -1422,32 +1509,60 @@ function splitPrompt(text, limit) {
             c + '\n\n[END OF PART ' + k + ' OF ' + n + ']';
     });
 }
-function hideSplit() { splitParts = []; const b = document.getElementById('splitBox'); if (b) { b.hidden = true; b.innerHTML = ''; } }
+function hideSplit() { splitParts = []; const b = document.getElementById('splitBox'); if (b) { b.hidden = true; b.innerHTML = ''; placeSplit(null); } }
+/* v5.5.0-test.3: the ONE split box moves to sit right after the Copy & launch the user pressed
+   (Core prompt, Guided task box or console). With no source it goes back to its console home. */
+/* Bring Copy part 1 on screen. v5.5.0-test.4: measures Copy part 1 (not the whole panel).
+   Keeps the launch control on screen too when both fit (clear of the toast if possible);
+   on screens too short for both, Copy part 1 wins. */
+function revealSplit() {
+    const b = document.getElementById('splitBox'); if (!b || b.hidden) return;
+    const first = b.querySelector('.parts button'); if (!first) return;
+    const a = b.previousElementSibling, f = first.getBoundingClientRect(), m = 8, vh = window.innerHeight;
+    const top = (a || b).getBoundingClientRect().top;
+    const clear = vh - (window.innerWidth < 600 ? 150 : 96);
+    const keep = top - m; // the most we can scroll with the launch control still on screen
+    let dy = 0;
+    if (f.bottom > clear) {
+        if (f.bottom - clear <= keep) dy = f.bottom - clear;          // both fit, Part 1 above the toast
+        else if (f.bottom - (vh - m) <= keep) dy = Math.max(keep, 0); // both fit, toast may overlap briefly
+        else dy = f.bottom - Math.max(clear, f.height + m);           // both cannot fit: Part 1 first
+    } else if (top < 0) dy = Math.max(top - m, f.bottom - (vh - m));
+    if (dy) window.scrollBy({ top: dy, behavior: 'instant' });
+}
+function placeSplit(src) {
+    const b = document.getElementById('splitBox'); if (!b) return;
+    const home = document.querySelector('.console-actions');
+    const anchor = (src && src.closest && src.closest('.launch-near, .console-actions')) || home;
+    if (anchor && anchor.nextElementSibling !== b) anchor.insertAdjacentElement('afterend', b);
+}
 function renderSplit(bot) {
     const b = document.getElementById('splitBox'), n = splitParts.length;
     b.innerHTML = '<b>Prompt is too long for ' + esc(bot.name) + ' in one paste.</b> It was split into ' + n + ' parts so nothing gets clipped. Part 1 is on your clipboard; paste each part in order and wait for the reply "Received part N" before sending the next. The chatbot should only answer after the FINAL PART.' +
         '<div class="parts">' + splitParts.map((p, i) => '<button type="button" onclick="copyPart(' + i + ')">Copy part ' + (i + 1) + ' of ' + n + '</button>').join('') + '</div>';
-    b.hidden = false;
+    b.className = 'splitbox'; b.hidden = false;
 }
 function copyPart(i) {
     copyText(splitParts[i]).then(() => toast('Part ' + (i + 1) + ' of ' + splitParts.length + ' copied \u2713'))
         .catch(() => toast('Clipboard blocked \u2014 copy manually', true));
 }
-function splitAndCopy(bot) {
+function splitAndCopy(bot, src) {
     const parts = splitPrompt(promptPreviewEl.textContent, bot.limit);
+    placeSplit(src);
     splitParts = parts; renderSplit(bot);
     const copying = copyText(parts[0]);
+    revealSplit(); // after the copy: its focus restore could otherwise scroll the page back
     const win = window.open(bot.url, '_blank');
     copying.then(() => toast('Too long for ' + bot.name + ': part 1 of ' + parts.length + ' copied. Use the Copy part buttons for the rest.'))
         .catch(() => toast('Auto-copy blocked \u2014 use the Copy part buttons', true));
     if (!win) toast('Popup blocked \u2014 allow popups or open the chatbot manually', true);
 }
 /* The ONE submit/launch button: copies the compiled prompt and opens the selected chatbot. */
-function launchBot() {
+function launchBot(src) {
     const bot = currentBot;
     const txt = promptPreviewEl.textContent;
-    if (!txt.trim()) { toast('Type a prompt or pick some modifiers first', true); return; }
-    if (txt.length > bot.limit) { splitAndCopy(bot); return; }
+    if (!txt.trim()) { toast(guideMode ? 'Describe your task first' : 'Type a prompt or pick some modifiers first', true); return; }
+    if (txt.length > bot.limit) { splitAndCopy(bot, src); return; }
     hideSplit();
     copyAndLaunch('promptPreview', bot.url);
 }
@@ -1615,12 +1730,22 @@ function hardReset(root) {
     const toastEl = $('#toast'); if (toastEl) { toastEl.removeAttribute('class'); toastEl.removeAttribute('style'); }
     ['splitBox', 'manualNote', 'modSplitBox'].forEach(id => { const e = $('#' + id); if (e) e.setAttribute('hidden', ''); });
     // buttons restored to default labels and styles
-    const lb = $('#launchBtn'); if (lb) { lb.textContent = 'Copy & launch'; lb.removeAttribute('style'); }
+    root.querySelectorAll('[data-launch]').forEach(lb => { lb.textContent = 'Copy & launch'; lb.removeAttribute('style'); });
     const ml = $('#modLaunchBtn'); if (ml) ml.textContent = 'Copy package & launch';
     // v5.4.0: catalog box, preset import, start panel
     ['catImportBox', 'catDiff', 'catSplitBox'].forEach(id => { const e = $('#' + id); if (e) e.setAttribute('hidden', ''); });
     const ct = $('#catImportText'); if (ct) ct.textContent = '';
     const sh = $('#startHere'); if (sh) sh.setAttribute('open', '');
+    // v5.5.0: guided path back to its default (standard builder shown, guided card hidden, preview read-only)
+    const wr = $('.wrap'); if (wr) wr.classList.remove('guided');
+    const gc = $('#guideCard'); if (gc) gc.setAttribute('hidden', '');
+    const gr = $('#guideRebuild'); if (gr) gr.setAttribute('hidden', '');
+    const mg = $('#modeGuided'); if (mg) mg.setAttribute('aria-pressed', 'false');
+    const ms = $('#modeStandard'); if (ms) ms.setAttribute('aria-pressed', 'true');
+    const pv = $('#promptPreview'); if (pv) ['contenteditable', 'role', 'aria-multiline', 'aria-label', 'spellcheck'].forEach(a => pv.removeAttribute(a));
+    setText('consoleTitle', 'COMPILED PROMPT');
+    root.querySelectorAll('input[type="radio"]').forEach(r => r.removeAttribute('checked'));
+    const gf = $('input[name="guideFmt"][value=""]'); if (gf) gf.setAttribute('checked', '');
 }
 
 /* Build a CLEAN copy of this page's source from the pristine snapshot taken at load.
@@ -2191,6 +2316,92 @@ try { if (localStorage.getItem('pb-start-closed') === '1') startEl.removeAttribu
 startEl.addEventListener('toggle', () => { try { localStorage.setItem('pb-start-closed', startEl.open ? '0' : '1'); } catch (e) {} });
 renderCatalogStatus();
 
+/* ---------------------------------------------------------- v5.5.0 Guided Path
+   The user describes a task in plain words and optionally picks an answer format.
+   The prompt is written into the same console preview, which becomes editable in this mode,
+   and is copied with the same Copy & launch button (so the chatbot choice, paste budget and
+   splitting all still apply). Once the user edits the prompt, their edits are never overwritten
+   unless they press Rebuild. Nothing here is stored; it lives only in this page. */
+const GUIDE_FORMATS = {
+    steps: 'Give me clear numbered steps I can follow in order.',
+    compare: 'Compare the options side by side in a table, then tell me which fits my situation best and why.',
+    draft: 'Write a ready-to-use draft that I can copy and adjust.',
+    summary: 'Keep it short: just the key points in a few sentences or bullet points.',
+    checklist: 'Give me a checklist I can tick off as I go.'
+};
+const guideTaskEl = document.getElementById('guideTask');
+let guideMode = false, guideEdited = false, guideEditedText = '', guideAnswersChanged = false;
+function guideFormat() { const r = document.querySelector('input[name="guideFmt"]:checked'); return r ? r.value : ''; }
+function guidedPromptText() {
+    const task = guideTaskEl.value.trim();
+    if (!task) return '';
+    const out = ['Help me with the task below. If something important is missing, ask me up to 3 short questions first; otherwise answer right away. Use plain, everyday language.',
+        'MY TASK:\n' + task];
+    const f = GUIDE_FORMATS[guideFormat()];
+    if (f) out.push('ANSWER FORMAT:\n' + f);
+    return out.join('\n\n');
+}
+function guideStatus(msg) { document.getElementById('guideStatus').textContent = msg || ''; }
+function updateGuidedPrompt() {
+    if (guideEdited) {
+        guideAnswersChanged = true;
+        guideStatus('You have edited the prompt, so changes to your answers are not applied. Press Rebuild from my answers to start again from them (this replaces your edits).');
+    } else {
+        promptPreviewEl.textContent = guidedPromptText();
+    }
+    updateMeters(promptPreviewEl.textContent);
+}
+function onPreviewEdit() {
+    if (!guideMode) return;
+    /* Keep the preview as plain text so Copy & launch copies exactly what is shown. */
+    if (promptPreviewEl.querySelector('*')) {
+        const t = promptPreviewEl.innerText; promptPreviewEl.textContent = t;
+        const r = document.createRange(); r.selectNodeContents(promptPreviewEl); r.collapse(false);
+        const sel = window.getSelection(); sel.removeAllRanges(); sel.addRange(r);
+    }
+    guideEdited = true; guideEditedText = promptPreviewEl.textContent;
+    document.getElementById('guideRebuild').hidden = false;
+    if (!guideAnswersChanged) guideStatus('Edited. Your changes will be copied as shown.');
+    updateMeters(promptPreviewEl.textContent);
+}
+function rebuildGuided() {
+    guideEdited = false; guideEditedText = ''; guideAnswersChanged = false;
+    document.getElementById('guideRebuild').hidden = true;
+    updateGuidedPrompt();
+    guideStatus('Rebuilt from your answers.');
+}
+function clearGuided() {
+    guideTaskEl.value = '';
+    const r = document.querySelector('input[name="guideFmt"][value=""]'); if (r) r.checked = true;
+    guideEdited = false; guideEditedText = ''; guideAnswersChanged = false;
+    document.getElementById('guideRebuild').hidden = true; guideStatus('');
+}
+function setMode(m) {
+    const g = m === 'guided';
+    if (guideMode && !g && guideEdited) guideEditedText = promptPreviewEl.textContent;
+    guideMode = g;
+    document.querySelector('.wrap').classList.toggle('guided', g);
+    document.getElementById('guideCard').hidden = !g;
+    document.getElementById('modeGuided').setAttribute('aria-pressed', g ? 'true' : 'false');
+    document.getElementById('modeStandard').setAttribute('aria-pressed', g ? 'false' : 'true');
+    document.getElementById('consoleTitle').textContent = g ? 'YOUR PROMPT \u00b7 EDITABLE' : 'COMPILED PROMPT';
+    const pv = promptPreviewEl;
+    if (g) {
+        pv.setAttribute('contenteditable', 'plaintext-only');
+        if (pv.contentEditable !== 'plaintext-only') pv.setAttribute('contenteditable', 'true');
+        pv.setAttribute('role', 'textbox'); pv.setAttribute('aria-multiline', 'true');
+        pv.setAttribute('aria-label', 'Your prompt. You can edit it before copying.'); pv.setAttribute('spellcheck', 'true');
+    } else {
+        ['contenteditable', 'role', 'aria-multiline', 'aria-label', 'spellcheck'].forEach(a => pv.removeAttribute(a));
+    }
+    try { history.replaceState(null, '', g ? '#guided' : location.pathname + location.search); } catch (e) {}
+    if (g && guideEdited) { pv.textContent = guideEditedText; updateMeters(pv.textContent); }
+    else updateStandardPrompt();
+}
+guideTaskEl.addEventListener('input', updateStandardPrompt);
+document.getElementById('guideFormats').addEventListener('change', updateStandardPrompt);
+promptPreviewEl.addEventListener('input', onPreviewEdit);
+
 renderControls();
 renderBots();
 renderPresets();
@@ -2202,4 +2413,5 @@ panelsEl.addEventListener('change', updateStandardPrompt);
 panelsEl.addEventListener('input', updateStandardPrompt);
 updateStandardPrompt();
 initLayout();
+if (location.hash === '#guided') setMode('guided');
 </script></body></html>

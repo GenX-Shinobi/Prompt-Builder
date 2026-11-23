@@ -1,0 +1,25 @@
+320x640 guided task box          pre=12 parts=7 btn=8,52 box=62,616 part1=259,303 -> part1 VISIBLE, button visible
+320x640 standard core            pre=12 parts=7 btn=8,52 box=62,596 part1=239,283 -> part1 VISIBLE, button visible
+320x640 standard console         pre=415 parts=7 btn=23,66 box=129,663 part1=306,350 -> part1 VISIBLE, button visible
+320x640 guided console (edited)  pre=415 parts=7 btn=23,66 box=129,663 part1=306,350 -> part1 VISIBLE, button visible
+320x568 guided task box          pre=12 parts=7 btn=8,52 box=62,616 part1=259,303 -> part1 VISIBLE, button visible
+320x568 standard core            pre=12 parts=7 btn=8,52 box=62,596 part1=239,283 -> part1 VISIBLE, button visible
+320x568 standard console         pre=343 parts=7 btn=23,66 box=129,663 part1=306,350 -> part1 VISIBLE, button visible
+320x568 guided console (edited)  pre=343 parts=7 btn=23,66 box=129,663 part1=306,350 -> part1 VISIBLE, button visible
+320x480 guided task box          pre=12 parts=7 btn=8,52 box=62,616 part1=259,303 -> part1 VISIBLE, button visible
+320x480 standard core            pre=12 parts=7 btn=8,52 box=62,596 part1=239,283 -> part1 VISIBLE, button visible
+320x480 standard console         pre=255 parts=7 btn=23,66 box=129,663 part1=306,350 -> part1 VISIBLE, button visible
+320x480 guided console (edited)  pre=255 parts=7 btn=23,66 box=129,663 part1=306,350 -> part1 VISIBLE, button visible
+320x420 guided task box          pre=12 parts=7 btn=8,52 box=62,616 part1=259,303 -> part1 VISIBLE, button visible
+320x420 standard core            pre=12 parts=7 btn=8,52 box=62,596 part1=239,283 -> part1 VISIBLE, button visible
+320x420 standard console         pre=195 parts=7 btn=23,66 box=129,663 part1=306,350 -> part1 VISIBLE, button visible
+320x420 guided console (edited)  pre=195 parts=7 btn=23,66 box=129,663 part1=306,350 -> part1 VISIBLE, button visible
+320x360 guided task box          pre=12 parts=7 btn=8,52 box=62,616 part1=259,303 -> part1 VISIBLE, button visible
+320x360 standard core            pre=12 parts=7 btn=8,52 box=62,596 part1=239,283 -> part1 VISIBLE, button visible
+320x360 standard console         pre=135 parts=7 btn=23,66 box=129,663 part1=306,350 -> part1 VISIBLE, button visible
+320x360 guided console (edited)  pre=135 parts=7 btn=23,66 box=129,663 part1=306,350 -> part1 VISIBLE, button visible
+360x400 guided task box          pre=12 parts=7 btn=8,52 box=62,446 part1=239,283 -> part1 VISIBLE, button visible
+360x400 standard core            pre=12 parts=7 btn=8,52 box=62,446 part1=239,283 -> part1 VISIBLE, button visible
+360x400 standard console         pre=175 parts=7 btn=23,66 box=129,494 part1=287,331 -> part1 VISIBLE, button visible
+360x400 guided console (edited)  pre=175 parts=7 btn=23,66 box=129,493 part1=286,330 -> part1 VISIBLE, button visible
+Copy part 1 offscreen in 0 case(s)

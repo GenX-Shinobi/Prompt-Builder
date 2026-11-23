@@ -1,0 +1,333 @@
+PASS three Copy & launch buttons: console, Core prompt, Guided task box (guideLaunchBtn,coreLaunchBtn,launchBtn)
+PASS every Copy & launch is a native <button type=button> running the shared launchBot(this)
+PASS all three show the selected chatbot name and colour (Copy & launch in ChatGPT ↗)
+PASS console Copy & launch and the split box start in their console home
+PASS Guided Copy & launch sits directly after the task box, before the optional format choices
+PASS switching chatbot relabels all three buttons
+PASS standard: Enter in the Core prompt adds new lines and never launches
+PASS standard: Core prompt and console buttons copy the same prompt, line breaks intact
+PASS standard: both open the same chatbot
+PASS standard: within budget, no split box is shown
+PASS keyboard: Tab from the Core prompt goes straight to its Copy & launch
+PASS keyboard: Enter on Core prompt Copy & launch copies and launches
+PASS keyboard: Space on Core prompt Copy & launch copies and launches
+PASS standard split from Core prompt: Copy part controls appear right under that button (gap 10px)
+PASS standard split from Core prompt: exactly one split box and one set of part buttons on the page
+PASS standard split: 2 part buttons in order 1..2
+PASS standard split: part 1 copied and the chatbot opened once
+PASS standard split from Core prompt: Copy part 1 is on screen after launch
+PASS the launch toast never blocks taps or clicks on the part buttons (pointer-events: none)
+PASS standard split: Copy part 2 copies part 2 exactly
+PASS standard split: Copy part 2 copies part 2 exactly
+PASS standard split: last part is marked final, earlier parts are not
+PASS keyboard: Tab from Core prompt Copy & launch goes to Copy part 1
+PASS keyboard: Enter on Copy part 2 copies part 2
+PASS standard split from console: the one split box moved under the console button
+PASS standard: no stale part controls remain in the Core prompt card
+PASS standard: console split produces identical parts and copies part 1
+PASS standard split from console: Copy part 1 is on screen after launch
+PASS editing back under budget hides the part controls and returns the box to its console home
+PASS standard: no errors, no network []
+PASS guided: Enter in the task box adds new lines and never launches
+PASS guided: format choices skipped (No preference)
+PASS guided (format skipped): Copy & launch directly under the task box (gap 14px)
+PASS guided (format skipped): task-box button copies the prompt with line breaks and launches
+PASS keyboard: Tab from the task box goes straight to its Copy & launch
+PASS keyboard: Enter on task-box Copy & launch copies and launches
+PASS keyboard: Space on task-box Copy & launch copies and launches
+PASS guided (format chosen): task-box and console buttons copy the same prompt
+PASS guided (editing): console Copy & launch directly under the editable prompt (gap 15px)
+PASS guided (editing): console and task-box buttons both copy the edited prompt exactly
+PASS guided split from task box: Copy part controls right under that button, one set only (gap 10px)
+PASS guided split from task box: 3 parts in order, part 1 copied, chatbot opened once
+PASS guided split from task box: Copy part 1 is on screen after launch
+PASS guided split: Copy part 2 copies part 2 exactly
+PASS keyboard: Tab from task-box Copy & launch goes to Copy part 1
+PASS guided: editing the prompt clears the old part controls (no stale parts)
+PASS guided split from console after editing: part controls under the console button, none left in the guided card
+PASS guided split after editing: parts built from the edited prompt, part 1 copied
+PASS guided split from console: Copy part 1 is on screen after launch
+PASS keyboard (console): Tab order unchanged, Reset all comes first
+PASS keyboard (console): the next Tab reaches Copy part 1
+PASS switching mode hides the part controls
+PASS guided: no errors, no network []
+PASS clean source: all three Copy & launch buttons at default label, no bot colour
+PASS clean source: one empty, hidden split box in its console home even after a live split elsewhere
+PASS 320x568 standard: Copy & launch under the Core prompt (gap 14px, 254x44)
+PASS 320x568 standard: Core prompt at top of screen, Copy & launch on screen too
+PASS 320x568 standard split: Copy part 1 right under the pressed button and on screen (44px tall)
+PASS 320x568 standard split: the pressed Copy & launch stays on screen too
+PASS 320x568 standard split: Copy part 1 sits clear of the launch toast
+PASS 320x568 standard: no sideways scrolling (0)
+PASS 320x568 standard split (button at screen bottom): page scrolls so Copy part 1 and the pressed button are both on screen, clear of the toast
+PASS 320x568 guided (format skipped): Copy & launch under the task box (gap 14px, 234x62)
+PASS 320x568 guided: task box at top of screen, Copy & launch on screen too, no scrolling past format choices
+PASS 320x568 guided (format chosen): still directly under the task box
+PASS 320x568 guided (editing): console Copy & launch under the editable prompt (gap 15px)
+PASS 320x568 guided split: Copy part 1 right under the pressed button and on screen
+PASS 320x568 guided split: the pressed Copy & launch stays on screen too
+PASS 320x568 guided split: Copy part 1 sits clear of the launch toast
+PASS 320x568 guided split from console: Copy part 1 under the console button and on screen
+PASS 320x568 guided: no sideways scrolling, no errors
+PASS 360x640 standard: Copy & launch under the Core prompt (gap 14px, 274x44)
+PASS 360x640 standard: Core prompt at top of screen, Copy & launch on screen too
+PASS 360x640 standard split: Copy part 1 right under the pressed button and on screen (44px tall)
+PASS 360x640 standard split: the pressed Copy & launch stays on screen too
+PASS 360x640 standard split: Copy part 1 sits clear of the launch toast
+PASS 360x640 standard: no sideways scrolling (0)
+PASS 360x640 standard split (button at screen bottom): page scrolls so Copy part 1 and the pressed button are both on screen, clear of the toast
+PASS 360x640 guided (format skipped): Copy & launch under the task box (gap 14px, 274x44)
+PASS 360x640 guided: task box at top of screen, Copy & launch on screen too, no scrolling past format choices
+PASS 360x640 guided (format chosen): still directly under the task box
+PASS 360x640 guided (editing): console Copy & launch under the editable prompt (gap 15px)
+PASS 360x640 guided split: Copy part 1 right under the pressed button and on screen
+PASS 360x640 guided split: the pressed Copy & launch stays on screen too
+PASS 360x640 guided split: Copy part 1 sits clear of the launch toast
+PASS 360x640 guided split from console: Copy part 1 under the console button and on screen
+PASS 360x640 guided: no sideways scrolling, no errors
+PASS 375x667 standard: Copy & launch under the Core prompt (gap 14px, 289x44)
+PASS 375x667 standard: Core prompt at top of screen, Copy & launch on screen too
+PASS 375x667 standard split: Copy part 1 right under the pressed button and on screen (44px tall)
+PASS 375x667 standard split: the pressed Copy & launch stays on screen too
+PASS 375x667 standard split: Copy part 1 sits clear of the launch toast
+PASS 375x667 standard: no sideways scrolling (0)
+PASS 375x667 standard split (button at screen bottom): page scrolls so Copy part 1 and the pressed button are both on screen, clear of the toast
+PASS 375x667 guided (format skipped): Copy & launch under the task box (gap 14px, 289x44)
+PASS 375x667 guided: task box at top of screen, Copy & launch on screen too, no scrolling past format choices
+PASS 375x667 guided (format chosen): still directly under the task box
+PASS 375x667 guided (editing): console Copy & launch under the editable prompt (gap 15px)
+PASS 375x667 guided split: Copy part 1 right under the pressed button and on screen
+PASS 375x667 guided split: the pressed Copy & launch stays on screen too
+PASS 375x667 guided split: Copy part 1 sits clear of the launch toast
+PASS 375x667 guided split from console: Copy part 1 under the console button and on screen
+PASS 375x667 guided: no sideways scrolling, no errors
+PASS 414x896 standard: Copy & launch under the Core prompt (gap 14px, 328x44)
+PASS 414x896 standard: Core prompt at top of screen, Copy & launch on screen too
+PASS 414x896 standard split: Copy part 1 right under the pressed button and on screen (44px tall)
+PASS 414x896 standard split: the pressed Copy & launch stays on screen too
+PASS 414x896 standard split: Copy part 1 sits clear of the launch toast
+PASS 414x896 standard: no sideways scrolling (0)
+PASS 414x896 standard split (button at screen bottom): page scrolls so Copy part 1 and the pressed button are both on screen, clear of the toast
+PASS 414x896 guided (format skipped): Copy & launch under the task box (gap 14px, 328x44)
+PASS 414x896 guided: task box at top of screen, Copy & launch on screen too, no scrolling past format choices
+PASS 414x896 guided (format chosen): still directly under the task box
+PASS 414x896 guided (editing): console Copy & launch under the editable prompt (gap 15px)
+PASS 414x896 guided split: Copy part 1 right under the pressed button and on screen
+PASS 414x896 guided split: the pressed Copy & launch stays on screen too
+PASS 414x896 guided split: Copy part 1 sits clear of the launch toast
+PASS 414x896 guided split from console: Copy part 1 under the console button and on screen
+PASS 414x896 guided: no sideways scrolling, no errors
+PASS 768x1024 standard: Copy & launch under the Core prompt (gap 14px, 682x44)
+PASS 768x1024 standard: Core prompt at top of screen, Copy & launch on screen too
+PASS 768x1024 standard split: Copy part 1 right under the pressed button and on screen (44px tall)
+PASS 768x1024 standard split: the pressed Copy & launch stays on screen too
+PASS 768x1024 standard split: Copy part 1 sits clear of the launch toast
+PASS 768x1024 standard: no sideways scrolling (0)
+PASS 768x1024 standard split (button at screen bottom): page scrolls so Copy part 1 and the pressed button are both on screen, clear of the toast
+PASS 768x1024 guided (format skipped): Copy & launch under the task box (gap 14px, 682x44)
+PASS 768x1024 guided: task box at top of screen, Copy & launch on screen too, no scrolling past format choices
+PASS 768x1024 guided (format chosen): still directly under the task box
+PASS 768x1024 guided (editing): console Copy & launch under the editable prompt (gap 15px)
+PASS 768x1024 guided split: Copy part 1 right under the pressed button and on screen
+PASS 768x1024 guided split: the pressed Copy & launch stays on screen too
+PASS 768x1024 guided split: Copy part 1 sits clear of the launch toast
+PASS 768x1024 guided split from console: Copy part 1 under the console button and on screen
+PASS 768x1024 guided: no sideways scrolling, no errors
+PASS 1024x768 standard: Copy & launch under the Core prompt (gap 14px, 515x44)
+PASS 1024x768 standard: Core prompt at top of screen, Copy & launch on screen too
+PASS 1024x768 standard split: Copy part 1 right under the pressed button and on screen (44px tall)
+PASS 1024x768 standard split: the pressed Copy & launch stays on screen too
+PASS 1024x768 standard split: Copy part 1 sits clear of the launch toast
+PASS 1024x768 standard: no sideways scrolling (0)
+PASS 1024x768 standard split (button at screen bottom): page scrolls so Copy part 1 and the pressed button are both on screen, clear of the toast
+PASS 1024x768 guided (format skipped): Copy & launch under the task box (gap 14px, 515x44)
+PASS 1024x768 guided: task box at top of screen, Copy & launch on screen too, no scrolling past format choices
+PASS 1024x768 guided (format chosen): still directly under the task box
+PASS 1024x768 guided (editing): console Copy & launch under the editable prompt (gap 15px)
+PASS 1024x768 guided split: Copy part 1 right under the pressed button and on screen
+PASS 1024x768 guided split: the pressed Copy & launch stays on screen too
+PASS 1024x768 guided split: Copy part 1 sits clear of the launch toast
+PASS 1024x768 guided split from console: Copy part 1 under the console button and on screen
+PASS 1024x768 guided: no sideways scrolling, no errors
+PASS 1360x900 standard: Copy & launch under the Core prompt (gap 14px, 664x44)
+PASS 1360x900 standard: Core prompt at top of screen, Copy & launch on screen too
+PASS 1360x900 standard split: Copy part 1 right under the pressed button and on screen (44px tall)
+PASS 1360x900 standard split: the pressed Copy & launch stays on screen too
+PASS 1360x900 standard split: Copy part 1 sits clear of the launch toast
+PASS 1360x900 standard: no sideways scrolling (0)
+PASS 1360x900 standard split (button at screen bottom): page scrolls so Copy part 1 and the pressed button are both on screen, clear of the toast
+PASS 1360x900 guided (format skipped): Copy & launch under the task box (gap 14px, 664x44)
+PASS 1360x900 guided: task box at top of screen, Copy & launch on screen too, no scrolling past format choices
+PASS 1360x900 guided (format chosen): still directly under the task box
+PASS 1360x900 guided (editing): console Copy & launch under the editable prompt (gap 15px)
+PASS 1360x900 guided split: Copy part 1 right under the pressed button and on screen
+PASS 1360x900 guided split: the pressed Copy & launch stays on screen too
+PASS 1360x900 guided split: Copy part 1 sits clear of the launch toast
+PASS 1360x900 guided split from console: Copy part 1 under the console button and on screen
+PASS 1360x900 guided: no sideways scrolling, no errors
+PASS 1920x1080 standard: Copy & launch under the Core prompt (gap 14px, 664x44)
+PASS 1920x1080 standard: Core prompt at top of screen, Copy & launch on screen too
+PASS 1920x1080 standard split: Copy part 1 right under the pressed button and on screen (44px tall)
+PASS 1920x1080 standard split: the pressed Copy & launch stays on screen too
+PASS 1920x1080 standard split: Copy part 1 sits clear of the launch toast
+PASS 1920x1080 standard: no sideways scrolling (0)
+PASS 1920x1080 standard split (button at screen bottom): page scrolls so Copy part 1 and the pressed button are both on screen, clear of the toast
+PASS 1920x1080 guided (format skipped): Copy & launch under the task box (gap 14px, 664x44)
+PASS 1920x1080 guided: task box at top of screen, Copy & launch on screen too, no scrolling past format choices
+PASS 1920x1080 guided (format chosen): still directly under the task box
+PASS 1920x1080 guided (editing): console Copy & launch under the editable prompt (gap 15px)
+PASS 1920x1080 guided split: Copy part 1 right under the pressed button and on screen
+PASS 1920x1080 guided split: the pressed Copy & launch stays on screen too
+PASS 1920x1080 guided split: Copy part 1 sits clear of the launch toast
+PASS 1920x1080 guided split from console: Copy part 1 under the console button and on screen
+PASS 1920x1080 guided: no sideways scrolling, no errors
+PASS Pixel 7 (emulated touch) standard: tap Copy & launch under the Core prompt
+PASS Pixel 7 (emulated touch) standard split: parts under the tapped button; tap Copy part 2 copies part 2
+PASS Pixel 7 (emulated touch) guided: tap Copy & launch under the task box (no format picked)
+PASS Pixel 7 (emulated touch) guided: after editing, tap console Copy & launch copies the edit
+PASS Pixel 7 (emulated touch) guided split: parts under the tapped button; tap Copy part 1 works
+PASS Pixel 7: no errors
+PASS iPhone 13 (emulated touch) standard: tap Copy & launch under the Core prompt
+PASS iPhone 13 (emulated touch) standard split: parts under the tapped button; tap Copy part 2 copies part 2
+PASS iPhone 13 (emulated touch) guided: tap Copy & launch under the task box (no format picked)
+PASS iPhone 13 (emulated touch) guided: after editing, tap console Copy & launch copies the edit
+PASS iPhone 13 (emulated touch) guided split: parts under the tapped button; tap Copy part 1 works
+PASS iPhone 13: no errors
+PASS iPhone SE (emulated touch) standard: tap Copy & launch under the Core prompt
+PASS iPhone SE (emulated touch) standard split: parts under the tapped button; tap Copy part 2 copies part 2
+PASS iPhone SE (emulated touch) guided: tap Copy & launch under the task box (no format picked)
+PASS iPhone SE (emulated touch) guided: after editing, tap console Copy & launch copies the edit
+PASS iPhone SE (emulated touch) guided split: parts under the tapped button; tap Copy part 1 works
+PASS iPhone SE: no errors
+PASS keyboard-open proxy 412x480 standard: Core prompt at top, Copy & launch still on screen
+PASS keyboard-open proxy 412x480 guided: task box at top, Copy & launch still on screen
+PASS 320x420 guided task box: 7 parts, one split box right after the pressed control [vh 420, before btn 12-56, after btn 0-44, part 1 251-295, 7 parts]
+PASS 320x420 guided task box: Copy part 1 is fully on screen [vh 420, before btn 12-56, after btn 0-44, part 1 251-295, 7 parts]
+PASS 320x420 guided task box: both fit, so the pressed Copy & launch stays on screen too [vh 420, before btn 12-56, after btn 0-44, part 1 251-295, 7 parts]
+PASS 320x420 guided task box: keyboard Tab from the pressed button reaches Copy part 1 (1 Tab)
+PASS 320x420 guided task box: no page errors []
+PASS 320x420 standard Core prompt: 7 parts, one split box right after the pressed control [vh 420, before btn 12-56, after btn 0-44, part 1 231-275, 7 parts]
+PASS 320x420 standard Core prompt: Copy part 1 is fully on screen [vh 420, before btn 12-56, after btn 0-44, part 1 231-275, 7 parts]
+PASS 320x420 standard Core prompt: both fit, so the pressed Copy & launch stays on screen too [vh 420, before btn 12-56, after btn 0-44, part 1 231-275, 7 parts]
+PASS 320x420 standard Core prompt: keyboard Tab from the pressed button reaches Copy part 1 (1 Tab)
+PASS 320x420 standard Core prompt: no page errors []
+PASS 320x420 standard console: 7 parts, one split box right after the pressed control [vh 420, before btn 195-238, after btn 23-66, part 1 306-350, 7 parts]
+PASS 320x420 standard console: Copy part 1 is fully on screen [vh 420, before btn 195-238, after btn 23-66, part 1 306-350, 7 parts]
+PASS 320x420 standard console: both fit, so the pressed Copy & launch stays on screen too [vh 420, before btn 195-238, after btn 23-66, part 1 306-350, 7 parts]
+PASS 320x420 standard console: keyboard Tab from the pressed button reaches Copy part 1 (2 Tabs)
+PASS 320x420 standard console: no page errors []
+PASS 320x420 guided console: 7 parts, one split box right after the pressed control [vh 420, before btn 195-238, after btn 23-66, part 1 306-350, 7 parts]
+PASS 320x420 guided console: Copy part 1 is fully on screen [vh 420, before btn 195-238, after btn 23-66, part 1 306-350, 7 parts]
+PASS 320x420 guided console: both fit, so the pressed Copy & launch stays on screen too [vh 420, before btn 195-238, after btn 23-66, part 1 306-350, 7 parts]
+PASS 320x420 guided console: keyboard Tab from the pressed button reaches Copy part 1 (2 Tabs)
+PASS 320x420 guided console: no page errors []
+PASS 320x300 guided task box: 7 parts, one split box right after the pressed control [vh 300, before btn 12-56, after btn -145--101, part 1 106-150, 7 parts]
+PASS 320x300 guided task box: Copy part 1 is fully on screen [vh 300, before btn 12-56, after btn -145--101, part 1 106-150, 7 parts]
+PASS 320x300 guided task box: too short for both, Copy part 1 takes priority [vh 300, before btn 12-56, after btn -145--101, part 1 106-150, 7 parts]
+PASS 320x300 guided task box: keyboard Tab from the pressed button reaches Copy part 1 (1 Tab)
+PASS 320x300 guided task box: no page errors []
+PASS 320x300 standard Core prompt: 7 parts, one split box right after the pressed control [vh 300, before btn 12-56, after btn 0-44, part 1 231-275, 7 parts]
+PASS 320x300 standard Core prompt: Copy part 1 is fully on screen [vh 300, before btn 12-56, after btn 0-44, part 1 231-275, 7 parts]
+PASS 320x300 standard Core prompt: both fit, so the pressed Copy & launch stays on screen too [vh 300, before btn 12-56, after btn 0-44, part 1 231-275, 7 parts]
+PASS 320x300 standard Core prompt: keyboard Tab from the pressed button reaches Copy part 1 (1 Tab)
+PASS 320x300 standard Core prompt: no page errors []
+PASS 320x300 standard console: 7 parts, one split box right after the pressed control [vh 300, before btn 75-118, after btn -177--134, part 1 106-150, 7 parts]
+PASS 320x300 standard console: Copy part 1 is fully on screen [vh 300, before btn 75-118, after btn -177--134, part 1 106-150, 7 parts]
+PASS 320x300 standard console: too short for both, Copy part 1 takes priority [vh 300, before btn 75-118, after btn -177--134, part 1 106-150, 7 parts]
+PASS 320x300 standard console: keyboard Tab from the pressed button reaches Copy part 1 (2 Tabs)
+PASS 320x300 standard console: no page errors []
+PASS 320x300 guided console: 7 parts, one split box right after the pressed control [vh 300, before btn 75-118, after btn -177--134, part 1 106-150, 7 parts]
+PASS 320x300 guided console: Copy part 1 is fully on screen [vh 300, before btn 75-118, after btn -177--134, part 1 106-150, 7 parts]
+PASS 320x300 guided console: too short for both, Copy part 1 takes priority [vh 300, before btn 75-118, after btn -177--134, part 1 106-150, 7 parts]
+PASS 320x300 guided console: keyboard Tab from the pressed button reaches Copy part 1 (2 Tabs)
+PASS 320x300 guided console: no page errors []
+PASS 320x280 guided task box: 7 parts, one split box right after the pressed control [vh 280, before btn 12-56, after btn -165--121, part 1 86-130, 7 parts]
+PASS 320x280 guided task box: Copy part 1 is fully on screen [vh 280, before btn 12-56, after btn -165--121, part 1 86-130, 7 parts]
+PASS 320x280 guided task box: too short for both, Copy part 1 takes priority [vh 280, before btn 12-56, after btn -165--121, part 1 86-130, 7 parts]
+PASS 320x280 guided task box: keyboard Tab from the pressed button reaches Copy part 1 (1 Tab)
+PASS 320x280 guided task box: no page errors []
+PASS 320x280 standard Core prompt: 7 parts, one split box right after the pressed control [vh 280, before btn 12-56, after btn -145--101, part 1 86-130, 7 parts]
+PASS 320x280 standard Core prompt: Copy part 1 is fully on screen [vh 280, before btn 12-56, after btn -145--101, part 1 86-130, 7 parts]
+PASS 320x280 standard Core prompt: too short for both, Copy part 1 takes priority [vh 280, before btn 12-56, after btn -145--101, part 1 86-130, 7 parts]
+PASS 320x280 standard Core prompt: keyboard Tab from the pressed button reaches Copy part 1 (1 Tab)
+PASS 320x280 standard Core prompt: no page errors []
+PASS 320x280 standard console: 7 parts, one split box right after the pressed control [vh 280, before btn 55-98, after btn -197--154, part 1 86-130, 7 parts]
+PASS 320x280 standard console: Copy part 1 is fully on screen [vh 280, before btn 55-98, after btn -197--154, part 1 86-130, 7 parts]
+PASS 320x280 standard console: too short for both, Copy part 1 takes priority [vh 280, before btn 55-98, after btn -197--154, part 1 86-130, 7 parts]
+PASS 320x280 standard console: keyboard Tab from the pressed button reaches Copy part 1 (2 Tabs)
+PASS 320x280 standard console: no page errors []
+PASS 320x280 guided console: 7 parts, one split box right after the pressed control [vh 280, before btn 55-98, after btn -197--154, part 1 86-130, 7 parts]
+PASS 320x280 guided console: Copy part 1 is fully on screen [vh 280, before btn 55-98, after btn -197--154, part 1 86-130, 7 parts]
+PASS 320x280 guided console: too short for both, Copy part 1 takes priority [vh 280, before btn 55-98, after btn -197--154, part 1 86-130, 7 parts]
+PASS 320x280 guided console: keyboard Tab from the pressed button reaches Copy part 1 (2 Tabs)
+PASS 320x280 guided console: no page errors []
+PASS 320x250 guided task box: 7 parts, one split box right after the pressed control [vh 250, before btn 12-56, after btn -195--151, part 1 56-100, 7 parts]
+PASS 320x250 guided task box: Copy part 1 is fully on screen [vh 250, before btn 12-56, after btn -195--151, part 1 56-100, 7 parts]
+PASS 320x250 guided task box: too short for both, Copy part 1 takes priority [vh 250, before btn 12-56, after btn -195--151, part 1 56-100, 7 parts]
+PASS 320x250 guided task box: keyboard Tab from the pressed button reaches Copy part 1 (1 Tab)
+PASS 320x250 guided task box: no page errors []
+PASS 320x250 standard Core prompt: 7 parts, one split box right after the pressed control [vh 250, before btn 12-56, after btn -175--131, part 1 56-100, 7 parts]
+PASS 320x250 standard Core prompt: Copy part 1 is fully on screen [vh 250, before btn 12-56, after btn -175--131, part 1 56-100, 7 parts]
+PASS 320x250 standard Core prompt: too short for both, Copy part 1 takes priority [vh 250, before btn 12-56, after btn -175--131, part 1 56-100, 7 parts]
+PASS 320x250 standard Core prompt: keyboard Tab from the pressed button reaches Copy part 1 (1 Tab)
+PASS 320x250 standard Core prompt: no page errors []
+PASS 320x250 standard console: 7 parts, one split box right after the pressed control [vh 250, before btn 25-68, after btn -227--184, part 1 56-100, 7 parts]
+PASS 320x250 standard console: Copy part 1 is fully on screen [vh 250, before btn 25-68, after btn -227--184, part 1 56-100, 7 parts]
+PASS 320x250 standard console: too short for both, Copy part 1 takes priority [vh 250, before btn 25-68, after btn -227--184, part 1 56-100, 7 parts]
+PASS 320x250 standard console: keyboard Tab from the pressed button reaches Copy part 1 (2 Tabs)
+PASS 320x250 standard console: no page errors []
+PASS 320x250 guided console: 7 parts, one split box right after the pressed control [vh 250, before btn 25-68, after btn -227--184, part 1 56-100, 7 parts]
+PASS 320x250 guided console: Copy part 1 is fully on screen [vh 250, before btn 25-68, after btn -227--184, part 1 56-100, 7 parts]
+PASS 320x250 guided console: too short for both, Copy part 1 takes priority [vh 250, before btn 25-68, after btn -227--184, part 1 56-100, 7 parts]
+PASS 320x250 guided console: keyboard Tab from the pressed button reaches Copy part 1 (2 Tabs)
+PASS 320x250 guided console: no page errors []
+PASS 320x280 touch guided task box: 7 parts, one split box right after the pressed control [vh 280, before btn 12-56, after btn -165--121, part 1 86-130, 7 parts]
+PASS 320x280 touch guided task box: Copy part 1 is fully on screen [vh 280, before btn 12-56, after btn -165--121, part 1 86-130, 7 parts]
+PASS 320x280 touch guided task box: too short for both, Copy part 1 takes priority [vh 280, before btn 12-56, after btn -165--121, part 1 86-130, 7 parts]
+PASS 320x280 touch guided task box: no page errors []
+PASS 320x280 touch standard Core prompt: 7 parts, one split box right after the pressed control [vh 280, before btn 12-56, after btn -145--101, part 1 86-130, 7 parts]
+PASS 320x280 touch standard Core prompt: Copy part 1 is fully on screen [vh 280, before btn 12-56, after btn -145--101, part 1 86-130, 7 parts]
+PASS 320x280 touch standard Core prompt: too short for both, Copy part 1 takes priority [vh 280, before btn 12-56, after btn -145--101, part 1 86-130, 7 parts]
+PASS 320x280 touch standard Core prompt: no page errors []
+PASS 320x280 touch standard console: 7 parts, one split box right after the pressed control [vh 280, before btn 55-98, after btn -197--154, part 1 86-130, 7 parts]
+PASS 320x280 touch standard console: Copy part 1 is fully on screen [vh 280, before btn 55-98, after btn -197--154, part 1 86-130, 7 parts]
+PASS 320x280 touch standard console: too short for both, Copy part 1 takes priority [vh 280, before btn 55-98, after btn -197--154, part 1 86-130, 7 parts]
+PASS 320x280 touch standard console: no page errors []
+PASS 320x280 touch guided console: 7 parts, one split box right after the pressed control [vh 280, before btn 55-98, after btn -197--154, part 1 86-130, 7 parts]
+PASS 320x280 touch guided console: Copy part 1 is fully on screen [vh 280, before btn 55-98, after btn -197--154, part 1 86-130, 7 parts]
+PASS 320x280 touch guided console: too short for both, Copy part 1 takes priority [vh 280, before btn 55-98, after btn -197--154, part 1 86-130, 7 parts]
+PASS 320x280 touch guided console: no page errors []
+PASS 360x400 touch guided task box: 7 parts, one split box right after the pressed control [vh 400, before btn 12-56, after btn 0-44, part 1 231-275, 7 parts]
+PASS 360x400 touch guided task box: Copy part 1 is fully on screen [vh 400, before btn 12-56, after btn 0-44, part 1 231-275, 7 parts]
+PASS 360x400 touch guided task box: both fit, so the pressed Copy & launch stays on screen too [vh 400, before btn 12-56, after btn 0-44, part 1 231-275, 7 parts]
+PASS 360x400 touch guided task box: no page errors []
+PASS 360x400 touch standard Core prompt: 7 parts, one split box right after the pressed control [vh 400, before btn 12-56, after btn 0-44, part 1 231-275, 7 parts]
+PASS 360x400 touch standard Core prompt: Copy part 1 is fully on screen [vh 400, before btn 12-56, after btn 0-44, part 1 231-275, 7 parts]
+PASS 360x400 touch standard Core prompt: both fit, so the pressed Copy & launch stays on screen too [vh 400, before btn 12-56, after btn 0-44, part 1 231-275, 7 parts]
+PASS 360x400 touch standard Core prompt: no page errors []
+PASS 360x400 touch standard console: 7 parts, one split box right after the pressed control [vh 400, before btn 175-218, after btn 23-66, part 1 287-331, 7 parts]
+PASS 360x400 touch standard console: Copy part 1 is fully on screen [vh 400, before btn 175-218, after btn 23-66, part 1 287-331, 7 parts]
+PASS 360x400 touch standard console: both fit, so the pressed Copy & launch stays on screen too [vh 400, before btn 175-218, after btn 23-66, part 1 287-331, 7 parts]
+PASS 360x400 touch standard console: no page errors []
+PASS 360x400 touch guided console: 7 parts, one split box right after the pressed control [vh 400, before btn 175-218, after btn 23-66, part 1 286-330, 7 parts]
+PASS 360x400 touch guided console: Copy part 1 is fully on screen [vh 400, before btn 175-218, after btn 23-66, part 1 286-330, 7 parts]
+PASS 360x400 touch guided console: both fit, so the pressed Copy & launch stays on screen too [vh 400, before btn 175-218, after btn 23-66, part 1 286-330, 7 parts]
+PASS 360x400 touch guided console: no page errors []
+PASS 568x320 touch guided task box: 7 parts, one split box right after the pressed control [vh 320, before btn 12-56, after btn 0-44, part 1 153-197, 7 parts]
+PASS 568x320 touch guided task box: Copy part 1 is fully on screen [vh 320, before btn 12-56, after btn 0-44, part 1 153-197, 7 parts]
+PASS 568x320 touch guided task box: both fit, so the pressed Copy & launch stays on screen too [vh 320, before btn 12-56, after btn 0-44, part 1 153-197, 7 parts]
+PASS 568x320 touch guided task box: no page errors []
+PASS 568x320 touch standard Core prompt: 7 parts, one split box right after the pressed control [vh 320, before btn 12-56, after btn 0-44, part 1 153-197, 7 parts]
+PASS 568x320 touch standard Core prompt: Copy part 1 is fully on screen [vh 320, before btn 12-56, after btn 0-44, part 1 153-197, 7 parts]
+PASS 568x320 touch standard Core prompt: both fit, so the pressed Copy & launch stays on screen too [vh 320, before btn 12-56, after btn 0-44, part 1 153-197, 7 parts]
+PASS 568x320 touch standard Core prompt: no page errors []
+PASS 568x320 touch standard console: 7 parts, one split box right after the pressed control [vh 320, before btn 156-199, after btn 23-66, part 1 181-225, 7 parts]
+PASS 568x320 touch standard console: Copy part 1 is fully on screen [vh 320, before btn 156-199, after btn 23-66, part 1 181-225, 7 parts]
+PASS 568x320 touch standard console: both fit, so the pressed Copy & launch stays on screen too [vh 320, before btn 156-199, after btn 23-66, part 1 181-225, 7 parts]
+PASS 568x320 touch standard console: no page errors []
+PASS 568x320 touch guided console: 7 parts, one split box right after the pressed control [vh 320, before btn 156-199, after btn 23-66, part 1 181-225, 7 parts]
+PASS 568x320 touch guided console: Copy part 1 is fully on screen [vh 320, before btn 156-199, after btn 23-66, part 1 181-225, 7 parts]
+PASS 568x320 touch guided console: both fit, so the pressed Copy & launch stays on screen too [vh 320, before btn 156-199, after btn 23-66, part 1 181-225, 7 parts]
+PASS 568x320 touch guided console: no page errors []
+Screenshots: /home/claude/scratch/shots-final
+331 passed, 0 failed
