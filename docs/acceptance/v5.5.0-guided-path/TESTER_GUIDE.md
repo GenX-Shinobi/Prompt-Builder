@@ -1,6 +1,6 @@
 # v5.5.0 Guided Path test build: tester guide
 
-This is a **draft test build** (PB-550-01, version `5.5.0-test.3`). It is not the live app and has not been released. The live v5.4.0 app at https://genx-shinobi.github.io/Prompt-Builder/ is unchanged and is still fine for informal exploration.
+This is a **draft test build** (PB-550-01, version `5.5.0-test.4`). It is not the live app and has not been released. The live v5.4.0 app at https://genx-shinobi.github.io/Prompt-Builder/ is unchanged and is still fine for informal exploration.
 
 ## Open the test build safely
 

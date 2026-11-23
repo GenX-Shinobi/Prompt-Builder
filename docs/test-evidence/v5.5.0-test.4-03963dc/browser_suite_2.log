@@ -1,0 +1,23 @@
+PASS NO network requests on page load (0)
+PASS attachments: text inlined, image listed in compiled prompt
+PASS saving the same preset name twice keeps one (duplicate handling)
+PASS Copy & launch opens the bare chatbot URL only: https://chatgpt.com|_blank
+PASS Download clean .html: complete, v5.5.0-test.4, no typed text/attachment/preset data
+PASS STILL zero network requests after typing, attaching, presets, launch, Dev Bay, downloads (0)
+PASS Manual check makes exactly one GET to the GitHub raw URL (no body): ["GET https://raw.githubusercontent.com/GenX-Shinobi/Prompt-Builder/main/catalog.json"]
+PASS validated + diff shown but NOTHING stored before Install is clicked
+PASS installed rev 2 after explicit click
+PASS four invalid imports left the installed catalog untouched
+PASS presets retained after catalog install
+PASS theme, palette, pin and reorder persist across reload {"t":"dark","pal":"ocean","order":"devbay,modules,presets,core"}
+PASS Reset layout restores default order
+PASS Unicode splitting: {"n":10,"lone":false,"missing":0,"maxLen":2777}
+PASS works offline: loads, 9 bots, prompt compiles
+PASS offline catalog check shows friendly message
+PASS a11y roles present, no unlabeled buttons {"tablist":true,"radiogroup":true,"dialog":true,"unlabeledButtons":0,"unlabeledInputs":2}
+
+requests seen overall: ["GET https://raw.githubusercontent.com/GenX-Shinobi/Prompt-Builder/main/catalog.json","GET https://raw.githubusercontent.com/GenX-Shinobi/Prompt-Builder/main/catalog.json"]
+errors: []
+PASS no console/page errors
+
+18 passed, 0 failed
