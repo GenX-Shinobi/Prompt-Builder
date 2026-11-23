@@ -1,4 +1,4 @@
-/* PB-550-01 launch and split placement checks (v5.5.0-test.3).
+/* PB-550-01 launch and split placement checks (v5.5.0-test.4).
    - Copy & launch within reach of where the user types: Core prompt (Standard), task box (Guided),
      console button under the editable prompt (Guided, after editing).
    - Over-budget prompts: the ONE existing split box (Copy part 1..N) appears right after the
@@ -312,6 +312,60 @@ const splitState = (p, id) => p.evaluate(bid => {
     ok(await onScreenFrom(p, '#guideTask', '#guideLaunchBtn'), 'keyboard-open proxy 412x480 guided: task box at top, Copy & launch still on screen');
     await p.screenshot({ path: path.join(SHOTS, 'keyboard-proxy-412x480.png') });
     await ctx.close();
+  }
+
+  /* ---------- 9. Short-viewport regression (v5.5.0-test.4) ----------
+     Narrow, short screens, a Claude prompt big enough for 5+ parts, and the pressed button already
+     near the top of the screen. test.3 kept the button on screen but could leave Copy part 1 below
+     the bottom edge (reproduced at 320x300 and shorter). Real pointer clicks and touch taps, so focus
+     lands on the pressed button as it does for a user. */
+  {
+    const PARA = 'context '.repeat(60).trim() + '.';
+    const SHORT = [
+      { w: 320, h: 420 }, { w: 320, h: 300 }, { w: 320, h: 280 }, { w: 320, h: 250 },
+      { w: 320, h: 280, touch: true }, { w: 360, h: 400, touch: true }, { w: 568, h: 320, touch: true }];
+    const SRC = [
+      { name: 'guided task box', hash: '#guided', field: '#guideTask', btn: 'guideLaunchBtn' },
+      { name: 'standard Core prompt', hash: '', field: '#corePrompt', btn: 'coreLaunchBtn' },
+      { name: 'standard console', hash: '', field: '#corePrompt', btn: 'launchBtn' },
+      { name: 'guided console', hash: '#guided', field: '#guideTask', btn: 'launchBtn' }];
+    for (const v of SHORT) for (const s of SRC) {
+      const tag = v.w + 'x' + v.h + (v.touch ? ' touch' : '') + ' ' + s.name;
+      ({ ctx, p, errs } = await open(b, { viewport: { width: v.w, height: v.h }, hasTouch: !!v.touch, isMobile: !!v.touch }, FILE + s.hash));
+      await (v.touch ? p.tap('.botcard[data-bot="Claude"]') : p.click('.botcard[data-bot="Claude"]'));
+      const lim = await p.evaluate(() => currentBot.limit);
+      const big = Array.from({ length: Math.ceil(lim * 5.3 / (PARA.length + 10)) }, (_, i) => 'Note ' + (i + 1) + ': ' + PARA).join('\n');
+      await p.fill(s.field, big); await p.waitForTimeout(80);
+      // pressed button near the top of the visible area (instant: the page uses smooth scrolling)
+      const before = await p.evaluate(id => { const e = document.getElementById(id); window.scrollBy({ top: e.getBoundingClientRect().top - 12, behavior: 'instant' });
+        const r = e.getBoundingClientRect(); return { top: Math.round(r.top), bottom: Math.round(r.bottom) }; }, s.btn);
+      await (v.touch ? p.tap('#' + s.btn) : p.click('#' + s.btn)); await p.waitForTimeout(700); // let any smooth scroll settle
+      const m = await p.evaluate(id => {
+        const R = e => { const r = e.getBoundingClientRect(); return { top: Math.round(r.top), bottom: Math.round(r.bottom), h: Math.round(r.height) }; };
+        const btn = document.getElementById(id), box = document.getElementById('splitBox'), first = box.querySelector('.parts button');
+        const anchor = btn.closest('.launch-near, .console-actions');
+        return { n: splitParts.length, vh: innerHeight, btn: R(btn), anchor: R(anchor), p1: first ? R(first) : null,
+          adjacent: anchor.nextElementSibling === box, boxes: document.querySelectorAll('#splitBox').length, sets: document.querySelectorAll('.parts').length,
+          focus: document.activeElement.id };
+      }, s.btn);
+      const p1On = m.p1 && m.p1.top >= 0 && m.p1.bottom <= m.vh, btnOn = m.btn.top >= 0 && m.btn.bottom <= m.vh;
+      // Both fit when the pressed control (its row) and Copy part 1 span no more than the screen less 8px margins.
+      const span = m.p1 ? m.p1.bottom - m.anchor.top : 1e9, bothFit = span <= m.vh - 16;
+      const dims = ' [vh ' + m.vh + ', before btn ' + before.top + '-' + before.bottom + ', after btn ' + m.btn.top + '-' + m.btn.bottom + ', part 1 ' + (m.p1 ? m.p1.top + '-' + m.p1.bottom : 'none') + ', ' + m.n + ' parts]';
+      ok(m.n >= 5 && m.adjacent && m.boxes === 1 && m.sets === 1, tag + ': ' + m.n + ' parts, one split box right after the pressed control' + dims);
+      ok(p1On, tag + ': Copy part 1 is fully on screen' + dims);
+      ok(bothFit ? btnOn : true, tag + ': ' + (bothFit ? 'both fit, so the pressed Copy & launch stays on screen too' : 'too short for both, Copy part 1 takes priority') + dims);
+      // keyboard: focus stays on the pressed button and Tab still reaches Copy part 1 (without scrolling it away)
+      if (!v.touch) {
+        // the console row also holds Reset all, so Copy part 1 is the next Tab stop after that row
+        const later = await p.evaluate(id => { const bt = document.getElementById(id), row = [...bt.parentElement.querySelectorAll('button')]; return row.length - 1 - row.indexOf(bt); }, s.btn);
+        for (let k = 0; k <= later; k++) await p.keyboard.press('Tab');
+        ok(m.focus === s.btn && await p.evaluate(() => document.activeElement.textContent.startsWith('Copy part 1')), tag + ': keyboard Tab from the pressed button reaches Copy part 1 (' + (later + 1) + ' Tab' + (later ? 's' : '') + ')');
+      }
+      ok(errs.length === 0, tag + ': no page errors ' + JSON.stringify(errs.slice(0, 2)));
+      if (v.w === 320 && v.h === 280 && !v.touch && s.btn === 'guideLaunchBtn') await p.screenshot({ path: path.join(SHOTS, 'short-320x280-guided-split.png') });
+      await ctx.close();
+    }
   }
 
   await b.close();

@@ -394,10 +394,17 @@ This block acts as an unalterable log. Every future AI Chatbot updating this fil
 increment the minor/major version string below, append a new historical array object, and preserve the template structure.
 
 [ACTIVE CONFIGURATION]
-- currentVersion: "5.5.0-test.3"
+- currentVersion: "5.5.0-test.4"
 
 [MIGRATION HISTORY MATRIX]
 [
+  {
+    "version": "5.5.0-test.4",
+    "bot": "Claude (Anthropic)",
+    "date": "2026-11-23",
+    "change": "DRAFT TEST BUILD (PB-550-01 short-viewport split fix, not a release). revealSplit() now measures Copy part 1 instead of the whole split panel. When Copy part 1 and the pressed Copy & launch both fit on screen, both stay visible (Part 1 kept clear of the toast where there is room); on screens too short for both, Copy part 1 takes priority. test.3 capped the scroll to keep the pressed button on screen, which left Copy part 1 below the bottom edge on short narrow screens (reproduced at 320 px wide and 300 px tall or less). splitAndCopy() now reveals after copying part 1, because the copy routine returns focus to the pressed button and that focus could scroll the page back. Splitting, parts, clipboard, keyboard order and the single moving split box are unchanged. No new dependencies; nothing new is stored.",
+    "why": "Owner-approved PB-550-01 follow-up on PR #12: Copy part 1 could be left off screen on short viewports."
+  },
   {
     "version": "5.5.0-test.3",
     "bot": "Claude (Anthropic)",
@@ -1505,15 +1512,22 @@ function splitPrompt(text, limit) {
 function hideSplit() { splitParts = []; const b = document.getElementById('splitBox'); if (b) { b.hidden = true; b.innerHTML = ''; placeSplit(null); } }
 /* v5.5.0-test.3: the ONE split box moves to sit right after the Copy & launch the user pressed
    (Core prompt, Guided task box or console). With no source it goes back to its console home. */
-/* Bring the part buttons on screen without hiding the launch button, leaving room above the toast. */
+/* Bring Copy part 1 on screen. v5.5.0-test.4: measures Copy part 1 (not the whole panel).
+   Keeps the launch control on screen too when both fit (clear of the toast if possible);
+   on screens too short for both, Copy part 1 wins. */
 function revealSplit() {
     const b = document.getElementById('splitBox'); if (!b || b.hidden) return;
-    const a = b.previousElementSibling, r = b.getBoundingClientRect();
-    const room = window.innerHeight - (window.innerWidth < 600 ? 150 : 96);
-    const keepTop = a ? a.getBoundingClientRect().top - 8 : r.top - 8;
+    const first = b.querySelector('.parts button'); if (!first) return;
+    const a = b.previousElementSibling, f = first.getBoundingClientRect(), m = 8, vh = window.innerHeight;
+    const top = (a || b).getBoundingClientRect().top;
+    const clear = vh - (window.innerWidth < 600 ? 150 : 96);
+    const keep = top - m; // the most we can scroll with the launch control still on screen
     let dy = 0;
-    if (r.bottom > room) dy = Math.min(r.bottom - room, keepTop);
-    else if (r.top < 0) dy = r.top - 8;
+    if (f.bottom > clear) {
+        if (f.bottom - clear <= keep) dy = f.bottom - clear;          // both fit, Part 1 above the toast
+        else if (f.bottom - (vh - m) <= keep) dy = Math.max(keep, 0); // both fit, toast may overlap briefly
+        else dy = f.bottom - Math.max(clear, f.height + m);           // both cannot fit: Part 1 first
+    } else if (top < 0) dy = Math.max(top - m, f.bottom - (vh - m));
     if (dy) window.scrollBy({ top: dy, behavior: 'instant' });
 }
 function placeSplit(src) {
@@ -1536,8 +1550,8 @@ function splitAndCopy(bot, src) {
     const parts = splitPrompt(promptPreviewEl.textContent, bot.limit);
     placeSplit(src);
     splitParts = parts; renderSplit(bot);
-    revealSplit();
     const copying = copyText(parts[0]);
+    revealSplit(); // after the copy: its focus restore could otherwise scroll the page back
     const win = window.open(bot.url, '_blank');
     copying.then(() => toast('Too long for ' + bot.name + ': part 1 of ' + parts.length + ' copied. Use the Copy part buttons for the rest.'))
         .catch(() => toast('Auto-copy blocked \u2014 use the Copy part buttons', true));
