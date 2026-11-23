@@ -8,8 +8,8 @@ The free-first, chatbot-independent mission and project scope in [PROJECT_CONTRO
 
 ## Authorized progression
 
-- **Active:** v5.4.0 post-release administrative closeout only (management documentation, evidence preservation planning). No application development milestone is active.
-- **Not authorized:** v5.5.0, CHIMERA implementation, application code changes, archive tags, branch retirement, release-note edits. Each needs a separate, bounded Owner authorization.
+- **Active:** PB-550-01 Guided Path test build and review under the Owner's bounded approval. [Issue #11](https://github.com/GenX-Shinobi/Prompt-Builder/issues/11) and [draft PR #12](https://github.com/GenX-Shinobi/Prompt-Builder/pull/12) track the work. v5.5.0-test.4 is ready for deferred Owner desktop browser acceptance.
+- **Separate authorization required:** further implementation, tester distribution, merge, deployment, release, archive tags, branch retirement, and CHIMERA work.
 
 ## Backlog — follow-up candidates (not scheduled, not authorized)
 
@@ -22,7 +22,7 @@ The free-first, chatbot-independent mission and project scope in [PROJECT_CONTRO
 
 ## NEXT — roadmap reassessment (proposal)
 
-Reassess the next milestone from user evidence and the idea inbox. Candidate directions include a Guided Path and a separate visual/accessibility/multilingual finishing phase. Neither is active implementation scope.
+Reassess the next milestone from user evidence and the idea inbox. Use Guided Path acceptance and tester feedback to inform the next milestone. A separate visual, accessibility and multilingual finishing phase remains a proposal.
 
 ## LATER — evidence-led improvements
 
@@ -62,4 +62,4 @@ Consider a separate owner-approved finishing phase to improve visual consistency
 
 ## Separate initiative boundary — CHIMERA
 
-CHIMERA (https://github.com/GenX-Shinobi/CHIMERA) is a separate open-source workforce-framework project. Prompt Builder may be considered as its first adopter only when the owner authorizes a separate integration milestone. Prompt Builder v5.5.0 ideas remain backlog; they may later serve as CHIMERA pilot material only under a separate, explicitly approved plan. This is not an active roadmap item. Do not combine project files, statutes or memory.
+CHIMERA (https://github.com/GenX-Shinobi/CHIMERA) is a separate open-source workforce-framework project. Prompt Builder may be considered as its first adopter only when the owner authorizes a separate integration milestone. Prompt Builder improvements beyond PB-550-01 remain backlog and may serve as CHIMERA pilot material under a separate, explicitly approved plan. This is not an active roadmap item. Do not combine project files, statutes or memory.
