@@ -1,0 +1,53 @@
+PASS baseline: 9 bots, 2 tabs, 81 commands [9,2,81]
+PASS built-in catalog rev 1
+PASS layout still has 4 sections
+PASS catalog status shown: Active catalog: rev 1, updated 2026-11-20 (built-in copy). 86 of 90 entries (chatbot notes and commands) are not confirmed or are due for a re-check. Only 6 of them show a grey chip. Chips appear on chatbot notes, and on commands that are unverified, in conflict between sources, or not checked for 60 days. Commands taken only from a research document ("doc only") stay chip-free until they are 60 days old, so no chip does not mean an entry is confirmed.
+PASS ChatGPT: note date, 11 items, 0 chips, suggest buttons match
+PASS Gemini: note date, 14 items, 0 chips, suggest buttons match
+PASS Claude: note date, 9 items, 0 chips, suggest buttons match
+PASS Perplexity: note date, 10 items, 1 chips, suggest buttons match
+PASS Grok: note date, 9 items, 0 chips, suggest buttons match
+PASS Microsoft Copilot: note date, 8 items, 0 chips, suggest buttons match
+PASS DeepSeek: note date, 6 items, 0 chips, suggest buttons match
+PASS Meta AI: note date, 6 items, 0 chips, suggest buttons match
+PASS Mistral: note date, 8 items, 0 chips, suggest buttons match
+PASS built-in catalog validates
+PASS bad catalogs rejected {"valid":0,"http":1,"tier":1,"note":1,"rev":1,"st":1,"extraDropped":true,"arr":1,"nul":1}
+PASS cleanCatalog drops unknown fields
+PASS clean source has no typed text or presets
+PASS clean source embeds valid catalog JSON
+PASS clean source structure + version 5.5.0-test.1 + start panel open
+PASS import shows diff (fence + trailing words handled)
+PASS invalid JSON refused
+PASS invalid catalog (http url) refused, no install button
+PASS installed catalog active after reload {"rev":2,"src":"saved","lim":12345,"n":12,"presets":1,"cs":2,"builtin":1}
+PASS presets survive catalog install
+PASS clean source embeds the NEWEST (installed) catalog
+PASS package catalog only: copied, opened Perplexity, split into 7 parts
+PASS part 2 copy button works
+PASS download catalog.json valid, rev 2
+PASS Use built-in catalog restores rev 1
+PASS invalid/older saved catalog ignored at load
+PASS corrupt saved catalog ignored at load
+PASS check for newer: falls back to GitHub copy and shows diff
+PASS cancel hides diff, nothing installed
+PASS offline check shows friendly message
+PASS identical catalog reports up to date
+PASS command suggest note copied
+PASS bot-level suggest note copied
+PASS export presets file
+PASS import: capped at 50, junk skipped, unknown fields dropped {"n":50,"evil":false,"flag":false}
+PASS import merges by name (replace)
+PASS bad preset file refused
+PASS start panel closes and remembers
+PASS start panel stays closed after reload
+PASS start panel reopens
+PASS Dev Bay package carries catalog block + new freshness wording
+PASS Dev Bay buttons intact
+PASS auto-split still works on Perplexity budget
+PASS no horizontal overflow at 390px
+
+console/page errors: []
+PASS no console or page errors
+
+49 passed, 0 failed

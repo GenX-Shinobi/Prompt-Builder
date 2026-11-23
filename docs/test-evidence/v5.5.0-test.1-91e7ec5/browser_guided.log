@@ -1,0 +1,83 @@
+PASS default: standard builder selected, guided card hidden, preview read-only
+PASS default: all four standard sections visible modules:true,core:true,presets:true,devbay:true
+PASS guided: switch pressed and guided card shown
+PASS guided: standard build sections and Dev Bay hidden, so the prompt follows the guided card modules:false,core:false,presets:false,devbay:false
+PASS guided: console preview is an editable plain-text textbox
+PASS guided: #guided in address, empty preview, Start here panel hidden
+PASS guided: empty task gives a plain message and opens nothing
+PASS no format: prompt has the task and no answer-format section
+PASS no format: prompt asks the AI to check for missing details first
+PASS no format: size meters update
+PASS no format: Copy & launch copies exactly the prompt and opens the selected chatbot
+PASS format "steps": answer-format line added
+PASS format "compare": answer-format line added
+PASS format "draft": answer-format line added
+PASS format "summary": answer-format line added
+PASS format "checklist": answer-format line added
+PASS format back to "No preference" removes the format line
+PASS edit: typed text and a new line stay plain text in the preview
+PASS edit: no markup inserted into the preview
+PASS edit: Rebuild from my answers appears
+PASS edit: Copy & launch copies the edited prompt exactly
+PASS edit: changing answers never overwrites edits, and says so
+PASS rebuild: prompt rebuilt from the new answers
+PASS chatbot switch: launch button follows the bot and the guided prompt is kept
+PASS chatbot switch: Copy & launch opens the newly selected chatbot
+PASS over budget: guided prompt is split into 3 parts with the existing splitter
+PASS over budget: part 1 is on the clipboard
+PASS back to standard: preview read-only, sections back, #guided removed
+PASS standard: compiles commands + core prompt, no guided text leaks in
+PASS standard: Copy & launch copies the compiled prompt
+PASS return to guided: your edited guided prompt is restored
+PASS Reset all: clears the task, format and edits
+PASS clean source: no guided text or mode, card hidden, version 5.5.0-test.1
+PASS clean source: preview read-only, only "No preference" pre-checked
+PASS keyboard: mode buttons are in tab order
+PASS keyboard: Enter on Guided path switches mode
+PASS keyboard: Space on Standard builder switches back
+PASS keyboard: Tab moves from the task box to the format choices
+PASS keyboard: arrow keys choose the next format ("draft" to "summary") and the prompt follows
+PASS keyboard: focused format choice shows a visible focus ring (solid)
+PASS keyboard: editable prompt shows a visible focus outline
+PASS keyboard: Enter on Copy & launch copies the guided prompt
+PASS no page or console errors in the desktop flow []
+PASS no network requests during the whole flow []
+PASS #guided link opens straight into the Guided path
+PASS 320px: no sideways scrolling (overflow 0px)
+PASS 320px: guided card, task box, prompt and Copy & launch all within the width
+PASS 320px: mode buttons 56px tall, launch 43px
+PASS 320px: no errors
+PASS 375px: no sideways scrolling (overflow 0px)
+PASS 375px: guided card, task box, prompt and Copy & launch all within the width
+PASS 375px: mode buttons 56px tall, launch 43px
+PASS 375px: no errors
+PASS 414px: no sideways scrolling (overflow 0px)
+PASS 414px: guided card, task box, prompt and Copy & launch all within the width
+PASS 414px: mode buttons 56px tall, launch 62px
+PASS 414px: no errors
+PASS 768px: no sideways scrolling (overflow 0px)
+PASS 768px: guided card, task box, prompt and Copy & launch all within the width
+PASS 768px: mode buttons 56px tall, launch 43px
+PASS 768px: no errors
+PASS 1024px: no sideways scrolling (overflow 0px)
+PASS 1024px: guided card, task box, prompt and Copy & launch all within the width
+PASS 1024px: mode buttons 56px tall, launch 43px
+PASS 1024px: no errors
+PASS 1360px: no sideways scrolling (overflow 0px)
+PASS 1360px: guided card, task box, prompt and Copy & launch all within the width
+PASS 1360px: mode buttons 56px tall, launch 43px
+PASS 1360px: no errors
+PASS 1920px: no sideways scrolling (overflow 0px)
+PASS 1920px: guided card, task box, prompt and Copy & launch all within the width
+PASS 1920px: mode buttons 56px tall, launch 43px
+PASS 1920px: no errors
+PASS Pixel 7 (emulated touch): tap to switch mode, type the task and pick a format
+PASS Pixel 7 (emulated touch): edit and Copy & launch by tap
+PASS Pixel 7: no errors
+PASS iPhone 13 (emulated touch): tap to switch mode, type the task and pick a format
+PASS iPhone 13 (emulated touch): edit and Copy & launch by tap
+PASS iPhone 13: no errors
+PASS offline downloaded file: Guided path builds and copies with the network off
+PASS offline downloaded file: standard builder still copies
+Screenshots: see this folder
+81 passed, 0 failed
