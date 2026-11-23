@@ -67,7 +67,7 @@ All named `v5.4.0-independent-verification`, from branch `verify/v5.4.0-independ
 
 - **Duplicate map** (Claude-reported): the three suite logs are byte-identical across all four artifacts and to the logs on the evidence branch; `environment.txt` and `exit-codes.txt` content appears in `verification-result.txt`; the run-3 `Preview.jpg` is the image on `main`. Unique to the artifacts: the original ZIP containers and two visually equivalent `Preview.jpg` variants.
 - **Private package:** a private evidence package containing the four original ZIPs was created and delivered to the Owner (Claude-reported). The four GitHub digests matched the packaged copies (PM-verified). The package is not stored in this repository.
-- **Permanent Owner-controlled private backup: pending.**
+- **Permanent Owner-controlled private backup: verified 2026-11-22 (PM-verified).** All four original ZIPs are preserved in the Owner-controlled private archive. The SHA-256 computed from each archived ZIP matches the corresponding GitHub digest in the table above.
 - **Git tags and branches do not preserve Actions artifacts.** After expiry, only private copies remain.
 
 ## 5. Unresolved provenance discrepancy
