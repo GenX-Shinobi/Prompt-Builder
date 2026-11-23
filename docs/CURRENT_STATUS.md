@@ -2,9 +2,21 @@
 
 > Authoritative current project state. A dated snapshot, not a live connection: verify GitHub before acting. Superseded status sections are recoverable through [ARCHIVE_INDEX.md](ARCHIVE_INDEX.md).
 
-**As of:** 2026-11-22, post-merge checkpoint after PR #8 (PB-CLOSEOUT-08).
+**As of:** 2026-11-23, PB-550-01 draft review checkpoint.
 
 **Evidence labels:** **PM-verified** = independently checked by ChatGPT; **Claude-verified** = checked against live GitHub by Claude Code; **Claude-reported** = Claude's own action or run; **CI** = GitHub Actions run; **Owner** = Owner decision or test.
+
+## Guided Path draft (PB-550-01)
+
+| Item | State | Label |
+|---|---|---|
+| `main` at review | `8f7ee172bad56151795c4627dca82b60c693c130`. Application blob on that commit: `856fb513eb242d8bf704d96a829f924217b3bc95`. | PM-verified |
+| [Draft PR #12](https://github.com/GenX-Shinobi/Prompt-Builder/pull/12) | Open, draft, at `1f1d7f54a2296c5366b41ad9e2e2b97c69f8351a` (v5.5.0-test.4). Scroll correction in `03963dc`, evidence at the PR head. | PM-verified |
+| Short-viewport regression | PM reviewed the correction and test and checked simulated element bounds. Chromium startup was blocked in the PM environment. | PM-verified |
+| Automated browser evidence | Placement 331/331, other suites 49/49, 18/18, 120/120 and 82/82. No PR workflow runs listed for this head. | Claude-reported suites and PM-verified workflow listing |
+| Owner acceptance | Android Chrome confirmed five-part placement on test.3. Test.4 browser acceptance is deferred until desktop access is available. | Owner |
+
+[Claude's completion report](https://github.com/GenX-Shinobi/Prompt-Builder/pull/12#issuecomment-7092310774) contains browser coverage and limitations. [Issue #11](https://github.com/GenX-Shinobi/Prompt-Builder/issues/11) tracks the approved scope.
 
 ## Release
 
@@ -14,9 +26,9 @@
 | Tag `v5.4.0` | `97531983b26b7e00be78a8200284d7897a97b864` | PM-verified; Claude-verified |
 | Application `index.html` | blob `856fb513eb242d8bf704d96a829f924217b3bc95` (unchanged since tested) | PM-verified; Claude-verified |
 | README image `Preview.jpg` | blob `f59e58372626ba9530e53d7f6a23646d7e62b84f`, genuine v5.4.0 first-open capture by CI run 44922527496 | Blob PM-verified; capture origin Claude-reported |
-| Live site | GitHub Pages publishes `main` automatically; the deployment for `2374a17` (PR #8 merge) completed successfully 2026-11-22 | Claude-verified (deployment runs succeeded) |
+| Live site | GitHub Pages publishes `main` automatically; the deployment for `2374a17` (PR #8 merge) completed successfully 2026-11-22 | Claude-verified (historical deployment runs succeeded) |
 
-## Repository
+## Repository history (PR #8 checkpoint)
 
 | Item | State at 2026-11-22 post-merge verification | Label |
 |---|---|---|
@@ -27,7 +39,7 @@
 | Branch protection / required checks on `main` | None configured | Claude-verified |
 | Archive tags | None created | Claude-verified |
 
-## Testing and acceptance (carried forward; not re-run)
+## v5.4.0 testing and acceptance (historical)
 
 | Evidence | Result | Label |
 |---|---|---|
@@ -69,6 +81,6 @@ Git tags and branches do not preserve GitHub Actions artifacts; the artifacts ar
 3. Release-note link correction, if GitHub permits editing the immutable release.
 4. Whether and when to authorize the deferred documentation maintenance (P1–P9, PR #8 comment 7075299144).
 
-**Authorized implementation:** none. No v5.5.0 or CHIMERA implementation without a bounded Owner-approved plan.
+**Authorized scope:** PB-550-01 and its completed short-viewport follow-up. Further implementation, tester distribution, merge, deployment and release require separate Owner authorization.
 
 The single next action is recorded in [SESSION_HANDOFF.md](SESSION_HANDOFF.md).

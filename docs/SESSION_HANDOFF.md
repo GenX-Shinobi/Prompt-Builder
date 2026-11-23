@@ -2,11 +2,11 @@
 
 > Continuity only: how to resume, what to check, and the single next action. Current facts live in [CURRENT_STATUS.md](CURRENT_STATUS.md); rules in [../PROJECT_CONTROL.md](../PROJECT_CONTROL.md) and [AI_WORK_RULES.md](AI_WORK_RULES.md). Earlier handoffs are recoverable through [ARCHIVE_INDEX.md](ARCHIVE_INDEX.md) and are not instructions.
 
-**Checkpoint:** 2026-11-22, PB-CLOSEOUT-08 post-merge checkpoint. PR #8 (final documentation reconciliation, PB-CLOSEOUT-04 to 07) is merged into `main` at `2374a1771277c967bcad497e18512d0676d158e2`.
+**Checkpoint:** 2026-11-23, PB-550-01. [Draft PR #12](https://github.com/GenX-Shinobi/Prompt-Builder/pull/12) is at `1f1d7f54a2296c5366b41ad9e2e2b97c69f8351a` (v5.5.0-test.4). Owner browser acceptance is deferred until desktop access is available.
 
 ## Resume phrase
 
-> **Resume AI Prompt Builder Hub after the v5.4.0 release.** Read `docs/SESSION_HANDOFF.md`, then `docs/CURRENT_STATUS.md`; verify live GitHub before acting. v5.4.0 is released. No development milestone is active. Do not merge, tag, release, delete branches, change application code, or start v5.5.0 or CHIMERA work without the Owner's separate approval. State one next action.
+> **Resume Prompt Builder PR #12.** Read this handoff and [CURRENT_STATUS.md](CURRENT_STATUS.md), then confirm the live PR head and read the latest report. Keep PR #12 in draft pending Owner review.
 
 ## Read first
 
@@ -19,8 +19,8 @@
 
 ## Startup checks
 
-1. Fetch GitHub. Compare `main`, tag `v5.4.0`, open PRs and branch tips with [CURRENT_STATUS.md](CURRENT_STATUS.md) and [ARCHIVE_INDEX.md](ARCHIVE_INDEX.md).
-2. Confirm `index.html` is still blob `856fb513eb242d8bf704d96a829f924217b3bc95` unless an authorized change says otherwise.
+1. Compare live `main`, the `v5.4.0` tag, and PR #12 with [CURRENT_STATUS.md](CURRENT_STATUS.md). Check the latest PR comments for any head or scope change.
+2. Confirm `index.html` on `main` is still blob `856fb513eb242d8bf704d96a829f924217b3bc95` unless an authorized change says otherwise.
 3. Check the CI artifact expiry (2026-12-05 ~16:05 UTC) against today's date and whether the Owner has confirmed a permanent private backup.
 4. Report any difference before acting.
 
@@ -30,6 +30,6 @@ The four CI artifacts expire on **2026-12-05 ~16:05 UTC**. A permanent Owner-con
 
 ## Single next action
 
-The Owner makes a permanent, Owner-controlled private backup of the evidence package before **2026-12-05 ~16:05 UTC** and confirms to the PM that it is done. No repository change is needed for this, and no private details belong in this repository.
+When desktop access is available, the Owner opens the [pinned test.4 build](https://github.com/GenX-Shinobi/Prompt-Builder/blob/1f1d7f54a2296c5366b41ad9e2e2b97c69f8351a/index.html) locally in Chrome. In Guided Path, choose Claude and use a prompt that splits into at least five parts. Narrow and shorten the browser window, position **Copy & launch in Claude** near the top, and press it. Return to the builder if Claude opens in a new tab. Check whether **Copy part 1** is fully in view without manually scrolling after launch. Record pass or fail and the viewport size if available.
 
-Not part of the next action: the deferred documentation maintenance (P1–P9, PR #8 comment 7075299144), archive tags, branch retirement and any development work. Each needs separate Owner authorization.
+After the result, the PM reviews acceptance and presents the next Owner decision. Tester distribution, merge, deployment and release each require authorization.
