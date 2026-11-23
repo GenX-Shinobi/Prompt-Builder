@@ -134,7 +134,7 @@ const shown = (p, sel) => p.evaluate(s => { const e = document.querySelector(s);
   /* ---------- 10. Clean export never carries guided state ---------- */
   await p.fill('#guideTask', 'PRIVATE-GUIDED-MARKER'); await p.click('label.pill:has(input[name=\"guideFmt\"][value=\"draft\"])');
   const cs = await p.evaluate(() => getCleanSource());
-  ok(!/PRIVATE-GUIDED-MARKER/.test(cs) && !/class="wrap guided"/.test(cs) && /id="guideCard" hidden=""/.test(cs) && /currentVersion: "5\.5\.0-test\.2"/.test(cs), 'clean source: no guided text or mode, card hidden, version 5.5.0-test.2');
+  ok(!/PRIVATE-GUIDED-MARKER/.test(cs) && !/class="wrap guided"/.test(cs) && /id="guideCard" hidden=""/.test(cs) && /currentVersion: "5\.5\.0-test\.3"/.test(cs), 'clean source: no guided text or mode, card hidden, version 5.5.0-test.3');
   const cdoc = await p.evaluate(h => { const d = new DOMParser().parseFromString(h, 'text/html'); const pv = d.getElementById('promptPreview'); return { ce: pv.hasAttribute('contenteditable'), chk: [...d.querySelectorAll('input[name="guideFmt"]')].filter(r => r.hasAttribute('checked')).map(r => r.value).join('|') }; }, cs);
   ok(!cdoc.ce && cdoc.chk === '', 'clean source: preview read-only, only "No preference" pre-checked');
 
@@ -149,8 +149,10 @@ const shown = (p, sel) => p.evaluate(s => { const e = document.querySelector(s);
   await p.focus('#modeGuided'); await p.keyboard.press('Space');
   await p.focus('#guideTask'); await p.keyboard.type('Plan a cheap weekly dinner menu for two.');
   await p.keyboard.press('Tab');
+  ok(await p.evaluate(() => document.activeElement.id) === 'guideLaunchBtn', 'keyboard: Tab from the task box reaches its Copy & launch (v5.5.0-test.3)');
+  await p.keyboard.press('Tab');
   st = await p.evaluate(() => document.activeElement.name);
-  ok(st === 'guideFmt', 'keyboard: Tab moves from the task box to the format choices');
+  ok(st === 'guideFmt', 'keyboard: the next Tab moves on to the format choices');
   const order = ['', 'steps', 'compare', 'draft', 'summary', 'checklist'];
   const before = await p.evaluate(() => guideFormat());
   await p.keyboard.press('ArrowRight');
