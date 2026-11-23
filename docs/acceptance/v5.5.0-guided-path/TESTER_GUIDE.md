@@ -1,6 +1,6 @@
 # v5.5.0 Guided Path test build: tester guide
 
-This is a **draft test build** (PB-550-01, version `5.5.0-test.1`). It is not the live app and has not been released. The live v5.4.0 app at https://genx-shinobi.github.io/Prompt-Builder/ is unchanged and is still fine for informal exploration.
+This is a **draft test build** (PB-550-01, version `5.5.0-test.2`). It is not the live app and has not been released. The live v5.4.0 app at https://genx-shinobi.github.io/Prompt-Builder/ is unchanged and is still fine for informal exploration.
 
 ## Open the test build safely
 
@@ -22,7 +22,7 @@ Don't read ahead or ask for help. Use it the way you would on your own.
 2. Choose **Guided path**.
 3. Describe **a real task you actually need done this week**, in your own words.
 4. Choose an answer format if you want one.
-5. Read the prompt. Change anything you like. Then press **Copy & launch** and paste it into the chatbot.
+5. Read the prompt. Change anything you like. Then press **Copy & launch** (just under the answer choices, or under the prompt) and paste it into the chatbot.
 6. Read the chatbot's answer, then fill in the form below.
 
 ## Feedback form
@@ -49,6 +49,6 @@ Answer format chosen (or "none"):
 
 ## Known limits of this build
 
-- The **Submit to AI** button placement change is not in this build. It is waiting for an owner decision on which control is meant (see issue #11).
+- **Copy & launch** now also sits right under where you type: under the Core prompt in Standard builder, and under the answer choices in Guided path. All of them do the same thing.
 - In the Guided path, the standard commands, saved presets, attachments and Dev Bay are hidden. Switch to **Standard builder** to use them.
 - Your edits to the prompt are kept only while the page is open.

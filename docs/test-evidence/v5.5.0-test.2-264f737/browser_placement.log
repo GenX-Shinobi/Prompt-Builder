@@ -1,0 +1,125 @@
+PASS three Copy & launch buttons: console, Core prompt, Guided step 3 (guideLaunchBtn,coreLaunchBtn,launchBtn)
+PASS every Copy & launch is a native <button type=button> running launchBot()
+PASS all three show the selected chatbot name and colour (Copy & launch in ChatGPT ↗)
+PASS console Copy & launch is still in the console, unchanged
+PASS switching chatbot relabels all three buttons
+PASS standard: Enter in the Core prompt adds new lines (multiline text typed by keyboard)
+PASS standard: pressing Enter while typing never launches
+PASS standard: Core prompt button and console button copy the same compiled prompt, line breaks intact
+PASS standard: both open the same chatbot (https://chatgpt.com)
+PASS keyboard: Tab from the Core prompt goes straight to its Copy & launch
+PASS keyboard: focused Core prompt Copy & launch shows a focus indicator
+PASS keyboard: Enter on the Core prompt Copy & launch copies and launches
+PASS keyboard: Space on the Core prompt Copy & launch copies and launches
+PASS standard: over-budget prompt from the Core prompt button splits, copies part 1 and opens the bot (4 parts)
+PASS standard: split result identical from either button
+PASS standard: empty Core prompt behaves identically from either button
+PASS guided: Enter in the task box adds new lines and never launches
+PASS guided: step 3 button and console button copy the same prompt, line breaks intact
+PASS guided: both open the same chatbot
+PASS guided: generated prompt edited with an added line
+PASS guided: after editing, the step 3 button copies the edited prompt exactly
+PASS guided: after editing, the console button copies the edited prompt exactly
+PASS keyboard: Tab from the answer-format choices goes straight to step 3 Copy & launch
+PASS keyboard: Enter on step 3 Copy & launch copies the edited prompt and launches
+PASS keyboard: Space on step 3 Copy & launch copies and launches
+PASS guided: over-budget edited prompt splits from the step 3 button (2 parts)
+PASS guided: step 3 button shown, Core prompt button hidden with its section
+PASS standard: Core prompt button shown, step 3 button hidden with the guided card
+PASS no page or console errors []
+PASS no network requests []
+PASS clean source: all three Copy & launch buttons back to default label, no bot colour (3)
+PASS 320x568 standard: Copy & launch directly under the Core prompt, same card (gap 14px)
+PASS 320x568 standard: touch target 254x44px
+PASS 320x568 standard: with the Core prompt at the top of the screen, Copy & launch is on screen too
+PASS 320x568 standard: no sideways scrolling (0)
+PASS 320x568 guided: Copy & launch in step 3 just below the answer choices, same card (gap 115px)
+PASS 320x568 guided: touch target 234x62px
+PASS 320x568 guided: with the answer choices at the top of the screen, Copy & launch is on screen too
+INFO 320x568 guided: task box bottom to step 3 button = 523px
+PASS 320x568 guided: console Copy & launch directly under the editable prompt (gap 15px)
+PASS 320x568 guided: no sideways scrolling, no errors
+PASS 360x640 standard: Copy & launch directly under the Core prompt, same card (gap 14px)
+PASS 360x640 standard: touch target 274x44px
+PASS 360x640 standard: with the Core prompt at the top of the screen, Copy & launch is on screen too
+PASS 360x640 standard: no sideways scrolling (0)
+PASS 360x640 guided: Copy & launch in step 3 just below the answer choices, same card (gap 100px)
+PASS 360x640 guided: touch target 274x44px
+PASS 360x640 guided: with the answer choices at the top of the screen, Copy & launch is on screen too
+INFO 360x640 guided: task box bottom to step 3 button = 366px
+PASS 360x640 guided: console Copy & launch directly under the editable prompt (gap 15px)
+PASS 360x640 guided: no sideways scrolling, no errors
+PASS 375x667 standard: Copy & launch directly under the Core prompt, same card (gap 14px)
+PASS 375x667 standard: touch target 289x44px
+PASS 375x667 standard: with the Core prompt at the top of the screen, Copy & launch is on screen too
+PASS 375x667 standard: no sideways scrolling (0)
+PASS 375x667 guided: Copy & launch in step 3 just below the answer choices, same card (gap 100px)
+PASS 375x667 guided: touch target 289x44px
+PASS 375x667 guided: with the answer choices at the top of the screen, Copy & launch is on screen too
+INFO 375x667 guided: task box bottom to step 3 button = 345px
+PASS 375x667 guided: console Copy & launch directly under the editable prompt (gap 15px)
+PASS 375x667 guided: no sideways scrolling, no errors
+PASS 414x896 standard: Copy & launch directly under the Core prompt, same card (gap 14px)
+PASS 414x896 standard: touch target 328x44px
+PASS 414x896 standard: with the Core prompt at the top of the screen, Copy & launch is on screen too
+PASS 414x896 standard: no sideways scrolling (0)
+PASS 414x896 guided: Copy & launch in step 3 just below the answer choices, same card (gap 85px)
+PASS 414x896 guided: touch target 328x44px
+PASS 414x896 guided: with the answer choices at the top of the screen, Copy & launch is on screen too
+INFO 414x896 guided: task box bottom to step 3 button = 330px
+PASS 414x896 guided: console Copy & launch directly under the editable prompt (gap 15px)
+PASS 414x896 guided: no sideways scrolling, no errors
+PASS 768x1024 standard: Copy & launch directly under the Core prompt, same card (gap 14px)
+PASS 768x1024 standard: touch target 682x44px
+PASS 768x1024 standard: with the Core prompt at the top of the screen, Copy & launch is on screen too
+PASS 768x1024 standard: no sideways scrolling (0)
+PASS 768x1024 guided: Copy & launch in step 3 just below the answer choices, same card (gap 70px)
+PASS 768x1024 guided: touch target 682x44px
+PASS 768x1024 guided: with the answer choices at the top of the screen, Copy & launch is on screen too
+INFO 768x1024 guided: task box bottom to step 3 button = 242px
+PASS 768x1024 guided: console Copy & launch directly under the editable prompt (gap 15px)
+PASS 768x1024 guided: no sideways scrolling, no errors
+PASS 1024x768 standard: Copy & launch directly under the Core prompt, same card (gap 14px)
+PASS 1024x768 standard: touch target 515x44px
+PASS 1024x768 standard: with the Core prompt at the top of the screen, Copy & launch is on screen too
+PASS 1024x768 standard: no sideways scrolling (0)
+PASS 1024x768 guided: Copy & launch in step 3 just below the answer choices, same card (gap 85px)
+PASS 1024x768 guided: touch target 515x44px
+PASS 1024x768 guided: with the answer choices at the top of the screen, Copy & launch is on screen too
+INFO 1024x768 guided: task box bottom to step 3 button = 273px
+PASS 1024x768 guided: console Copy & launch directly under the editable prompt (gap 15px)
+PASS 1024x768 guided: no sideways scrolling, no errors
+PASS 1360x900 standard: Copy & launch directly under the Core prompt, same card (gap 14px)
+PASS 1360x900 standard: touch target 664x44px
+PASS 1360x900 standard: with the Core prompt at the top of the screen, Copy & launch is on screen too
+PASS 1360x900 standard: no sideways scrolling (0)
+PASS 1360x900 guided: Copy & launch in step 3 just below the answer choices, same card (gap 70px)
+PASS 1360x900 guided: touch target 664x44px
+PASS 1360x900 guided: with the answer choices at the top of the screen, Copy & launch is on screen too
+INFO 1360x900 guided: task box bottom to step 3 button = 242px
+PASS 1360x900 guided: console Copy & launch directly under the editable prompt (gap 15px)
+PASS 1360x900 guided: no sideways scrolling, no errors
+PASS 1920x1080 standard: Copy & launch directly under the Core prompt, same card (gap 14px)
+PASS 1920x1080 standard: touch target 664x44px
+PASS 1920x1080 standard: with the Core prompt at the top of the screen, Copy & launch is on screen too
+PASS 1920x1080 standard: no sideways scrolling (0)
+PASS 1920x1080 guided: Copy & launch in step 3 just below the answer choices, same card (gap 70px)
+PASS 1920x1080 guided: touch target 664x44px
+PASS 1920x1080 guided: with the answer choices at the top of the screen, Copy & launch is on screen too
+INFO 1920x1080 guided: task box bottom to step 3 button = 242px
+PASS 1920x1080 guided: console Copy & launch directly under the editable prompt (gap 15px)
+PASS 1920x1080 guided: no sideways scrolling, no errors
+PASS Pixel 7 (emulated touch) standard: tap Core prompt Copy & launch copies multiline prompt and launches
+PASS Pixel 7 (emulated touch) guided: tap step 3 Copy & launch copies the guided prompt
+PASS Pixel 7 (emulated touch) guided: after editing, tap step 3 Copy & launch copies the edit
+PASS Pixel 7: no errors
+PASS iPhone 13 (emulated touch) standard: tap Core prompt Copy & launch copies multiline prompt and launches
+PASS iPhone 13 (emulated touch) guided: tap step 3 Copy & launch copies the guided prompt
+PASS iPhone 13 (emulated touch) guided: after editing, tap step 3 Copy & launch copies the edit
+PASS iPhone 13: no errors
+PASS iPhone SE (emulated touch) standard: tap Core prompt Copy & launch copies multiline prompt and launches
+PASS iPhone SE (emulated touch) guided: tap step 3 Copy & launch copies the guided prompt
+PASS iPhone SE (emulated touch) guided: after editing, tap step 3 Copy & launch copies the edit
+PASS iPhone SE: no errors
+Screenshots: <screenshot-dir>
+115 passed, 0 failed
