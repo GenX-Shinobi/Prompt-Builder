@@ -2,7 +2,7 @@
 
 > Continuity only: how to resume, what to check, and the single next action. Current facts live in [CURRENT_STATUS.md](CURRENT_STATUS.md); rules in [../PROJECT_CONTROL.md](../PROJECT_CONTROL.md) and [AI_WORK_RULES.md](AI_WORK_RULES.md). Earlier handoffs are recoverable through [ARCHIVE_INDEX.md](ARCHIVE_INDEX.md) and are not instructions.
 
-**Checkpoint:** 2026-11-22, PB-CLOSEOUT-08 post-merge checkpoint. PR #8 (final documentation reconciliation, PB-CLOSEOUT-04 to 07) is merged into `main` at `2374a1771277c967bcad497e18512d0676d158e2`.
+**Checkpoint:** November 23, 2026 (Eastern). v5.4.0 is released and private evidence preservation is verified. [PR #10](https://github.com/GenX-Shinobi/Prompt-Builder/pull/10) records the backup verification.
 
 ## Resume phrase
 
@@ -21,15 +21,9 @@
 
 1. Fetch GitHub. Compare `main`, tag `v5.4.0`, open PRs and branch tips with [CURRENT_STATUS.md](CURRENT_STATUS.md) and [ARCHIVE_INDEX.md](ARCHIVE_INDEX.md).
 2. Confirm `index.html` is still blob `856fb513eb242d8bf704d96a829f924217b3bc95` unless an authorized change says otherwise.
-3. Check the CI artifact expiry (2026-12-05 ~16:05 UTC) against today's date and whether the Owner has confirmed a permanent private backup.
+3. Use the archive index for evidence provenance and the verified backup record.
 4. Report any difference before acting.
 
-## Time-sensitive pending item
+## Resume checkpoint
 
-The four CI artifacts expire on **2026-12-05 ~16:05 UTC**. A permanent Owner-controlled private backup of the evidence package is **pending**. Git tags do not preserve these artifacts.
-
-## Single next action
-
-The Owner makes a permanent, Owner-controlled private backup of the evidence package before **2026-12-05 ~16:05 UTC** and confirms to the PM that it is done. No repository change is needed for this, and no private details belong in this repository.
-
-Not part of the next action: the deferred documentation maintenance (P1–P9, PR #8 comment 7075299144), archive tags, branch retirement and any development work. Each needs separate Owner authorization.
+The [archive index](ARCHIVE_INDEX.md#4-github-actions-artifacts) records the verified Owner-controlled backup of all four original CI artifact ZIPs. The separate device-switch check remains paused and is tracked in its authorized private workspace. No development milestone is active. Bring forward one next decision if the Owner resumes Prompt Builder work.
